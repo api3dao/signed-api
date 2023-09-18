@@ -1,7 +1,10 @@
 {
-  "name": "nodary-stamp-pool",
+  "name": "api",
   "version": "1.0.0",
-  "description": "",
+  "engines": {
+    "node": "^18.14.0",
+    "pnpm": "^8.7.0"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -18,7 +21,6 @@
     "format:check": "yarn prettier:check && yarn eslint:check",
     "format:write": "yarn prettier:write && yarn eslint:write"
   },
-  "author": "",
   "license": "MIT",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.115",
@@ -45,8 +47,5 @@
     "express": "^4.18.2",
     "lodash": "^4.17.21",
     "zod": "^3.21.4"
-  },
-  "volta": {
-    "node": "16.20.1"
   }
 }
