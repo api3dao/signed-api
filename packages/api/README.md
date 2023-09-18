@@ -27,12 +27,21 @@ Spin up local `express` server:
 pnpm run dev
 ```
 
-You can use following valid examples in the next section to test server. Note, the port may differ based on the `.env`
-value.
+## Docker
+
+The API is also dockerized. In order to run the API from a docker, run:
+
+```bash
+pnpm run docker:start
+# or in a detached mode
+pnpm run docker:detach:start
+# optionally specify port
+PORT=5123 pnpm run docker:start
+```
 
 ### Examples
 
-Here are some examples of how to use the API with `curl`:
+Here are some examples of how to use the API with `curl`. Note, the port may differ based on the `.env` value.
 
 ```bash
 # Upsert signed data (HTTP PUT)

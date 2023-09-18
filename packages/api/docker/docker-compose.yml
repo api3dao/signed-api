@@ -6,7 +6,7 @@ services:
       context: ../../../
       dockerfile: ./packages/api/docker/Dockerfile
     ports:
-      - '4000:4000'
+      - '${PORT:-4000}:${PORT:-4000}'
     environment:
       - NODE_ENV=production
-      - PORT=4000
+      - PORT=${PORT:-4000}
