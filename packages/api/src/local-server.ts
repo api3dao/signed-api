@@ -9,14 +9,16 @@ const { PORT } = process.env;
 const port = PORT || 8090;
 const app = express();
 
-app.put('/', express.json(), async (req, res) => {
+app.use(express.json());
+
+app.put('/', async (req, res) => {
   const result = await upsertData({
     body: JSON.stringify(req.body),
   } as APIGatewayProxyEvent);
   res.status(result.statusCode).header(result.headers).send(result.body);
 });
 
-app.post('/', express.json(), async (req, res) => {
+app.post('/', async (req, res) => {
   const result = await batchUpsertData({
     body: JSON.stringify(req.body),
   } as APIGatewayProxyEvent);
