@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "lib": ["esnext"],
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "skipLibCheck": true,
+    "composite": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Disabled because they are too restrictive
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitReturns": false,
+
+    // Disabled because they are covered by Eslint rules
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    // Disabled because prefer the property syntax
+    "noPropertyAccessFromIndexSignature": false,
+    "baseUrl": "./",
+    "outDir": "dist"
+  },
+  // See: https://www.typescriptlang.org/docs/handbook/project-references.html#overall-structure
+  //
+  // Another good practice is to have a “solution” tsconfig.json file that simply has references to all of your leaf-node
+  // projects and sets files to an empty array (otherwise the solution file will cause double compilation of files)
+  "exclude": ["node_modules", "dist", "dist/**/*", "node_modules/**/*"],
+  "include": ["./src/**/*", "./test/**/*"]
+}
