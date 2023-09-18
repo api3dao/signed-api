@@ -7,7 +7,6 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "serverless deploy",
     "removeDeployment": "serverless remove",
     "dynamodb-local-up": "docker compose -f docker-compose.dynamodb-local.yml up -d ",
@@ -18,8 +17,7 @@
     "prettier:write": "prettier --write \"./**/*.{js,ts,md,json,json.example}\"",
     "eslint:check": "eslint . --ext .js,.ts",
     "eslint:write": "eslint . --ext .js,.ts --fix",
-    "format:check": "yarn prettier:check && yarn eslint:check",
-    "format:write": "yarn prettier:write && yarn eslint:write"
+    "tsc": "tsc --project ."
   },
   "license": "MIT",
   "devDependencies": {

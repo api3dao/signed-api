@@ -16,17 +16,13 @@
     "dev:eth-node": "hardhat node",
     "dev:testing-services:start": "pm2 start test/testing-services.config.js",
     "dev:testing-services:stop": "pm2 delete test/testing-services.config.js",
-    "format": "yarn prettier",
-    "format:fix": "yarn prettier:fix",
-    "lint": "yarn format && yarn eslint",
-    "lint:fix": "yarn format:fix && yarn eslint:fix",
-    "eslint": "eslint . --ext .js,.ts",
+    "eslint:check": "eslint . --ext .js,.ts",
     "eslint:fix": "eslint . --ext .js,.ts --fix",
-    "prettier": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
+    "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\" --ignore-unknown",
-    "prettier:write": "yarn prettier:fix",
     "test": "SILENCE_LOGGER=true jest --selectProjects unit",
-    "test:e2e": "jest --selectProjects e2e --runInBand"
+    "test:e2e": "jest --selectProjects e2e --runInBand",
+    "tsc": "tsc --project ."
   },
   "license": "MIT",
   "dependencies": {

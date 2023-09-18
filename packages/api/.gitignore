@@ -1,6 +1,0 @@
-.serverless
-.build
-.vscode
-.env
-node_modules
-docker

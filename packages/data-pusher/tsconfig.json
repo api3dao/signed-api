@@ -27,10 +27,6 @@
     "baseUrl": "./",
     "outDir": "dist"
   },
-  // See: https://www.typescriptlang.org/docs/handbook/project-references.html#overall-structure
-  //
-  // Another good practice is to have a “solution” tsconfig.json file that simply has references to all of your leaf-node
-  // projects and sets files to an empty array (otherwise the solution file will cause double compilation of files)
-  "exclude": ["node_modules", "dist", "dist/**/*", "node_modules/**/*"],
+  "exclude": ["dist/**/*", "node_modules/**/*"],
   "include": ["./src/**/*", "./test/**/*"]
 }

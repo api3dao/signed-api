@@ -1,18 +1,32 @@
 {
   "compilerOptions": {
-    "preserveConstEnums": true,
-    "strictNullChecks": true,
-    "sourceMap": true,
-    "allowJs": true,
-    "target": "es2017",
-    "outDir": ".build",
-    "moduleResolution": "node",
-    "lib": ["es2017"],
-    "rootDir": "./",
-    "strict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "lib": ["esnext"],
     "module": "commonjs",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "target": "esnext",
+    "skipLibCheck": true,
+    "composite": true,
+    "noFallthroughCasesInSwitch": true,
+
+    // Disabled because they are too restrictive
+    "exactOptionalPropertyTypes": false,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitReturns": false,
+
+    // Disabled because they are covered by Eslint rules
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    // Disabled because prefer the property syntax
+    "noPropertyAccessFromIndexSignature": false,
+    "baseUrl": "./",
+    "outDir": "dist"
   },
-  "include": ["**/*"],
-  "exclude": ["node_modules", "**/*.spec.ts"]
+  "exclude": ["dist/**/*", "node_modules/**/*"],
+  "include": ["./src/**/*", "./test/**/*"]
 }
