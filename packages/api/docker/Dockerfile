@@ -2,9 +2,8 @@
 FROM node:18-alpine AS builder
 
 WORKDIR /usr/src/app
-# Assumes the context is the root of the monorepo.
-COPY pnpm-lock.yaml package.json .
-# Copies all of the contents (without files listed in .dockerignore) of the monorepo into the image.
+# Assumes the context is the root of the monorepo. Copies all of the contents (without files listed in .dockerignore) of
+# the monorepo into the image.
 COPY . .
 RUN npm install -g pnpm
 # Installs all dependencies only for the api package.
