@@ -1,0 +1,27 @@
+# NOTE: Keep in sync with other configuration ignore files
+
+# Package directories & files
+/node_modules
+# Ignore dist and build folder in every (sub)folder
+dist
+build
+*.tgz
+
+# TypeScript build files
+*.tsbuildinfo
+
+# IDE specific files
+.vscode
+
+# Coverage
+/coverage
+
+# Log files
+*.log
+
+# Ignore Serverless directories
+.serverless
+.build
+
+# Vercel ncc build files
+ncc

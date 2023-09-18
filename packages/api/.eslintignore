@@ -1,0 +1,21 @@
+# NOTE: Keep in sync with other configuration ignore files
+
+# Package directories & files
+/node_modules
+/dist
+*.tgz
+
+# IDE specific files
+.vscode
+.idea
+
+# Coverage
+/coverage
+
+# Log files
+*.log
+
+# Hardhat files
+cache
+artifacts
+credentials.json
