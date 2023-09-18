@@ -1,4 +1,5 @@
 module.exports = {
+  root: true, // https://github.com/eslint/eslint/issues/13385#issuecomment-641252879
   env: {
     es6: true,
     jest: true,
@@ -20,7 +21,6 @@ module.exports = {
     'plugin:import/recommended',
     'plugin:import/typescript',
     'plugin:jest/recommended',
-    '.eslintrc.fp.js',
   ],
   plugins: ['@typescript-eslint', 'import', 'jest'],
   rules: {
@@ -61,7 +61,7 @@ module.exports = {
     // ESLint
     'comma-dangle': ['error', 'only-multiline'],
     indent: 'off',
-    'no-console': 'warn',
+    'no-console': 'error',
     'no-useless-escape': 'off',
     semi: 'error',
     eqeqeq: ['error', 'smart'],
