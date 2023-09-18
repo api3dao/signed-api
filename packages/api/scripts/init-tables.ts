@@ -29,12 +29,15 @@ export const POOL_TABLE_SCHEMA = {
 };
 
 export async function createTable(params: CreateTableInput) {
+  // eslint-disable-next-line no-console
   console.log('Creating table with params: ', params);
   try {
     await ddbClient.createTable(params).promise();
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error('Unable to create table. Error JSON:', JSON.stringify(e, null, 2));
   }
+  // eslint-disable-next-line no-console
   console.log('Created table ', params.TableName);
 }
 

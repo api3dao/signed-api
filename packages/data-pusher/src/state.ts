@@ -34,7 +34,6 @@ export const initializeState = (config: Config) => {
 /**
  * Generates a random ID used when creating Bottleneck limiters.
  */
-// eslint-disable-next-line functional/prefer-tacit
 export const getRandomId = () => utils.randomBytes(16).toString();
 
 const deriveEndpointId = (oisTitle: string, endpointName: string) =>

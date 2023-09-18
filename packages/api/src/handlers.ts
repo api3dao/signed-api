@@ -16,6 +16,7 @@ if (process.env.LOCAL_DEV) {
     endpoint: 'http://localhost:8000',
   };
   AWS.config.update(localAWSConfig);
+  // eslint-disable-next-line no-console
   console.log('AWS SDK was configured for local development.');
 }
 
