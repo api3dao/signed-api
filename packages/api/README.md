@@ -10,12 +10,6 @@ Copy `.env` from the `example.env` file and optionally change the defaults.
 
 TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
 
-## Public Endpoint
-
-The API is publicly accessible at the following endpoint:
-
-- https://pool.nodary.io
-
 ## Usage
 
 The API provides the following endpoints:
@@ -79,10 +73,4 @@ curl --location 'http://localhost:8090/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd
 # List available airnode addresses (HTTP GET)
 curl --location 'http://localhost:8090' \
 --header 'Content-Type: application/json'
-
 ```
-
-## References
-
-- To configure Cloudflare for caching, AWS API Gateway for custom domain support see
-  [the page](https://kylebarron.dev/blog/caching-lambda-functions-cloudflare).
