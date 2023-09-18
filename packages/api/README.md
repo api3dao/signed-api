@@ -1,43 +1,14 @@
-# Nodary Signature Pool
+# api
 
-This repository contains code for a Nodary Signature Pool, which utilizes serverless infrastructure and is deployed on
-AWS. It provides endpoints to handle signed data for a specific airnode.
+A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
 
-## Technologies Used
-
-- AWS DynamoDB: A NoSQL database service.
-- AWS API Gateway: A fully managed service for creating, deploying, and managing APIs.
-- AWS Lambda: A serverless computing service that runs your code in response to events.
-
-## Getting Started
-
-### Prerequisites
-
-- `Node.js` and `yarn` should be installed on your machine.
-- An AWS account with the necessary permissions to create and deploy the required resources.
-
-### Installation
-
-Clone the repository:
-
-```bash
-git clone git@github.com:nodaryio/signed-api.git
-```
-
-Install the dependencies:
-
-```bash
-cd signed-api
-yarn
-```
-
-### Configuration
+## Configuration
 
 1. Copy `.env` from the `example.env` file.
 2. Open the `.env` file and update the environment variables:
    - `HTTP_API_ID`: The ID of the HTTP API in AWS API Gateway.
 
-### Deployment
+## Deployment
 
 To deploy infrastructure to AWS:
 
@@ -53,7 +24,7 @@ yarn removeDeployment
 
 ## Public Endpoint
 
-The Nodary Signature Pool is publicly accessible at the following endpoint:
+The API is publicly accessible at the following endpoint:
 
 - https://pool.nodary.io
 
@@ -66,7 +37,7 @@ The API provides the following endpoints:
 - `GET /{airnode}`: Retrieve signed data for the airnode.
 - `GET /`: Retrieve list of all available airnode address.
 
-### Local development
+## Local development
 
 Start local dynamodb server:
 
