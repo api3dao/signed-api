@@ -4,23 +4,11 @@ A service for storing and accessing signed data. It provides endpoints to handle
 
 ## Configuration
 
-1. Copy `.env` from the `example.env` file.
-2. Open the `.env` file and update the environment variables:
-   - `HTTP_API_ID`: The ID of the HTTP API in AWS API Gateway.
+Copy `.env` from the `example.env` file and optionally change the defaults.
 
 ## Deployment
 
-To deploy infrastructure to AWS:
-
-```bash
-pnpm run deploy
-```
-
-To remove deployment:
-
-```bash
-pnpm run removeDeployment
-```
+TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
 
 ## Public Endpoint
 
@@ -39,25 +27,14 @@ The API provides the following endpoints:
 
 ## Local development
 
-Start local dynamodb server:
+Spin up local `express` server:
 
 ```bash
-pnpm run dynamodb-local-up
+pnpm run dev
 ```
 
-Initialize tables:
-
-```bash
-pnpm run init-tables
-```
-
-Spin up local `express` server to mimic AWS API gateway:
-
-```bash
-pnpm run start-local
-```
-
-You can use following valid examples in the next section to test server.
+You can use following valid examples in the next section to test server. Note, the port may differ based on the `.env`
+value.
 
 ### Examples
 

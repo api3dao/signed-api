@@ -5,7 +5,7 @@ import { getData, listAirnodeAddresses, batchUpsertData, upsertData } from './ha
 dotenv.config();
 const { PORT } = process.env;
 
-const port = PORT || 8090;
+const port = PORT;
 const app = express();
 
 app.use(express.json());

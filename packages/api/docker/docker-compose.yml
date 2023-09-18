@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  express-server:
+    build:
+      context: ../../../
+      dockerfile: ./packages/api/docker/Dockerfile
+    ports:
+      - '4000:4000'
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
