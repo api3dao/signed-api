@@ -6,7 +6,7 @@
     "pnpm": "^8.7.0"
   },
   "scripts": {
-    "build": "yarn clean && yarn compile && yarn build:ncc",
+    "build": "pnpm run clean && pnpm run compile && pnpm run build:ncc",
     "clean": "rimraf -rf ./ncc ./build ./dist *.tgz",
     "compile": "tsc --build tsconfig.json",
     "build:ncc": "ncc build -m -o ncc -s --target es2023 src/serverless.ts",

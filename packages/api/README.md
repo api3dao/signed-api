@@ -13,13 +13,13 @@ A service for storing and accessing signed data. It provides endpoints to handle
 To deploy infrastructure to AWS:
 
 ```bash
-yarn deploy
+pnpm run deploy
 ```
 
 To remove deployment:
 
 ```bash
-yarn removeDeployment
+pnpm run removeDeployment
 ```
 
 ## Public Endpoint
@@ -42,19 +42,19 @@ The API provides the following endpoints:
 Start local dynamodb server:
 
 ```bash
-yarn dynamodb-local-up
+pnpm run dynamodb-local-up
 ```
 
 Initialize tables:
 
 ```bash
-yarn init-tables
+pnpm run init-tables
 ```
 
 Spin up local `express` server to mimic AWS API gateway:
 
 ```bash
-yarn start-local
+pnpm run start-local
 ```
 
 You can use following valid examples in the next section to test server.
