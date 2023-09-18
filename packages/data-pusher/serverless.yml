@@ -1,0 +1,28 @@
+service: signed-data-pusher
+
+package:
+  patterns:
+    - '!./**'
+    - './ncc/**'
+    - './package.json'
+    - ./config/airseeker.json
+
+provider:
+  name: aws
+  region: us-east-2
+  stage: '22jun-dev'
+  runtime: nodejs18.x
+  architecture: arm64
+  logRetentionInDays: 14
+  environment: ${file(scripts/load-secrets-env.js)}
+  deploymentMethod: direct
+
+functions:
+  signed-data-pusher:
+    handler: ./ncc/index.handler
+    maximumRetryAttempts: 0
+    maximumEventAge: 60
+    timeout: 900
+    memorySize: 256
+    events:
+      - schedule: rate(14 minutes)
