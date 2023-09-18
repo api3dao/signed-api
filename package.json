@@ -13,5 +13,8 @@
     "tsc": "pnpm recursive run tsc"
   },
   "keywords": [],
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^8.0.3"
+  }
 }
