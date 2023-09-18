@@ -10,3 +10,4 @@ build
 dist
 docker
 node_modules
+coverage

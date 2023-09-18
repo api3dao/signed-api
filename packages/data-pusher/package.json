@@ -20,8 +20,7 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
-    "test": "SILENCE_LOGGER=true jest --selectProjects unit",
-    "test:e2e": "jest --selectProjects e2e --runInBand",
+    "test": "jest",
     "tsc": "tsc --project ."
   },
   "license": "MIT",

@@ -10,7 +10,8 @@
     "eslint:fix": "pnpm recursive run eslint:fix",
     "prettier:check": "pnpm recursive run prettier:check",
     "prettier:fix": "pnpm recursive run prettier:fix",
-    "tsc": "pnpm recursive run tsc"
+    "tsc": "pnpm recursive run tsc",
+    "test": "pnpm recursive run test"
   },
   "keywords": [],
   "license": "MIT",
