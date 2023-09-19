@@ -9,13 +9,13 @@
     {
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
-      "schedule": ["every 1 month on the 1st day-of-month at 12am"],
+      "schedule": ["before 1am on the first day of the month"],
       "groupName": "devDependencies (non-major)"
     },
     {
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["patch", "minor"],
-      "schedule": ["every 1 month on the 1st day-of-month at 12am"],
+      "schedule": ["before 1am on the first day of the month"],
       "groupName": "dependencies (non-major)"
     }
   ],
