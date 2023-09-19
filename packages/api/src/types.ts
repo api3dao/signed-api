@@ -23,3 +23,14 @@ export type BatchSignedData = z.infer<typeof batchSignedDataSchema>;
 export interface PromiseError<T> extends Error {
   reason: T;
 }
+
+export interface ApiResponse {
+  statusCode: number;
+  headers: Record<string, string>;
+  body: string;
+}
+
+export interface ApiRequest {
+  body: string;
+  queryParams: Record<string, string>;
+}

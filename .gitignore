@@ -1,3 +1,4 @@
+# NOTE: Keep in sync with .dockerignore
 .build
 .env
 .idea
@@ -5,9 +6,7 @@
 .serverless
 .tsbuildinfo
 .vscode
-.vscode
 build
 dist
-docker
 node_modules
 coverage

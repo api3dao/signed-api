@@ -4,29 +4,11 @@ A service for storing and accessing signed data. It provides endpoints to handle
 
 ## Configuration
 
-1. Copy `.env` from the `example.env` file.
-2. Open the `.env` file and update the environment variables:
-   - `HTTP_API_ID`: The ID of the HTTP API in AWS API Gateway.
+Copy `.env` from the `example.env` file and optionally change the defaults.
 
 ## Deployment
 
-To deploy infrastructure to AWS:
-
-```bash
-pnpm run deploy
-```
-
-To remove deployment:
-
-```bash
-pnpm run removeDeployment
-```
-
-## Public Endpoint
-
-The API is publicly accessible at the following endpoint:
-
-- https://pool.nodary.io
+TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
 
 ## Usage
 
@@ -39,29 +21,27 @@ The API provides the following endpoints:
 
 ## Local development
 
-Start local dynamodb server:
+Spin up local `express` server:
 
 ```bash
-pnpm run dynamodb-local-up
+pnpm run dev
 ```
 
-Initialize tables:
+## Docker
+
+The API is also dockerized. In order to run the API from a docker, run:
 
 ```bash
-pnpm run init-tables
+pnpm run docker:start
+# or in a detached mode
+pnpm run docker:detach:start
+# optionally specify port
+PORT=5123 pnpm run docker:start
 ```
-
-Spin up local `express` server to mimic AWS API gateway:
-
-```bash
-pnpm run start-local
-```
-
-You can use following valid examples in the next section to test server.
 
 ### Examples
 
-Here are some examples of how to use the API with `curl`:
+Here are some examples of how to use the API with `curl`. Note, the port may differ based on the `.env` value.
 
 ```bash
 # Upsert signed data (HTTP PUT)
@@ -102,10 +82,4 @@ curl --location 'http://localhost:8090/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd
 # List available airnode addresses (HTTP GET)
 curl --location 'http://localhost:8090' \
 --header 'Content-Type: application/json'
-
 ```
-
-## References
-
-- To configure Cloudflare for caching, AWS API Gateway for custom domain support see
-  [the page](https://kylebarron.dev/blog/caching-lambda-functions-cloudflare).

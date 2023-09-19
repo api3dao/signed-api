@@ -1,5 +1,4 @@
-import { APIGatewayProxyResult } from 'aws-lambda';
-import { BatchSignedData, SignedData } from './types';
+import { ApiResponse, BatchSignedData, SignedData } from './types';
 import { COMMON_HEADERS } from './constants';
 
 export const isBatchUnique = (batchSignedData: BatchSignedData) =>
@@ -9,7 +8,8 @@ export const generateErrorResponse = (
   statusCode: number,
   message: string,
   detail?: string,
+  // TODO: This is a bit weird in the context of a generic error response
   causing?: SignedData
-): APIGatewayProxyResult => {
+): ApiResponse => {
   return { statusCode, headers: COMMON_HEADERS, body: JSON.stringify({ message, detail, causing }) };
 };
