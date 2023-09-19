@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "engines": {
     "node": "^18.14.0",
-    "pnpm": "^8.7.0"
+    "pnpm": "^8.7.6"
   },
   "scripts": {
     "build": "pnpm recursive run build",
