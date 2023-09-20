@@ -7,7 +7,7 @@ import * as abi from '@api3/airnode-abi';
 import * as validator from '@api3/airnode-validator';
 import { go, goSync } from '@api3/promise-utils';
 import { logger } from './logging';
-import { SignedApiPayload, SignedApiUpdate, SignedData, TemplateId } from './validation';
+import { SignedApiPayload, SignedApiUpdate, SignedData, TemplateId } from './validation/schema';
 import { getState } from './state';
 import { unsafeEvaluate, unsafeEvaluateAsync } from './unexported-airnode-features/unsafe-evaluate';
 import { SignedApiNameUpdateDelayGroup } from './update-signed-api';

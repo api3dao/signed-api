@@ -3,7 +3,7 @@ import { logger } from './logging';
 import { getState } from './state';
 import { makeTemplateRequests, signTemplateResponses } from './make-request';
 import { sleep } from './utils';
-import { SignedApiUpdate } from './validation';
+import { SignedApiUpdate } from './validation/schema';
 import { NO_FETCH_EXIT_CODE } from './constants';
 
 export const initiateFetchingBeaconData = async () => {

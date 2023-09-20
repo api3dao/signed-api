@@ -2,7 +2,7 @@ import { setLogOptions, randomHexString } from '@api3/airnode-utilities';
 import { ethers, utils } from 'ethers';
 import Bottleneck from 'bottleneck';
 import { uniqBy } from 'lodash';
-import { Config, SignedData, TemplateId } from './validation';
+import { Config, SignedData, TemplateId } from './validation/schema';
 import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
 import { logger } from './logging';
 

@@ -3,7 +3,7 @@ import { logger } from './logging';
 import { getState } from './state';
 import { postSignedApiData } from './make-request';
 import { sleep } from './utils';
-import { BeaconId } from './validation';
+import { BeaconId } from './validation/schema';
 import { NO_SIGNED_API_UPDATE_EXIT_CODE, SIGNED_DATA_PUSH_POLLING_INTERVAL } from './constants';
 
 // <Signed API Provider, <Update Delay, List of Beacon ID>>

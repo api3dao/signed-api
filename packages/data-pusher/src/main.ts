@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { logger } from './logging';
-import { loadConfig } from './config';
+import { loadConfig } from './validation/config';
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
 import { initiateUpdatingSignedApi } from './update-signed-api';
 import { expireLimiterJobs, initializeState, updateState } from './state';
