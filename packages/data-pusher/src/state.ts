@@ -1,10 +1,10 @@
 import { setLogOptions, randomHexString } from '@api3/airnode-utilities';
-import { ethers, utils } from 'ethers';
 import Bottleneck from 'bottleneck';
 import { uniqBy } from 'lodash';
 import { Config, SignedData, TemplateId } from './validation/schema';
 import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
 import { logger } from './logging';
+import { deriveEndpointId, getRandomId } from './utils';
 
 export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 
@@ -16,20 +16,17 @@ export interface State {
   apiLimiters: Record<string, Bottleneck>;
 }
 
-// TODO: Freeze the state in development mode
 let state: State;
 
 export const initializeState = (config: Config) => {
+  // Set initial log options.
+  setLogOptions({
+    ...config.log,
+    meta: { 'Coordinator-ID': randomHexString(16) },
+  });
+
   state = getInitialState(config);
 };
-
-/**
- * Generates a random ID used when creating Bottleneck limiters.
- */
-export const getRandomId = () => utils.randomBytes(16).toString();
-
-const deriveEndpointId = (oisTitle: string, endpointName: string) =>
-  ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 
 export const buildApiLimiters = (config: Config) => {
   if (!config.ois) {
@@ -84,12 +81,6 @@ export const buildTemplateStorages = (config: Config) =>
   Object.fromEntries(Object.keys(config.templates).map((templateId) => [templateId, new DelayedSignedDataQueue()]));
 
 export const getInitialState = (config: Config) => {
-  // Set initial log options
-  setLogOptions({
-    ...config.log,
-    meta: { 'Coordinator-ID': randomHexString(16) },
-  });
-
   return {
     config,
     stopSignalReceived: false,
@@ -102,6 +93,7 @@ export const getInitialState = (config: Config) => {
 };
 
 type StateUpdater = (state: State) => State;
+// TODO: Consider removing this in favour of setState
 export const updateState = (updater: StateUpdater) => {
   setState(updater(state));
 };
