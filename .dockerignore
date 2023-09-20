@@ -15,3 +15,5 @@
 **/dist
 **/node_modules
 **/coverage
+**/pusher.json
+**/secrets.env
