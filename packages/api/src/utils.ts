@@ -1,4 +1,4 @@
-import { ApiResponse, BatchSignedData, SignedData } from './types';
+import { ApiResponse, BatchSignedData } from './types';
 import { COMMON_HEADERS } from './constants';
 
 export const isBatchUnique = (batchSignedData: BatchSignedData) =>
@@ -8,8 +8,7 @@ export const generateErrorResponse = (
   statusCode: number,
   message: string,
   detail?: string,
-  // TODO: This is a bit weird in the context of a generic error response
-  causing?: SignedData
+  extra?: unknown
 ): ApiResponse => {
-  return { statusCode, headers: COMMON_HEADERS, body: JSON.stringify({ message, detail, causing }) };
+  return { statusCode, headers: COMMON_HEADERS, body: JSON.stringify({ message, detail, extra }) };
 };
