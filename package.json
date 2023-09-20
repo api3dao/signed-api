@@ -6,6 +6,7 @@
     "pnpm": "^8.7.0"
   },
   "scripts": {
+    "clean": "pnpm recursive run clean",
     "eslint:check": "pnpm recursive run eslint:check",
     "eslint:fix": "pnpm recursive run eslint:fix",
     "prettier:check": "pnpm recursive run prettier:check",

@@ -7,6 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "clean": "rm -rf coverage dist",
     "dev": "pnpm ts-node src/index.ts",
     "docker:build": "docker compose --file docker/docker-compose.yml build",
     "docker:start": "docker compose --file docker/docker-compose.yml up",

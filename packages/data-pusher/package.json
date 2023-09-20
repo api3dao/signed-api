@@ -6,6 +6,7 @@
     "pnpm": "^8.7.0"
   },
   "scripts": {
+    "clean": "rm -rf coverage dist",
     "dev": "ts-node src/index.ts",
     "docker:build": "docker compose --file docker/docker-compose.yml build",
     "docker:start": "docker compose --file docker/docker-compose.yml up",
