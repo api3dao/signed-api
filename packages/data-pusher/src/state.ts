@@ -6,14 +6,6 @@ import { Config, SignedData, TemplateId } from './validation/schema';
 import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
 import { logger } from './logging';
 
-export type Id<T> = T & {
-  id: string;
-};
-
-export type Index<T> = T & {
-  index: number;
-};
-
 export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 
 export interface State {

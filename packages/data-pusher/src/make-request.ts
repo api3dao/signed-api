@@ -16,14 +16,6 @@ declare type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessRespo
 declare type TemplateResponses = TemplateResponse[];
 declare type SignedResponse = [TemplateId, SignedData];
 
-export const urlJoin = (baseUrl: string, endpointId: string) => {
-  if (baseUrl.endsWith('/')) {
-    return `${baseUrl}${endpointId}`;
-  } else {
-    return `${baseUrl}/${endpointId}`;
-  }
-};
-
 export const postProcessApiSpecifications = async (input: unknown, endpoint: validator.ois.Endpoint) => {
   const { postProcessingSpecifications } = endpoint;
 
