@@ -9,7 +9,7 @@ import { go, goSync } from '@api3/promise-utils';
 import { logger } from './logging';
 import { SignedApiPayload, SignedApiUpdate, SignedData, TemplateId } from './validation';
 import { getState } from './state';
-import { unsafeEvaluate, unsafeEvaluateAsync } from './unsafe-evaluate';
+import { unsafeEvaluate, unsafeEvaluateAsync } from './unexported-airnode-features/unsafe-evaluate';
 import { SignedApiNameUpdateDelayGroup } from './update-signed-api';
 
 declare type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
