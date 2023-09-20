@@ -1,4 +1,24 @@
-// TODO: Does this work?
+// Imports the source-map-support module and registers it to enable source map support in Node.js. This allows stack
+// traces to show information from the original code, rather than the compiled JavaScript.
+//
+// You can check how this works by following the demo from https://github.com/evanw/node-source-map-support#demos. Just
+// create a test script with/without the source map support, build the project and run the built script using node.
 import 'source-map-support/register';
-// TODO: Why not import this directly?
-export { main } from './main';
+
+import * as path from 'path';
+import { loadConfig } from './validation/config';
+import { initiateFetchingBeaconData } from './fetch-beacon-data';
+import { initiateUpdatingSignedApi } from './update-signed-api';
+import { initializeState } from './state';
+import { initializeWallet } from './wallets';
+
+export async function main() {
+  // TODO: How should the config be called?
+  const config = await loadConfig(path.join(__dirname, '..', 'config', 'pusher.json'), process.env);
+  initializeState(config);
+
+  initializeWallet();
+  await Promise.all([initiateFetchingBeaconData(), initiateUpdatingSignedApi()]);
+}
+
+main();
