@@ -2,9 +2,10 @@
 
 A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
 
-## Configuration
+## Local development
 
-Copy `.env` from the `example.env` file and optionally change the defaults.
+1. `cp .env.example .env` - To copy `.env` from the `example.env` file. Optionally change the defaults.
+2. `pnpm run dev` - To start the API server. The port number can be configured in the `.env` file.
 
 ## Deployment
 
