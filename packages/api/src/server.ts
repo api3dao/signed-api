@@ -12,6 +12,9 @@ export const startServer = () => {
   app.use(express.json());
 
   app.put('/', async (req, res) => {
+    // eslint-disable-next-line no-console
+    console.log('Received request "PUT /"', req.body, req.params, req.query);
+
     const result = await upsertData({
       body: JSON.stringify(req.body),
       queryParams: {},
@@ -20,6 +23,9 @@ export const startServer = () => {
   });
 
   app.post('/', async (req, res) => {
+    // eslint-disable-next-line no-console
+    console.log('Received request "POST /"', req.body, req.params, req.query);
+
     const result = await batchUpsertData({
       body: JSON.stringify(req.body),
       queryParams: {},
@@ -28,6 +34,9 @@ export const startServer = () => {
   });
 
   app.get('/:airnode', async (req, res) => {
+    // eslint-disable-next-line no-console
+    console.log('Received request "GET /:airnode"', req.body, req.params, req.query);
+
     const result = await getData({
       body: '',
       queryParams: { airnode: req.params.airnode },
@@ -36,6 +45,9 @@ export const startServer = () => {
   });
 
   app.get('/', async (_req, res) => {
+    // eslint-disable-next-line no-console
+    console.log('Received request "GET /"');
+
     const result = await listAirnodeAddresses({
       body: '',
       queryParams: {},

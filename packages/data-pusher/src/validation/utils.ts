@@ -25,6 +25,7 @@ export const interpolateSecrets = (config: unknown, secrets: Record<string, stri
   );
 
   if (!goInterpolated.success) {
+    // TODO: This should use error cause
     throw new Error(`Error interpolating secrets. Make sure the secrets format is correct. ${goInterpolated.error}`);
   }
 

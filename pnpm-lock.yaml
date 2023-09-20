@@ -114,6 +114,9 @@ importers:
       bottleneck:
         specifier: ^2.19.5
         version: 2.19.5
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       ethers:
         specifier: ^5.7.2
         version: 5.7.2

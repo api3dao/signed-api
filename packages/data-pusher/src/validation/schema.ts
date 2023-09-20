@@ -180,8 +180,10 @@ const validateTriggerReferences: SuperRefinement<{
     // Check only if beaconIds contains more than 1 beacon
     if (beaconIds.length > 1) {
       const operationPayloadPromises = beaconIds.map((beaconId) => {
+        // TODO: This can throw when there is no beacon - which is an unhandled error in this validation check.
         const template = templates[beacons[beaconId].templateId];
 
+        // TODO: This can throw when there is no template - which is an unhandled error in this validation check.
         const parameters = abi.decode(template.parameters);
         const endpoint = endpoints[template.endpointId];
 
