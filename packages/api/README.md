@@ -32,6 +32,7 @@ pnpm run dev
 The API is also dockerized. In order to run the API from a docker, run:
 
 ```bash
+# starts the API on port 4000
 pnpm run docker:start
 # or in a detached mode
 pnpm run docker:detach:start

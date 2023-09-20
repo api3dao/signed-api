@@ -26,4 +26,4 @@ RUN npm install -g pnpm
 # Only install dependencies for production (ignore "devDependencies" section in package.json).
 RUN pnpm install --prod
 
-CMD [ "node", "dist/src/local-server.js" ]
+CMD [ "node", "dist/src/index.js" ]
