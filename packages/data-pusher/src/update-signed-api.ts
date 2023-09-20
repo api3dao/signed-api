@@ -55,8 +55,9 @@ export const initiateUpdatingSignedApi = async () => {
 };
 
 export const updateSignedApiInLoop = async (signedApiNameUpdateDelayGroup: SignedApiNameUpdateDelayGroup) => {
-  while (!getState().stopSignalReceived) {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     await postSignedApiData(signedApiNameUpdateDelayGroup);
-    await sleep(SIGNED_DATA_PUSH_POLLING_INTERVAL); // regularly re-assess the stop interval
+    await sleep(SIGNED_DATA_PUSH_POLLING_INTERVAL);
   }
 };

@@ -1,16 +1,13 @@
 import { setLogOptions, randomHexString } from '@api3/airnode-utilities';
 import Bottleneck from 'bottleneck';
-import { uniqBy } from 'lodash';
 import { Config, SignedData, TemplateId } from './validation/schema';
 import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
-import { logger } from './logging';
 import { deriveEndpointId, getRandomId } from './utils';
 
 export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 
 export interface State {
   config: Config;
-  stopSignalReceived: boolean;
   templateValues: TemplateValueStorage;
   walletPrivateKey: string;
   apiLimiters: Record<string, Bottleneck>;
@@ -83,8 +80,8 @@ export const buildTemplateStorages = (config: Config) =>
 export const getInitialState = (config: Config) => {
   return {
     config,
-    stopSignalReceived: false,
     templateValues: buildTemplateStorages(config),
+    // TODO: Why is this prop here?
     providers: {},
     apiLimiters: buildApiLimiters(config),
     walletPrivateKey: '',
@@ -96,28 +93,6 @@ type StateUpdater = (state: State) => State;
 // TODO: Consider removing this in favour of setState
 export const updateState = (updater: StateUpdater) => {
   setState(updater(state));
-};
-
-export const expireLimiterJobs = async () => {
-  // Trying to stop already stopping limiters produces very nasty errors.
-  if (getState().stopSignalReceived) {
-    return;
-  }
-
-  logger.warn('Terminating all limiters...');
-
-  const limiterStopper = (limiter?: Bottleneck) => {
-    const stopOptions = { dropWaitingJobs: true };
-
-    return limiter?.stop(stopOptions);
-  };
-
-  const state = getState();
-
-  // Limiters should not be stopped multiple times - so we uniq them by their random IDs.
-  const apiLimiterPromises = uniqBy(Object.values(state.apiLimiters), (item) => item.id).map(limiterStopper);
-
-  await Promise.allSettled([...apiLimiterPromises]);
 };
 
 export const setState = (newState: State) => {
