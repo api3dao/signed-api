@@ -140,9 +140,9 @@ export const callApi = async (payload: node.ApiCallPayload) => {
 };
 
 export const signWithTemplateId = (templateId: string, timestamp: string, data: string) => {
-  const { airseekerWalletPrivateKey } = getState();
+  const { walletPrivateKey } = getState();
 
-  return new ethers.Wallet(airseekerWalletPrivateKey).signMessage(
+  return new ethers.Wallet(walletPrivateKey).signMessage(
     ethers.utils.arrayify(
       ethers.utils.keccak256(
         ethers.utils.solidityPack(['bytes32', 'uint256', 'bytes'], [templateId, timestamp, data || '0x'])

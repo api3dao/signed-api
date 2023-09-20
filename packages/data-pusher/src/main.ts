@@ -4,18 +4,19 @@ import { loadConfig } from './config';
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
 import { initiateUpdatingSignedApi } from './update-signed-api';
 import { expireLimiterJobs, initializeState, updateState } from './state';
-import { initializeAirseekerWallet } from './wallets';
+import { initializeWallet } from './wallets';
 
 export const handleStopSignal = (signal: string) => {
   logger.info(`Signal ${signal} received`);
-  logger.info('Stopping Airseeker gracefully...');
+  logger.info('Stopping gracefully...');
 
   expireLimiterJobs();
   updateState((state) => ({ ...state, stopSignalReceived: true }));
 };
 
 export async function main() {
-  const config = await loadConfig(path.join(__dirname, '..', 'config', 'airseeker.json'), process.env);
+  // TODO: How should the config be called?
+  const config = await loadConfig(path.join(__dirname, '..', 'config', 'pusher.json'), process.env);
   initializeState(config);
 
   // TODO Remove
@@ -24,9 +25,9 @@ export async function main() {
   process.on('SIGTERM', handleStopSignal);
 
   process.on('exit', () => {
-    logger.info('Airseeker has quit.');
+    logger.info('Pusher has quit.');
   });
 
-  initializeAirseekerWallet();
+  initializeWallet();
   await Promise.all([initiateFetchingBeaconData(), initiateUpdatingSignedApi()]);
 }

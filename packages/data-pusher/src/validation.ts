@@ -274,7 +274,7 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
 export const configSchema = z
   .object({
-    airseekerWalletMnemonic: z.string(),
+    walletMnemonic: z.string(),
     log: logSchema,
     beacons: beaconsSchema,
     beaconSets: z.any(),

@@ -20,7 +20,7 @@ export interface State {
   config: Config;
   stopSignalReceived: boolean;
   templateValues: TemplateValueStorage;
-  airseekerWalletPrivateKey: string;
+  walletPrivateKey: string;
   apiLimiters: Record<string, Bottleneck>;
 }
 
@@ -104,7 +104,7 @@ export const getInitialState = (config: Config) => {
     templateValues: buildTemplateStorages(config),
     providers: {},
     apiLimiters: buildApiLimiters(config),
-    airseekerWalletPrivateKey: '',
+    walletPrivateKey: '',
     sponsorWalletsPrivateKey: {},
   };
 };

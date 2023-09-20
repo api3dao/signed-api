@@ -1,11 +1,10 @@
 import { ethers } from 'ethers';
 import { getState, updateState } from './state';
 
-export const initializeAirseekerWallet = () => {
+export const initializeWallet = () => {
   const { config } = getState();
 
-  // Derive airseeker wallet
-  const airseekerWalletPrivateKey = ethers.Wallet.fromMnemonic(config.airseekerWalletMnemonic).privateKey;
+  const walletPrivateKey = ethers.Wallet.fromMnemonic(config.walletMnemonic).privateKey;
 
-  updateState((state) => ({ ...state, airseekerWalletPrivateKey }));
+  updateState((state) => ({ ...state, walletPrivateKey }));
 };

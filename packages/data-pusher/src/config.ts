@@ -1,3 +1,5 @@
+// TODO: This logic should be implemented from Airnode.
+
 import fs from 'fs';
 import { z } from 'zod';
 import template from 'lodash/template';
@@ -10,7 +12,7 @@ export const loadConfig = async (configPath: string, secrets: Record<string, str
   const rawConfig = readConfig(configPath);
   const parsedConfigRes = await parseConfigWithSecrets(rawConfig, secrets);
   if (!parsedConfigRes.success) {
-    throw new Error(`Invalid Airseeker configuration file: ${parsedConfigRes.error}`);
+    throw new Error(`Invalid configuration file: ${parsedConfigRes.error}`);
   }
 
   const config = parsedConfigRes.data;
