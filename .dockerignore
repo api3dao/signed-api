@@ -9,7 +9,6 @@
 **/.env
 **/.idea
 **/.log
-**/.serverless
 **/.tsbuildinfo
 **/.vscode
 **/build

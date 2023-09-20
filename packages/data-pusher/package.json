@@ -9,7 +9,6 @@
     "build": "pnpm run clean && pnpm run compile && pnpm run build:ncc",
     "clean": "rimraf -rf ./ncc ./build ./dist *.tgz",
     "compile": "tsc --build tsconfig.json",
-    "build:ncc": "ncc build -m -o ncc -s --target es2023 src/serverless.ts",
     "dev:api": "ts-node test/server/server.ts",
     "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
     "eslint:fix": "eslint . --ext .js,.ts --fix",
@@ -40,8 +39,6 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "@types/lodash": "^4.14.186",
-    "@types/serverless": "^3.12.8",
-    "@vercel/ncc": "^0.36.1",
-    "serverless": "^3.23.0"
+    "@vercel/ncc": "^0.36.1"
   }
 }
