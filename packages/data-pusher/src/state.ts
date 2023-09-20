@@ -81,18 +81,10 @@ export const getInitialState = (config: Config) => {
   return {
     config,
     templateValues: buildTemplateStorages(config),
-    // TODO: Why is this prop here?
-    providers: {},
     apiLimiters: buildApiLimiters(config),
     walletPrivateKey: '',
     sponsorWalletsPrivateKey: {},
   };
-};
-
-type StateUpdater = (state: State) => State;
-// TODO: Consider removing this in favour of setState
-export const updateState = (updater: StateUpdater) => {
-  setState(updater(state));
 };
 
 export const setState = (newState: State) => {

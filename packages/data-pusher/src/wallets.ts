@@ -1,10 +1,10 @@
 import { ethers } from 'ethers';
-import { getState, updateState } from './state';
+import { getState, setState } from './state';
 
 export const initializeWallet = () => {
-  const { config } = getState();
+  const state = getState();
 
-  const walletPrivateKey = ethers.Wallet.fromMnemonic(config.walletMnemonic).privateKey;
+  const walletPrivateKey = ethers.Wallet.fromMnemonic(state.config.walletMnemonic).privateKey;
 
-  updateState((state) => ({ ...state, walletPrivateKey }));
+  setState({ ...state, walletPrivateKey });
 };

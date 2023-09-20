@@ -6,7 +6,7 @@ import { sleep } from './utils';
 import { SignedApiUpdate } from './validation/schema';
 import { NO_FETCH_EXIT_CODE } from './constants';
 
-export const initiateFetchingBeaconData = async () => {
+export const initiateFetchingBeaconData = () => {
   logger.debug('Initiating fetching all beacon data');
   const { config } = getState();
 
@@ -20,7 +20,7 @@ export const initiateFetchingBeaconData = async () => {
   return signedApiUpdates.map(fetchBeaconDataInLoop);
 };
 
-export const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
+const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
   const { templateValues } = getState();
 
   // eslint-disable-next-line no-constant-condition

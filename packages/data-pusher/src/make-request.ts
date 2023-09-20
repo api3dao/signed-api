@@ -12,10 +12,9 @@ import { getState } from './state';
 import { unsafeEvaluate, unsafeEvaluateAsync } from './unexported-airnode-features/unsafe-evaluate';
 import { SignedApiNameUpdateDelayGroup } from './update-signed-api';
 
-// TODO: Remove declare
-declare type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
-declare type TemplateResponses = TemplateResponse[];
-declare type SignedResponse = [TemplateId, SignedData];
+type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
+type TemplateResponses = TemplateResponse[];
+type SignedResponse = [TemplateId, SignedData];
 
 export const postProcessApiSpecifications = async (input: unknown, endpoint: validator.ois.Endpoint) => {
   const { postProcessingSpecifications } = endpoint;
