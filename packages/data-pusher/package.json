@@ -17,7 +17,7 @@
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
     "test": "jest",
-    "tsc": "tsc --project ."
+    "build": "tsc --project ."
   },
   "license": "MIT",
   "dependencies": {

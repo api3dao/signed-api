@@ -17,7 +17,7 @@
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
     "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
     "eslint:fix": "eslint . --ext .js,.ts --fix",
-    "tsc": "tsc --project .",
+    "build": "tsc --project .",
     "test": "jest --passWithNoTests"
   },
   "license": "MIT",
