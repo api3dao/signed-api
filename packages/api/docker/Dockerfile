@@ -23,7 +23,7 @@ COPY --from=builder /usr/src/app/packages/api/package.json .
 # guarantees consistency by utilizing identical sets of dependencies.
 COPY pnpm-lock.yaml .
 RUN npm install -g pnpm
-# Only install dependencies for production (ignore "devDependecies" section in package.json).
+# Only install dependencies for production (ignore "devDependencies" section in package.json).
 RUN pnpm install --prod
 
 CMD [ "node", "dist/src/local-server.js" ]
