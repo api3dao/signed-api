@@ -1,5 +1,5 @@
 {
-  "airseekerWalletMnemonic": "${AIRSEEKER_WALLET_MNEMONIC}",
+  "walletMnemonic": "${WALLET_MNEMONIC}",
   "log": { "format": "plain", "level": "INFO" },
   "rateLimiting": { "maxDirectGatewayConcurrency": 25, "minDirectGatewayTime": 10 },
   "beacons": {

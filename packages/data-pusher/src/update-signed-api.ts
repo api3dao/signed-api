@@ -3,7 +3,7 @@ import { logger } from './logging';
 import { getState } from './state';
 import { postSignedApiData } from './make-request';
 import { sleep } from './utils';
-import { BeaconId } from './validation';
+import { BeaconId } from './validation/schema';
 import { NO_SIGNED_API_UPDATE_EXIT_CODE, SIGNED_DATA_PUSH_POLLING_INTERVAL } from './constants';
 
 // <Signed API Provider, <Update Delay, List of Beacon ID>>
@@ -55,8 +55,9 @@ export const initiateUpdatingSignedApi = async () => {
 };
 
 export const updateSignedApiInLoop = async (signedApiNameUpdateDelayGroup: SignedApiNameUpdateDelayGroup) => {
-  while (!getState().stopSignalReceived) {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     await postSignedApiData(signedApiNameUpdateDelayGroup);
-    await sleep(SIGNED_DATA_PUSH_POLLING_INTERVAL); // regularly re-assess the stop interval
+    await sleep(SIGNED_DATA_PUSH_POLLING_INTERVAL);
   }
 };

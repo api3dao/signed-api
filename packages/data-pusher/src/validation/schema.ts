@@ -5,7 +5,7 @@ import { oisSchema, OIS, Endpoint as oisEndpoint } from '@api3/ois';
 import { config } from '@api3/airnode-validator';
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
-import { preProcessApiSpecifications } from './make-request';
+import { preProcessApiSpecifications } from '../make-request';
 
 export const logSchema = z.object({
   format: config.logFormatSchema,
@@ -274,7 +274,7 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
 export const configSchema = z
   .object({
-    airseekerWalletMnemonic: z.string(),
+    walletMnemonic: z.string(),
     log: logSchema,
     beacons: beaconsSchema,
     beaconSets: z.any(),
@@ -337,3 +337,5 @@ export type FetchMethod = z.infer<typeof fetchMethodSchema>;
 export type LimiterConfig = z.infer<typeof limiterConfig>;
 export type RateLimitingConfig = z.infer<typeof rateLimitingSchema>;
 export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
+
+export const secretsSchema = z.record(z.string());

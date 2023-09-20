@@ -9,10 +9,11 @@
 **/.env
 **/.idea
 **/.log
-**/.serverless
 **/.tsbuildinfo
 **/.vscode
 **/build
 **/dist
 **/node_modules
 **/coverage
+**/pusher.json
+**/secrets.env

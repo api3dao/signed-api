@@ -4,27 +4,19 @@ import { ethers } from 'ethers';
 import * as adapter from '@api3/airnode-adapter';
 import * as node from '@api3/airnode-node';
 import * as abi from '@api3/airnode-abi';
-import * as validator from '@api3/airnode-validator';
 import { go, goSync } from '@api3/promise-utils';
+import { Endpoint, ProcessingSpecification } from '@api3/ois';
 import { logger } from './logging';
-import { SignedApiPayload, SignedApiUpdate, SignedData, TemplateId } from './validation';
+import { SignedApiPayload, SignedApiUpdate, SignedData, TemplateId } from './validation/schema';
 import { getState } from './state';
-import { unsafeEvaluate, unsafeEvaluateAsync } from './unsafe-evaluate';
+import { unsafeEvaluate, unsafeEvaluateAsync } from './unexported-airnode-features/unsafe-evaluate';
 import { SignedApiNameUpdateDelayGroup } from './update-signed-api';
 
-declare type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
-declare type TemplateResponses = TemplateResponse[];
-declare type SignedResponse = [TemplateId, SignedData];
+type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
+type TemplateResponses = TemplateResponse[];
+type SignedResponse = [TemplateId, SignedData];
 
-export const urlJoin = (baseUrl: string, endpointId: string) => {
-  if (baseUrl.endsWith('/')) {
-    return `${baseUrl}${endpointId}`;
-  } else {
-    return `${baseUrl}/${endpointId}`;
-  }
-};
-
-export const postProcessApiSpecifications = async (input: unknown, endpoint: validator.ois.Endpoint) => {
+export const postProcessApiSpecifications = async (input: unknown, endpoint: Endpoint) => {
   const { postProcessingSpecifications } = endpoint;
 
   if (!postProcessingSpecifications || postProcessingSpecifications?.length === 0) {
@@ -33,7 +25,7 @@ export const postProcessApiSpecifications = async (input: unknown, endpoint: val
 
   const goResult = await go(
     () =>
-      postProcessingSpecifications.reduce(async (input: any, currentValue: validator.ois.ProcessingSpecification) => {
+      postProcessingSpecifications.reduce(async (input: any, currentValue: ProcessingSpecification) => {
         switch (currentValue.environment) {
           case 'Node':
             return unsafeEvaluate(await input, currentValue.value, currentValue.timeoutMs);
@@ -102,19 +94,16 @@ export const preProcessApiSpecifications = async (payload: node.ApiCallPayload):
 
   const goProcessedParameters = await go(
     () =>
-      preProcessingSpecifications.reduce(
-        async (input: Promise<unknown>, currentValue: validator.ois.ProcessingSpecification) => {
-          switch (currentValue.environment) {
-            case 'Node':
-              return unsafeEvaluate(await input, currentValue.value, currentValue.timeoutMs);
-            case 'Node async':
-              return unsafeEvaluateAsync(await input, currentValue.value, currentValue.timeoutMs);
-            default:
-              throw new Error(`Environment ${currentValue.environment} is not supported`);
-          }
-        },
-        Promise.resolve(aggregatedApiCall.parameters)
-      ),
+      preProcessingSpecifications.reduce(async (input: Promise<unknown>, currentValue: ProcessingSpecification) => {
+        switch (currentValue.environment) {
+          case 'Node':
+            return unsafeEvaluate(await input, currentValue.value, currentValue.timeoutMs);
+          case 'Node async':
+            return unsafeEvaluateAsync(await input, currentValue.value, currentValue.timeoutMs);
+          default:
+            throw new Error(`Environment ${currentValue.environment} is not supported`);
+        }
+      }, Promise.resolve(aggregatedApiCall.parameters)),
     { retries: 0, totalTimeoutMs: node.PROCESSING_TIMEOUT }
   );
 
@@ -140,9 +129,9 @@ export const callApi = async (payload: node.ApiCallPayload) => {
 };
 
 export const signWithTemplateId = (templateId: string, timestamp: string, data: string) => {
-  const { airseekerWalletPrivateKey } = getState();
+  const { walletPrivateKey } = getState();
 
-  return new ethers.Wallet(airseekerWalletPrivateKey).signMessage(
+  return new ethers.Wallet(walletPrivateKey).signMessage(
     ethers.utils.arrayify(
       ethers.utils.keccak256(
         ethers.utils.solidityPack(['bytes32', 'uint256', 'bytes'], [templateId, timestamp, data || '0x'])
