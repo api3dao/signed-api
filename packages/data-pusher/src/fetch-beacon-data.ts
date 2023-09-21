@@ -1,10 +1,11 @@
 import { isEmpty } from 'lodash';
 import { logger } from './logging';
 import { getState } from './state';
-import { makeTemplateRequests, signTemplateResponses } from './make-request';
 import { sleep } from './utils';
 import { SignedApiUpdate } from './validation/schema';
 import { NO_FETCH_EXIT_CODE } from './constants';
+import { makeTemplateRequests } from './api-requests/data-provider';
+import { signTemplateResponses } from './api-requests/signed-api';
 
 export const initiateFetchingBeaconData = () => {
   logger.debug('Initiating fetching all beacon data');

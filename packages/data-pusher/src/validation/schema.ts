@@ -5,7 +5,7 @@ import { oisSchema, OIS, Endpoint as oisEndpoint } from '@api3/ois';
 import { config } from '@api3/airnode-validator';
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
-import { preProcessApiSpecifications } from '../make-request';
+import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
 export const logSchema = z.object({
   format: config.logFormatSchema,
