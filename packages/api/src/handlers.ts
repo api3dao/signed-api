@@ -154,14 +154,14 @@ export const batchUpsertData = async (request: ApiRequest): Promise<ApiResponse>
 };
 
 export const getData = async (request: ApiRequest): Promise<ApiResponse> => {
-  if (isNil(request.queryParams.airnode))
-    return generateErrorResponse(400, 'Invalid request, path parameter airnode address is missing');
+  const airnode = request.queryParams.airnode;
+  if (isNil(airnode)) return generateErrorResponse(400, 'Invalid request, path parameter airnode address is missing');
 
-  const goValidateSchema = await go(() => evmAddressSchema.parseAsync(request.queryParams.airnode));
+  const goValidateSchema = await go(() => evmAddressSchema.parseAsync(airnode));
   if (!goValidateSchema.success)
     return generateErrorResponse(400, 'Invalid request, path parameter must be an EVM address');
 
-  const goReadDb = await go(() => getAllBy(request.queryParams.airnode));
+  const goReadDb = await go(() => getAllBy(airnode));
   if (!goReadDb.success)
     return generateErrorResponse(500, 'Unable to get signed data from database', goReadDb.error.message);
 

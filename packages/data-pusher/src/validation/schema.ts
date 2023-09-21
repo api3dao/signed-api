@@ -151,7 +151,7 @@ const validateOisReferences: SuperRefinement<{ ois: OIS[]; endpoints: Endpoints 
       return;
     }
     // Take first OIS fits the filter rule, then check specific endpoint existence
-    const ois = oises[0];
+    const ois = oises[0]!;
     const endpoints = ois.endpoints.filter(({ name }: oisEndpoint) => name === endpointName);
 
     if (endpoints.length === 0) {
@@ -180,12 +180,35 @@ const validateTriggerReferences: SuperRefinement<{
     // Check only if beaconIds contains more than 1 beacon
     if (beaconIds.length > 1) {
       const operationPayloadPromises = beaconIds.map((beaconId) => {
-        // TODO: This can throw when there is no beacon - which is an unhandled error in this validation check.
-        const template = templates[beacons[beaconId].templateId];
+        const beacon = beacons[beaconId];
+        if (!beacon) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unable to find beacon with ID: ${beaconId}`,
+            path: ['beacons'],
+          });
+          return;
+        }
+        const template = templates[beacon.templateId];
+        if (!template) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unable to find template with ID: ${beacon.templateId}`,
+            path: ['templates'],
+          });
+          return;
+        }
 
-        // TODO: This can throw when there is no template - which is an unhandled error in this validation check.
         const parameters = abi.decode(template.parameters);
         const endpoint = endpoints[template.endpointId];
+        if (!endpoint) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unable to find endpoint with ID: ${template.endpointId}`,
+            path: ['endpoints'],
+          });
+          return;
+        }
 
         const aggregatedApiCall = {
           parameters,
@@ -245,10 +268,10 @@ export const rateLimitingSchema = z.object({
     .optional(),
 });
 
-const validateOisRateLimiterReferences: SuperRefinement<{ ois: OIS[]; rateLimiting?: RateLimitingConfig }> = (
-  config,
-  ctx
-) => {
+const validateOisRateLimiterReferences: SuperRefinement<{
+  ois: OIS[];
+  rateLimiting?: RateLimitingConfig | undefined;
+}> = (config, ctx) => {
   const directGateways = config.rateLimiting?.overrides?.directGateways ?? {};
   const oises = config?.ois ?? [];
 

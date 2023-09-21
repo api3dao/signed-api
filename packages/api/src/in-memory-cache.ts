@@ -5,7 +5,7 @@ const signedDataCache: Record<string /* Airnode ID */, Record<string /* Template
 // The API is deliberately asynchronous to mimic a database call.
 export const getBy = async (airnodeId: string, templateId: string) => {
   if (!signedDataCache[airnodeId]) return null;
-  return signedDataCache[airnodeId][templateId] ?? null;
+  return signedDataCache[airnodeId]![templateId] ?? null;
 };
 
 // The API is deliberately asynchronous to mimic a database call.
@@ -19,7 +19,7 @@ export const getAll = async () => signedDataCache;
 // The API is deliberately asynchronous to mimic a database call.
 export const put = async (signedData: SignedData) => {
   signedDataCache[signedData.airnode] = signedDataCache[signedData.airnode] ?? {};
-  signedDataCache[signedData.airnode][signedData.templateId] = signedData;
+  signedDataCache[signedData.airnode]![signedData.templateId] = signedData;
 };
 
 // The API is deliberately asynchronous to mimic a database call.

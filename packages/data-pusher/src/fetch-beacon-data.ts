@@ -28,7 +28,7 @@ const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
     const startTimestamp = Date.now();
     const templateResponses = await makeTemplateRequests(signedApiUpdate);
     const signedResponses = await signTemplateResponses(templateResponses);
-    signedResponses.forEach(([templateId, signedResponse]) => templateValues[templateId].put(signedResponse));
+    signedResponses.forEach(([templateId, signedResponse]) => templateValues[templateId]!.put(signedResponse));
     const duration = Date.now() - startTimestamp;
 
     await sleep(signedApiUpdate.fetchInterval * 1_000 - duration);

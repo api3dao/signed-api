@@ -149,11 +149,11 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
 
   // Because each beacon have same operation, just take first one as operational template
   // See the function validateTriggerReferences in validation.ts
-  const operationTemplateId = beacons[beaconIds[0]].templateId;
-  const operationTemplate = templates[operationTemplateId];
+  const operationTemplateId = beacons[beaconIds[0]!]!.templateId;
+  const operationTemplate = templates[operationTemplateId]!;
 
   const parameters = abi.decode(operationTemplate.parameters);
-  const endpoint = endpoints[operationTemplate.endpointId];
+  const endpoint = endpoints[operationTemplate.endpointId]!;
 
   const aggregatedApiCall: node.BaseAggregatedApiCall = {
     parameters,
@@ -168,7 +168,9 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     aggregatedApiCall,
   };
 
-  const [_, apiCallResponse] = await limiter.schedule({ expiration: 90_000 }, () => callApi(operationPayload));
+  const [_, apiCallResponse] = await (limiter
+    ? limiter.schedule({ expiration: 90_000 }, () => callApi(operationPayload))
+    : callApi(operationPayload));
 
   if (node.api.isPerformApiCallFailure(apiCallResponse)) {
     const message = `Failed to make API call for the endpoint [${endpoint.oisTitle}] ${endpoint.endpointName}.`;
@@ -176,12 +178,12 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     return [];
   }
 
-  const templateIds = beaconIds.map((beaconId) => beacons[beaconId].templateId);
+  const templateIds = beaconIds.map((beaconId) => beacons[beaconId]!.templateId);
 
   const templateResponsePromises = templateIds.map(async (templateId) => {
-    const template = templates[templateId];
+    const template = templates[templateId]!;
     const parameters = abi.decode(template.parameters);
-    const endpoint = endpoints[template.endpointId];
+    const endpoint = endpoints[template.endpointId]!;
 
     const aggregatedApiCall: node.BaseAggregatedApiCall = {
       parameters,
@@ -255,8 +257,8 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   const provider = signedApis.find((a) => a.name === providerName)!;
 
   const batchPayloadOrNull = beaconIds.map((beaconId): SignedApiPayload | null => {
-    const { templateId, airnode } = beacons[beaconId];
-    const delayedSignedData = templateValues[templateId].get(updateDelay);
+    const { templateId, airnode } = beacons[beaconId]!;
+    const delayedSignedData = templateValues[templateId]!.get(updateDelay);
     if (isNil(delayedSignedData)) return null;
     return { airnode, templateId, beaconId, ...delayedSignedData };
   });

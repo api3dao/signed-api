@@ -10,7 +10,7 @@ export interface State {
   config: Config;
   templateValues: TemplateValueStorage;
   walletPrivateKey: string;
-  apiLimiters: Record<string, Bottleneck>;
+  apiLimiters: Record<string, Bottleneck | undefined>;
 }
 
 let state: State;
@@ -35,7 +35,7 @@ export const buildApiLimiters = (config: Config) => {
       const directGatewayOverrides = config?.rateLimiting?.overrides?.directGateways;
 
       if (directGatewayOverrides && directGatewayOverrides[ois.title]) {
-        const { minTime, maxConcurrent } = directGatewayOverrides[ois.title];
+        const { minTime, maxConcurrent } = directGatewayOverrides[ois.title]!;
 
         return [
           ois.title,
@@ -66,7 +66,7 @@ export const buildApiLimiters = (config: Config) => {
   // Make use of the reference/pointer nature of objects
   const apiLimiters = Object.fromEntries(
     Object.entries(config.templates).map(([templateId, template]) => {
-      const title = endpointTitles[template.endpointId];
+      const title = endpointTitles[template.endpointId]!;
       return [templateId, oisLimiters[title]];
     })
   );

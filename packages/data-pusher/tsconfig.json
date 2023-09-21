@@ -12,11 +12,9 @@
     "skipLibCheck": true,
     "composite": true,
     "noFallthroughCasesInSwitch": true,
-
-    // Disabled because they are too restrictive
-    "exactOptionalPropertyTypes": false,
-    "noUncheckedIndexedAccess": false,
-    "noImplicitReturns": false,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitReturns": true,
 
     // Disabled because they are covered by Eslint rules
     "noUnusedLocals": false,
