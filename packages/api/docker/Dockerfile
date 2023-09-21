@@ -9,7 +9,7 @@ RUN npm install -g pnpm
 # Installs all dependencies only for the api package.
 RUN pnpm install --recursive --filter api
 # Builds the api package.
-RUN pnpm run --filter api tsc
+RUN pnpm run --filter api build
 
 # Step 2: Run the built application.
 FROM node:18-alpine

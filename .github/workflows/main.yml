@@ -37,7 +37,7 @@ jobs:
       - name: Lint
         run: pnpm run prettier:check && pnpm run eslint:check
       - name: Build
-        run: pnpm run tsc
+        run: pnpm run build
       - name: Test
         run: pnpm run test
 

@@ -9,7 +9,7 @@ RUN npm install -g pnpm
 # Installs all dependencies only for the data-pusher package.
 RUN pnpm install --recursive --filter data-pusher
 # Builds the data-pusher package.
-RUN pnpm run --filter data-pusher tsc
+RUN pnpm run --filter data-pusher build
 
 # Step 2: Run the built application.
 FROM node:18-alpine
