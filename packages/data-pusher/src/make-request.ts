@@ -285,5 +285,5 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     );
     return;
   }
-  logger.info(`Signed datas (${goRes.data.count.toString()}) were pushed to pool.`, logOptions);
+  logger.info(`Pushed ${goRes.data.count.toString()} signed data updates to the pool.`, logOptions);
 };
