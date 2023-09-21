@@ -1,6 +1,6 @@
 import { SignedData } from './types';
 
-const signedDataCache: Record<string /* Airnode ID */, Record<string /* Template ID */, SignedData>> = {};
+const signedDataCache: Record<string /* Airnode ID */, Record<string /* Template ID */, SignedData[]>> = {};
 
 // The API is deliberately asynchronous to mimic a database call.
 export const getBy = async (airnodeId: string, templateId: string) => {
@@ -18,8 +18,10 @@ export const getAll = async () => signedDataCache;
 
 // The API is deliberately asynchronous to mimic a database call.
 export const put = async (signedData: SignedData) => {
-  signedDataCache[signedData.airnode] = signedDataCache[signedData.airnode] ?? {};
-  signedDataCache[signedData.airnode]![signedData.templateId] = signedData;
+  const { airnode, templateId } = signedData;
+  signedDataCache[airnode] ??= {};
+  signedDataCache[airnode]![templateId] ??= [];
+  signedDataCache[airnode]![templateId]!.push(signedData);
 };
 
 // The API is deliberately asynchronous to mimic a database call.

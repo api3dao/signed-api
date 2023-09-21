@@ -1,67 +1,10 @@
-import { isEmpty, isNil, omit, size } from 'lodash';
+import { isEmpty, isNil, last, omit, size } from 'lodash';
 import { go, goSync } from '@api3/promise-utils';
-import {
-  ApiRequest,
-  ApiResponse,
-  PromiseError,
-  batchSignedDataSchema,
-  evmAddressSchema,
-  signedDataSchema,
-} from './types';
+import { ApiRequest, ApiResponse, PromiseError, batchSignedDataSchema, evmAddressSchema } from './types';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
 import { generateErrorResponse, isBatchUnique } from './utils';
 import { CACHE_HEADERS, COMMON_HEADERS, MAX_BATCH_SIZE } from './constants';
-import { getAll, getAllBy, getBy, put, putAll } from './in-memory-cache';
-
-export const upsertData = async (request: ApiRequest): Promise<ApiResponse> => {
-  if (isNil(request.body)) return generateErrorResponse(400, 'Invalid request, http body is missing');
-
-  const goJsonParseBody = goSync(() => JSON.parse(request.body));
-  if (!goJsonParseBody.success) return generateErrorResponse(400, 'Invalid request, body must be in JSON');
-
-  const goValidateSchema = await go(() => signedDataSchema.parseAsync(goJsonParseBody.data));
-  if (!goValidateSchema.success)
-    return generateErrorResponse(
-      400,
-      'Invalid request, body must fit schema for signed data',
-      goValidateSchema.error.message
-    );
-
-  const signedData = goValidateSchema.data;
-
-  const goRecoverSigner = goSync(() => recoverSignerAddress(signedData));
-  if (!goRecoverSigner.success)
-    return generateErrorResponse(400, 'Unable to recover signer address', goRecoverSigner.error.message);
-
-  if (signedData.airnode !== goRecoverSigner.data) return generateErrorResponse(400, 'Signature is invalid');
-
-  const goDeriveBeaconId = goSync(() => deriveBeaconId(signedData.airnode, signedData.templateId));
-  if (!goDeriveBeaconId.success)
-    return generateErrorResponse(
-      400,
-      'Unable to derive beaconId by given airnode and templateId',
-      goDeriveBeaconId.error.message
-    );
-
-  if (signedData.beaconId !== goDeriveBeaconId.data) return generateErrorResponse(400, 'beaconId is invalid');
-
-  const goReadDb = await go(() => getBy(signedData.airnode, signedData.templateId));
-  if (!goReadDb.success)
-    return generateErrorResponse(
-      500,
-      'Unable to get signed data from database to validate timestamp',
-      goReadDb.error.message
-    );
-
-  if (!isNil(goReadDb.data) && parseInt(signedData.timestamp) <= parseInt(goReadDb.data.timestamp))
-    return generateErrorResponse(400, "Request isn't updating the timestamp");
-
-  const goWriteDb = await go(() => put(signedData));
-  if (!goWriteDb.success)
-    return generateErrorResponse(500, 'Unable to send signed data to database', goWriteDb.error.message);
-
-  return { statusCode: 201, headers: COMMON_HEADERS, body: JSON.stringify({ count: 1 }) };
-};
+import { getAll, getAllBy, getBy, putAll } from './in-memory-cache';
 
 export const batchUpsertData = async (request: ApiRequest): Promise<ApiResponse> => {
   if (isNil(request.body)) return generateErrorResponse(400, 'Invalid request, http body is missing');
@@ -137,8 +80,10 @@ export const batchUpsertData = async (request: ApiRequest): Promise<ApiResponse>
           signedData
         )
       );
+    if (isNil(goReadDb.data)) return;
 
-    if (!isNil(goReadDb.data) && parseInt(signedData.timestamp) <= parseInt(goReadDb.data.timestamp))
+    const lastDbSignedData = goReadDb.data[goReadDb.data.length - 1]!;
+    if (parseInt(signedData.timestamp) <= parseInt(lastDbSignedData.timestamp))
       return Promise.reject(generateErrorResponse(400, "Request isn't updating the timestamp", undefined, signedData));
   });
 
@@ -166,7 +111,10 @@ export const getData = async (request: ApiRequest): Promise<ApiResponse> => {
     return generateErrorResponse(500, 'Unable to get signed data from database', goReadDb.error.message);
 
   // Transform array of signed data to be in form {[beaconId]: SignedData}
-  const data = goReadDb.data.reduce((acc, Item) => ({ ...acc, [Item.beaconId]: omit(Item, 'beaconId') }), {});
+  const data = goReadDb.data.reduce((acc, signedDataArray) => {
+    const signedData = last(signedDataArray)!; // Guaranteed to exist because we never remove data. TODO: This might not be true after we do removals.
+    return { ...acc, [signedData.beaconId]: omit(signedData, 'beaconId') };
+  }, {});
 
   return {
     statusCode: 200,

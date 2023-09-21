@@ -15,7 +15,6 @@ TODO: Write example how to deploy on AWS (and maybe other cloud providers as wel
 
 The API provides the following endpoints:
 
-- `PUT /`: Upsert single signed data.
 - `POST /`: Upsert batch of signed data.
 - `GET /{airnode}`: Retrieve signed data for the airnode.
 - `GET /`: Retrieve list of all available airnode address.
@@ -46,18 +45,6 @@ PORT=5123 pnpm run docker:start
 Here are some examples of how to use the API with `curl`. Note, the port may differ based on the `.env` value.
 
 ```bash
-# Upsert signed data (HTTP PUT)
-curl --location --request PUT 'http://localhost:8090' \
---header 'Content-Type: application/json' \
---data '{
-    "airnode": "0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4",
-    "beaconId": "0x70601427c8ff03560563917eed9837651ad9d6eb3414e46e8f96302c6f0aefcd",
-    "templateId": "0x8f255387c5fdb03117d82372b8fa5c7813881fd9a8202b7cc373f1a5868496b2",
-    "timestamp": "1694644051",
-    "encodedValue": "0x000000000000000000000000000000000000000000000002eb268c108b0b1da0",
-    "signature": "0x8e540abb31f6ef161153c508b9cc3909dcc3cf6596deff88ed4f9f2226fa28c61b8c23078373f64a7125035d1f70fd3befa6dfc48a31e7e15cc23133331ed9221b"
-  }'
-
 # Upsert batch of signed data (HTTP POST)
 curl --location 'http://localhost:8090' \
 --header 'Content-Type: application/json' \
