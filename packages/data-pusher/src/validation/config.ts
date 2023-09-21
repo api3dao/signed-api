@@ -10,6 +10,6 @@ export const loadConfig = async (configPath: string, rawSecrets: Record<string, 
     return configSchema.parseAsync(interpolateSecrets(rawConfig, secrets));
   });
 
-  if (!goLoadConfig.success) throw new Error(`Unable to load configuration. Reason:\n${goLoadConfig.error}`);
+  if (!goLoadConfig.success) throw new Error(`Unable to load configuration.`, { cause: goLoadConfig.error });
   return goLoadConfig.data;
 };

@@ -1,5 +1,5 @@
 import { isEmpty, isNil } from 'lodash';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { ethers } from 'ethers';
 import * as adapter from '@api3/airnode-adapter';
 import * as node from '@api3/airnode-node';
@@ -267,17 +267,23 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     logger.debug('No batch payload found to post skipping.', logOptions);
     return;
   }
-  const goRes = await go(() =>
-    axios.post(provider.url, batchPayload, {
+  const goRes = await go<Promise<{ count: number }>, AxiosError>(async () => {
+    const axiosResponse = await axios.post(provider.url, batchPayload, {
       headers: {
         'Content-Type': 'application/json',
       },
-    })
-  );
+    });
+
+    return axiosResponse.data;
+  });
 
   if (!goRes.success) {
-    logger.warn(`Failed to post payload to update signed API. Err: ${goRes.error}`, logOptions);
+    logger.warn(
+      // See: https://axios-http.com/docs/handling_errors
+      `Failed to post payload to update signed API. Err: ${goRes.error}, axios response: ${goRes.error.response}`,
+      logOptions
+    );
     return;
   }
-  logger.info(`Signed datas (${goRes.data.data.count.toString()}) were pushed to pool.`, logOptions);
+  logger.info(`Pushed ${goRes.data.count.toString()} signed data updates to the pool.`, logOptions);
 };

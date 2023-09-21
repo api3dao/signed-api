@@ -3,16 +3,16 @@
   "log": { "format": "plain", "level": "INFO" },
   "rateLimiting": { "maxDirectGatewayConcurrency": 25, "minDirectGatewayTime": 10 },
   "beacons": {
-    "0x45157f8e0c448d36b2780ac9fa74040c864be5866e2c4f8a621c54d9a6d1baa9": {
-      "airnode": "0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4",
+    "0xebba8507d616ed80766292d200a3598fdba656d9938cecc392765d4a284a69a4": {
+      "airnode": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC",
       "templateId": "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd"
     },
-    "0xe1d3bc514126e305f90484f977be17996f9389613607ac88aee3c955919fda59": {
-      "airnode": "0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4",
+    "0x6f6acbdadaaf116c89faf0e8de1d0c7c2352b01cce7be0eb9deb126ceaefa6ba": {
+      "airnode": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC",
       "templateId": "0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66"
     },
-    "0xc139000a53aa2863d802a263a840559398d2120f50f464474188a567a59ad452": {
-      "airnode": "0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4",
+    "0x7944f22b40cc691a003e35db4810b41543a83781d94f706b5c0b6980e0a06ed7": {
+      "airnode": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC",
       "templateId": "0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9"
     }
   },
@@ -39,11 +39,11 @@
   "triggers": {
     "signedApiUpdates": [
       {
-        "signedApiName": "Nodary",
+        "signedApiName": "localhost",
         "beaconIds": [
-          "0x45157f8e0c448d36b2780ac9fa74040c864be5866e2c4f8a621c54d9a6d1baa9",
-          "0xe1d3bc514126e305f90484f977be17996f9389613607ac88aee3c955919fda59",
-          "0xc139000a53aa2863d802a263a840559398d2120f50f464474188a567a59ad452"
+          "0xebba8507d616ed80766292d200a3598fdba656d9938cecc392765d4a284a69a4",
+          "0x6f6acbdadaaf116c89faf0e8de1d0c7c2352b01cce7be0eb9deb126ceaefa6ba",
+          "0x7944f22b40cc691a003e35db4810b41543a83781d94f706b5c0b6980e0a06ed7"
         ],
         "fetchInterval": 5,
         "updateDelay": 30
@@ -52,13 +52,13 @@
   },
   "signedApis": [
     {
-      "name": "Nodary",
-      "url": "https://pool.nodary.io"
+      "name": "localhost",
+      "url": "http://localhost:8090"
     }
   ],
   "ois": [
     {
-      "oisFormat": "2.0.0",
+      "oisFormat": "2.1.0",
       "title": "Nodary",
       "version": "0.2.0",
       "apiSpecifications": {

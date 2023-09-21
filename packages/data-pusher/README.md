@@ -4,7 +4,20 @@ A service for storing and accessing signed data.
 
 ## Local development
 
-TODO: How to run locally.
+The pusher needs a configuration in order to run. The `config` folder contains example configuration which uses:
+
+- [Nodary](https://nodary.io/) as the data provider, from which the data is fetched.
+- Signed API running on `http://localhost:8090` where the data is pushed.
+
+To start the the pusher in dev mode run the following:
+
+1. `cp pusher.example.json pusher.json` - To copy the pusher configuration from the example. Note, the `pusher.json`
+   file is ignored by git.
+2. `cp secrets.example.env secrets.env` - To copy the secrets.env needed for the configuration. This file is also
+   ignored by git.
+3. Set the `NODARY_API_KEY` inside the secrets file.
+4. `pnpm run dev` - To run the pusher. This step assumes already running signed API as specified in the `pusher.json`
+   configuration.
 
 ## Docker
 
