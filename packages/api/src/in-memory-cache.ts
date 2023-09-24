@@ -3,9 +3,7 @@ import { isIgnored } from './utils';
 import { SignedData } from './schema';
 import { getCache } from './cache';
 
-// TODO: Tests
-
-const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimestamp: number) =>
+export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimestamp: number) =>
   signedDatas.filter((data) => !isIgnored(data, ignoreAfterTimestamp));
 
 // The API is deliberately asynchronous to mimic a database call.
@@ -52,7 +50,6 @@ export const put = async (signedData: SignedData) => {
   else signedDatas.splice(index, 0, signedData);
 };
 
-// TODO: Tests that it inserts in correct order.
 // The API is deliberately asynchronous to mimic a database call.
 export const putAll = async (signedDataArray: SignedData[]) => {
   for (const signedData of signedDataArray) await put(signedData);
