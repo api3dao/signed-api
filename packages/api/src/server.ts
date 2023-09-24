@@ -12,7 +12,6 @@ export const startServer = () => {
     // eslint-disable-next-line no-console
     console.log('Received request "POST /"', req.body, req.params, req.query);
 
-    // TODO: Test if this ensures the data is json
     const result = await batchInsertData(req.body);
     res.status(result.statusCode).header(result.headers).send(result.body);
   });
