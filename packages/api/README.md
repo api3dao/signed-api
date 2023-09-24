@@ -4,8 +4,9 @@ A service for storing and accessing signed data. It provides endpoints to handle
 
 ## Local development
 
-1. `cp .env.example .env` - To copy `.env` from the `example.env` file. Optionally change the defaults.
-2. `pnpm run dev` - To start the API server. The port number can be configured in the `.env` file.
+1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally
+   change the defaults.
+2. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
 ## Deployment
 
@@ -15,9 +16,14 @@ TODO: Write example how to deploy on AWS (and maybe other cloud providers as wel
 
 The API provides the following endpoints:
 
-- `POST /`: Upsert batch of signed data.
-- `GET /{airnode}`: Retrieve signed data for the airnode.
-- `GET /`: Retrieve list of all available airnode address.
+- `POST /`: Insert a batch of signed data.
+  - The batch is validated for consistency and data integrity errors. If there is any issue during this step, the whole
+    batch is rejected. Otherwise the batch is accepted.
+- `GET /{endpoint-name}/{airnode}`: Retrieve signed data for the Airnode respecting the endpoint configuration.
+  - Only returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
+- `GET /`: Retrieve list of all available Airnode address.
+  - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
+    delayed endpoints (in case the data is too fresh and there is not an older alternative).
 
 ## Local development
 
@@ -42,7 +48,7 @@ PORT=5123 pnpm run docker:start
 
 ### Examples
 
-Here are some examples of how to use the API with `curl`. Note, the port may differ based on the `.env` value.
+Here are some examples of how to use the API with `curl`. Note, the port may differ based on the configuration.
 
 ```bash
 # Upsert batch of signed data (HTTP POST)
@@ -65,7 +71,7 @@ curl --location 'http://localhost:8090' \
   }]'
 
 # Get data for the airnode address (HTTP GET)
-curl --location 'http://localhost:8090/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4' \
+curl --location 'http://localhost:8090/real-time/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4' \
 --header 'Content-Type: application/json'
 
 # List available airnode addresses (HTTP GET)

@@ -7,6 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
+    "print-info": "which pnpm",
     "build": "tsc --project .",
     "clean": "rm -rf coverage dist",
     "dev": "pnpm ts-node src/index.ts",
@@ -18,7 +19,7 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
-    "test": "jest --passWithNoTests"
+    "test": "jest"
   },
   "license": "MIT",
   "devDependencies": {

@@ -1,12 +1,9 @@
-import * as dotenv from 'dotenv';
 import express from 'express';
-import { getData, listAirnodeAddresses, batchUpsertData } from './handlers';
+import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
+import { getConfig } from './utils';
 
 export const startServer = () => {
-  dotenv.config();
-  const { PORT } = process.env;
-
-  const port = PORT;
+  const config = getConfig();
   const app = express();
 
   app.use(express.json());
@@ -15,21 +12,8 @@ export const startServer = () => {
     // eslint-disable-next-line no-console
     console.log('Received request "POST /"', req.body, req.params, req.query);
 
-    const result = await batchUpsertData({
-      body: JSON.stringify(req.body),
-      queryParams: {},
-    });
-    res.status(result.statusCode).header(result.headers).send(result.body);
-  });
-
-  app.get('/:airnode', async (req, res) => {
-    // eslint-disable-next-line no-console
-    console.log('Received request "GET /:airnode"', req.body, req.params, req.query);
-
-    const result = await getData({
-      body: '',
-      queryParams: { airnode: req.params.airnode },
-    });
+    // TODO: Test if this ensures the data is json
+    const result = await batchInsertData(req.body);
     res.status(result.statusCode).header(result.headers).send(result.body);
   });
 
@@ -37,15 +21,26 @@ export const startServer = () => {
     // eslint-disable-next-line no-console
     console.log('Received request "GET /"');
 
-    const result = await listAirnodeAddresses({
-      body: '',
-      queryParams: {},
-    });
+    const result = await listAirnodeAddresses();
     res.status(result.statusCode).header(result.headers).send(result.body);
   });
 
-  app.listen(port, () => {
+  for (const endpoint of config.endpoints) {
     // eslint-disable-next-line no-console
-    console.log(`Server listening at http://localhost:${port}`);
+    console.log('Registering endpoint', endpoint);
+    const { urlPath, delaySeconds } = endpoint;
+
+    app.get(`${urlPath}/:airnodeAddress`, async (req, res) => {
+      // eslint-disable-next-line no-console
+      console.log('Received request "GET /:airnode"', req.body, req.params, req.query);
+
+      const result = await getData(req.params.airnodeAddress, delaySeconds);
+      res.status(result.statusCode).header(result.headers).send(result.body);
+    });
+  }
+
+  app.listen(config.port, () => {
+    // eslint-disable-next-line no-console
+    console.log(`Server listening at http://localhost:${config.port}`);
   });
 };

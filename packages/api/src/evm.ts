@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { SignedData } from './types';
+import { SignedData } from './schema';
 
 export const decodeData = (data: string) => ethers.utils.defaultAbiCoder.decode(['int256'], data);
 

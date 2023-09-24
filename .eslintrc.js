@@ -65,5 +65,8 @@ module.exports = {
     'no-useless-escape': 'off',
     semi: 'error',
     eqeqeq: ['error', 'smart'],
+
+    // Jest
+    'jest/valid-title': 'off', // Prevents using "<function-name>.name" as a test name
   },
 };

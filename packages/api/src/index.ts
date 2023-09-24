@@ -4,7 +4,6 @@
 // You can check how this works by following the demo from https://github.com/evanw/node-source-map-support#demos. Just
 // create a test script with/without the source map support, build the project and run the built script using node.
 import 'source-map-support/register';
-
 import { startServer } from './server';
 
 startServer();
