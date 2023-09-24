@@ -24,10 +24,9 @@ export const configSchema = z
 
 export type Config = z.infer<typeof configSchema>;
 
-// TODO: add tests for lines below, better error messages
-export const evmAddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/);
+export const evmAddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Must be a valid EVM address');
 
-export const evmIdSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/);
+export const evmIdSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/, 'Must be a valid EVM hash');
 
 export const signedDataSchema = z.object({
   airnode: evmAddressSchema,
