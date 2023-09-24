@@ -10,5 +10,8 @@
     }
   ],
   "maxBatchSize": 10,
-  "port": 8090
+  "port": 8090,
+  "cache": {
+    "maxAgeSeconds": 300
+  }
 }

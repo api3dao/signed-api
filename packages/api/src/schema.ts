@@ -16,6 +16,9 @@ export const configSchema = z
     endpoints: z.array(endpointSchema),
     maxBatchSize: z.number().nonnegative().int(),
     port: z.number().nonnegative().int(),
+    cache: z.object({
+      maxAgeSeconds: z.number().nonnegative().int(),
+    }),
   })
   .strict();
 

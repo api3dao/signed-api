@@ -103,8 +103,7 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
 
   return {
     statusCode: 200,
-    // TODO: The cache headers should be configurable via config file, esp. the max-age property.
-    headers: { ...COMMON_HEADERS, ...CACHE_HEADERS, 'cdn-cache-control': 'max-age=300' },
+    headers: { ...COMMON_HEADERS, ...CACHE_HEADERS, 'cdn-cache-control': `max-age=${getConfig().cache.maxAgeSeconds}` },
     body: JSON.stringify({ count: airnodeAddresses.length, 'available-airnodes': airnodeAddresses }),
   };
 };
