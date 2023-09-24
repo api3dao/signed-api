@@ -1,10 +1,19 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { omit } from 'lodash';
 import * as cacheModule from './cache';
+import * as utilsModule from './utils';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 import { createSignedData, generateRandomWallet } from '../test/utils';
 
 afterEach(() => {
   cacheModule.setCache({});
+});
+
+beforeEach(() => {
+  jest
+    .spyOn(utilsModule, 'getConfig')
+    .mockImplementation(() => JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8')));
 });
 
 describe(batchInsertData.name, () => {
