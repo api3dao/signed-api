@@ -1,3 +1,4 @@
+import { uniqBy } from 'lodash';
 import { z } from 'zod';
 
 export const endpointSchema = z
@@ -11,9 +12,16 @@ export const endpointSchema = z
 
 export type Endpoint = z.infer<typeof endpointSchema>;
 
+export const endpointsSchema = z
+  .array(endpointSchema)
+  .refine(
+    (endpoints) => uniqBy(endpoints, 'urlPath').length === endpoints.length,
+    'Each "urlPath" of an endpoint must be unique'
+  );
+
 export const configSchema = z
   .object({
-    endpoints: z.array(endpointSchema),
+    endpoints: endpointsSchema,
     maxBatchSize: z.number().nonnegative().int(),
     port: z.number().nonnegative().int(),
     cache: z.object({

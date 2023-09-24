@@ -12,6 +12,32 @@ A service for storing and accessing signed data. It provides endpoints to handle
 
 TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
 
+## Configuration
+
+The API is configured via `signed-api.json`. You can use this file to specify the port of the server, configure cache
+header longevity or maximum batch size the API accepts.
+
+### Configuring endpoints
+
+The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
+
+```json
+  "endpoints": [
+    {
+      "urlPath": "/real-time",
+      "delaySeconds": 0
+    },
+    {
+      "urlPath": "/delayed",
+      "delaySeconds": 15
+    }
+  ],
+```
+
+defines two endpoints. The `/real-time` serves the non-delayed data, the latter (`/delayed`) ignores all signed data
+that has bee pushed in the last 15 seconds (configured by `delaySeconds` parameter). You can define multiple endpoints
+as long as the `urlPath` is unique.
+
 ## Usage
 
 The API provides the following endpoints:

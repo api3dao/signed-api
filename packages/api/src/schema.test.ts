@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ZodError } from 'zod';
-import { configSchema, endpointSchema } from './schema';
+import { configSchema, endpointSchema, endpointsSchema } from './schema';
 
 describe('endpointSchema', () => {
   it('validates urlPath', () => {
@@ -19,6 +19,25 @@ describe('endpointSchema', () => {
     expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0 })).toThrow(expectedError);
 
     expect(() => endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0 })).not.toThrow();
+  });
+});
+
+describe('endpointsSchema', () => {
+  it('ensures each urlPath is unique', () => {
+    expect(() =>
+      endpointsSchema.parse([
+        { urlPath: '/url-path', delaySeconds: 0 },
+        { urlPath: '/url-path', delaySeconds: 0 },
+      ])
+    ).toThrow(
+      new ZodError([
+        {
+          code: 'custom',
+          message: 'Each "urlPath" of an endpoint must be unique',
+          path: [],
+        },
+      ])
+    );
   });
 });
 
