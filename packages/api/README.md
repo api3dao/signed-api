@@ -35,14 +35,19 @@ pnpm run dev
 
 ## Docker
 
-The API is also dockerized. In order to run the API from a docker, run:
+The API is also dockerized. Docker needs to publish the port of the server (running inside the docker) to the port on
+the host machine. By default, it expects the server is running on port `8090` and publishes it to the `8090` on the
+host. To change this, you need to modify both `signed-api.json` configuration and use `PORT` environment variable with
+the same value.
+
+In order to run the API from a docker, run:
 
 ```bash
-# starts the API on port 4000
+# Starts the API on port 8090
 pnpm run docker:start
-# or in a detached mode
+# Or in a detached mode
 pnpm run docker:detach:start
-# optionally specify port
+# Optionally specify port (also make sure the same port is specified inside `signed-api.json`)
 PORT=5123 pnpm run docker:start
 ```
 

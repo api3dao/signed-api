@@ -20,6 +20,5 @@ export const generateErrorResponse = (
   return { statusCode, headers: COMMON_HEADERS, body: JSON.stringify({ message, detail, extra }) };
 };
 
-// TODO: Ensure this works in a docker (need to mount the config folder).
 export const getConfig = () =>
   configSchema.parse(JSON.parse(readFileSync(join(__dirname, '../config/signed-api.json'), 'utf8')));
