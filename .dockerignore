@@ -18,3 +18,4 @@
 **/pusher.json
 **/secrets.env
 **/signed-api.json
+**/.DS_Store
