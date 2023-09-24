@@ -71,13 +71,11 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
 // filter out all signed data that happend in the specified "delaySeconds" parameter (essentially, such signed data is
 // treated as non-existant).
 export const getData = async (airnodeAddress: string, delaySeconds: number): Promise<ApiResponse> => {
-  if (isNil(airnodeAddress))
-    // TODO: Change error messages, avoid "path parameter"
-    return generateErrorResponse(400, 'Invalid request, path parameter airnode address is missing');
+  if (isNil(airnodeAddress)) return generateErrorResponse(400, 'Invalid request, airnode address is missing');
 
   const goValidateSchema = await go(() => evmAddressSchema.parseAsync(airnodeAddress));
   if (!goValidateSchema.success)
-    return generateErrorResponse(400, 'Invalid request, path parameter must be an EVM address');
+    return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address');
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
   const goReadDb = await go(() => getAll(airnodeAddress, ignoreAfterTimestamp));

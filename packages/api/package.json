@@ -7,7 +7,6 @@
   },
   "main": "index.js",
   "scripts": {
-    "print-info": "which pnpm",
     "build": "tsc --project .",
     "clean": "rm -rf coverage dist",
     "dev": "pnpm ts-node src/index.ts",

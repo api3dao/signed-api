@@ -64,7 +64,7 @@ describe(getData.name, () => {
     const result = await getData('0xInvalid', 0);
 
     expect(result).toEqual({
-      body: JSON.stringify({ message: 'Invalid request, path parameter must be an EVM address' }),
+      body: JSON.stringify({ message: 'Invalid request, airnode address must be an EVM address' }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
