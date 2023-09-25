@@ -10,9 +10,9 @@ type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
 type TemplateResponses = TemplateResponse[];
 
 export const callApi = async (payload: node.ApiCallPayload) => {
-  getLogger().debug('Preprocessing API call payload', payload);
+  getLogger().debug('Preprocessing API call payload', { aggregateApiCall: payload.aggregatedApiCall });
   const processedPayload = await preProcessApiSpecifications(payload);
-  getLogger().debug('Performing API call', processedPayload);
+  getLogger().debug('Performing API call', { aggregateApiCall: payload.aggregatedApiCall });
   return node.api.performApiCall(processedPayload);
 };
 
@@ -72,12 +72,13 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       aggregatedApiCall,
     };
 
-    getLogger().debug('Processing successful API call', { apiCallResponse });
+    getLogger().debug('Processing successful API call', { templateId, operationTemplateId });
     const [_, response] = await node.api.processSuccessfulApiCall(payload, apiCallResponse);
 
     if (!response.success) {
       const message = `Failed to post process successful API call`;
-      getLogger().warn(message, { templateId, operationTemplateId });
+      getLogger().warn(message, { templateId, operationTemplateId, errorMessage: response.errorMessage });
+      process.exit(1);
       return null;
     }
     return [templateId, response];

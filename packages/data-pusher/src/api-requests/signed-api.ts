@@ -49,9 +49,9 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
 
   if (!goRes.success) {
     getLogger().warn(
+      `Failed to post payload to update signed API.`,
       // See: https://axios-http.com/docs/handling_errors
-      `Failed to post payload to update signed API. Err: ${goRes.error}, axios response: ${goRes.error.response}`,
-      logContext
+      { ...logContext, axiosResponse: goRes.error.response }
     );
     return;
   }

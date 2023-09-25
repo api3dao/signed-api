@@ -98,7 +98,7 @@
           "postProcessingSpecifications": [
             {
               "environment": "Node",
-              "value": "const output = input.data[input.parameters.name].value;",
+              "value": "const output = input[endpointParameters.name].value;",
               "timeoutMs": 5000
             }
           ]

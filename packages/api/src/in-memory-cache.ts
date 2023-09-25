@@ -75,7 +75,7 @@ export const putAll = async (signedDataArray: SignedData[]) => {
 // performance reasons, because it only looks to prune the data that for beacons that have been just inserted.
 export const prune = async (signedDataArray: SignedData[], maxIgnoreAfterTimestamp: number) => {
   const beaconsToPrune = uniqBy(signedDataArray, 'beaconId');
-  logger.debug('Pruning signed data', { beaconsToPrune, maxIgnoreAfterTimestamp });
+  logger.debug('Pruning signed data', { maxIgnoreAfterTimestamp });
   const signedDataCache = getCache();
 
   for (const beacon of beaconsToPrune) {
@@ -86,7 +86,7 @@ export const prune = async (signedDataArray: SignedData[], maxIgnoreAfterTimesta
     // It is enough to keep only the freshest signed data for each beacon.
     const removeCount = Math.max(0, signedDatas.length - 1);
     if (removeCount) {
-      logger.debug('Pruning signed data for beacon', { beacon, signedDatas });
+      logger.debug('Pruning signed data for beacon', { beacon, signedDatas, removeCount });
       signedDataCache[airnode]![templateId] = allSignedDatas.slice(removeCount);
     }
   }
