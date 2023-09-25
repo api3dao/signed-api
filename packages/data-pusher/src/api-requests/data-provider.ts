@@ -1,10 +1,10 @@
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
 import { isNil } from 'lodash';
-import { logger } from '../logging';
 import { getState } from '../state';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 import { SignedApiUpdate, TemplateId } from '../validation/schema';
+import { getLogger } from '../logger';
 
 type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
 type TemplateResponses = TemplateResponse[];
@@ -48,7 +48,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
 
   if (node.api.isPerformApiCallFailure(apiCallResponse)) {
     const message = `Failed to make API call for the endpoint [${endpoint.oisTitle}] ${endpoint.endpointName}.`;
-    logger.warn(message, { meta: { 'Operation-Template-ID': operationTemplateId } });
+    getLogger().warn(message, { meta: { 'Operation-Template-ID': operationTemplateId } });
     return [];
   }
 
@@ -73,7 +73,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
 
     if (!response.success) {
       const message = `Failed to post process successful API call`;
-      logger.warn(message, {
+      getLogger().warn(message, {
         meta: { 'Template-ID': templateId, 'Operation-Template-ID': operationTemplateId },
       });
       return null;

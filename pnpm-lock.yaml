@@ -108,9 +108,6 @@ importers:
       '@api3/airnode-node':
         specifier: ^0.12.0
         version: 0.12.0
-      '@api3/airnode-utilities':
-        specifier: ^0.12.0
-        version: 0.12.0
       '@api3/airnode-validator':
         specifier: ^0.12.0
         version: 0.12.0
@@ -138,6 +135,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      signed-api/common:
+        specifier: workspace:common@*
+        version: link:../common
       source-map-support:
         specifier: ^0.5.21
         version: 0.5.21
