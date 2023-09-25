@@ -2,7 +2,7 @@ import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, isNil, omit, size } from 'lodash';
 import { CACHE_HEADERS, COMMON_HEADERS } from './constants';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
-import { getAll, getAllAirnodeAddresses, putAll } from './in-memory-cache';
+import { getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { ApiResponse } from './types';
 import { generateErrorResponse, getConfig, isBatchUnique } from './utils';
 import { batchSignedDataSchema, evmAddressSchema } from './schema';
@@ -26,7 +26,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
 
   // Check whether the size of batch exceeds a maximum batch size
-  const { maxBatchSize } = getConfig();
+  const { maxBatchSize, endpoints } = getConfig();
   if (size(batchSignedData) > maxBatchSize)
     return generateErrorResponse(400, `Maximum batch size (${maxBatchSize}) exceeded`);
 
@@ -63,6 +63,13 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   const goBatchWriteDb = await go(() => putAll(batchSignedData));
   if (!goBatchWriteDb.success)
     return generateErrorResponse(500, 'Unable to send batch of signed data to database', goBatchWriteDb.error.message);
+
+  // Prune the cache with the data that is too old (no endpoint will ever return it)
+  const maxDelay = endpoints.reduce((acc, endpoint) => Math.max(acc, endpoint.delaySeconds), 0);
+  const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
+  const goPruneCache = await go(() => prune(batchSignedData, maxIgnoreAfterTimestamp));
+  if (!goPruneCache.success)
+    return generateErrorResponse(500, 'Unable to remove outdated cache data', goPruneCache.error.message);
 
   return { statusCode: 201, headers: COMMON_HEADERS, body: JSON.stringify({ count: batchSignedData.length }) };
 };

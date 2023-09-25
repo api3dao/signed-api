@@ -1,4 +1,4 @@
-import { last } from 'lodash';
+import { last, uniqBy } from 'lodash';
 import { isIgnored } from './utils';
 import { SignedData } from './schema';
 import { getCache } from './cache';
@@ -53,4 +53,24 @@ export const put = async (signedData: SignedData) => {
 // The API is deliberately asynchronous to mimic a database call.
 export const putAll = async (signedDataArray: SignedData[]) => {
   for (const signedData of signedDataArray) await put(signedData);
+};
+
+// The API is deliberately asynchronous to mimic a database call.
+//
+// Removes all signed data that is no longer needed to be kept in memory (because it is too old and there exist a newer
+// signed data for each endpoint). The function is intended to be called after each insertion of new signed data for
+// performance reasons, because it only looks to prune the data that for beacons that have been just inserted.
+export const prune = async (signedDataArray: SignedData[], maxIgnoreAfterTimestamp: number) => {
+  const beaconsToPrune = uniqBy(signedDataArray, 'beaconId');
+  const signedDataCache = getCache();
+
+  for (const beacon of beaconsToPrune) {
+    const { airnode, templateId } = beacon;
+    const allSignedDatas = signedDataCache[airnode]![templateId]!; // Assume the data is inserted the cache.
+    const signedDatas = ignoreTooFreshData(allSignedDatas, maxIgnoreAfterTimestamp);
+
+    // It is enough to keep only the freshest signed data for each beacon.
+    const removeCount = Math.max(0, signedDatas.length - 1);
+    signedDataCache[airnode]![templateId] = allSignedDatas.slice(removeCount);
+  }
 };
