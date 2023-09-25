@@ -73,7 +73,7 @@ const createBaseLogger = (config: LogConfig) => {
   });
 };
 
-export type LogContext = Record<string, unknown>;
+export type LogContext = Record<string, any>;
 
 export interface Logger {
   debug(message: string, context?: LogContext): void;

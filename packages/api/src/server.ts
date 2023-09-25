@@ -14,6 +14,8 @@ export const startServer = () => {
 
     const result = await batchInsertData(req.body);
     res.status(result.statusCode).header(result.headers).send(result.body);
+
+    logger.info('Responded to request "POST /"', result);
   });
 
   app.get('/', async (_req, res) => {
@@ -21,6 +23,8 @@ export const startServer = () => {
 
     const result = await listAirnodeAddresses();
     res.status(result.statusCode).header(result.headers).send(result.body);
+
+    logger.info('Responded to request "GET /"', result);
   });
 
   for (const endpoint of config.endpoints) {
@@ -32,6 +36,8 @@ export const startServer = () => {
 
       const result = await getData(req.params.airnodeAddress, delaySeconds);
       res.status(result.statusCode).header(result.headers).send(result.body);
+
+      logger.info('Responded to request "GET /:airnode"', result);
     });
   }
 
