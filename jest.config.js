@@ -3,7 +3,7 @@
  * https://jestjs.io/docs/configuration
  */
 module.exports = {
-  clearMocks: true,
+  restoreMocks: true,
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',

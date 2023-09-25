@@ -4,21 +4,52 @@ A service for storing and accessing signed data. It provides endpoints to handle
 
 ## Local development
 
-1. `cp .env.example .env` - To copy `.env` from the `example.env` file. Optionally change the defaults.
-2. `pnpm run dev` - To start the API server. The port number can be configured in the `.env` file.
+1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally
+   change the defaults.
+2. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
 ## Deployment
 
 TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
 
+## Configuration
+
+The API is configured via `signed-api.json`. You can use this file to specify the port of the server, configure cache
+header longevity or maximum batch size the API accepts.
+
+### Configuring endpoints
+
+The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
+
+```json
+  "endpoints": [
+    {
+      "urlPath": "/real-time",
+      "delaySeconds": 0
+    },
+    {
+      "urlPath": "/delayed",
+      "delaySeconds": 15
+    }
+  ],
+```
+
+defines two endpoints. The `/real-time` serves the non-delayed data, the latter (`/delayed`) ignores all signed data
+that has bee pushed in the last 15 seconds (configured by `delaySeconds` parameter). You can define multiple endpoints
+as long as the `urlPath` is unique.
+
 ## Usage
 
 The API provides the following endpoints:
 
-- `PUT /`: Upsert single signed data.
-- `POST /`: Upsert batch of signed data.
-- `GET /{airnode}`: Retrieve signed data for the airnode.
-- `GET /`: Retrieve list of all available airnode address.
+- `POST /`: Insert a batch of signed data.
+  - The batch is validated for consistency and data integrity errors. If there is any issue during this step, the whole
+    batch is rejected. Otherwise the batch is accepted.
+- `GET /{endpoint-name}/{airnode}`: Retrieve signed data for the Airnode respecting the endpoint configuration.
+  - Only returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
+- `GET /`: Retrieve list of all available Airnode address.
+  - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
+    delayed endpoints (in case the data is too fresh and there is not an older alternative).
 
 ## Local development
 
@@ -30,34 +61,27 @@ pnpm run dev
 
 ## Docker
 
-The API is also dockerized. In order to run the API from a docker, run:
+The API is also dockerized. Docker needs to publish the port of the server (running inside the docker) to the port on
+the host machine. By default, it expects the server is running on port `8090` and publishes it to the `8090` on the
+host. To change this, you need to modify both `signed-api.json` configuration and use `PORT` environment variable with
+the same value.
+
+In order to run the API from a docker, run:
 
 ```bash
-# starts the API on port 4000
+# Starts the API on port 8090
 pnpm run docker:start
-# or in a detached mode
+# Or in a detached mode
 pnpm run docker:detach:start
-# optionally specify port
+# Optionally specify port (also make sure the same port is specified inside `signed-api.json`)
 PORT=5123 pnpm run docker:start
 ```
 
 ### Examples
 
-Here are some examples of how to use the API with `curl`. Note, the port may differ based on the `.env` value.
+Here are some examples of how to use the API with `curl`. Note, the port may differ based on the configuration.
 
 ```bash
-# Upsert signed data (HTTP PUT)
-curl --location --request PUT 'http://localhost:8090' \
---header 'Content-Type: application/json' \
---data '{
-    "airnode": "0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4",
-    "beaconId": "0x70601427c8ff03560563917eed9837651ad9d6eb3414e46e8f96302c6f0aefcd",
-    "templateId": "0x8f255387c5fdb03117d82372b8fa5c7813881fd9a8202b7cc373f1a5868496b2",
-    "timestamp": "1694644051",
-    "encodedValue": "0x000000000000000000000000000000000000000000000002eb268c108b0b1da0",
-    "signature": "0x8e540abb31f6ef161153c508b9cc3909dcc3cf6596deff88ed4f9f2226fa28c61b8c23078373f64a7125035d1f70fd3befa6dfc48a31e7e15cc23133331ed9221b"
-  }'
-
 # Upsert batch of signed data (HTTP POST)
 curl --location 'http://localhost:8090' \
 --header 'Content-Type: application/json' \
@@ -78,7 +102,7 @@ curl --location 'http://localhost:8090' \
   }]'
 
 # Get data for the airnode address (HTTP GET)
-curl --location 'http://localhost:8090/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4' \
+curl --location 'http://localhost:8090/real-time/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4' \
 --header 'Content-Type: application/json'
 
 # List available airnode addresses (HTTP GET)

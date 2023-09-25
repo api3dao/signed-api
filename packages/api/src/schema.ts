@@ -1,0 +1,52 @@
+import { uniqBy } from 'lodash';
+import { z } from 'zod';
+
+export const endpointSchema = z
+  .object({
+    urlPath: z
+      .string()
+      .regex(/^\/[a-zA-Z0-9\-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
+    delaySeconds: z.number().nonnegative().int(),
+  })
+  .strict();
+
+export type Endpoint = z.infer<typeof endpointSchema>;
+
+export const endpointsSchema = z
+  .array(endpointSchema)
+  .refine(
+    (endpoints) => uniqBy(endpoints, 'urlPath').length === endpoints.length,
+    'Each "urlPath" of an endpoint must be unique'
+  );
+
+export const configSchema = z
+  .object({
+    endpoints: endpointsSchema,
+    maxBatchSize: z.number().nonnegative().int(),
+    port: z.number().nonnegative().int(),
+    cache: z.object({
+      maxAgeSeconds: z.number().nonnegative().int(),
+    }),
+  })
+  .strict();
+
+export type Config = z.infer<typeof configSchema>;
+
+export const evmAddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Must be a valid EVM address');
+
+export const evmIdSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/, 'Must be a valid EVM hash');
+
+export const signedDataSchema = z.object({
+  airnode: evmAddressSchema,
+  templateId: evmIdSchema,
+  beaconId: evmIdSchema,
+  timestamp: z.string(),
+  encodedValue: z.string(),
+  signature: z.string(),
+});
+
+export type SignedData = z.infer<typeof signedDataSchema>;
+
+export const batchSignedDataSchema = z.array(signedDataSchema);
+
+export type BatchSignedData = z.infer<typeof batchSignedDataSchema>;
