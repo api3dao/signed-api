@@ -21,4 +21,4 @@ export const generateErrorResponse = (
 };
 
 export const getConfig = () =>
-  configSchema.parse(JSON.parse(readFileSync(join(__dirname, '../config/signed-api.json'), 'utf8')));
+  configSchema.parse(JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8')));

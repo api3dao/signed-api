@@ -5,5 +5,8 @@
 // create a test script with/without the source map support, build the project and run the built script using node.
 import 'source-map-support/register';
 import { startServer } from './server';
+import { getConfig } from './utils';
+import { logger } from './logger';
 
+logger.info('Using configuration', getConfig());
 startServer();

@@ -1,6 +1,7 @@
 import express from 'express';
 import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
 import { getConfig } from './utils';
+import { logger } from './logger';
 
 export const startServer = () => {
   const config = getConfig();
@@ -9,37 +10,38 @@ export const startServer = () => {
   app.use(express.json());
 
   app.post('/', async (req, res) => {
-    // eslint-disable-next-line no-console
-    console.log('Received request "POST /"', req.body, req.params, req.query);
+    logger.info('Received request "POST /"', req.body);
 
     const result = await batchInsertData(req.body);
     res.status(result.statusCode).header(result.headers).send(result.body);
+
+    logger.info('Responded to request "POST /"', result);
   });
 
   app.get('/', async (_req, res) => {
-    // eslint-disable-next-line no-console
-    console.log('Received request "GET /"');
+    logger.info('Received request "GET /"');
 
     const result = await listAirnodeAddresses();
     res.status(result.statusCode).header(result.headers).send(result.body);
+
+    logger.info('Responded to request "GET /"', result);
   });
 
   for (const endpoint of config.endpoints) {
-    // eslint-disable-next-line no-console
-    console.log('Registering endpoint', endpoint);
+    logger.info('Registering endpoint', endpoint);
     const { urlPath, delaySeconds } = endpoint;
 
     app.get(`${urlPath}/:airnodeAddress`, async (req, res) => {
-      // eslint-disable-next-line no-console
-      console.log('Received request "GET /:airnode"', req.body, req.params, req.query);
+      logger.info('Received request "GET /:airnode"', { body: req.body, params: req.params });
 
       const result = await getData(req.params.airnodeAddress, delaySeconds);
       res.status(result.statusCode).header(result.headers).send(result.body);
+
+      logger.info('Responded to request "GET /:airnode"', result);
     });
   }
 
   app.listen(config.port, () => {
-    // eslint-disable-next-line no-console
-    console.log(`Server listening at http://localhost:${config.port}`);
+    logger.info(`Server listening at http://localhost:${config.port}`);
   });
 };

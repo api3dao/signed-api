@@ -5,19 +5,16 @@
 // create a test script with/without the source map support, build the project and run the built script using node.
 import 'source-map-support/register';
 
-import { join } from 'path';
-import { readFileSync } from 'fs';
-import dotenv from 'dotenv';
 import { loadConfig } from './validation/config';
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
 import { initiateUpdatingSignedApi } from './update-signed-api';
 import { initializeState } from './state';
 import { initializeWallet } from './wallets';
+import { initializeLogger } from './logger';
 
 export async function main() {
-  const configPath = join(__dirname, '..', 'config');
-  const secrets = dotenv.parse(readFileSync(join(configPath, 'secrets.env'), 'utf8'));
-  const config = await loadConfig(join(configPath, 'pusher.json'), secrets);
+  const config = await loadConfig();
+  initializeLogger(config);
   initializeState(config);
 
   initializeWallet();

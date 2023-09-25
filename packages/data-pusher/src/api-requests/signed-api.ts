@@ -3,7 +3,7 @@ import { go } from '@api3/promise-utils';
 import axios, { AxiosError } from 'axios';
 import { isEmpty, isNil } from 'lodash';
 import { ethers } from 'ethers';
-import { logger } from '../logging';
+import { getLogger } from '../logger';
 import { getState } from '../state';
 import { SignedApiNameUpdateDelayGroup } from '../update-signed-api';
 import { SignedApiPayload, SignedData, TemplateId } from '../validation/schema';
@@ -19,8 +19,8 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     templateValues,
   } = getState();
   const { providerName, beaconIds, updateDelay } = group;
-
-  const logOptions = { meta: { Provider: providerName, 'Update-delay': updateDelay.toString() } };
+  const logContext = { providerName, updateDelay };
+  getLogger().debug('Posting signed API data.', { group, ...logContext });
 
   const provider = signedApis.find((a) => a.name === providerName)!;
 
@@ -34,7 +34,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
 
   if (isEmpty(batchPayload)) {
-    logger.debug('No batch payload found to post skipping.', logOptions);
+    getLogger().debug('No batch payload found to post skipping.', logContext);
     return;
   }
   const goRes = await go<Promise<{ count: number }>, AxiosError>(async () => {
@@ -48,17 +48,19 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   });
 
   if (!goRes.success) {
-    logger.warn(
+    getLogger().warn(
+      `Failed to post payload to update signed API.`,
       // See: https://axios-http.com/docs/handling_errors
-      `Failed to post payload to update signed API. Err: ${goRes.error}, axios response: ${goRes.error.response}`,
-      logOptions
+      { ...logContext, axiosResponse: goRes.error.response }
     );
     return;
   }
-  logger.info(`Pushed ${goRes.data.count.toString()} signed data updates to the pool.`, logOptions);
+  getLogger().info(`Pushed signed data updates to the pool.`, { ...logContext, count: goRes.data.count });
 };
 
 export const signTemplateResponses = async (templateResponses: TemplateResponses) => {
+  getLogger().debug('Signing template responses', { templateResponses });
+
   const signPromises = templateResponses.map(async ([templateId, response]) => {
     const encodedValue = response.data.encodedValue;
     const timestamp = Math.floor(Date.now() / 1000).toString();
@@ -67,8 +69,8 @@ export const signTemplateResponses = async (templateResponses: TemplateResponses
     const goSignWithTemplateId = await go(() => signWithTemplateId(wallet, templateId, timestamp, encodedValue));
     if (!goSignWithTemplateId.success) {
       const message = `Failed to sign response. Error: "${goSignWithTemplateId.error}"`;
-      logger.warn(message, {
-        meta: { 'Template-ID': templateId },
+      getLogger().warn(message, {
+        templateId,
       });
       return null;
     }

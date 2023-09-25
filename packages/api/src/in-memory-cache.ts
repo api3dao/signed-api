@@ -2,12 +2,15 @@ import { last, uniqBy } from 'lodash';
 import { isIgnored } from './utils';
 import { SignedData } from './schema';
 import { getCache } from './cache';
+import { logger } from './logger';
 
 export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimestamp: number) =>
   signedDatas.filter((data) => !isIgnored(data, ignoreAfterTimestamp));
 
 // The API is deliberately asynchronous to mimic a database call.
 export const get = async (airnodeId: string, templateId: string, ignoreAfterTimestamp: number) => {
+  logger.debug('Getting signed data', { airnodeId, templateId, ignoreAfterTimestamp });
+
   const signedDataCache = getCache();
   if (!signedDataCache[airnodeId]) return null;
   const signedDatas = signedDataCache[airnodeId]![templateId];
@@ -18,6 +21,8 @@ export const get = async (airnodeId: string, templateId: string, ignoreAfterTime
 
 // The API is deliberately asynchronous to mimic a database call.
 export const getAll = async (airnodeId: string, ignoreAfterTimestamp: number) => {
+  logger.debug('Getting all signed data', { airnodeId, ignoreAfterTimestamp });
+
   const signedDataCache = getCache();
   const signedDataByTemplateId = signedDataCache[airnodeId] ?? {};
   const freshestSignedData: SignedData[] = [];
@@ -33,10 +38,16 @@ export const getAll = async (airnodeId: string, ignoreAfterTimestamp: number) =>
 //
 // The Airnode addresses are returned independently of how old the data is. This means that an API can get all Airnode
 // addresses and then use a delayed endpoint to get data from each, but fail to get data from some of them.
-export const getAllAirnodeAddresses = async () => Object.keys(getCache());
+export const getAllAirnodeAddresses = async () => {
+  logger.debug('Getting all Airnode addresses');
+
+  return Object.keys(getCache());
+};
 
 // The API is deliberately asynchronous to mimic a database call.
 export const put = async (signedData: SignedData) => {
+  logger.debug('Putting signed data', { signedData });
+
   const signedDataCache = getCache();
   const { airnode, templateId } = signedData;
   signedDataCache[airnode] ??= {};
@@ -52,6 +63,8 @@ export const put = async (signedData: SignedData) => {
 
 // The API is deliberately asynchronous to mimic a database call.
 export const putAll = async (signedDataArray: SignedData[]) => {
+  logger.debug('Putting all signed data', { signedDataArray });
+
   for (const signedData of signedDataArray) await put(signedData);
 };
 
@@ -62,6 +75,7 @@ export const putAll = async (signedDataArray: SignedData[]) => {
 // performance reasons, because it only looks to prune the data that for beacons that have been just inserted.
 export const prune = async (signedDataArray: SignedData[], maxIgnoreAfterTimestamp: number) => {
   const beaconsToPrune = uniqBy(signedDataArray, 'beaconId');
+  logger.debug('Pruning signed data', { maxIgnoreAfterTimestamp });
   const signedDataCache = getCache();
 
   for (const beacon of beaconsToPrune) {
@@ -71,6 +85,9 @@ export const prune = async (signedDataArray: SignedData[], maxIgnoreAfterTimesta
 
     // It is enough to keep only the freshest signed data for each beacon.
     const removeCount = Math.max(0, signedDatas.length - 1);
-    signedDataCache[airnode]![templateId] = allSignedDatas.slice(removeCount);
+    if (removeCount) {
+      logger.debug('Pruning signed data for beacon', { beacon, signedDatas, removeCount });
+      signedDataCache[airnode]![templateId] = allSignedDatas.slice(removeCount);
+    }
   }
 };

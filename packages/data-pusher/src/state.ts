@@ -1,4 +1,3 @@
-import { setLogOptions, randomHexString } from '@api3/airnode-utilities';
 import Bottleneck from 'bottleneck';
 import { Config, SignedData, TemplateId } from './validation/schema';
 import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
@@ -16,13 +15,8 @@ export interface State {
 let state: State;
 
 export const initializeState = (config: Config) => {
-  // Set initial log options.
-  setLogOptions({
-    ...config.log,
-    meta: { 'Coordinator-ID': randomHexString(16) },
-  });
-
   state = getInitialState(config);
+  return state;
 };
 
 export const buildApiLimiters = (config: Config) => {

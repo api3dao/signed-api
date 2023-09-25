@@ -1,6 +1,10 @@
 {
   "walletMnemonic": "${WALLET_MNEMONIC}",
-  "log": { "format": "plain", "level": "INFO" },
+  "logger": {
+    "type": "pretty",
+    "styling": "on",
+    "minLevel": "debug"
+  },
   "rateLimiting": { "maxDirectGatewayConcurrency": 25, "minDirectGatewayTime": 10 },
   "beacons": {
     "0xebba8507d616ed80766292d200a3598fdba656d9938cecc392765d4a284a69a4": {
@@ -94,7 +98,7 @@
           "postProcessingSpecifications": [
             {
               "environment": "Node",
-              "value": "const output = input.data[input.parameters.name].value;",
+              "value": "const output = input[endpointParameters.name].value;",
               "timeoutMs": 5000
             }
           ]

@@ -1,4 +1,5 @@
 import { uniqBy } from 'lodash';
+import { logConfigSchema } from 'signed-api/common';
 import { z } from 'zod';
 
 export const endpointSchema = z
@@ -27,6 +28,7 @@ export const configSchema = z
     cache: z.object({
       maxAgeSeconds: z.number().nonnegative().int(),
     }),
+    logger: logConfigSchema,
   })
   .strict();
 

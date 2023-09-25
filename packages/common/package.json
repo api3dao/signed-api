@@ -1,0 +1,24 @@
+{
+  "name": "common",
+  "version": "1.0.0",
+  "main": "./dist/src/index.js",
+  "engines": {
+    "node": "^18.14.0",
+    "pnpm": "^8.7.6"
+  },
+  "scripts": {
+    "build": "tsc --project .",
+    "clean": "rm -rf coverage dist",
+    "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
+    "eslint:fix": "eslint . --ext .js,.ts --fix",
+    "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
+    "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
+    "test": "jest"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "winston": "^3.10.0",
+    "winston-console-format": "^1.0.8",
+    "zod": "^3.22.2"
+  }
+}
