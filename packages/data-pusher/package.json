@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc --project .",
     "clean": "rm -rf coverage dist",
-    "dev": "ts-node src/index.ts",
+    "dev": "nodemon --ext ts,js,json,env  --exec \"pnpm run start\"",
     "docker:build": "docker compose --file docker/docker-compose.yml build",
     "docker:start:detach": "docker compose --file docker/docker-compose.yml up --detach",
     "docker:start": "docker compose --file docker/docker-compose.yml up",
@@ -17,6 +17,8 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
+    "start": "pnpm ts-node src/index.ts",
+    "start:prod": "pnpm node dist/src/index.js",
     "test": "jest"
   },
   "license": "MIT",
@@ -40,6 +42,7 @@
   "devDependencies": {
     "@types/express": "^4.17.17",
     "@types/lodash": "^4.14.198",
-    "@types/source-map-support": "^0.5.7"
+    "@types/source-map-support": "^0.5.7",
+    "nodemon": "^3.0.1"
   }
 }
