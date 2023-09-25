@@ -5,6 +5,7 @@ let logger: Logger | undefined;
 
 export const initializeLogger = (config: Config) => {
   logger = createLogger(config.logger);
+  return logger;
 };
 
 export const getLogger = () => {

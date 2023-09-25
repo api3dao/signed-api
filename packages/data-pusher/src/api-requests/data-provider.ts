@@ -10,7 +10,9 @@ type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
 type TemplateResponses = TemplateResponse[];
 
 export const callApi = async (payload: node.ApiCallPayload) => {
+  getLogger().debug('Preprocessing API call payload', payload);
   const processedPayload = await preProcessApiSpecifications(payload);
+  getLogger().debug('Performing API call', processedPayload);
   return node.api.performApiCall(processedPayload);
 };
 
@@ -19,6 +21,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     config: { beacons, endpoints, templates, ois, apiCredentials },
     apiLimiters,
   } = getState();
+  getLogger().debug('Making template requests', signedApiUpdate);
   const { beaconIds } = signedApiUpdate;
 
   // Because each beacon have same operation, just take first one as operational template
@@ -48,7 +51,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
 
   if (node.api.isPerformApiCallFailure(apiCallResponse)) {
     const message = `Failed to make API call for the endpoint [${endpoint.oisTitle}] ${endpoint.endpointName}.`;
-    getLogger().warn(message, { meta: { 'Operation-Template-ID': operationTemplateId } });
+    getLogger().warn(message, { operationTemplateId });
     return [];
   }
 
@@ -69,13 +72,12 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       aggregatedApiCall,
     };
 
+    getLogger().debug('Processing successful API call', { apiCallResponse });
     const [_, response] = await node.api.processSuccessfulApiCall(payload, apiCallResponse);
 
     if (!response.success) {
       const message = `Failed to post process successful API call`;
-      getLogger().warn(message, {
-        meta: { 'Template-ID': templateId, 'Operation-Template-ID': operationTemplateId },
-      });
+      getLogger().warn(message, { templateId, operationTemplateId });
       return null;
     }
     return [templateId, response];

@@ -14,8 +14,9 @@ import { initializeLogger } from './logger';
 
 export async function main() {
   const config = await loadConfig();
-  initializeLogger(config);
-  initializeState(config);
+  const logger = initializeLogger(config);
+  const state = initializeState(config);
+  logger.info('Initalized state', { config, state });
 
   initializeWallet();
   initiateFetchingBeaconData();

@@ -19,8 +19,8 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     templateValues,
   } = getState();
   const { providerName, beaconIds, updateDelay } = group;
-
-  const logOptions = { meta: { Provider: providerName, 'Update-delay': updateDelay.toString() } };
+  const logContext = { providerName, updateDelay };
+  getLogger().debug('Posting signed API data.', { group, ...logContext });
 
   const provider = signedApis.find((a) => a.name === providerName)!;
 
@@ -34,7 +34,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
 
   if (isEmpty(batchPayload)) {
-    getLogger().debug('No batch payload found to post skipping.', logOptions);
+    getLogger().debug('No batch payload found to post skipping.', logContext);
     return;
   }
   const goRes = await go<Promise<{ count: number }>, AxiosError>(async () => {
@@ -51,14 +51,16 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     getLogger().warn(
       // See: https://axios-http.com/docs/handling_errors
       `Failed to post payload to update signed API. Err: ${goRes.error}, axios response: ${goRes.error.response}`,
-      logOptions
+      logContext
     );
     return;
   }
-  getLogger().info(`Pushed ${goRes.data.count.toString()} signed data updates to the pool.`, logOptions);
+  getLogger().info(`Pushed signed data updates to the pool.`, { ...logContext, count: goRes.data.count });
 };
 
 export const signTemplateResponses = async (templateResponses: TemplateResponses) => {
+  getLogger().debug('Signing template responses', { templateResponses });
+
   const signPromises = templateResponses.map(async ([templateId, response]) => {
     const encodedValue = response.data.encodedValue;
     const timestamp = Math.floor(Date.now() / 1000).toString();
@@ -68,7 +70,7 @@ export const signTemplateResponses = async (templateResponses: TemplateResponses
     if (!goSignWithTemplateId.success) {
       const message = `Failed to sign response. Error: "${goSignWithTemplateId.error}"`;
       getLogger().warn(message, {
-        meta: { 'Template-ID': templateId },
+        templateId,
       });
       return null;
     }

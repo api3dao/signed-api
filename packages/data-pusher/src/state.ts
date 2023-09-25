@@ -16,6 +16,7 @@ let state: State;
 
 export const initializeState = (config: Config) => {
   state = getInitialState(config);
+  return state;
 };
 
 export const buildApiLimiters = (config: Config) => {
