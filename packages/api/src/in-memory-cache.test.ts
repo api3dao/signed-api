@@ -1,7 +1,11 @@
 import { groupBy } from 'lodash';
-import { get, getAll, getAllAirnodeAddresses, ignoreTooFreshData, put, putAll } from './in-memory-cache';
+import { get, getAll, getAllAirnodeAddresses, ignoreTooFreshData, prune, put, putAll } from './in-memory-cache';
 import * as cacheModule from './cache';
 import { createSignedData, generateRandomWallet } from '../test/utils';
+
+afterEach(() => {
+  cacheModule.setCache({});
+});
 
 describe(ignoreTooFreshData.name, () => {
   const createData = async () => [
@@ -151,10 +155,6 @@ describe(getAllAirnodeAddresses.name, () => {
 });
 
 describe(put.name, () => {
-  afterEach(() => {
-    cacheModule.setCache({});
-  });
-
   it('inserts the data in the correct position', async () => {
     const airnodeWallet = generateRandomWallet();
     const data = await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '100' });
@@ -207,5 +207,39 @@ describe(putAll.name, () => {
     const cache = cacheModule.getCache();
     expect(cache[data!.airnode]![data!.templateId]).toEqual([allData[0], newDataBatch[0], allData[1], allData[2]]);
     expect(cache[newDataBatch[1]!.airnode]![newDataBatch[1]!.templateId]).toEqual([newDataBatch[1]]);
+  });
+});
+
+describe(prune.name, () => {
+  it('removes all data that is too old', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const data = await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '100' });
+    const insertData = [
+      data,
+      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '105' }),
+      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '110' }),
+    ];
+    const otherAirnodeWallet = generateRandomWallet();
+    const otherAirnodeData = await createSignedData({ airnodeWallet: otherAirnodeWallet, timestamp: '80' });
+    const otherAirnodeInsertData = [
+      otherAirnodeData,
+      await createSignedData({
+        airnodeWallet: otherAirnodeWallet,
+        templateId: otherAirnodeData.templateId,
+        timestamp: '90',
+      }),
+    ];
+    const batchInsertData = [...insertData, ...otherAirnodeInsertData];
+    // We can't mock because the implementation mutates the cache value directly.
+    cacheModule.setCache({
+      [data.airnode]: groupBy(insertData, 'templateId'),
+      [otherAirnodeData.airnode]: groupBy(otherAirnodeInsertData, 'templateId'),
+    });
+
+    await prune(batchInsertData, 105);
+
+    const cache = cacheModule.getCache();
+    expect(cache[data.airnode]![data.templateId]).toEqual([insertData[1], insertData[2]]);
+    expect(cache[otherAirnodeData.airnode]![otherAirnodeData.templateId]).toEqual([otherAirnodeInsertData[1]]);
   });
 });

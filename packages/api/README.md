@@ -44,7 +44,8 @@ The API provides the following endpoints:
 
 - `POST /`: Insert a batch of signed data.
   - The batch is validated for consistency and data integrity errors. If there is any issue during this step, the whole
-    batch is rejected. Otherwise the batch is accepted.
+    batch is rejected. Otherwise the batch is accepted. Also, all data that is no longer needed is removed during this
+    step.
 - `GET /{endpoint-name}/{airnode}`: Retrieve signed data for the Airnode respecting the endpoint configuration.
   - Only returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
 - `GET /`: Retrieve list of all available Airnode address.
