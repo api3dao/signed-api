@@ -2,8 +2,8 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { configSchema } from './schema';
 
-it('validates example config', () => {
+it('validates example config', async () => {
   const config = JSON.parse(readFileSync(join(__dirname, '../../config/pusher.example.json'), 'utf8'));
 
-  expect(() => configSchema.parse(config)).not.toThrow();
+  await expect(configSchema.parseAsync(config)).resolves.not.toThrow();
 });
