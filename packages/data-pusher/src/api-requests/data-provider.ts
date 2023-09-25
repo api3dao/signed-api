@@ -78,7 +78,6 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     if (!response.success) {
       const message = `Failed to post process successful API call`;
       getLogger().warn(message, { templateId, operationTemplateId, errorMessage: response.errorMessage });
-      process.exit(1);
       return null;
     }
     return [templateId, response];
