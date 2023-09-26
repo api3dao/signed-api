@@ -26,7 +26,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
 
   // Check whether the size of batch exceeds a maximum batch size
-  const { maxBatchSize, endpoints } = getConfig();
+  const { maxBatchSize, endpoints } = await getConfig();
   if (size(batchSignedData) > maxBatchSize)
     return generateErrorResponse(400, `Maximum batch size (${maxBatchSize}) exceeded`);
 

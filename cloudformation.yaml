@@ -2,50 +2,57 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: AWS CloudFormation Stack for running a Docker container on Fargate in multiple AZs
 
 Parameters:
+  BucketName:
+    Description: 'The name of the S3 bucket where the config files are hosted'
+    Type: String
+
   CertificateArn:
     Description: 'The ARN of the SSL certificate'
     Type: String
 
-Resources:
+  TaskDefinitionRoleArn:
+    Description: 'The ARN of the IAM role with access to the S3 bucket'
+    Type: String
 
+Resources:
   VPC:
     Type: AWS::EC2::VPC
-    Properties: 
-      CidrBlock: "10.0.0.0/16"
-      EnableDnsSupport: "true"
-      EnableDnsHostnames: "true"
+    Properties:
+      CidrBlock: '10.0.0.0/16'
+      EnableDnsSupport: 'true'
+      EnableDnsHostnames: 'true'
 
   Subnet1:
     Type: AWS::EC2::Subnet
-    Properties: 
-      VpcId: 
+    Properties:
+      VpcId:
         Ref: VPC
-      CidrBlock: "10.0.1.0/24"
-      AvailabilityZone: 
-        Fn::Select: 
+      CidrBlock: '10.0.1.0/24'
+      AvailabilityZone:
+        Fn::Select:
           - 0
-          - Fn::GetAZs: ""
-  
+          - Fn::GetAZs: ''
+
   Subnet2:
     Type: AWS::EC2::Subnet
-    Properties: 
-      VpcId: 
+    Properties:
+      VpcId:
         Ref: VPC
-      CidrBlock: "10.0.2.0/24"
-      AvailabilityZone: 
-        Fn::Select: 
+      CidrBlock: '10.0.2.0/24'
+      AvailabilityZone:
+        Fn::Select:
           - 1
-          - Fn::GetAZs: ""
+          - Fn::GetAZs: ''
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway
 
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
-    Properties: 
-      VpcId: 
+    Properties:
+      VpcId:
         Ref: VPC
-      InternetGatewayId: 
+      InternetGatewayId:
         Ref: InternetGateway
 
   RouteTable:
@@ -71,6 +78,28 @@ Resources:
       RouteTableId: !Ref RouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref InternetGateway
+
+  ConfigBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref BucketName
+
+  # IAM policy to allow ECS task to fetch the config file
+  ECSTaskS3Policy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: ECSTaskS3Access
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              Fn::Sub:
+                - arn:aws:s3:::${BucketName}/api/signed-api.json
+                - BucketName: !Ref ConfigBucket
+      Roles:
+        - Ref: ECSTaskRole
 
   FargateCluster:
     Type: AWS::ECS::Cluster
@@ -102,47 +131,47 @@ Resources:
 
   FargateTaskDefinition:
     Type: AWS::ECS::TaskDefinition
-    Properties: 
+    Properties:
       Family: FargateTaskDefinition
       ExecutionRoleArn:
         Ref: FargateExecutionRole
       NetworkMode: awsvpc
-      RequiresCompatibilities: 
+      RequiresCompatibilities:
         - FARGATE
-      Cpu: "256"
-      Memory: "512"
-      ContainerDefinitions: 
+      Cpu: '256'
+      Memory: '512'
+      ContainerDefinitions:
         - Name: signed-api
           Image: andreogle/signed-api:latest
-          Memory: "512"
-          Cpu: "256"
-          Essential: "true"
-          Environment: 
+          Memory: '512'
+          Cpu: '256'
+          Essential: 'true'
+          Environment:
             - Name: NODE_ENV
               Value: production
             - Name: PORT
-              Value: 4000
-          PortMappings: 
-            - ContainerPort: 4000
-          LogConfiguration: 
-            LogDriver: "awslogs"
-            Options: 
-              awslogs-group: "signed-api"
-              awslogs-region: "us-east-1"
-              awslogs-stream-prefix: "ecs"
+              Value: 8090
+          PortMappings:
+            - ContainerPort: 8090
+          LogConfiguration:
+            LogDriver: 'awslogs'
+            Options:
+              awslogs-group: 'signed-api'
+              awslogs-region: 'us-east-1'
+              awslogs-stream-prefix: 'ecs'
 
   LoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
-    Properties: 
+    Properties:
       Name: FargateALB
-      Subnets: 
+      Subnets:
         - Ref: Subnet1
         - Ref: Subnet2
-      SecurityGroups: 
-        - Fn::GetAtt: 
-          - LoadBalancerSecurityGroup
-          - GroupId
-      LoadBalancerAttributes: 
+      SecurityGroups:
+        - Fn::GetAtt:
+            - LoadBalancerSecurityGroup
+            - GroupId
+      LoadBalancerAttributes:
         - Key: idle_timeout.timeout_seconds
           Value: '60'
       Scheme: internet-facing
@@ -162,20 +191,20 @@ Resources:
 
   LoadBalancerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    Properties: 
+    Properties:
       GroupDescription: Security Group for ALB
-      VpcId: 
+      VpcId:
         Ref: VPC
-      SecurityGroupIngress: 
+      SecurityGroupIngress:
         - Description: Allow HTTPS traffic
           IpProtocol: tcp
           FromPort: 443
           ToPort: 443
           CidrIp: 0.0.0.0/0
-        - Description: Allow traffic on port 4000 within VPC
+        - Description: Allow traffic on port 8090 within VPC
           IpProtocol: tcp
-          FromPort: 4000
-          ToPort: 4000
+          FromPort: 8090
+          ToPort: 8090
           CidrIp:
             Fn::GetAtt:
               - VPC
@@ -188,59 +217,58 @@ Resources:
   FargateService:
     Type: AWS::ECS::Service
     DependsOn: HTTPSListener
-    Properties: 
+    Properties:
       ServiceName: FargateService
-      Cluster: 
+      Cluster:
         Ref: FargateCluster
       LaunchType: FARGATE
-      DeploymentConfiguration: 
+      DeploymentConfiguration:
         MaximumPercent: 200
         MinimumHealthyPercent: 100
       DesiredCount: 2
       HealthCheckGracePeriodSeconds: 10
-      TaskDefinition: 
+      TaskDefinition:
         Ref: FargateTaskDefinition
-      LoadBalancers: 
-        - TargetGroupArn: 
+      LoadBalancers:
+        - TargetGroupArn:
             Ref: TargetGroup
           ContainerName: signed-api
-          ContainerPort: 4000
-      NetworkConfiguration: 
-        AwsvpcConfiguration: 
-          Subnets: 
+          ContainerPort: 8090
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          Subnets:
             - Ref: Subnet1
             - Ref: Subnet2
-          AssignPublicIp: "ENABLED"
+          AssignPublicIp: 'ENABLED'
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
-    Properties: 
+    Properties:
       Name: FargateTargetGroup
       TargetType: ip
-      VpcId: 
+      VpcId:
         Ref: VPC
-      Port: 4000
+      Port: 8090
       Protocol: HTTP
       HealthCheckProtocol: HTTP
-      HealthCheckPath: / # Adjust this based on your application’s health check endpoint
+      HealthCheckPath: /
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 2
       UnhealthyThresholdCount: 2
-      Matcher: 
+      Matcher:
         HttpCode: '200'
 
   CloudWatchLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: "signed-api"
+      LogGroupName: 'signed-api'
       RetentionInDays: 14
 
-Outputs: 
-  LoadBalancerDNSName: 
+Outputs:
+  LoadBalancerDNSName:
     Description: 'The DNS name of the Load Balancer'
-    Value: 
-      Fn::GetAtt: 
+    Value:
+      Fn::GetAtt:
         - LoadBalancer
         - DNSName
-
