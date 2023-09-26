@@ -13,3 +13,12 @@ The repo uses `pnpm` workspaces. To install the dependencies:
 ```sh
 pnpm install
 ```
+
+and to build the packages:
+
+```sh
+pnpm run build
+```
+
+Note, that everytime you make a change to a workspace that is used as a dependency of another, you need to rebuild the
+changed package (otherwise you might get weird JS/TS errors).
