@@ -1,28 +1,26 @@
-import * as node from '@api3/airnode-node';
 import { go } from '@api3/promise-utils';
 import axios, { AxiosError } from 'axios';
 import { isEmpty, isNil } from 'lodash';
 import { ethers } from 'ethers';
+import { TemplateResponse } from './data-provider';
 import { getLogger } from '../logger';
 import { getState } from '../state';
 import { SignedApiNameUpdateDelayGroup } from '../update-signed-api';
-import { SignedApiPayload, SignedData, TemplateId } from '../validation/schema';
+import { SignedApiPayload, SignedData, TemplateId, signedApiResponseSchema } from '../validation/schema';
 import { signWithTemplateId } from '../utils';
 
-type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
-type TemplateResponses = TemplateResponse[];
-type SignedResponse = [TemplateId, SignedData];
+export type SignedResponse = [TemplateId, SignedData];
 
 export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
   const {
     config: { beacons, signedApis },
     templateValues,
   } = getState();
-  const { providerName, beaconIds, updateDelay } = group;
-  const logContext = { providerName, updateDelay };
+  const { signedApiName, beaconIds, updateDelay } = group;
+  const logContext = { signedApiName, updateDelay };
   getLogger().debug('Posting signed API data.', { group, ...logContext });
 
-  const provider = signedApis.find((a) => a.name === providerName)!;
+  const provider = signedApis.find((a) => a.name === signedApiName)!;
 
   const batchPayloadOrNull = beaconIds.map((beaconId): SignedApiPayload | null => {
     const { templateId, airnode } = beacons[beaconId]!;
@@ -34,10 +32,11 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
 
   if (isEmpty(batchPayload)) {
-    getLogger().debug('No batch payload found to post skipping.', logContext);
-    return;
+    getLogger().debug('No batch payload found to post. Skipping.', logContext);
+    return { success: true, count: 0 };
   }
-  const goRes = await go<Promise<{ count: number }>, AxiosError>(async () => {
+  const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
+    getLogger().debug('Posting batch payload.', { ...logContext, batchPayload });
     const axiosResponse = await axios.post(provider.url, batchPayload, {
       headers: {
         'Content-Type': 'application/json',
@@ -46,19 +45,31 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
 
     return axiosResponse.data;
   });
-
-  if (!goRes.success) {
+  if (!goAxiosRequest.success) {
     getLogger().warn(
-      `Failed to post payload to update signed API.`,
+      `Failed to make update signed API request.`,
       // See: https://axios-http.com/docs/handling_errors
-      { ...logContext, axiosResponse: goRes.error.response }
+      { ...logContext, axiosResponse: goAxiosRequest.error.response }
     );
-    return;
+    return { success: false };
   }
-  getLogger().info(`Pushed signed data updates to the pool.`, { ...logContext, count: goRes.data.count });
+
+  getLogger().debug('Parsing response from the signed API.', { ...logContext, axiosResponse: goAxiosRequest.data });
+  const parsedResponse = signedApiResponseSchema.safeParse(goAxiosRequest.data);
+  if (!parsedResponse.success) {
+    getLogger().warn('Failed to parse response from the signed API.', {
+      ...logContext,
+      errors: parsedResponse.error,
+    });
+    return { success: false };
+  }
+
+  const count = parsedResponse.data.count;
+  getLogger().info(`Pushed signed data updates to the signed API.`, { ...logContext, count });
+  return { success: true, count };
 };
 
-export const signTemplateResponses = async (templateResponses: TemplateResponses) => {
+export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
   getLogger().debug('Signing template responses', { templateResponses });
 
   const signPromises = templateResponses.map(async ([templateId, response]) => {

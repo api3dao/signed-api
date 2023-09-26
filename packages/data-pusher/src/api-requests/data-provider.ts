@@ -1,22 +1,21 @@
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
-import { isNil } from 'lodash';
+import { isNil, pick } from 'lodash';
 import { getState } from '../state';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 import { SignedApiUpdate, TemplateId } from '../validation/schema';
 import { getLogger } from '../logger';
 
-type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
-type TemplateResponses = TemplateResponse[];
+export type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
 
 export const callApi = async (payload: node.ApiCallPayload) => {
-  getLogger().debug('Preprocessing API call payload', { aggregateApiCall: payload.aggregatedApiCall });
+  getLogger().debug('Preprocessing API call payload', pick(payload.aggregatedApiCall, ['endpointName', 'oisTitle']));
   const processedPayload = await preProcessApiSpecifications(payload);
-  getLogger().debug('Performing API call', { aggregateApiCall: payload.aggregatedApiCall });
+  getLogger().debug('Performing API call', { processedPayload: processedPayload });
   return node.api.performApiCall(processedPayload);
 };
 
-export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponses> => {
+export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponse[]> => {
   const {
     config: { beacons, endpoints, templates, ois, apiCredentials },
     apiLimiters,
@@ -24,8 +23,8 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   getLogger().debug('Making template requests', signedApiUpdate);
   const { beaconIds } = signedApiUpdate;
 
-  // Because each beacon have same operation, just take first one as operational template
-  // See the function validateTriggerReferences in validation.ts
+  // Because each beacon has the same operation, just take first one as operational template. See validation.ts for
+  // details.
   const operationTemplateId = beacons[beaconIds[0]!]!.templateId;
   const operationTemplate = templates[operationTemplateId]!;
 

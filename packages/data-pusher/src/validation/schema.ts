@@ -360,3 +360,11 @@ export type RateLimitingConfig = z.infer<typeof rateLimitingSchema>;
 export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
 
 export const secretsSchema = z.record(z.string());
+
+export const signedApiResponseSchema = z
+  .object({
+    count: z.number(),
+  })
+  .strict();
+
+export type SignedApiResponse = z.infer<typeof signedApiResponseSchema>;

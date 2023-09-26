@@ -9,7 +9,6 @@ import { loadConfig } from './validation/config';
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
 import { initiateUpdatingSignedApi } from './update-signed-api';
 import { initializeState } from './state';
-import { initializeWallet } from './wallets';
 import { initializeLogger } from './logger';
 
 export async function main() {
@@ -17,7 +16,6 @@ export async function main() {
   initializeLogger(config);
   initializeState(config);
 
-  initializeWallet();
   initiateFetchingBeaconData();
   initiateUpdatingSignedApi();
 }
