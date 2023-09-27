@@ -5,7 +5,6 @@ import { oisSchema, OIS, Endpoint as oisEndpoint } from '@api3/ois';
 import { config } from '@api3/airnode-validator';
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
-import { logConfigSchema } from 'signed-api/common';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
 export const limiterConfig = z.object({ minTime: z.number(), maxConcurrent: z.number() });
@@ -296,7 +295,6 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 export const configSchema = z
   .object({
     walletMnemonic: z.string(),
-    logger: logConfigSchema,
     beacons: beaconsSchema,
     beaconSets: z.any(),
     chains: z.any(),

@@ -1,10 +1,8 @@
 import { api as nodeApiModule } from '@api3/airnode-node';
 import { makeTemplateRequests } from './data-provider';
 import * as stateModule from '../state';
-import * as loggerModule from '../logger';
 import {
   config,
-  createMockedLogger,
   nodaryTemplateRequestErrorResponse,
   nodaryTemplateRequestResponseData,
   nodaryTemplateResponses,
@@ -14,8 +12,6 @@ describe(makeTemplateRequests.name, () => {
   it('makes a single template request for multiple beacons', async () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(nodeApiModule, 'performApiCall').mockResolvedValue([[], nodaryTemplateRequestResponseData]);
 
     const response = await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
@@ -26,8 +22,6 @@ describe(makeTemplateRequests.name, () => {
   it('handles request failure', async () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(nodeApiModule, 'performApiCall').mockRejectedValue(nodaryTemplateRequestErrorResponse);
 
     await expect(makeTemplateRequests(config.triggers.signedApiUpdates[0]!)).rejects.toEqual({

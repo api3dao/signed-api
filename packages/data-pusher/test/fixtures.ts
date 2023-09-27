@@ -18,11 +18,6 @@ export const createMockedLogger = (): Logger => {
 
 export const config: Config = {
   walletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
-  logger: {
-    type: 'pretty',
-    styling: 'on',
-    minLevel: 'debug',
-  },
   rateLimiting: { maxDirectGatewayConcurrency: 25, minDirectGatewayTime: 10 },
   beacons: {
     '0xebba8507d616ed80766292d200a3598fdba656d9938cecc392765d4a284a69a4': {
