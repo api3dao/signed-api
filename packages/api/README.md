@@ -16,29 +16,100 @@ the data in memory and provides endpoints to push and retrieve beacon data.
 
 <!-- TODO: Document similarly how pusher is documented -->
 
-The API is configured via `signed-api.json`. You can use this file to specify the port of the server, configure cache
-header longevity or maximum batch size the API accepts.
+The API is configured via `signed-api.json`.
 
-### Configuring endpoints
+### `endpoints`
 
 The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
 
 ```json
-  "endpoints": [
-    {
-      "urlPath": "/real-time",
-      "delaySeconds": 0
-    },
-    {
-      "urlPath": "/delayed",
-      "delaySeconds": 15
-    }
-  ],
+// Defines two endpoints.
+"endpoints": [
+  // Serves the non-delayed data on URL path "/real-time".
+  {
+    "urlPath": "/real-time",
+    "delaySeconds": 0
+  },
+  // Serves the data delayed by 15 seconds on URL path "/delayed".
+  {
+    "urlPath": "/delayed",
+    "delaySeconds": 15
+  }
+]
 ```
 
-defines two endpoints. The `/real-time` serves the non-delayed data, the latter (`/delayed`) ignores all signed data
-that has bee pushed in the last 15 seconds (configured by `delaySeconds` parameter). You can define multiple endpoints
-as long as the `urlPath` is unique.
+#### `endpoints[n]`
+
+Configuration for one of the endpoints.
+
+##### `urlPath`
+
+The URL path on which the endpoint is served. Must start with a slash and contain only alphanumeric characters and
+dashes.
+
+##### `delaySeconds`
+
+The delay in seconds for the endpoint. The endpoint will only serve data that is older than the delay.
+
+### `maxBatchSize`
+
+The maximum number of signed data entries that can be inserted in one batch. This is a safety measure to prevent
+spamming theAPI with large payloads. The batch is rejected if it contains more entries than this value.
+
+### `port`
+
+The port on which the API is served.
+
+### `cache.maxAgeSeconds`
+
+The maximum age of the cache header in seconds.
+
+### `logger` <!-- NOTE: This is same documentation as in data-pusher/README.md -->
+
+Defines the logging configuration. For example:
+
+```json
+// Defines a logger suitable for production.
+"logger": {
+  "type": "json",
+  "styling": "off",
+  "minLevel": "info"
+}
+```
+
+or
+
+```json
+// Defines a logger suitable for local development or testing.
+"logger": {
+  "type": "pretty",
+  "styling": "on",
+  "minLevel": "debug"
+}
+```
+
+#### `type` <!-- NOTE: This is copied over over from logger/README.md -->
+
+- `hidden` - Silences all logs. This is suitable for test environment.
+- `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
+- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
+  development.
+
+#### `styling`
+
+- `on` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
+  Recommended when running locally and in development.
+- `off` - Disables colors in the log output. Recommended for production.
+
+#### `minLevel`
+
+One of the following options:
+
+```ts
+'debug' | 'info' | 'warn' | 'error';
+```
+
+Logs with smaller level (severity) will be silenced.
 
 ## API
 

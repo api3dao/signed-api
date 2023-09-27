@@ -49,7 +49,7 @@ secrets. For example:
 "airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
 ```
 
-### `logger`
+### `logger` <!-- NOTE: This is same documentation as in api/README.md -->
 
 Defines the logging configuration. For example:
 
