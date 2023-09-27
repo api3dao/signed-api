@@ -1,5 +1,5 @@
 {
-  "walletMnemonic": "${WALLET_MNEMONIC}",
+  "airnodeWalletMnemonic": "${WALLET_MNEMONIC}",
   "rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
   "templates": {
     "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd": {

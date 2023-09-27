@@ -238,7 +238,7 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
 export const configSchema = z
   .object({
-    walletMnemonic: z.string(),
+    airnodeWalletMnemonic: z.string(),
     beaconSets: z.any(),
     chains: z.any(),
     gateways: z.any(),

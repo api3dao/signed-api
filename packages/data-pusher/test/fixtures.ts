@@ -6,7 +6,7 @@ import { SignedResponse } from '../src/api-requests/signed-api';
 import { TemplateResponse } from '../src/api-requests/data-provider';
 
 export const config: Config = {
-  walletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
+  airnodeWalletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
   rateLimiting: { Nodary: { maxConcurrency: 25, minTime: 10 } },
   templates: {
     '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd': {

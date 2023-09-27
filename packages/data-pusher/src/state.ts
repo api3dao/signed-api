@@ -76,7 +76,7 @@ export const getInitialState = (config: Config) => {
     config,
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
-    walletPrivateKey: ethers.Wallet.fromMnemonic(config.walletMnemonic).privateKey,
+    walletPrivateKey: ethers.Wallet.fromMnemonic(config.airnodeWalletMnemonic).privateKey,
     sponsorWalletsPrivateKey: {},
   };
 };
