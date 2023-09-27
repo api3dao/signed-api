@@ -226,11 +226,22 @@ const validateOisRateLimiterReferences: SuperRefinement<{
 };
 
 export const signedApiSchema = z.object({
-  name: z.string(), // TODO: This should be unique
+  name: z.string(),
   url: z.string().url(),
 });
 
-export const signedApisSchema = z.array(signedApiSchema);
+export const signedApisSchema = z.array(signedApiSchema).superRefine((apis, ctx) => {
+  const names = apis.map((api) => api.name);
+  const uniqueNames = [...new Set(names)];
+
+  if (names.length !== uniqueNames.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Signed API names must be unique`,
+      path: ['signedApis'],
+    });
+  }
+});
 
 export const oisesSchema = z.array(oisSchema);
 
@@ -258,12 +269,6 @@ export const configSchema = z
 
 export const encodedValueSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/);
 export const signatureSchema = z.string().regex(/^0x[a-fA-F0-9]{130}$/);
-// TODO: Remove
-export const signedDataSchemaLegacy = z.object({
-  data: z.object({ timestamp: z.string(), value: encodedValueSchema }),
-  signature: signatureSchema,
-});
-
 export const signedDataSchema = z.object({
   timestamp: z.string(),
   encodedValue: encodedValueSchema,

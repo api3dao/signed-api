@@ -1,6 +1,9 @@
 # api
 
-A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
+> A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
+
+Signed API is a Node.js API server, dockerized and deployable on any cloud provider or hostable on premise. It stores
+the data in memory and provides endpoints to push and retrieve beacon data.
 
 ## Local development
 
@@ -10,6 +13,8 @@ A service for storing and accessing signed data. It provides endpoints to handle
 3. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
 ## Configuration
+
+<!-- TODO: Document similarly how pusher is documented -->
 
 The API is configured via `signed-api.json`. You can use this file to specify the port of the server, configure cache
 header longevity or maximum batch size the API accepts.

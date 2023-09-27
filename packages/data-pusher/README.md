@@ -8,7 +8,7 @@ Pusher is a Node.js service, dockerized and deployable on any cloud provider or 
 running two core loops:
 
 1. `Fetch beacon data` - Each `triggers.signedApiUpdates` entry defines a group of templates. Pusher makes a template
-   requests to the API specified in the OIS to get the template data. Pusher's wallet is used to sign the responses and
+   request to the API specified in the OIS to get the template data. Pusher's wallet is used to sign the responses and
    these are then saved to in-memory storage.
 2. `Push signed beacon data to signed API` - For each `triggers.signedApiUpdates`, periodically checks the in-memory
    storage and pushes the signed data to the configured API.
@@ -34,7 +34,7 @@ To start the the pusher in dev mode run the following:
 ## Configuration
 
 Pusher needs two configuration files, `pusher.json` and `secrets.env`. All expressions of a form `${SECRET_NAME}` are
-refering to values from secret and are interpolated inside the `config.json` at runtime. You are advised to put
+referring to values from secrets and are interpolated inside the `config.json` at runtime. You are advised to put
 sensitive information inside secrets.
 
 You can also refer to the [example configuration](./config).
@@ -45,7 +45,7 @@ Mnemonic for the airnode wallet used to sign the template responses. It is recom
 secrets. For example:
 
 ```json
-// The mnemonic is interpolated from the secrets file.
+// The mnemonic is interpolated from the "WALLET_MNEMONIC" secret.
 "airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
 ```
 
@@ -145,8 +145,6 @@ The template ID hash is derived from the template object. You can derive the ID 
 ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 ```
 
-deriveEndpointId
-
 #### `templates[<TEMPLATE_ID>]`
 
 Configuration for the template object with ID `<TEMPLATE_ID>`.
@@ -212,8 +210,6 @@ The title of the OIS to which the endpoint belongs.
 
 ### `triggers.signedApiUpdates`
 
-<!-- TODO: Does this need to be nested -->
-
 Configuration for the signed API update triggers. There can be multiple triggers, each specifying a different update
 configuration.
 
@@ -226,7 +222,7 @@ For example:
     {
       // The data is pushed to the signed API named "localhost".
       "signedApiName": "localhost",
-      // The data is fetched for the templates with the specified template IDs.
+      // The data is fetched for the templates with the template IDs specified below.
       "templateIds": [
         "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd",
         "0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66",
@@ -247,10 +243,10 @@ Configuration for one of the signed API update triggers. Pusher periodically pus
 period is `2.5` seconds.
 
 Pusher only makes a single template request independently of the number of template IDs specified. This is to reduce the
-number of data provider calls. This implies that all of the template must use the same endpoint and parameters. You can
-use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html) to remove the parameters before
-making the request (using pre-processing) and later get the corresponding template value based off the endpoint
-parameters (using-processing). Refer to the [example configuration](./config) for details.
+number of data provider calls. This implies that all of the templates in the trigger must use the same endpoint and
+parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html) to remove the
+parameters before making the request (using pre-processing) and later get the corresponding template value based on the
+endpoint parameters (using-processing). Refer to the [example configuration](./config) for details.
 
 ##### `signedApiName`
 
