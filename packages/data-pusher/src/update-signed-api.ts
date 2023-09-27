@@ -10,7 +10,7 @@ import { postSignedApiData } from './api-requests/signed-api';
 type SignedApiUpdateDelayBeaconIdsMap = Record<string, Record<number, BeaconId[]>>;
 
 export type SignedApiNameUpdateDelayGroup = {
-  providerName: string;
+  signedApiName: string;
   beaconIds: BeaconId[];
   updateDelay: number;
 };
@@ -38,9 +38,9 @@ export const initiateUpdatingSignedApi = async () => {
 
   const signedApiUpdateDelayGroups: SignedApiNameUpdateDelayGroup[] = Object.entries(
     signedApiUpdateDelayBeaconIdsMap
-  ).flatMap(([providerName, updateDelayBeaconIds]) =>
+  ).flatMap(([signedApiName, updateDelayBeaconIds]) =>
     Object.entries(updateDelayBeaconIds).map(([updateDelay, beaconIds]) => ({
-      providerName,
+      signedApiName,
       updateDelay: parseInt(updateDelay),
       beaconIds,
     }))

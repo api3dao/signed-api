@@ -1,4 +1,5 @@
 import Bottleneck from 'bottleneck';
+import { ethers } from 'ethers';
 import { Config, SignedData, TemplateId } from './validation/schema';
 import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
 import { deriveEndpointId, getRandomId } from './utils';
@@ -76,7 +77,7 @@ export const getInitialState = (config: Config) => {
     config,
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
-    walletPrivateKey: '',
+    walletPrivateKey: ethers.Wallet.fromMnemonic(config.walletMnemonic).privateKey,
     sponsorWalletsPrivateKey: {},
   };
 };
