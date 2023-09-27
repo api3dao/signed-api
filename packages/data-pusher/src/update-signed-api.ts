@@ -2,16 +2,16 @@ import { get, isEmpty } from 'lodash';
 import { logger } from './logger';
 import { getState } from './state';
 import { sleep } from './utils';
-import { BeaconId } from './validation/schema';
+import { TemplateId } from './validation/schema';
 import { NO_SIGNED_API_UPDATE_EXIT_CODE, SIGNED_DATA_PUSH_POLLING_INTERVAL } from './constants';
 import { postSignedApiData } from './api-requests/signed-api';
 
-// <Signed API Provider, <Update Delay, List of Beacon ID>>
-type SignedApiUpdateDelayBeaconIdsMap = Record<string, Record<number, BeaconId[]>>;
+// <Signed API Provider, <Update Delay, List of template IDs>>
+type SignedApiUpdateDelayTemplateIdsMap = Record<string, Record<number, TemplateId[]>>;
 
 export type SignedApiNameUpdateDelayGroup = {
   signedApiName: string;
-  beaconIds: BeaconId[];
+  templateIds: TemplateId[];
   updateDelay: number;
 };
 
@@ -19,16 +19,16 @@ export const initiateUpdatingSignedApi = async () => {
   logger.debug('Initiating updating signed API');
   const { config } = getState();
 
-  const signedApiUpdateDelayBeaconIdsMap = config.triggers.signedApiUpdates.reduce(
-    (acc: SignedApiUpdateDelayBeaconIdsMap, signedApiUpdate) => {
-      if (isEmpty(signedApiUpdate.beaconIds)) return acc;
+  const signedApiUpdateDelayTemplateIdsMap = config.triggers.signedApiUpdates.reduce(
+    (acc: SignedApiUpdateDelayTemplateIdsMap, signedApiUpdate) => {
+      if (isEmpty(signedApiUpdate.templateIds)) return acc;
       return {
         ...acc,
         [signedApiUpdate.signedApiName]: {
           ...acc[signedApiUpdate.signedApiName],
           [signedApiUpdate.updateDelay]: [
             ...get(acc, [signedApiUpdate.signedApiName, signedApiUpdate.updateDelay], []),
-            ...signedApiUpdate.beaconIds,
+            ...signedApiUpdate.templateIds,
           ],
         },
       };
@@ -37,12 +37,12 @@ export const initiateUpdatingSignedApi = async () => {
   );
 
   const signedApiUpdateDelayGroups: SignedApiNameUpdateDelayGroup[] = Object.entries(
-    signedApiUpdateDelayBeaconIdsMap
-  ).flatMap(([signedApiName, updateDelayBeaconIds]) =>
-    Object.entries(updateDelayBeaconIds).map(([updateDelay, beaconIds]) => ({
+    signedApiUpdateDelayTemplateIdsMap
+  ).flatMap(([signedApiName, updateDelayTemplateIds]) =>
+    Object.entries(updateDelayTemplateIds).map(([updateDelay, templateIds]) => ({
       signedApiName,
       updateDelay: parseInt(updateDelay),
-      beaconIds,
+      templateIds,
     }))
   );
 

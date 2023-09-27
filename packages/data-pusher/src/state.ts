@@ -9,6 +9,7 @@ export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 export interface State {
   config: Config;
   templateValues: TemplateValueStorage;
+  // TODO: this can be trivially derived from config - remove.
   walletPrivateKey: string;
   apiLimiters: Record<string, Bottleneck | undefined>;
 }

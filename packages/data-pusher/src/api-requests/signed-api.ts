@@ -2,6 +2,7 @@ import { go } from '@api3/promise-utils';
 import axios, { AxiosError } from 'axios';
 import { isEmpty, isNil } from 'lodash';
 import { ethers } from 'ethers';
+import { deriveBeaconId } from '@api3/airnode-node';
 import { TemplateResponse } from './data-provider';
 import { logger } from '../logger';
 import { getState } from '../state';
@@ -13,20 +14,22 @@ export type SignedResponse = [TemplateId, SignedData];
 
 export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
   const {
-    config: { beacons, signedApis },
+    config: { signedApis },
     templateValues,
+    walletPrivateKey,
   } = getState();
-  const { signedApiName, beaconIds, updateDelay } = group;
+  const { signedApiName, templateIds, updateDelay } = group;
   const logContext = { signedApiName, updateDelay };
   logger.debug('Posting signed API data.', { group, ...logContext });
 
   const provider = signedApis.find((a) => a.name === signedApiName)!;
 
-  const batchPayloadOrNull = beaconIds.map((beaconId): SignedApiPayload | null => {
-    const { templateId, airnode } = beacons[beaconId]!;
+  const airnode = new ethers.Wallet(walletPrivateKey).address;
+  const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
     const delayedSignedData = templateValues[templateId]!.get(updateDelay);
     if (isNil(delayedSignedData)) return null;
-    return { airnode, templateId, beaconId, ...delayedSignedData };
+
+    return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...delayedSignedData };
   });
 
   const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));

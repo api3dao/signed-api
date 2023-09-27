@@ -8,35 +8,18 @@ import { TemplateResponse } from '../src/api-requests/data-provider';
 export const config: Config = {
   walletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
   rateLimiting: { maxDirectGatewayConcurrency: 25, minDirectGatewayTime: 10 },
-  beacons: {
-    '0xebba8507d616ed80766292d200a3598fdba656d9938cecc392765d4a284a69a4': {
-      airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-      templateId: '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd',
-    },
-    '0x6f6acbdadaaf116c89faf0e8de1d0c7c2352b01cce7be0eb9deb126ceaefa6ba': {
-      airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-      templateId: '0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66',
-    },
-    '0x7944f22b40cc691a003e35db4810b41543a83781d94f706b5c0b6980e0a06ed7': {
-      airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-      templateId: '0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9',
-    },
-  },
   templates: {
     '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd': {
       endpointId: '0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc',
-      parameters:
-        '0x31730000000000000000000000000000000000000000000000000000000000006e616d65000000000000000000000000000000000000000000000000000000005754492f55534400000000000000000000000000000000000000000000000000',
+      parameters: [{ type: 'string32', name: 'name', value: 'WTI/USD' }],
     },
     '0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66': {
       endpointId: '0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc',
-      parameters:
-        '0x31730000000000000000000000000000000000000000000000000000000000006e616d65000000000000000000000000000000000000000000000000000000005841472f55534400000000000000000000000000000000000000000000000000',
+      parameters: [{ type: 'string32', name: 'name', value: 'XAG/USD' }],
     },
     '0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9': {
       endpointId: '0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc',
-      parameters:
-        '0x31730000000000000000000000000000000000000000000000000000000000006e616d65000000000000000000000000000000000000000000000000000000005841552f55534400000000000000000000000000000000000000000000000000',
+      parameters: [{ type: 'string32', name: 'name', value: 'XAU/USD' }],
     },
   },
   endpoints: {
@@ -49,10 +32,10 @@ export const config: Config = {
     signedApiUpdates: [
       {
         signedApiName: 'localhost',
-        beaconIds: [
-          '0xebba8507d616ed80766292d200a3598fdba656d9938cecc392765d4a284a69a4',
-          '0x6f6acbdadaaf116c89faf0e8de1d0c7c2352b01cce7be0eb9deb126ceaefa6ba',
-          '0x7944f22b40cc691a003e35db4810b41543a83781d94f706b5c0b6980e0a06ed7',
+        templateIds: [
+          '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd',
+          '0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66',
+          '0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9',
         ],
         fetchInterval: 5,
         updateDelay: 5,
