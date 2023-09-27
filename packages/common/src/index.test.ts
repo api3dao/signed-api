@@ -1,12 +1,13 @@
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
-it('index file re-exports from all implementation files', () => {
-  const files = readdirSync(__dirname);
-  const ignoreList = ['index.ts'];
+it('index file re-exports from all implementation folders', () => {
+  const entries = readdirSync(__dirname, { withFileTypes: true });
 
-  const implementationFiles = files.filter((file) => !file.endsWith('.test.ts') && !ignoreList.includes(file));
-  const exports = [...readFileSync(join(__dirname, './index.ts'), 'utf8').matchAll(/export \* from/g)];
+  const subFolders = entries.filter((entry) => entry.isDirectory()).map((dir) => dir.name);
+  const mainExports = [
+    ...readFileSync(join(__dirname, './index.ts'), 'utf8').matchAll(/export \* from '\.\/(.+)'/g),
+  ].map((match) => match[1]);
 
-  expect(implementationFiles.length).toEqual(exports.length);
+  expect(subFolders).toEqual(mainExports);
 });
