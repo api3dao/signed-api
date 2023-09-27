@@ -27,12 +27,21 @@ export const generateErrorResponse = (
   return { statusCode, headers: COMMON_HEADERS, body: JSON.stringify({ message, detail, extra }) };
 };
 
-export const getAndParseConfig = async (): Promise<Config> => {
-  const config = await getConfig();
-  return configSchema.parse(config);
+let config: Config;
+export const getConfig = (): Config => {
+  if (!config) {
+    throw new Error(`config has not been set yet`);
+  }
+  return config;
 };
 
-export const getConfig = async (): Promise<any> => {
+export const fetchAndCacheConfig = async (): Promise<Config> => {
+  const jsonConfig = await fetchConfig();
+  config = configSchema.parse(jsonConfig);
+  return config;
+};
+
+const fetchConfig = async (): Promise<any> => {
   const source = process.env.CONFIG_SOURCE;
   if (!source || source === 'local') {
     return JSON.parse(readFileSync(join(__dirname, '../config/signed-api.json'), 'utf8'));
@@ -43,7 +52,7 @@ export const getConfig = async (): Promise<any> => {
   throw new Error(`Unable to load config CONFIG_SOURCE:${source}`);
 };
 
-const fetchConfigFromS3 = async () => {
+const fetchConfigFromS3 = async (): Promise<any> => {
   const region = process.env.AWS_REGION!;
   const s3 = new S3({ region });
 
@@ -52,7 +61,7 @@ const fetchConfigFromS3 = async () => {
     Key: process.env.AWS_S3_BUCKET_PATH!,
   };
 
-  logger.info(`Fetching config from S3 region:${region}...`);
+  logger.info(`Fetching config from AWS S3 region:${region}...`);
   const res = await go(() => s3.getObject(params), { retries: 1 });
   if (!res.success) {
     logger.error('Error fetching config from AWS S3:', res.error);

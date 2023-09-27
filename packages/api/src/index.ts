@@ -6,14 +6,14 @@
 import 'source-map-support/register';
 import dotenv from 'dotenv';
 import { startServer } from './server';
-import { getAndParseConfig } from './utils';
+import { fetchAndCacheConfig } from './utils';
 import { logger } from './logger';
 import { Config } from './schema';
 
 dotenv.config();
 
 // Fetch the config before starting the application
-getAndParseConfig().then((config: Config) => {
+fetchAndCacheConfig().then((config: Config) => {
   logger.info('Using configuration', config);
   startServer(config);
 });
