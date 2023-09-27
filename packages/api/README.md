@@ -9,10 +9,6 @@ A service for storing and accessing signed data. It provides endpoints to handle
 2. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
 3. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
-## Deployment
-
-TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
-
 ## Configuration
 
 The API is configured via `signed-api.json`. You can use this file to specify the port of the server, configure cache
@@ -39,7 +35,7 @@ defines two endpoints. The `/real-time` serves the non-delayed data, the latter 
 that has bee pushed in the last 15 seconds (configured by `delaySeconds` parameter). You can define multiple endpoints
 as long as the `urlPath` is unique.
 
-## Usage
+## API
 
 The API provides the following endpoints:
 
@@ -53,13 +49,11 @@ The API provides the following endpoints:
   - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
     delayed endpoints (in case the data is too fresh and there is not an older alternative).
 
-## Local development
+## Deployment
 
-Spin up local `express` server:
+TODO: Write example how to deploy on AWS.
 
-```bash
-pnpm run dev
-```
+To deploy on premise you can use the Docker instructions below.
 
 ## Docker
 

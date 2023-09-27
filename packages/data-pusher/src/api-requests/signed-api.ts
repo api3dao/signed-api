@@ -72,6 +72,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   return { success: true, count };
 };
 
+// TODO: This function could be moved elsewhere
 export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
   logger.debug('Signing template responses', { templateResponses });
 

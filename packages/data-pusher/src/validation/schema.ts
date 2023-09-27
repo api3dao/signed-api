@@ -226,7 +226,7 @@ const validateOisRateLimiterReferences: SuperRefinement<{
 };
 
 export const signedApiSchema = z.object({
-  name: z.string(),
+  name: z.string(), // TODO: This should be unique
   url: z.string().url(),
 });
 
@@ -258,6 +258,7 @@ export const configSchema = z
 
 export const encodedValueSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/);
 export const signatureSchema = z.string().regex(/^0x[a-fA-F0-9]{130}$/);
+// TODO: Remove
 export const signedDataSchemaLegacy = z.object({
   data: z.object({ timestamp: z.string(), value: encodedValueSchema }),
   signature: signatureSchema,

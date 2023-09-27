@@ -14,20 +14,22 @@ interface LogConfiguration {
 }
 ```
 
-### type
+<!-- NOTE: When editting, be sure to change data-pusher/README.md -->
+
+### `type`
 
 - `hidden` - Silences all logs. This is suitable for test environment.
 - `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
 - `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
   development.
 
-### styling
+### `styling`
 
 - `on` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
   Recommended when running locally and in development.
 - `off` - Disables colors in the log output. Recommended for production.
 
-### minLevel
+### `minLevel`
 
 One of the following options:
 
