@@ -7,7 +7,7 @@ import { TemplateResponse } from '../src/api-requests/data-provider';
 
 export const config: Config = {
   walletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
-  rateLimiting: { maxDirectGatewayConcurrency: 25, minDirectGatewayTime: 10 },
+  rateLimiting: { Nodary: { maxConcurrency: 25, minTime: 10 } },
   templates: {
     '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd': {
       endpointId: '0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc',

@@ -9,7 +9,7 @@ import { logFormatSchema, logLevelSchema } from 'signed-api/common';
 import { goSync } from '@api3/promise-utils';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
-export const limiterConfig = z.object({ minTime: z.number(), maxConcurrent: z.number() });
+export const limiterConfig = z.object({ minTime: z.number(), maxConcurrency: z.number() });
 
 export const parameterSchema = z
   .object({
@@ -208,30 +208,14 @@ const validateTriggerReferences: SuperRefinement<{
   }
 };
 
-export const rateLimitingSchema = z.object({
-  maxGatewayConcurrency: z.number().optional(),
-  minGatewayTime: z.number().optional(),
-  maxProviderConcurrency: z.number().optional(),
-  minProviderTime: z.number().optional(),
-  minDirectGatewayTime: z.number().optional(),
-  maxDirectGatewayConcurrency: z.number().optional(),
-  overrides: z
-    .object({
-      signedDataGateways: z.record(limiterConfig).optional(), // key is Airnode address
-      directGateways: z.record(limiterConfig).optional(), // key is ois title
-    })
-    .optional(),
-});
+export const rateLimitingSchema = z.record(limiterConfig);
 
 const validateOisRateLimiterReferences: SuperRefinement<{
   ois: OIS[];
-  rateLimiting?: RateLimitingConfig | undefined;
+  rateLimiting: RateLimitingConfig;
 }> = (config, ctx) => {
-  const directGateways = config.rateLimiting?.overrides?.directGateways ?? {};
-  const oises = config?.ois ?? [];
-
-  Object.keys(directGateways).forEach((oisTitle) => {
-    if (!oises.find((ois) => ois.title === oisTitle)) {
+  Object.keys(config.rateLimiting).forEach((oisTitle) => {
+    if (!config.ois.find((ois) => ois.title === oisTitle)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `OIS Title "${oisTitle}" in rate limiting overrides is not defined in the config.ois array`,
@@ -264,7 +248,7 @@ export const configSchema = z
     ois: oisesSchema,
     apiCredentials: apisCredentialsSchema,
     endpoints: endpointsSchema,
-    rateLimiting: rateLimitingSchema.optional(),
+    rateLimiting: rateLimitingSchema,
   })
   .strict()
   .superRefine(validateTemplatesReferences)
