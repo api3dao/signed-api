@@ -15,7 +15,7 @@ describe(makeTemplateRequests.name, () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'getLogger').mockReturnValue(logger);
+    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(nodeApiModule, 'performApiCall').mockResolvedValue([[], nodaryTemplateRequestResponseData]);
 
     const response = await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
@@ -27,7 +27,7 @@ describe(makeTemplateRequests.name, () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'getLogger').mockReturnValue(logger);
+    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(nodeApiModule, 'performApiCall').mockRejectedValue(nodaryTemplateRequestErrorResponse);
 
     await expect(makeTemplateRequests(config.triggers.signedApiUpdates[0]!)).rejects.toEqual({

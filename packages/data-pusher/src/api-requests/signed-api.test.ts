@@ -16,7 +16,7 @@ describe(signTemplateResponses.name, () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'getLogger').mockReturnValue(logger);
+    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
 
     const signedTemplateResponses = await signTemplateResponses(nodaryTemplateResponses);
@@ -42,7 +42,7 @@ describe(postSignedApiData.name, () => {
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'getLogger').mockReturnValue(logger);
+    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(axios, 'post').mockResolvedValue(signedApiResponse);
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
@@ -62,7 +62,7 @@ describe(postSignedApiData.name, () => {
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'getLogger').mockReturnValue(logger);
+    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(axios, 'post').mockResolvedValue({ youHaveNotThoughAboutThisDidYou: 'yes-I-did' });
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
@@ -95,7 +95,7 @@ describe(postSignedApiData.name, () => {
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'getLogger').mockReturnValue(logger);
+    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
     jest.spyOn(axios, 'post').mockRejectedValue('simulated-network-error');
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);

@@ -4,14 +4,14 @@ import { isNil, pick } from 'lodash';
 import { getState } from '../state';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 import { SignedApiUpdate, TemplateId } from '../validation/schema';
-import { getLogger } from '../logger';
+import { logger } from '../logger';
 
 export type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
 
 export const callApi = async (payload: node.ApiCallPayload) => {
-  getLogger().debug('Preprocessing API call payload', pick(payload.aggregatedApiCall, ['endpointName', 'oisTitle']));
+  logger.debug('Preprocessing API call payload', pick(payload.aggregatedApiCall, ['endpointName', 'oisTitle']));
   const processedPayload = await preProcessApiSpecifications(payload);
-  getLogger().debug('Performing API call', { processedPayload: processedPayload });
+  logger.debug('Performing API call', { processedPayload: processedPayload });
   return node.api.performApiCall(processedPayload);
 };
 
@@ -20,7 +20,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     config: { beacons, endpoints, templates, ois, apiCredentials },
     apiLimiters,
   } = getState();
-  getLogger().debug('Making template requests', signedApiUpdate);
+  logger.debug('Making template requests', signedApiUpdate);
   const { beaconIds } = signedApiUpdate;
 
   // Because each beacon has the same operation, just take first one as operational template. See validation.ts for
@@ -50,7 +50,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
 
   if (node.api.isPerformApiCallFailure(apiCallResponse)) {
     const message = `Failed to make API call for the endpoint [${endpoint.oisTitle}] ${endpoint.endpointName}.`;
-    getLogger().warn(message, { operationTemplateId });
+    logger.warn(message, { operationTemplateId });
     return [];
   }
 
@@ -71,12 +71,12 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       aggregatedApiCall,
     };
 
-    getLogger().debug('Processing successful API call', { templateId, operationTemplateId });
+    logger.debug('Processing successful API call', { templateId, operationTemplateId });
     const [_, response] = await node.api.processSuccessfulApiCall(payload, apiCallResponse);
 
     if (!response.success) {
       const message = `Failed to post process successful API call`;
-      getLogger().warn(message, { templateId, operationTemplateId, errorMessage: response.errorMessage });
+      logger.warn(message, { templateId, operationTemplateId, errorMessage: response.errorMessage });
       return null;
     }
     return [templateId, response];

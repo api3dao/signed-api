@@ -1,15 +1,15 @@
-import { Logger, createLogger } from 'signed-api/common';
-import { Config } from './validation/schema';
+import { createLogger, logLevelSchema, LogConfig } from 'signed-api/common';
 
-let logger: Logger | undefined;
-
-export const initializeLogger = (config: Config) => {
-  logger = createLogger(config.logger);
-  return logger;
+const logLevel = () => {
+  const res = logLevelSchema.safeParse(process.env.LOG_LEVEL || 'info');
+  return res.success ? res.data : 'info';
 };
 
-export const getLogger = () => {
-  if (!logger) throw new Error('Logger not initialized');
-
-  return logger;
+const options: LogConfig = {
+  colorize: process.env.LOG_COLORIZE !== 'false',
+  enabled: process.env.LOGGER_ENABLED !== 'false',
+  minLevel: logLevel(),
+  format: process.env.LOG_FORMAT === 'json' ? 'json' : 'pretty',
 };
+
+export const logger = createLogger(options);

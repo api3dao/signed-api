@@ -9,11 +9,9 @@ import { loadConfig } from './validation/config';
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
 import { initiateUpdatingSignedApi } from './update-signed-api';
 import { initializeState } from './state';
-import { initializeLogger } from './logger';
 
 export async function main() {
   const config = await loadConfig();
-  initializeLogger(config);
   initializeState(config);
 
   initiateFetchingBeaconData();
