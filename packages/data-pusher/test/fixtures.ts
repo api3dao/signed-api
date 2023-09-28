@@ -2,8 +2,7 @@ import { PerformApiCallSuccess } from '@api3/airnode-node/dist/src/api';
 import { ApiCallErrorResponse } from '@api3/airnode-node';
 import { AxiosResponse } from 'axios';
 import { Config } from '../src/validation/schema';
-import { SignedResponse } from '../src/api-requests/signed-api';
-import { TemplateResponse } from '../src/api-requests/data-provider';
+import { SignedResponse, TemplateResponse } from '../src/sign-template-data';
 
 export const config: Config = {
   airnodeWalletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',

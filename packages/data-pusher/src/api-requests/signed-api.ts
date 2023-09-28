@@ -3,14 +3,10 @@ import axios, { AxiosError } from 'axios';
 import { isEmpty, isNil } from 'lodash';
 import { ethers } from 'ethers';
 import { deriveBeaconId } from '@api3/airnode-node';
-import { TemplateResponse } from './data-provider';
 import { logger } from '../logger';
 import { getState } from '../state';
 import { SignedApiNameUpdateDelayGroup } from '../update-signed-api';
-import { SignedApiPayload, SignedData, TemplateId, signedApiResponseSchema } from '../validation/schema';
-import { signWithTemplateId } from '../utils';
-
-export type SignedResponse = [TemplateId, SignedData];
+import { SignedApiPayload, signedApiResponseSchema } from '../validation/schema';
 
 export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
   const {
@@ -69,35 +65,4 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   const count = parsedResponse.data.count;
   logger.info(`Pushed signed data updates to the signed API.`, { ...logContext, count });
   return { success: true, count };
-};
-
-// TODO: This function could be moved elsewhere
-export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
-  logger.debug('Signing template responses', { templateResponses });
-
-  const signPromises = templateResponses.map(async ([templateId, response]) => {
-    const encodedValue = response.data.encodedValue;
-    const timestamp = Math.floor(Date.now() / 1000).toString();
-
-    const wallet = ethers.Wallet.fromMnemonic(getState().config.airnodeWalletMnemonic);
-    const goSignWithTemplateId = await go(() => signWithTemplateId(wallet, templateId, timestamp, encodedValue));
-    if (!goSignWithTemplateId.success) {
-      const message = `Failed to sign response. Error: "${goSignWithTemplateId.error}"`;
-      logger.warn(message, { templateId });
-      return null;
-    }
-
-    return [
-      templateId,
-      {
-        timestamp: timestamp,
-        encodedValue: encodedValue,
-        signature: goSignWithTemplateId.data,
-      },
-    ];
-  });
-  const signedResponsesOrNull = await Promise.all(signPromises);
-  const signedResponses = signedResponsesOrNull.filter((response): response is SignedResponse => !isNil(response));
-
-  return signedResponses;
 };
