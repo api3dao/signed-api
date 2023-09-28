@@ -14,9 +14,8 @@ export type SignedResponse = [TemplateId, SignedData];
 
 export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
   const {
-    config: { signedApis },
+    config: { signedApis, airnodeWalletMnemonic },
     templateValues,
-    walletPrivateKey,
   } = getState();
   const { signedApiName, templateIds, updateDelay } = group;
   const logContext = { signedApiName, updateDelay };
@@ -24,7 +23,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
 
   const provider = signedApis.find((a) => a.name === signedApiName)!;
 
-  const airnode = new ethers.Wallet(walletPrivateKey).address;
+  const airnode = ethers.Wallet.fromMnemonic(airnodeWalletMnemonic).address;
   const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
     const delayedSignedData = templateValues[templateId]!.get(updateDelay);
     if (isNil(delayedSignedData)) return null;
@@ -80,7 +79,7 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
     const encodedValue = response.data.encodedValue;
     const timestamp = Math.floor(Date.now() / 1000).toString();
 
-    const wallet = new ethers.Wallet(getState().walletPrivateKey);
+    const wallet = ethers.Wallet.fromMnemonic(getState().config.airnodeWalletMnemonic);
     const goSignWithTemplateId = await go(() => signWithTemplateId(wallet, templateId, timestamp, encodedValue));
     if (!goSignWithTemplateId.success) {
       const message = `Failed to sign response. Error: "${goSignWithTemplateId.error}"`;
