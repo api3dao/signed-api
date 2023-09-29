@@ -1,4 +1,5 @@
 import Bottleneck from 'bottleneck';
+import { last } from 'lodash';
 import { Config, SignedData, TemplateId } from './validation/schema';
 import { OIS_MAX_CONCURRENCY_DEFAULT, OIS_MIN_TIME_DEFAULT_MS } from './constants';
 import { deriveEndpointId, getRandomId } from './utils';
@@ -65,8 +66,14 @@ export const buildApiLimiters = (config: Config) => {
   return apiLimiters;
 };
 
-export const buildTemplateStorages = (config: Config) =>
-  Object.fromEntries(Object.keys(config.templates).map((templateId) => [templateId, new DelayedSignedDataQueue()]));
+export const buildTemplateStorages = (config: Config) => {
+  return Object.fromEntries(
+    Object.keys(config.templates).map((templateId) => {
+      const maxUpdateDelayTime = Math.max(...Object.values(config.triggers.signedApiUpdates).map((u) => u.updateDelay));
+      return [templateId, new DelayedSignedDataQueue(maxUpdateDelayTime)];
+    })
+  );
+};
 
 export const getInitialState = (config: Config): State => {
   return {
@@ -89,33 +96,60 @@ export const getState = () => {
  */
 export class DelayedSignedDataQueue {
   private storage: SignedData[] = [];
+  private maxUpdateDelay: number;
 
+  /**
+   * Creates the delayed signed data queue with the maximum update delay time. If there exists some signed data satisfying
+   * this delay, all other signed data with smaller timestamps are removed.
+   * @param maxUpdateDelay - The maximum update delay time in seconds.
+   */
+  constructor(maxUpdateDelay: number) {
+    this.maxUpdateDelay = maxUpdateDelay;
+  }
+
+  /**
+   * Checks if a signed data entry is delayed enough. This means that the timestamp of the entry must be smaller than
+   * the reference timestamp.
+   */
+  private isDelayedEnough(data: SignedData, referenceTimestamp: number) {
+    return parseInt(data.timestamp) < referenceTimestamp;
+  }
+
+  /**
+   * Adds a signed data entry to the queue. Assumes the data is not older than other entries in the queue.
+   * @param data - The signed data entry to add.
+   */
   public put(data: SignedData): void {
+    // Make sure the data is not older than other entries in the queue.
+    if (this.storage.length && parseInt(last(this.storage)!.timestamp) > parseInt(data.timestamp)) {
+      throw new Error('The signed data is too old');
+    }
     this.storage.push(data);
   }
   /**
    * Retrieves the newest signed data entry from the queue that is delayed by a specified time.
-   * @param updateDelay - The maximum delay (in seconds) allowed for retrieved data.
+   * @param referenceTimestamp - The reference timestamp in seconds. Signed data with newer or equal timestamp is
+   * ignored during this call.
    * @returns The delayed signed data entry, or undefined if none is found.
    */
-  public get(updateDelay: number): SignedData | undefined {
-    // Calculate the reference timestamp based on the current time and update delay.
-    const referenceTimestamp = Date.now() / 1000 - updateDelay;
-    // Function to check if an element's timestamp is delayed enough.
-    const isDelayedEnough = (element: SignedData) => parseInt(element.timestamp) < referenceTimestamp;
-    // Find the index of the newest delayed data entry in the storage.
-    const index = this.storage.findLastIndex(isDelayedEnough);
-    // If a delayed entry is found, remove older entries (also include returned one) and return the delayed one.
-    if (index >= 0) {
-      const delayedData = this.storage[index];
-      this.storage.splice(0, index + 1);
-      return delayedData;
-    }
-
-    return;
+  public get(referenceTimestamp: number): SignedData | undefined {
+    // Find the newest delayed data entry in the storage.
+    return this.storage.findLast((data) => this.isDelayedEnough(data, referenceTimestamp));
   }
 
-  public list(): SignedData[] {
+  /**
+   * Removes all signed data entries from the queue that are not needed anymore. This means that there must exist a
+   * signed data with timestamp smaller maximum update delay. All data with smaller timestamp can be removed.
+   */
+  public prune(): void {
+    const index = this.storage.findLastIndex((data) =>
+      this.isDelayedEnough(data, Date.now() / 1000 - this.maxUpdateDelay)
+    );
+
+    this.storage = this.storage.slice(index);
+  }
+
+  public getAll(): SignedData[] {
     return this.storage;
   }
 }
