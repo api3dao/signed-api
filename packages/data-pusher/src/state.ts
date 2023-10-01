@@ -1,7 +1,7 @@
 import Bottleneck from 'bottleneck';
 import { ethers } from 'ethers';
 import { Config, SignedData, TemplateId } from './validation/schema';
-import { DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT, DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS } from './constants';
+import { OIS_MAX_CONCURRENCY_DEFAULT, OIS_MIN_TIME_DEFAULT_MS } from './constants';
 import { deriveEndpointId, getRandomId } from './utils';
 
 export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
@@ -9,6 +9,7 @@ export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 export interface State {
   config: Config;
   templateValues: TemplateValueStorage;
+  // TODO: this can be trivially derived from config - remove.
   walletPrivateKey: string;
   apiLimiters: Record<string, Bottleneck | undefined>;
 }
@@ -27,17 +28,15 @@ export const buildApiLimiters = (config: Config) => {
 
   const oisLimiters = Object.fromEntries(
     config.ois.map((ois) => {
-      const directGatewayOverrides = config?.rateLimiting?.overrides?.directGateways;
-
-      if (directGatewayOverrides && directGatewayOverrides[ois.title]) {
-        const { minTime, maxConcurrent } = directGatewayOverrides[ois.title]!;
+      if (config.rateLimiting[ois.title]) {
+        const { minTime, maxConcurrency } = config.rateLimiting[ois.title]!;
 
         return [
           ois.title,
           new Bottleneck({
             id: getRandomId(),
-            minTime: minTime ?? DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS,
-            maxConcurrent: maxConcurrent ?? DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT,
+            minTime: minTime ?? OIS_MIN_TIME_DEFAULT_MS,
+            maxConcurrent: maxConcurrency ?? OIS_MAX_CONCURRENCY_DEFAULT,
           }),
         ];
       }
@@ -46,8 +45,8 @@ export const buildApiLimiters = (config: Config) => {
         ois.title,
         new Bottleneck({
           id: getRandomId(),
-          minTime: DIRECT_GATEWAY_MIN_TIME_DEFAULT_MS,
-          maxConcurrent: DIRECT_GATEWAY_MAX_CONCURRENCY_DEFAULT,
+          minTime: OIS_MIN_TIME_DEFAULT_MS,
+          maxConcurrent: OIS_MAX_CONCURRENCY_DEFAULT,
         }),
       ];
     })
@@ -77,7 +76,7 @@ export const getInitialState = (config: Config) => {
     config,
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
-    walletPrivateKey: ethers.Wallet.fromMnemonic(config.walletMnemonic).privateKey,
+    walletPrivateKey: ethers.Wallet.fromMnemonic(config.airnodeWalletMnemonic).privateKey,
     sponsorWalletsPrivateKey: {},
   };
 };

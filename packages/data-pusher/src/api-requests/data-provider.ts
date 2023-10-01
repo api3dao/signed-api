@@ -1,4 +1,3 @@
-import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
 import { isNil, pick } from 'lodash';
 import { getState } from '../state';
@@ -17,20 +16,23 @@ export const callApi = async (payload: node.ApiCallPayload) => {
 
 export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponse[]> => {
   const {
-    config: { beacons, endpoints, templates, ois, apiCredentials },
+    config: { endpoints, templates, ois, apiCredentials },
     apiLimiters,
   } = getState();
   logger.debug('Making template requests', signedApiUpdate);
-  const { beaconIds } = signedApiUpdate;
+  const { templateIds } = signedApiUpdate;
 
-  // Because each beacon has the same operation, just take first one as operational template. See validation.ts for
-  // details.
-  const operationTemplateId = beacons[beaconIds[0]!]!.templateId;
+  // Because each template has the same operation, just take first one as operational template. See the validation logic
+  // for details.
+  const operationTemplateId = templateIds[0]!;
   const operationTemplate = templates[operationTemplateId]!;
-
-  const parameters = abi.decode(operationTemplate.parameters);
   const endpoint = endpoints[operationTemplate.endpointId]!;
-
+  const parameters = operationTemplate.parameters.reduce((acc, parameter) => {
+    return {
+      ...acc,
+      [parameter.name]: parameter.value,
+    };
+  }, {});
   const aggregatedApiCall: node.BaseAggregatedApiCall = {
     parameters,
     ...endpoint,
@@ -54,13 +56,16 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     return [];
   }
 
-  const templateIds = beaconIds.map((beaconId) => beacons[beaconId]!.templateId);
-
   const templateResponsePromises = templateIds.map(async (templateId) => {
     const template = templates[templateId]!;
-    const parameters = abi.decode(template.parameters);
     const endpoint = endpoints[template.endpointId]!;
 
+    const parameters = template.parameters.reduce((acc, parameter) => {
+      return {
+        ...acc,
+        [parameter.name]: parameter.value,
+      };
+    }, {});
     const aggregatedApiCall: node.BaseAggregatedApiCall = {
       parameters,
       ...endpoint,

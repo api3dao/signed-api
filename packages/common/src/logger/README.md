@@ -4,35 +4,36 @@ Backend-only logger for Node.js packages based on Winston logger.
 
 ## Configuration
 
-Logger configuration is essentially:
+Logger configuration allows specifying log format, styling and level.
 
-```ts
-interface LogConfiguration {
-  type: 'hidden' | 'json' | 'pretty'; // Specifies the log format.
-  styling: 'on' | 'off'; // Toggles output colorization.
-  minLevel: 'debug' | 'info' | 'warn' | 'error'; // Specifies the minimum log level that is logged.
-}
-```
+<!-- NOTE: Keep in sync with pusher and API. -->
 
-### type
+### `enabled`
 
-- `hidden` - Silences all logs. This is suitable for test environment.
+Enables or disables logging. Options:
+
+- `true` - Enables logging.
+- `false` - Disables logging.
+
+### `format`
+
 - `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
 - `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
   development.
 
-### styling
+### `colorize`
 
-- `on` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
+Enables or disables colors in the log output. Options:
+
+- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
   Recommended when running locally and in development.
-- `off` - Disables colors in the log output. Recommended for production.
+- `false` - Disables colors in the log output. Recommended for production.
 
-### minLevel
+### `minLevel`
 
-One of the following options:
+Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
 
-```ts
-'debug' | 'info' | 'warn' | 'error';
-```
-
-Logs with smaller level (severity) will be silenced.
+- `debug` - Enables all logs.
+- `info` - Enables logs with level `info`, `warn` and `error`.
+- `warn` - Enables logs with level `warn` and `error`.
+- `error` - Enables logs with level `error`.

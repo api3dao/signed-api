@@ -1,6 +1,9 @@
 # api
 
-A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
+> A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
+
+Signed API is a Node.js API server, dockerized and deployable on any cloud provider or hostable on premise. It stores
+the data in memory and provides endpoints to push and retrieve beacon data.
 
 ## Local development
 
@@ -9,37 +12,119 @@ A service for storing and accessing signed data. It provides endpoints to handle
 2. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
 3. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
-## Deployment
-
-TODO: Write example how to deploy on AWS (and maybe other cloud providers as well).
-
 ## Configuration
 
-The API is configured via `signed-api.json`. You can use this file to specify the port of the server, configure cache
-header longevity or maximum batch size the API accepts.
+The API is configured via combination of [environment variables](#environment-variables) and
+[configuration file](#configuration-file).
 
-### Configuring endpoints
+### Environment variables
+
+Parts of the API needs to be initialized prior the configuration files are loaded. This is done via environment
+variables. For example:
+
+```sh
+# Defines a logger suitable for production.
+LOGGER_ENABLED=true
+LOG_COLORIZE=false
+LOG_FORMAT=json
+LOG_LEVEL=info
+
+# Defines the source of the configuration file on AWS S3 (the values specified here are only exemplatory).
+CONFIG_SOURCE=aws-s3
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+AWS_REGION=us-west-1
+AWS_S3_BUCKET_NAME=my-config-bucket
+AWS_S3_BUCKET_PATH=configs/my-app/signed-api.json
+```
+
+<!-- TODO: Document how to pass ENVs through docker -->
+
+<!-- NOTE: Keep the logger configuration in-sync with logger and pusher. -->
+
+#### `LOGGER_ENABLED`
+
+Enables or disables logging. Options:
+
+- `true` - Enables logging.
+- `false` - Disables logging.
+
+#### `LOG_FORMAT`
+
+The format of the log output. Options:
+
+- `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
+- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
+  development.
+
+#### `LOG_COLORIZE`
+
+Enables or disables colors in the log output. Options:
+
+- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
+  Recommended when running locally and in development.
+- `false` - Disables colors in the log output. Recommended for production.
+
+#### `LOG_LEVEL`
+
+Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
+
+- `debug` - Enables all logs.
+- `info` - Enables logs with level `info`, `warn` and `error`.
+- `warn` - Enables logs with level `warn` and `error`.
+- `error` - Enables logs with level `error`.
+
+### Configuration file
+
+The API is configured via `signed-api.json` configuration file.
+
+#### `endpoints`
 
 The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
 
-```json
-  "endpoints": [
-    {
-      "urlPath": "/real-time",
-      "delaySeconds": 0
-    },
-    {
-      "urlPath": "/delayed",
-      "delaySeconds": 15
-    }
-  ],
+```jsonc
+// Defines two endpoints.
+"endpoints": [
+  // Serves the non-delayed data on URL path "/real-time".
+  {
+    "urlPath": "/real-time",
+    "delaySeconds": 0
+  },
+  // Serves the data delayed by 15 seconds on URL path "/delayed".
+  {
+    "urlPath": "/delayed",
+    "delaySeconds": 15
+  }
+]
 ```
 
-defines two endpoints. The `/real-time` serves the non-delayed data, the latter (`/delayed`) ignores all signed data
-that has bee pushed in the last 15 seconds (configured by `delaySeconds` parameter). You can define multiple endpoints
-as long as the `urlPath` is unique.
+##### `endpoints[n]`
 
-## Usage
+Configuration for one of the endpoints.
+
+###### `urlPath`
+
+The URL path on which the endpoint is served. Must start with a slash and contain only alphanumeric characters and
+dashes.
+
+###### `delaySeconds`
+
+The delay in seconds for the endpoint. The endpoint will only serve data that is older than the delay.
+
+#### `maxBatchSize`
+
+The maximum number of signed data entries that can be inserted in one batch. This is a safety measure to prevent
+spamming theAPI with large payloads. The batch is rejected if it contains more entries than this value.
+
+#### `port`
+
+The port on which the API is served.
+
+#### `cache.maxAgeSeconds`
+
+The maximum age of the cache header in seconds.
+
+## API
 
 The API provides the following endpoints:
 
@@ -53,13 +138,11 @@ The API provides the following endpoints:
   - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
     delayed endpoints (in case the data is too fresh and there is not an older alternative).
 
-## Local development
+## Deployment
 
-Spin up local `express` server:
+TODO: Write example how to deploy on AWS.
 
-```bash
-pnpm run dev
-```
+To deploy on premise you can use the Docker instructions below.
 
 ## Docker
 

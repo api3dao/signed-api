@@ -6,50 +6,42 @@ import { config } from '@api3/airnode-validator';
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
 import { logFormatSchema, logLevelSchema } from 'signed-api/common';
+import { goSync } from '@api3/promise-utils';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
-export const limiterConfig = z.object({ minTime: z.number(), maxConcurrent: z.number() });
+export const limiterConfig = z.object({ minTime: z.number(), maxConcurrency: z.number() });
 
-export const fetchMethodSchema = z.union([z.literal('gateway'), z.literal('api')]);
-
-export const beaconSchema = z
+export const parameterSchema = z
   .object({
-    airnode: config.evmAddressSchema,
-    templateId: config.evmIdSchema,
-    fetchInterval: z.number().int().positive().optional(),
-    fetchMethod: fetchMethodSchema.optional(),
+    name: z.string(),
+    type: z.string(),
+    value: z.string(),
   })
   .strict();
-
-export const beaconsSchema = z.record(config.evmIdSchema, beaconSchema).superRefine((beacons, ctx) => {
-  Object.entries(beacons).forEach(([beaconId, beacon]) => {
-    // Verify that config.beacons.<beaconId> is valid
-    // by deriving the hash of the airnode address and templateId
-    const derivedBeaconId = ethers.utils.solidityKeccak256(['address', 'bytes32'], [beacon.airnode, beacon.templateId]);
-    if (derivedBeaconId !== beaconId) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Beacon ID "${beaconId}" is invalid`,
-        path: [beaconId],
-      });
-    }
-  });
-});
 
 export const templateSchema = z
   .object({
     endpointId: config.evmIdSchema,
-    parameters: z.string(),
+    parameters: z.array(parameterSchema),
   })
   .strict();
 
 export const templatesSchema = z.record(config.evmIdSchema, templateSchema).superRefine((templates, ctx) => {
   Object.entries(templates).forEach(([templateId, template]) => {
-    // Verify that config.templates.<templateId> is valid
-    // by deriving the hash of the endpointId and parameters
+    // Verify that config.templates.<templateId> is valid by deriving the hash of the endpointId and parameters
+    const goEncodeParameters = goSync(() => abi.encode(template.parameters));
+    if (!goEncodeParameters.success) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Unable to encode parameters: ${goEncodeParameters.error}`,
+        path: ['templates', templateId, 'parameters'],
+      });
+      return;
+    }
+
     const derivedTemplateId = ethers.utils.solidityKeccak256(
       ['bytes32', 'bytes'],
-      [template.endpointId, template.parameters]
+      [template.endpointId, goEncodeParameters.data]
     );
     if (derivedTemplateId !== templateId) {
       ctx.addIssue({
@@ -99,7 +91,7 @@ export const beaconUpdateSchema = z
 
 export const signedApiUpdateSchema = z.object({
   signedApiName: z.string(),
-  beaconIds: z.array(config.evmIdSchema),
+  templateIds: z.array(config.evmIdSchema),
   fetchInterval: z.number(),
   updateDelay: z.number(),
 });
@@ -108,28 +100,15 @@ export const triggersSchema = z.object({
   signedApiUpdates: z.array(signedApiUpdateSchema),
 });
 
-const validateTemplatesReferences: SuperRefinement<{ beacons: Beacons; templates: Templates; endpoints: Endpoints }> = (
-  config,
-  ctx
-) => {
+const validateTemplatesReferences: SuperRefinement<{ templates: Templates; endpoints: Endpoints }> = (config, ctx) => {
   Object.entries(config.templates).forEach(([templateId, template]) => {
-    // Verify that config.templates.<templateId>.endpointId is
-    // referencing a valid config.endpoints.<endpointId> object
-
-    // Only verify for `api` call endpoints
-    if (
-      Object.values(config.beacons).some(
-        ({ templateId: tId, fetchMethod }) => fetchMethod === 'api' && tId === templateId
-      )
-    ) {
-      const endpoint = config.endpoints[template.endpointId];
-      if (isNil(endpoint)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: `Endpoint "${template.endpointId}" is not defined in the config.endpoints object`,
-          path: ['templates', templateId, 'endpointId'],
-        });
-      }
+    const endpoint = config.endpoints[template.endpointId];
+    if (isNil(endpoint)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Endpoint "${template.endpointId}" is not defined in the config.endpoints object`,
+        path: ['templates', templateId, 'endpointId'],
+      });
     }
   });
 };
@@ -164,38 +143,26 @@ const validateTriggerReferences: SuperRefinement<{
   ois: OIS[];
   endpoints: Endpoints;
   triggers: Triggers;
-  beacons: Beacons;
   templates: Templates;
   apiCredentials: ApisCredentials;
 }> = async (config, ctx) => {
-  const { ois, templates, endpoints, beacons, apiCredentials, triggers } = config;
+  const { ois, templates, endpoints, apiCredentials, triggers } = config;
 
   for (const signedApiUpdate of triggers.signedApiUpdates) {
-    const { beaconIds } = signedApiUpdate;
+    const { templateIds } = signedApiUpdate;
 
-    // Check only if beaconIds contains more than 1 beacon
-    if (beaconIds.length > 1) {
-      const operationPayloadPromises = beaconIds.map((beaconId) => {
-        const beacon = beacons[beaconId];
-        if (!beacon) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Unable to find beacon with ID: ${beaconId}`,
-            path: ['beacons'],
-          });
-          return;
-        }
-        const template = templates[beacon.templateId];
+    if (templateIds.length > 1) {
+      const operationPayloadPromises = templateIds.map((templateId) => {
+        const template = templates[templateId];
         if (!template) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Unable to find template with ID: ${beacon.templateId}`,
+            message: `Unable to find template with ID: ${templateId}`,
             path: ['templates'],
           });
           return;
         }
 
-        const parameters = abi.decode(template.parameters);
         const endpoint = endpoints[template.endpointId];
         if (!endpoint) {
           ctx.addIssue({
@@ -205,6 +172,13 @@ const validateTriggerReferences: SuperRefinement<{
           });
           return;
         }
+
+        const parameters = template.parameters.reduce((acc, parameter) => {
+          return {
+            ...acc,
+            [parameter.name]: parameter.value,
+          };
+        }, {});
 
         const aggregatedApiCall = {
           parameters,
@@ -234,45 +208,14 @@ const validateTriggerReferences: SuperRefinement<{
   }
 };
 
-const validateBeaconsReferences: SuperRefinement<{ beacons: Beacons; templates: Templates }> = (config, ctx) => {
-  Object.entries(config.beacons).forEach(([beaconId, beacon]) => {
-    // Verify that config.beacons.<beaconId>.templateId is
-    // referencing a valid config.templates.<templateId> object
-    const template = config.templates[beacon.templateId];
-    if (isNil(template)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Template ID "${beacon.templateId}" is not defined in the config.templates object`,
-        path: ['beacons', beaconId, 'templateId'],
-      });
-    }
-  });
-};
-
-export const rateLimitingSchema = z.object({
-  maxGatewayConcurrency: z.number().optional(),
-  minGatewayTime: z.number().optional(),
-  maxProviderConcurrency: z.number().optional(),
-  minProviderTime: z.number().optional(),
-  minDirectGatewayTime: z.number().optional(),
-  maxDirectGatewayConcurrency: z.number().optional(),
-  overrides: z
-    .object({
-      signedDataGateways: z.record(limiterConfig).optional(), // key is Airnode address
-      directGateways: z.record(limiterConfig).optional(), // key is ois title
-    })
-    .optional(),
-});
+export const rateLimitingSchema = z.record(limiterConfig);
 
 const validateOisRateLimiterReferences: SuperRefinement<{
   ois: OIS[];
-  rateLimiting?: RateLimitingConfig | undefined;
+  rateLimiting: RateLimitingConfig;
 }> = (config, ctx) => {
-  const directGateways = config.rateLimiting?.overrides?.directGateways ?? {};
-  const oises = config?.ois ?? [];
-
-  Object.keys(directGateways).forEach((oisTitle) => {
-    if (!oises.find((ois) => ois.title === oisTitle)) {
+  Object.keys(config.rateLimiting).forEach((oisTitle) => {
+    if (!config.ois.find((ois) => ois.title === oisTitle)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `OIS Title "${oisTitle}" in rate limiting overrides is not defined in the config.ois array`,
@@ -287,7 +230,18 @@ export const signedApiSchema = z.object({
   url: z.string().url(),
 });
 
-export const signedApisSchema = z.array(signedApiSchema);
+export const signedApisSchema = z.array(signedApiSchema).superRefine((apis, ctx) => {
+  const names = apis.map((api) => api.name);
+  const uniqueNames = [...new Set(names)];
+
+  if (names.length !== uniqueNames.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Signed API names must be unique`,
+      path: ['signedApis'],
+    });
+  }
+});
 
 export const oisesSchema = z.array(oisSchema);
 
@@ -295,8 +249,7 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
 export const configSchema = z
   .object({
-    walletMnemonic: z.string(),
-    beacons: beaconsSchema,
+    airnodeWalletMnemonic: z.string(),
     beaconSets: z.any(),
     chains: z.any(),
     gateways: z.any(),
@@ -306,10 +259,9 @@ export const configSchema = z
     ois: oisesSchema,
     apiCredentials: apisCredentialsSchema,
     endpoints: endpointsSchema,
-    rateLimiting: rateLimitingSchema.optional(),
+    rateLimiting: rateLimitingSchema,
   })
   .strict()
-  .superRefine(validateBeaconsReferences)
   .superRefine(validateTemplatesReferences)
   .superRefine(validateOisReferences)
   .superRefine(validateOisRateLimiterReferences)
@@ -317,11 +269,6 @@ export const configSchema = z
 
 export const encodedValueSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/);
 export const signatureSchema = z.string().regex(/^0x[a-fA-F0-9]{130}$/);
-export const signedDataSchemaLegacy = z.object({
-  data: z.object({ timestamp: z.string(), value: encodedValueSchema }),
-  signature: signatureSchema,
-});
-
 export const signedDataSchema = z.object({
   timestamp: z.string(),
   encodedValue: encodedValueSchema,
@@ -339,8 +286,6 @@ export const signedApiBatchPayloadSchema = z.array(signedApiPayloadSchema);
 export type SignedApiPayload = z.infer<typeof signedApiPayloadSchema>;
 export type SignedApiBatchPayload = z.infer<typeof signedApiBatchPayloadSchema>;
 export type Config = z.infer<typeof configSchema>;
-export type Beacon = z.infer<typeof beaconSchema>;
-export type Beacons = z.infer<typeof beaconsSchema>;
 export type Template = z.infer<typeof templateSchema>;
 export type Templates = z.infer<typeof templatesSchema>;
 export type BeaconUpdate = z.infer<typeof beaconUpdateSchema>;
@@ -353,10 +298,10 @@ export type EndpointId = z.infer<typeof config.evmIdSchema>;
 export type SignedData = z.infer<typeof signedDataSchema>;
 export type Endpoint = z.infer<typeof endpointSchema>;
 export type Endpoints = z.infer<typeof endpointsSchema>;
-export type FetchMethod = z.infer<typeof fetchMethodSchema>;
 export type LimiterConfig = z.infer<typeof limiterConfig>;
 export type RateLimitingConfig = z.infer<typeof rateLimitingSchema>;
 export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
+export type Parameter = z.infer<typeof parameterSchema>;
 
 export const secretsSchema = z.record(z.string());
 
