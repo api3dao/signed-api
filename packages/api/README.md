@@ -82,7 +82,7 @@ The API is configured via `signed-api.json` configuration file.
 
 The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
 
-```json
+```jsonc
 // Defines two endpoints.
 "endpoints": [
   // Serves the non-delayed data on URL path "/real-time".

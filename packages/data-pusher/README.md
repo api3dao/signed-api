@@ -108,7 +108,7 @@ You can also refer to the [example configuration](./config).
 Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from
 secrets. For example:
 
-```json
+```jsonc
 // The mnemonic is interpolated from the "WALLET_MNEMONIC" secret.
 "airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
 ```
@@ -117,14 +117,14 @@ secrets. For example:
 
 Configuration for rate limiting OIS requests. Rate limiting can be configured for each OIS separately. For example:
 
-```json
+```jsonc
 // Defines no rate limiting.
 "rateLimiting": { },
 ```
 
 or
 
-```json
+```jsonc
 // Defines rate limiting for OIS with title "Nodary"
 "rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
 ```
@@ -146,7 +146,7 @@ Minimum time in milliseconds between two requests to the OIS.
 Configuration for the template requests. Each template request is defined by a `templateId` and a `template` object. For
 example:
 
-```json
+```jsonc
 // Defines a single template.
 "templates": {
   "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd": {
@@ -197,7 +197,7 @@ The value of the parameter.
 
 Configuration for the endpoints. Each endpoint is defined by an `endpointId` and an `endpoint` object. For example:
 
-```json
+```jsonc
 "endpoints": {
   // Defines a single endpoint pointing to the OIS with title "Nodary" and endpoint named "feed".
   "0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc": {
@@ -232,7 +232,7 @@ configuration.
 
 For example:
 
-```json
+```jsonc
 "triggers": {
   // Defines a single trigger.
   "signedApiUpdates": [
@@ -286,7 +286,7 @@ The minimum delay in seconds before the data can be pushed to signed API.
 Configuration for the signed APIs. Each signed API is defined by a `signedApiName` and a `signedApi` object. For
 example:
 
-```json
+```jsonc
 // Defines a single signed API.
 "signedApis": [
   {
