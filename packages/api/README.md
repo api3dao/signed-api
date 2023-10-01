@@ -12,6 +12,18 @@ the data in memory and provides endpoints to push and retrieve beacon data.
 2. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
 3. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
+### Testing
+
+To run the tests:
+
+```sh
+pnpm run test
+# or to run test only from a specific files (path substring search)
+pnpm run test schema
+# or to enable logger (by default the logger is disabled by jest.setup.js).
+LOGGER_ENABLED=true pnpm run test
+```
+
 ## Configuration
 
 The API is configured via combination of [environment variables](#environment-variables) and
