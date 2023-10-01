@@ -1,6 +1,4 @@
-<!-- TODO: Rename data-pusher workspace to pusher -->
-
-# data-pusher
+# pusher
 
 > A service for storing and accessing signed data.
 
@@ -350,7 +348,7 @@ pnpm run docker:stop
 
 ### Development only docker instructions
 
-By default the `CONFIG_PATH` is points to the `data-pusher/config` directory. This means it's possible to run:
+By default the `CONFIG_PATH` is points to the `pusher/config` directory. This means it's possible to run:
 
 ```bash
 pnpm run docker:build
