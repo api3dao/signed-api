@@ -1,25 +1,9 @@
 import axios from 'axios';
 import { ZodError } from 'zod';
-import { postSignedApiData, signTemplateResponses } from './signed-api';
-import { config, signedApiResponse, nodarySignedTemplateResponses, nodaryTemplateResponses } from '../../test/fixtures';
+import { postSignedApiData } from './signed-api';
+import { config, signedApiResponse, nodarySignedTemplateResponses } from '../../test/fixtures';
 import { logger } from '../logger';
 import * as stateModule from '../state';
-
-describe(signTemplateResponses.name, () => {
-  it('signs template responses', async () => {
-    const state = stateModule.getInitialState(config);
-    jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
-
-    const signedTemplateResponses = await signTemplateResponses(nodaryTemplateResponses);
-
-    expect(signedTemplateResponses).toEqual(nodarySignedTemplateResponses);
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
-  });
-});
 
 describe(postSignedApiData.name, () => {
   it('posts data to central api', async () => {

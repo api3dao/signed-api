@@ -2,10 +2,9 @@ import * as node from '@api3/airnode-node';
 import { isNil, pick } from 'lodash';
 import { getState } from '../state';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
-import { SignedApiUpdate, TemplateId } from '../validation/schema';
+import { SignedApiUpdate } from '../validation/schema';
 import { logger } from '../logger';
-
-export type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
+import { TemplateResponse } from '../sign-template-data';
 
 export const callApi = async (payload: node.ApiCallPayload) => {
   logger.debug('Preprocessing API call payload', pick(payload.aggregatedApiCall, ['endpointName', 'oisTitle']));

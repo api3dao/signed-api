@@ -5,7 +5,7 @@ import { sleep } from './utils';
 import { SignedApiUpdate } from './validation/schema';
 import { NO_FETCH_EXIT_CODE } from './constants';
 import { makeTemplateRequests } from './api-requests/data-provider';
-import { signTemplateResponses } from './api-requests/signed-api';
+import { signTemplateResponses } from './sign-template-data';
 
 export const initiateFetchingBeaconData = () => {
   logger.debug('Initiating fetching all beacon data');

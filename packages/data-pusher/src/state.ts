@@ -1,5 +1,4 @@
 import Bottleneck from 'bottleneck';
-import { ethers } from 'ethers';
 import { Config, SignedData, TemplateId } from './validation/schema';
 import { OIS_MAX_CONCURRENCY_DEFAULT, OIS_MIN_TIME_DEFAULT_MS } from './constants';
 import { deriveEndpointId, getRandomId } from './utils';
@@ -9,8 +8,6 @@ export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 export interface State {
   config: Config;
   templateValues: TemplateValueStorage;
-  // TODO: this can be trivially derived from config - remove.
-  walletPrivateKey: string;
   apiLimiters: Record<string, Bottleneck | undefined>;
 }
 
@@ -71,13 +68,11 @@ export const buildApiLimiters = (config: Config) => {
 export const buildTemplateStorages = (config: Config) =>
   Object.fromEntries(Object.keys(config.templates).map((templateId) => [templateId, new DelayedSignedDataQueue()]));
 
-export const getInitialState = (config: Config) => {
+export const getInitialState = (config: Config): State => {
   return {
     config,
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
-    walletPrivateKey: ethers.Wallet.fromMnemonic(config.airnodeWalletMnemonic).privateKey,
-    sponsorWalletsPrivateKey: {},
   };
 };
 
