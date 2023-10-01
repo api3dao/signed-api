@@ -1,14 +1,8 @@
 import axios from 'axios';
 import { ZodError } from 'zod';
 import { postSignedApiData, signTemplateResponses } from './signed-api';
-import {
-  config,
-  createMockedLogger,
-  signedApiResponse,
-  nodarySignedTemplateResponses,
-  nodaryTemplateResponses,
-} from '../../test/fixtures';
-import * as loggerModule from '../logger';
+import { config, signedApiResponse, nodarySignedTemplateResponses, nodaryTemplateResponses } from '../../test/fixtures';
+import { logger } from '../logger';
 import * as stateModule from '../state';
 
 describe(signTemplateResponses.name, () => {
@@ -57,8 +51,7 @@ describe(postSignedApiData.name, () => {
       })
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
+    jest.spyOn(logger, 'warn');
     jest.spyOn(axios, 'post').mockResolvedValue({ youHaveNotThoughAboutThisDidYou: 'yes-I-did' });
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
@@ -90,8 +83,7 @@ describe(postSignedApiData.name, () => {
       })
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    const logger = createMockedLogger();
-    jest.spyOn(loggerModule, 'logger').mockReturnValue(logger);
+    jest.spyOn(logger, 'warn');
     jest.spyOn(axios, 'post').mockRejectedValue('simulated-network-error');
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);

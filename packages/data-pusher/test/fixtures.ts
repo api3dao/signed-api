@@ -1,20 +1,9 @@
 import { PerformApiCallSuccess } from '@api3/airnode-node/dist/src/api';
 import { ApiCallErrorResponse } from '@api3/airnode-node';
-import { Logger } from 'signed-api/common';
 import { AxiosResponse } from 'axios';
 import { Config } from '../src/validation/schema';
 import { SignedResponse } from '../src/api-requests/signed-api';
 import { TemplateResponse } from '../src/api-requests/data-provider';
-
-export const createMockedLogger = (): Logger => {
-  return {
-    debug: jest.fn(),
-    warn: jest.fn(),
-    error: jest.fn(),
-    info: jest.fn(),
-    child: jest.fn(),
-  };
-};
 
 export const config: Config = {
   walletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',

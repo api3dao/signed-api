@@ -1,4 +1,5 @@
 import { uniqBy } from 'lodash';
+import { logFormatSchema, logLevelSchema } from 'signed-api/common';
 import { z } from 'zod';
 
 export const endpointSchema = z
@@ -50,3 +51,35 @@ export type SignedData = z.infer<typeof signedDataSchema>;
 export const batchSignedDataSchema = z.array(signedDataSchema);
 
 export type BatchSignedData = z.infer<typeof batchSignedDataSchema>;
+
+export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')]).transform((val) => val === 'true');
+
+// We apply default values to make it convenient to omit certain environment variables. The default values should be
+// primarily focused on users and production usage.
+export const envConfigSchema = z
+  .object({
+    LOGGER_ENABLED: envBooleanSchema.default('true'),
+    LOG_COLORIZE: envBooleanSchema.default('false'),
+    LOG_FORMAT: logFormatSchema.default('json'),
+    LOG_LEVEL: logLevelSchema.default('info'),
+
+    CONFIG_SOURCE: z.union([z.literal('local'), z.literal('aws-s3')]).default('local'),
+
+    AWS_ACCESS_KEY_ID: z.string().optional(),
+    AWS_SECRET_ACCESS_KEY: z.string().optional(),
+    AWS_REGION: z.string().optional(),
+    AWS_S3_BUCKET_NAME: z.string().optional(),
+    AWS_S3_BUCKET_PATH: z.string().optional(),
+  })
+  .strip() // We parse from ENV variables of the process which has many variables that we don't care about.
+  .superRefine((val, ctx) => {
+    if (val.CONFIG_SOURCE === 'aws-s3' && !val.AWS_REGION) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'The AWS_REGION must be set when CONFIG_SOURCE is "aws-s3"',
+        path: ['AWS_REGION'],
+      });
+    }
+  });
+
+export type EnvConfig = z.infer<typeof envConfigSchema>;

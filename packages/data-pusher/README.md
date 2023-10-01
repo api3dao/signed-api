@@ -16,7 +16,8 @@ To start the the pusher in dev mode run the following:
 2. `cp secrets.example.env secrets.env` - To copy the secrets.env needed for the configuration. This file is also
    ignored by git.
 3. Set the `NODARY_API_KEY` inside the secrets file.
-4. `pnpm run dev` - To run the pusher. This step assumes already running signed API as specified in the `pusher.json`
+4. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
+5. `pnpm run dev` - To run the pusher. This step assumes already running signed API as specified in the `pusher.json`
    configuration.
 
 ## Docker

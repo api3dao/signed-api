@@ -4,8 +4,9 @@ import { CACHE_HEADERS, COMMON_HEADERS } from './constants';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
 import { getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { ApiResponse } from './types';
-import { generateErrorResponse, getConfig, isBatchUnique } from './utils';
+import { generateErrorResponse, isBatchUnique } from './utils';
 import { batchSignedDataSchema, evmAddressSchema } from './schema';
+import { getConfig } from './config';
 
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.

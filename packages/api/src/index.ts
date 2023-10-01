@@ -4,16 +4,15 @@
 // You can check how this works by following the demo from https://github.com/evanw/node-source-map-support#demos. Just
 // create a test script with/without the source map support, build the project and run the built script using node.
 import 'source-map-support/register';
-import dotenv from 'dotenv';
 import { startServer } from './server';
-import { fetchAndCacheConfig } from './utils';
 import { logger } from './logger';
-import { Config } from './schema';
+import { fetchAndCacheConfig } from './config';
 
-dotenv.config();
-
-// Fetch the config before starting the application
-fetchAndCacheConfig().then((config: Config) => {
+async function main() {
+  const config = await fetchAndCacheConfig();
   logger.info('Using configuration', config);
+
   startServer(config);
-});
+}
+
+main();
