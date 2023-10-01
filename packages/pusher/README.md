@@ -69,8 +69,6 @@ LOG_FORMAT=json
 LOG_LEVEL=info
 ```
 
-<!-- TODO: Document how to pass ENVs through docker -->
-
 <!-- NOTE: Keep the logger configuration in-sync with logger and API. -->
 
 #### `LOGGER_ENABLED`
@@ -341,31 +339,32 @@ To deploy on premise you can use the Docker instructions below.
 
 ## Docker
 
-Pusher is also dockerized. The dockerized pusher needs expects environment variable `CONFIG_PATH` to be defined,
-pointing to a directory with `pusher.json` and `secrets.env` files.
+Pusher is also dockerized. To run the dockerized pusher you need to:
 
-In order to run the pusher from a docker, run:
+1. Mount config folder to `/app/config`. The folder should contain the `pusher.json` and `secrets.env` files.
+2. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
+   [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
+3. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
 
-```bash
-CONFIG_PATH=$(pwd)/config pnpm run docker:start
-# or in a detached mode
-CONFIG_PATH=$(pwd)/config pnpm run docker:detach:start
+For example:
+
+```sh
+# Assuming the current folder contains the "config" folder and ".env" file.
+docker run -it --init --volume $(pwd)/config:/app/config --env-file .env pusher:latest
 ```
 
-To stop a running pusher in a detached mode, run:
+As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
 
-```bash
-pnpm run docker:stop
+```sh
+docker build --target pusher --tag pusher:latest ../../
 ```
 
 ### Development only docker instructions
 
-By default the `CONFIG_PATH` is points to the `pusher/config` directory. This means it's possible to run:
+You can use shorthands from package.json. To understand how the docker image is built, read the
+[Dockerfile](../../Dockerfile).
 
-```bash
+```sh
 pnpm run docker:build
-# or
-pnpm run docker:start
+pnpm run docker:run
 ```
-
-without the need to set `CONFIG_PATH` explicitly.

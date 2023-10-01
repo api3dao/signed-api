@@ -50,8 +50,6 @@ AWS_S3_BUCKET_NAME=my-config-bucket
 AWS_S3_BUCKET_PATH=configs/my-app/signed-api.json
 ```
 
-<!-- TODO: Document how to pass ENVs through docker -->
-
 <!-- NOTE: Keep the logger configuration in-sync with logger and pusher. -->
 
 #### `LOGGER_ENABLED`
@@ -158,27 +156,42 @@ To deploy on premise you can use the Docker instructions below.
 
 ## Docker
 
-The API is also dockerized. Docker needs to publish the port of the server (running inside the docker) to the port on
-the host machine. By default, it expects the server is running on port `8090` and publishes it to the `8090` on the
-host. To change this, you need to modify both `signed-api.json` configuration and use `PORT` environment variable with
-the same value.
+The API is also dockerized. To run the dockerized APi, you need to:
 
-In order to run the API from a docker, run:
+1. Publish the port of the API to the host machine.
+2. Mount config folder to `/app/config`. The folder should contain the `signed-api.json` file.
+3. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
+   [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
+4. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
 
-```bash
-# Starts the API on port 8090
-pnpm run docker:start
-# Or in a detached mode
-pnpm run docker:detach:start
-# Optionally specify port (also make sure the same port is specified inside `signed-api.json`)
-PORT=5123 pnpm run docker:start
+For example:
+
+```sh
+# Assuming the current folder contains the "config" folder and ".env" file.
+docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env api:latest
+```
+
+As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
+
+```sh
+docker build --target api --tag api:latest ../../
+```
+
+### Development only docker instructions
+
+You can use shorthands from package.json. To understand how the docker image is built, read the
+[Dockerfile](../../Dockerfile).
+
+```sh
+pnpm run docker:build
+pnpm run docker:run
 ```
 
 ### Examples
 
 Here are some examples of how to use the API with `curl`. Note, the port may differ based on the configuration.
 
-```bash
+```sh
 # Upsert batch of signed data (HTTP POST)
 curl --location 'http://localhost:8090' \
 --header 'Content-Type: application/json' \
