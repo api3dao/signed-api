@@ -33,13 +33,77 @@ To start the the pusher in dev mode run the following:
 
 ## Configuration
 
+Pusher can be configured via a combination of [environment variables](#environment-variables) and
+[configuration files](#configuration-files).
+
+### Environment variables
+
+Logging needs to be initialized prior the configuration files are loaded. This is done via environment variables. For
+example:
+
+```sh
+# Defines a logger suitable for production.
+LOGGER_ENABLED=true
+LOG_COLORIZE=false
+LOG_FORMAT=json
+LOG_LEVEL=info
+```
+
+or
+
+```sh
+# Defines a logger suitable for local development or testing.
+LOGGER_ENABLED=true
+LOG_COLORIZE=false
+LOG_FORMAT=json
+LOG_LEVEL=info
+```
+
+<!-- TODO: Document how to pass ENVs through docker -->
+
+<!-- NOTE: Keep the logger configuration in-sync with logger and API. -->
+
+#### `LOGGER_ENABLED`
+
+Enables or disables logging. Options:
+
+- `true` - Enables logging.
+- `false` - Disables logging.
+
+#### `LOG_FORMAT`
+
+The format of the log output. Options:
+
+- `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
+- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
+  development.
+
+#### `LOG_COLORIZE`
+
+Enables or disables colors in the log output. Options:
+
+- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
+  Recommended when running locally and in development.
+- `false` - Disables colors in the log output. Recommended for production.
+
+#### `LOG_LEVEL`
+
+Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
+
+- `debug` - Enables all logs.
+- `info` - Enables logs with level `info`, `warn` and `error`.
+- `warn` - Enables logs with level `warn` and `error`.
+- `error` - Enables logs with level `error`.
+
+### Configuration files
+
 Pusher needs two configuration files, `pusher.json` and `secrets.env`. All expressions of a form `${SECRET_NAME}` are
 referring to values from secrets and are interpolated inside the `config.json` at runtime. You are advised to put
 sensitive information inside secrets.
 
 You can also refer to the [example configuration](./config).
 
-### `airnodeWalletMnemonic`
+#### `airnodeWalletMnemonic`
 
 Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from
 secrets. For example:
@@ -49,54 +113,7 @@ secrets. For example:
 "airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
 ```
 
-### `logger` <!-- NOTE: This is same documentation as in api/README.md -->
-
-Defines the logging configuration. For example:
-
-```json
-// Defines a logger suitable for production.
-"logger": {
-  "type": "json",
-  "styling": "off",
-  "minLevel": "info"
-}
-```
-
-or
-
-```json
-// Defines a logger suitable for local development or testing.
-"logger": {
-  "type": "pretty",
-  "styling": "on",
-  "minLevel": "debug"
-}
-```
-
-#### `type` <!-- NOTE: This is copied over over from logger/README.md -->
-
-- `hidden` - Silences all logs. This is suitable for test environment.
-- `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
-- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
-  development.
-
-#### `styling`
-
-- `on` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
-  Recommended when running locally and in development.
-- `off` - Disables colors in the log output. Recommended for production.
-
-#### `minLevel`
-
-One of the following options:
-
-```ts
-'debug' | 'info' | 'warn' | 'error';
-```
-
-Logs with smaller level (severity) will be silenced.
-
-### `rateLimiting`
+#### `rateLimiting`
 
 Configuration for rate limiting OIS requests. Rate limiting can be configured for each OIS separately. For example:
 
@@ -112,19 +129,19 @@ or
 "rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
 ```
 
-#### `rateLimiting[<OIS_TITLE>]`
+##### `rateLimiting[<OIS_TITLE>]`
 
 The configuration for the OIS with title `<OIS_TITLE>`.
 
-##### `maxConcurrency`
+###### `maxConcurrency`
 
 Maximum number of concurrent requests to the OIS.
 
-##### `minTime`
+###### `minTime`
 
 Minimum time in milliseconds between two requests to the OIS.
 
-### `templates`
+#### `templates`
 
 Configuration for the template requests. Each template request is defined by a `templateId` and a `template` object. For
 example:
@@ -145,38 +162,38 @@ The template ID hash is derived from the template object. You can derive the ID 
 ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 ```
 
-#### `templates[<TEMPLATE_ID>]`
+##### `templates[<TEMPLATE_ID>]`
 
 Configuration for the template object with ID `<TEMPLATE_ID>`.
 
-##### `endpointId`
+###### `endpointId`
 
 The ID of the endpoint to which the template request is made.
 
-##### `parameters`
+###### `parameters`
 
 The parameters of the template request. Refer to
 [Airnode ABI](https://dapi-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html) specification for
 details.
 
-##### `parameters[n]`
+###### `parameters[n]`
 
 Defines one of the parameters of the template request.
 
-###### `type`
+`type`
 
 Refer to
 [Airnode ABI available types](https://dapi-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html#details).
 
-###### `name`
+`name`
 
 The name of the parameter.
 
-###### `value`
+`value`
 
 The value of the parameter.
 
-### `endpoints`
+#### `endpoints`
 
 Configuration for the endpoints. Each endpoint is defined by an `endpointId` and an `endpoint` object. For example:
 
@@ -196,19 +213,19 @@ The endpoint ID hash is derived from the endpoint object. You can derive the ID 
 ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 ```
 
-#### `endpoints[<ENDPOINT_ID>]`
+##### `endpoints[<ENDPOINT_ID>]`
 
 Configuration for the endpoint object with ID `<ENDPOINT_ID>`.
 
-##### `endpointName`
+###### `endpointName`
 
 The name of the endpoint.
 
-##### `oisTitle`
+###### `oisTitle`
 
 The title of the OIS to which the endpoint belongs.
 
-### `triggers.signedApiUpdates`
+#### `triggers.signedApiUpdates`
 
 Configuration for the signed API update triggers. There can be multiple triggers, each specifying a different update
 configuration.
@@ -237,7 +254,7 @@ For example:
 }
 ```
 
-#### `triggers.signedApiUpdates[n]`
+##### `triggers.signedApiUpdates[n]`
 
 Configuration for one of the signed API update triggers. Pusher periodically pushes the data to the signed API. The
 period is `2.5` seconds.
@@ -248,23 +265,23 @@ parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/oi
 parameters before making the request (using pre-processing) and later get the corresponding template value based on the
 endpoint parameters (using-processing). Refer to the [example configuration](./config) for details.
 
-##### `signedApiName`
+###### `signedApiName`
 
 The name of the signed API to which the data is pushed.
 
-##### `templateIds`
+###### `templateIds`
 
 The IDs of the templates for which the data is fetched, signed and pushed.
 
-##### `fetchInterval`
+###### `fetchInterval`
 
 The interval in seconds between two consecutive fetches of the template data.
 
-##### `updateDelay`
+###### `updateDelay`
 
 The minimum delay in seconds before the data can be pushed to signed API.
 
-### `signedApis`
+#### `signedApis`
 
 Configuration for the signed APIs. Each signed API is defined by a `signedApiName` and a `signedApi` object. For
 example:
@@ -279,29 +296,29 @@ example:
 ]
 ```
 
-#### `signedApis[n]`
+##### `signedApis[n]`
 
 Configuration for one of the signed APIs.
 
-##### `name`
+###### `name`
 
 The name of the signed API.
 
-##### `url`
+###### `url`
 
 The URL of the signed API.
 
-### `ois`
+#### `ois`
 
 Configuration for the OISes.
 
 <!-- There is no example, because OISes are too large. -->
 
-#### `ois[n]`
+##### `ois[n]`
 
 Refer to the [OIS documentation](https://dapi-docs.api3.org/reference/ois/latest/).
 
-### `apiCredentials`
+#### `apiCredentials`
 
 Refer to Airnode's
 [API credentials](https://dapi-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
