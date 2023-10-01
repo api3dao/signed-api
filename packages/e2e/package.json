@@ -1,0 +1,23 @@
+{
+  "name": "e2e",
+  "version": "1.0.0",
+  "engines": {
+    "node": "^18.14.0",
+    "pnpm": "^8.8.0"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf coverage dist",
+    "dev": "ts-node src/index.ts",
+    "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
+    "eslint:fix": "eslint . --ext .js,.ts --fix",
+    "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
+    "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
+    "test": "jest --passWithNoTests",
+    "tsc": "tsc --project ."
+  },
+  "license": "MIT",
+  "dependencies": {
+    "zod": "^3.22.2"
+  }
+}

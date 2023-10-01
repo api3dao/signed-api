@@ -1,0 +1,15 @@
+# NOTE: Keep in sync with .dockerignore
+.build
+.env
+.idea
+.log
+.tsbuildinfo
+.vscode
+build
+dist
+node_modules
+coverage
+pusher.json
+secrets.env
+signed-api.json
+.DS_Store
