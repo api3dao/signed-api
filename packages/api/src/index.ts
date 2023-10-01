@@ -5,8 +5,14 @@
 // create a test script with/without the source map support, build the project and run the built script using node.
 import 'source-map-support/register';
 import { startServer } from './server';
-import { getConfig } from './utils';
 import { logger } from './logger';
+import { fetchAndCacheConfig } from './config';
 
-logger.info('Using configuration', getConfig());
-startServer();
+async function main() {
+  const config = await fetchAndCacheConfig();
+  logger.info('Using configuration', config);
+
+  startServer(config);
+}
+
+main();

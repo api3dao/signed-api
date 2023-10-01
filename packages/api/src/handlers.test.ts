@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { omit } from 'lodash';
 import * as cacheModule from './cache';
-import * as utilsModule from './utils';
+import * as configModule from './config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 import { createSignedData, generateRandomWallet } from '../test/utils';
 
@@ -12,7 +12,7 @@ afterEach(() => {
 
 beforeEach(() => {
   jest
-    .spyOn(utilsModule, 'getConfig')
+    .spyOn(configModule, 'getConfig')
     .mockImplementation(() => JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8')));
 });
 

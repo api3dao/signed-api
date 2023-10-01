@@ -1,15 +1,15 @@
-import { Logger, createLogger } from 'signed-api/common';
-import { Config } from './validation/schema';
+import { createLogger, logConfigSchema } from 'signed-api/common';
+import { loadEnv } from './validation/env';
 
-let logger: Logger | undefined;
+// We need to load the environment variables before we can use the logger. Because we want the logger to always be
+// available, we load the environment variables as a side effect during the module import.
+const env = loadEnv();
 
-export const initializeLogger = (config: Config) => {
-  logger = createLogger(config.logger);
-  return logger;
-};
+const options = logConfigSchema.parse({
+  colorize: env.LOG_COLORIZE,
+  enabled: env.LOGGER_ENABLED,
+  minLevel: env.LOG_LEVEL,
+  format: env.LOG_FORMAT,
+});
 
-export const getLogger = () => {
-  if (!logger) throw new Error('Logger not initialized');
-
-  return logger;
-};
+export const logger = createLogger(options);

@@ -1,5 +1,5 @@
 import { get, isEmpty } from 'lodash';
-import { getLogger } from './logger';
+import { logger } from './logger';
 import { getState } from './state';
 import { sleep } from './utils';
 import { BeaconId } from './validation/schema';
@@ -16,7 +16,7 @@ export type SignedApiNameUpdateDelayGroup = {
 };
 
 export const initiateUpdatingSignedApi = async () => {
-  getLogger().debug('Initiating updating signed API');
+  logger.debug('Initiating updating signed API');
   const { config } = getState();
 
   const signedApiUpdateDelayBeaconIdsMap = config.triggers.signedApiUpdates.reduce(
@@ -47,7 +47,7 @@ export const initiateUpdatingSignedApi = async () => {
   );
 
   if (isEmpty(signedApiUpdateDelayGroups)) {
-    getLogger().error('No signed API updates found. Stopping.');
+    logger.error('No signed API updates found. Stopping.');
     process.exit(NO_SIGNED_API_UPDATE_EXIT_CODE);
   }
 

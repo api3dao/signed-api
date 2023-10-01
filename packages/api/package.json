@@ -7,7 +7,7 @@
   },
   "main": "index.js",
   "scripts": {
-    "build": "tsc --project .",
+    "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf coverage dist",
     "dev": "nodemon --ext ts,js,json,env  --exec \"pnpm ts-node src/index.ts\"",
     "docker:build": "docker compose --file docker/docker-compose.yml build",
@@ -19,7 +19,8 @@
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
     "start-prod": "node dist/src/index.js",
-    "test": "jest"
+    "test": "jest",
+    "tsc": "tsc --project ."
   },
   "license": "MIT",
   "devDependencies": {
@@ -30,6 +31,8 @@
   },
   "dependencies": {
     "@api3/promise-utils": "0.4.0",
+    "@aws-sdk/client-s3": "^3.418.0",
+    "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
     "lodash": "^4.17.21",

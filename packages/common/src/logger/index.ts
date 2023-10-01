@@ -2,44 +2,43 @@ import winston from 'winston';
 import { z } from 'zod';
 import { consoleFormat } from 'winston-console-format';
 
-export const logTypeSchema = z.union([z.literal('hidden'), z.literal('json'), z.literal('pretty')]);
+export const logFormatSchema = z.union([z.literal('json'), z.literal('pretty')]);
 
-export type LogType = z.infer<typeof logTypeSchema>;
-
-export const logStylingSchema = z.union([z.literal('on'), z.literal('off')]);
-
-export type LogStyling = z.infer<typeof logStylingSchema>;
+export type LogType = z.infer<typeof logFormatSchema>;
 
 export const logLevelSchema = z.union([z.literal('debug'), z.literal('info'), z.literal('warn'), z.literal('error')]);
 
 export type LogLevel = z.infer<typeof logLevelSchema>;
 
 export const logConfigSchema = z.object({
-  type: logTypeSchema,
-  styling: logStylingSchema,
+  colorize: z.boolean(),
+  enabled: z.boolean(),
+  format: logFormatSchema,
   minLevel: logLevelSchema,
 });
 
 export type LogConfig = z.infer<typeof logConfigSchema>;
 
 const createConsoleTransport = (config: LogConfig) => {
-  const { type, styling } = config;
+  const { colorize, enabled, format } = config;
 
-  switch (type) {
-    case 'hidden':
-      return new winston.transports.Console({ silent: true });
+  if (!enabled) {
+    return new winston.transports.Console({ silent: true });
+  }
+
+  switch (format) {
     case 'json':
       return new winston.transports.Console({ format: winston.format.json() });
     case 'pretty': {
       const formats = [
-        styling === 'on' ? winston.format.colorize({ all: true }) : null,
+        colorize ? winston.format.colorize({ all: true }) : null,
         winston.format.padLevels(),
         consoleFormat({
           showMeta: true,
           metaStrip: [],
           inspectOptions: {
             depth: Infinity,
-            colors: styling === 'on',
+            colors: colorize,
             maxArrayLength: Infinity,
             breakLength: 120,
             compact: Infinity,
@@ -55,7 +54,7 @@ const createConsoleTransport = (config: LogConfig) => {
 };
 
 const createBaseLogger = (config: LogConfig) => {
-  const { type, minLevel } = config;
+  const { enabled, minLevel } = config;
 
   return winston.createLogger({
     level: minLevel,
@@ -67,7 +66,7 @@ const createBaseLogger = (config: LogConfig) => {
       winston.format.splat(),
       winston.format.json()
     ),
-    silent: type === 'hidden',
+    silent: !enabled,
     exitOnError: false,
     transports: [createConsoleTransport(config)],
   });

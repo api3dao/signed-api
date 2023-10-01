@@ -1,7 +1,8 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { ZodError } from 'zod';
-import { configSchema, endpointSchema, endpointsSchema } from './schema';
+import dotenv from 'dotenv';
+import { configSchema, endpointSchema, endpointsSchema, envBooleanSchema, envConfigSchema } from './schema';
 
 describe('endpointSchema', () => {
   it('validates urlPath', () => {
@@ -46,5 +47,68 @@ describe('configSchema', () => {
     const config = JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8'));
 
     expect(() => configSchema.parse(config)).not.toThrow();
+  });
+});
+
+describe('env config schema', () => {
+  it('parses boolean env variable correctly', () => {
+    expect(envBooleanSchema.parse('true')).toBe(true);
+    expect(envBooleanSchema.parse('false')).toBe(false);
+
+    // Using a function to create the expected error because the error message length is too long to be inlined. The
+    // error messages is trivially stringified if propagated to the user.
+    const createExpectedError = (received: string) =>
+      new ZodError([
+        {
+          code: 'invalid_union',
+          unionErrors: [
+            new ZodError([
+              {
+                received,
+                code: 'invalid_literal',
+                expected: 'true',
+                path: [],
+                message: 'Invalid literal value, expected "true"',
+              },
+            ]),
+            new ZodError([
+              {
+                received,
+                code: 'invalid_literal',
+                expected: 'false',
+                path: [],
+                message: 'Invalid literal value, expected "false"',
+              },
+            ]),
+          ],
+          path: [],
+          message: 'Invalid input',
+        },
+      ]);
+    expect(() => envBooleanSchema.parse('')).toThrow(createExpectedError(''));
+    expect(() => envBooleanSchema.parse('off')).toThrow(createExpectedError('off'));
+  });
+
+  it('parses example env correctly', () => {
+    // Load the example configuration from the ".env.example" file
+    const env = dotenv.parse(readFileSync(join(__dirname, '../.env.example'), 'utf8'));
+
+    expect(() => envConfigSchema.parse(env)).not.toThrow();
+  });
+
+  it('AWS_REGION is set when CONFIG_SOURCE is aws-s3', () => {
+    const env = {
+      CONFIG_SOURCE: 'aws-s3',
+    };
+
+    expect(() => envConfigSchema.parse(env)).toThrow(
+      new ZodError([
+        {
+          code: 'custom',
+          message: 'The AWS_REGION must be set when CONFIG_SOURCE is "aws-s3"',
+          path: ['AWS_REGION'],
+        },
+      ])
+    );
   });
 });

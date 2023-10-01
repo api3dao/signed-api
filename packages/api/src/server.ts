@@ -1,10 +1,9 @@
 import express from 'express';
 import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
-import { getConfig } from './utils';
 import { logger } from './logger';
+import { Config } from './schema';
 
-export const startServer = () => {
-  const config = getConfig();
+export const startServer = (config: Config) => {
   const app = express();
 
   app.use(express.json());

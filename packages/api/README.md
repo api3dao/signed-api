@@ -6,7 +6,8 @@ A service for storing and accessing signed data. It provides endpoints to handle
 
 1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally
    change the defaults.
-2. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
+2. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
+3. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
 
 ## Deployment
 

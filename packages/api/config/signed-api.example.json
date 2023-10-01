@@ -13,10 +13,5 @@
   "port": 8090,
   "cache": {
     "maxAgeSeconds": 300
-  },
-  "logger": {
-    "type": "pretty",
-    "styling": "on",
-    "minLevel": "debug"
   }
 }

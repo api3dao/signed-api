@@ -5,7 +5,7 @@ import { oisSchema, OIS, Endpoint as oisEndpoint } from '@api3/ois';
 import { config } from '@api3/airnode-validator';
 import * as abi from '@api3/airnode-abi';
 import * as node from '@api3/airnode-node';
-import { logConfigSchema } from 'signed-api/common';
+import { logFormatSchema, logLevelSchema } from 'signed-api/common';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
 export const limiterConfig = z.object({ minTime: z.number(), maxConcurrent: z.number() });
@@ -296,7 +296,6 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 export const configSchema = z
   .object({
     walletMnemonic: z.string(),
-    logger: logConfigSchema,
     beacons: beaconsSchema,
     beaconSets: z.any(),
     chains: z.any(),
@@ -368,3 +367,18 @@ export const signedApiResponseSchema = z
   .strict();
 
 export type SignedApiResponse = z.infer<typeof signedApiResponseSchema>;
+
+export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')]).transform((val) => val === 'true');
+
+// We apply default values to make it convenient to omit certain environment variables. The default values should be
+// primarily focused on users and production usage.
+export const envConfigSchema = z
+  .object({
+    LOGGER_ENABLED: envBooleanSchema.default('true'),
+    LOG_COLORIZE: envBooleanSchema.default('false'),
+    LOG_FORMAT: logFormatSchema.default('json'),
+    LOG_LEVEL: logLevelSchema.default('info'),
+  })
+  .strip(); // We parse from ENV variables of the process which has many variables that we don't care about.
+
+export type EnvConfig = z.infer<typeof envConfigSchema>;
