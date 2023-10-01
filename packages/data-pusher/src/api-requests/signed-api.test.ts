@@ -11,7 +11,7 @@ describe(postSignedApiData.name, () => {
     // Assumes the template responses are for unique template IDs (which is true in the test fixtures).
     state.templateValues = Object.fromEntries(
       nodarySignedTemplateResponses.map(([templateId, signedData]) => {
-        const dataQueue = new stateModule.DelayedSignedDataQueue();
+        const dataQueue = new stateModule.DelayedSignedDataQueue(0);
         dataQueue.put(signedData);
         return [templateId, dataQueue];
       })
@@ -29,7 +29,7 @@ describe(postSignedApiData.name, () => {
     // Assumes the template responses are for unique template IDs (which is true in the test fixtures).
     state.templateValues = Object.fromEntries(
       nodarySignedTemplateResponses.map(([templateId, signedData]) => {
-        const dataQueue = new stateModule.DelayedSignedDataQueue();
+        const dataQueue = new stateModule.DelayedSignedDataQueue(0);
         dataQueue.put(signedData);
         return [templateId, dataQueue];
       })
@@ -61,7 +61,7 @@ describe(postSignedApiData.name, () => {
     // Assumes the template responses are for unique template IDs (which is true in the test fixtures).
     state.templateValues = Object.fromEntries(
       nodarySignedTemplateResponses.map(([templateId, signedData]) => {
-        const dataQueue = new stateModule.DelayedSignedDataQueue();
+        const dataQueue = new stateModule.DelayedSignedDataQueue(0);
         dataQueue.put(signedData);
         return [templateId, dataQueue];
       })

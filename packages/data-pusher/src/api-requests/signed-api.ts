@@ -21,7 +21,10 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
 
   const airnode = ethers.Wallet.fromMnemonic(airnodeWalletMnemonic).address;
   const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
-    const delayedSignedData = templateValues[templateId]!.get(updateDelay);
+    // Calculate the reference timestamp based on the current time and update delay.
+    const referenceTimestamp = Date.now() / 1000 - updateDelay;
+    const delayedSignedData = templateValues[templateId]!.get(referenceTimestamp);
+    templateValues[templateId]!.prune();
     if (isNil(delayedSignedData)) return null;
 
     return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...delayedSignedData };
