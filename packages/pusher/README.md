@@ -21,7 +21,13 @@ The pusher needs a configuration in order to run. The `config` folder contains e
 To start the the pusher in dev mode run the following:
 
 1. `cp pusher.example.json pusher.json` - To copy the pusher configuration from the example. Note, the `pusher.json`
-   file is ignored by git.
+   file is ignored by git. If you are using Docker Desktop, you need to change the URL from localhost to
+   `host.docker.internal`. For example:
+
+   ```jsonc
+   "url": "http://host.docker.internal:8090"
+   ```
+
 2. `cp secrets.example.env secrets.env` - To copy the secrets.env needed for the configuration. This file is also
    ignored by git.
 3. Set the `NODARY_API_KEY` inside the secrets file. Ask someone from development team for the key.
