@@ -68,13 +68,13 @@ describe(postSignedApiData.name, () => {
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(logger, 'warn');
-    jest.spyOn(axios, 'post').mockRejectedValue('simulated-network-error');
+    jest.spyOn(axios, 'post').mockRejectedValue(new Error('simulated-network-error'));
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
 
     expect(response).toEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
-      axiosResponse: undefined,
+      error: new Error('simulated-network-error'),
       signedApiName: 'localhost',
       updateDelay: 5,
     });

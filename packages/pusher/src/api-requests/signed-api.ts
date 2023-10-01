@@ -15,9 +15,6 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   } = getState();
   const { signedApiName, templateIds, updateDelay } = group;
   const logContext = { signedApiName, updateDelay };
-  logger.debug('Posting signed API data.', { group, ...logContext });
-
-  const provider = signedApis.find((a) => a.name === signedApiName)!;
 
   const airnode = ethers.Wallet.fromMnemonic(airnodeWalletMnemonic).address;
   const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
@@ -36,6 +33,9 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     logger.debug('No batch payload found to post. Skipping.', logContext);
     return { success: true, count: 0 };
   }
+
+  logger.debug('Posting signed API data.', { group, ...logContext });
+  const provider = signedApis.find((a) => a.name === signedApiName)!;
   const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
     logger.debug('Posting batch payload.', { ...logContext, batchPayload });
     const axiosResponse = await axios.post(provider.url, batchPayload, {
@@ -50,7 +50,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     logger.warn(
       `Failed to make update signed API request.`,
       // See: https://axios-http.com/docs/handling_errors
-      { ...logContext, axiosResponse: goAxiosRequest.error.response }
+      { ...logContext, error: goAxiosRequest.error.response ?? goAxiosRequest.error }
     );
     return { success: false };
   }

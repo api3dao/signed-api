@@ -8,6 +8,7 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
+    "docker:build": "pnpm recursive run docker:build",
     "eslint:check": "pnpm recursive run eslint:check",
     "eslint:fix": "pnpm recursive run eslint:fix",
     "prettier:check": "pnpm recursive run prettier:check",
