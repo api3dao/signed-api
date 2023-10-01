@@ -351,12 +351,13 @@ Pusher is also dockerized. To run the dockerized pusher you need to:
 2. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
 3. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
+4. Optionally, pass the `--rm` flag to remove the container after it is stopped.
 
 For example:
 
 ```sh
 # Assuming the current folder contains the "config" folder and ".env" file.
-docker run -it --init --volume $(pwd)/config:/app/config --env-file .env pusher:latest
+docker run -it --init --volume $(pwd)/config:/app/config --env-file .env --rm pusher:latest
 ```
 
 As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:

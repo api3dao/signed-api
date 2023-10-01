@@ -158,17 +158,18 @@ To deploy on premise you can use the Docker instructions below.
 
 The API is also dockerized. To run the dockerized APi, you need to:
 
-1. Publish the port of the API to the host machine.
+1. Publish the port of the API to the host machine using the `--publish` flag.
 2. Mount config folder to `/app/config`. The folder should contain the `signed-api.json` file.
 3. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
 4. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
+5. Optionally, pass the `--rm` flag to remove the container after it is stopped.
 
 For example:
 
 ```sh
-# Assuming the current folder contains the "config" folder and ".env" file.
-docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env api:latest
+# Assuming the current folder contains the "config" folder and ".env" file and the API port is 8090.
+docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api:latest
 ```
 
 As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
