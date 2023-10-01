@@ -40,9 +40,9 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
-    "@types/express": "^4.17.17",
-    "@types/lodash": "^4.14.198",
-    "@types/source-map-support": "^0.5.7",
+    "@types/express": "^4.17.18",
+    "@types/lodash": "^4.14.199",
+    "@types/source-map-support": "^0.5.8",
     "nodemon": "^3.0.1"
   }
 }
