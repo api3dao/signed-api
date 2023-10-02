@@ -1,0 +1,17 @@
+{
+  "endpoints": [
+    {
+      "urlPath": "/real-time",
+      "delaySeconds": 0
+    },
+    {
+      "urlPath": "/delayed",
+      "delaySeconds": 10
+    }
+  ],
+  "maxBatchSize": 10,
+  "port": 8090,
+  "cache": {
+    "maxAgeSeconds": 0
+  }
+}

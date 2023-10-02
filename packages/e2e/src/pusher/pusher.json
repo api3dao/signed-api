@@ -1,0 +1,111 @@
+{
+  "airnodeWalletMnemonic": "diamond result history offer forest diagram crop armed stumble orchard stage glance",
+  "rateLimiting": { "Mock API": { "maxConcurrency": 25, "minTime": 0 } },
+  "templates": {
+    "0xd1c9c79ccb6e24f77c14456b9b037ded9bfd0709468297e4e1e1bedbfe1bbf1a": {
+      "endpointId": "0xa02c7e24d1d73f429927eedb78185a7d7d7c82d410acc3914cf6213aa29fea3f",
+      "parameters": [{ "type": "string32", "name": "name", "value": "MOCK-ETH/USD" }]
+    },
+    "0x4edc7440a34c8420ff592e4b2455785a9218c388a3112a2a92beedcb3e8feeba": {
+      "endpointId": "0xa02c7e24d1d73f429927eedb78185a7d7d7c82d410acc3914cf6213aa29fea3f",
+      "parameters": [{ "type": "string32", "name": "name", "value": "MOCK-BTC/USD" }]
+    },
+    "0xcc72aa1d058c5db90c4595a6fcfb320dce997b978dcb6d1f176a121c05d47eeb": {
+      "endpointId": "0xa02c7e24d1d73f429927eedb78185a7d7d7c82d410acc3914cf6213aa29fea3f",
+      "parameters": [{ "type": "string32", "name": "name", "value": "MOCK-ABC/DEF" }]
+    },
+    "0xcd2516b29a7634861a010155a3666b1be9af9cdb2d442e8f1ac1607c42862f9e": {
+      "endpointId": "0xa02c7e24d1d73f429927eedb78185a7d7d7c82d410acc3914cf6213aa29fea3f",
+      "parameters": [{ "type": "string32", "name": "name", "value": "MOCK-HJK/KOP" }]
+    }
+  },
+  "endpoints": {
+    "0xa02c7e24d1d73f429927eedb78185a7d7d7c82d410acc3914cf6213aa29fea3f": {
+      "endpointName": "mock-feed",
+      "oisTitle": "Mock API"
+    }
+  },
+  "triggers": {
+    "signedApiUpdates": [
+      {
+        "signedApiName": "localhost",
+        "templateIds": [
+          "0xd1c9c79ccb6e24f77c14456b9b037ded9bfd0709468297e4e1e1bedbfe1bbf1a",
+          "0x4edc7440a34c8420ff592e4b2455785a9218c388a3112a2a92beedcb3e8feeba"
+        ],
+        "fetchInterval": 5,
+        "updateDelay": 0
+      },
+      {
+        "signedApiName": "localhost",
+        "templateIds": [
+          "0x4edc7440a34c8420ff592e4b2455785a9218c388a3112a2a92beedcb3e8feeba",
+          "0xcc72aa1d058c5db90c4595a6fcfb320dce997b978dcb6d1f176a121c05d47eeb",
+          "0xcd2516b29a7634861a010155a3666b1be9af9cdb2d442e8f1ac1607c42862f9e"
+        ],
+        "fetchInterval": 3,
+        "updateDelay": 5
+      },
+      {
+        "signedApiName": "localhost",
+        "templateIds": [
+          "0xd1c9c79ccb6e24f77c14456b9b037ded9bfd0709468297e4e1e1bedbfe1bbf1a",
+          "0xcc72aa1d058c5db90c4595a6fcfb320dce997b978dcb6d1f176a121c05d47eeb",
+          "0xcd2516b29a7634861a010155a3666b1be9af9cdb2d442e8f1ac1607c42862f9e"
+        ],
+        "fetchInterval": 1,
+        "updateDelay": 0
+      }
+    ]
+  },
+  "signedApis": [
+    {
+      "name": "localhost",
+      "url": "http://${HOST_IP}:8090"
+    }
+  ],
+  "ois": [
+    {
+      "oisFormat": "2.2.0",
+      "title": "Mock API",
+      "version": "0.2.0",
+      "apiSpecifications": {
+        "components": {
+          "securitySchemes": {}
+        },
+        "paths": {
+          "/": { "get": { "parameters": [] } }
+        },
+        "servers": [{ "url": "http://${HOST_IP}:9876" }],
+        "security": {}
+      },
+      "endpoints": [
+        {
+          "fixedOperationParameters": [],
+          "name": "mock-feed",
+          "operation": { "method": "get", "path": "/" },
+          "parameters": [{ "name": "name" }],
+          "reservedParameters": [
+            { "name": "_type", "fixed": "int256" },
+            { "name": "_times", "fixed": "1000000000000000000" }
+          ],
+          "preProcessingSpecifications": [
+            {
+              "environment": "Node",
+              "value": "const output = {};",
+              "timeoutMs": 5000
+            }
+          ],
+          "postProcessingSpecifications": [
+            {
+              "environment": "Node",
+              "value": "const output = input[endpointParameters.name];",
+              "timeoutMs": 5000
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "apiCredentials": []
+}
