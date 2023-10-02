@@ -1,6 +1,6 @@
 import { go } from '@api3/promise-utils';
 import axios, { AxiosError } from 'axios';
-import { isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil, pick } from 'lodash';
 import { ethers } from 'ethers';
 import { deriveBeaconId } from '@api3/airnode-node';
 import { logger } from '../logger';
@@ -50,7 +50,11 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     logger.warn(
       `Failed to make update signed API request.`,
       // See: https://axios-http.com/docs/handling_errors
-      { ...logContext, error: goAxiosRequest.error.response ?? goAxiosRequest.error }
+      {
+        ...logContext,
+        axiosResponse: pick(goAxiosRequest.error.response, ['data', 'status', 'headers']),
+        errorMessage: goAxiosRequest.error.message,
+      }
     );
     return { success: false };
   }

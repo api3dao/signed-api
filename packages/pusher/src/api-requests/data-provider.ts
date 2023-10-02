@@ -9,7 +9,7 @@ import { TemplateResponse } from '../sign-template-data';
 export const callApi = async (payload: node.ApiCallPayload) => {
   logger.debug('Preprocessing API call payload', pick(payload.aggregatedApiCall, ['endpointName', 'oisTitle']));
   const processedPayload = await preProcessApiSpecifications(payload);
-  logger.debug('Performing API call', { processedPayload: processedPayload });
+  logger.debug('Performing API call', pick(processedPayload.aggregatedApiCall, ['endpointName', 'oisTitle']));
   return node.api.performApiCall(processedPayload);
 };
 
@@ -50,8 +50,11 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     : callApi(operationPayload));
 
   if (node.api.isPerformApiCallFailure(apiCallResponse)) {
-    const message = `Failed to make API call for the endpoint [${endpoint.oisTitle}] ${endpoint.endpointName}.`;
-    logger.warn(message, { operationTemplateId });
+    logger.warn(`Failed to make API call`, {
+      operationTemplateId,
+      ...pick(endpoint, ['endpointName', 'oisTitle']),
+      errorMessage: apiCallResponse.errorMessage,
+    });
     return [];
   }
 
@@ -78,9 +81,11 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     logger.debug('Processing successful API call', { templateId, operationTemplateId });
     const [_, response] = await node.api.processSuccessfulApiCall(payload, apiCallResponse);
 
-    if (!response.success) {
+    // We need to check both success and error property because Airnode returns success. See:
+    // https://github.com/api3dao/airnode/blob/c0ad71f1cbf40235f2ee765000b430f7f0f026a5/packages/airnode-node/src/api/index.ts#L243
+    if (!response.success || (response as any).errorMessage) {
       const message = `Failed to post process successful API call`;
-      logger.warn(message, { templateId, operationTemplateId, errorMessage: response.errorMessage });
+      logger.warn(message, { templateId, operationTemplateId, errorMessage: (response as any).errorMessage });
       return null;
     }
     return [templateId, response];

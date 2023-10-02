@@ -352,6 +352,10 @@ Pusher is also dockerized. To run the dockerized pusher you need to:
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
 3. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
 4. Optionally, pass the `--rm` flag to remove the container after it is stopped.
+5. If running on Linux, you need to use the `--network host` to access the host network. This has no effect for Docker
+   Desktop.
+6. Lastly, if you are using Docker Desktop and you want to access the host machine, you need to change the host URL from
+   `localhost` to `host.docker.internal` in the configuration files.
 
 For example:
 

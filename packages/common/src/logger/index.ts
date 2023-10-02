@@ -87,15 +87,15 @@ export interface Logger {
 // That's causing an override of fields `name` and `message` if they are present.
 const wrapper = (logger: Logger): Logger => {
   return {
-    debug: (message, context) => logger.debug(message, { context }),
-    info: (message, context) => logger.info(message, { context }),
-    warn: (message, context) => logger.warn(message, { context }),
+    debug: (message, context) => logger.debug(message, context ? { context } : undefined),
+    info: (message, context) => logger.info(message, context ? { context } : undefined),
+    warn: (message, context) => logger.warn(message, context ? { context } : undefined),
     // We need to handle both overloads of the `error` function
     error: (message, errorOrContext, context) => {
       if (errorOrContext instanceof Error) {
-        logger.error(message, errorOrContext, { context });
+        logger.error(message, errorOrContext, context ? { context } : undefined);
       } else {
-        logger.error(message, { context: errorOrContext });
+        logger.error(message, errorOrContext ? { context: errorOrContext } : undefined);
       }
     },
     child: (options) => wrapper(logger.child(options)),
