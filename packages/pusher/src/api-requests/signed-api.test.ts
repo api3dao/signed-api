@@ -74,7 +74,8 @@ describe(postSignedApiData.name, () => {
 
     expect(response).toEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
-      error: new Error('simulated-network-error'),
+      errorMessage: 'simulated-network-error',
+      axiosResponse: {},
       signedApiName: 'localhost',
       updateDelay: 5,
     });
