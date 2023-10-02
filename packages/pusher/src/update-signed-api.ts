@@ -1,4 +1,4 @@
-import { get, isEmpty } from 'lodash';
+import { get, isEmpty, uniq } from 'lodash';
 import { logger } from './logger';
 import { getState } from './state';
 import { sleep } from './utils';
@@ -19,22 +19,20 @@ export const initiateUpdatingSignedApi = async () => {
   logger.debug('Initiating updating signed API');
   const { config } = getState();
 
-  const signedApiUpdateDelayTemplateIdsMap = config.triggers.signedApiUpdates.reduce(
-    (acc: SignedApiUpdateDelayTemplateIdsMap, signedApiUpdate) => {
-      if (isEmpty(signedApiUpdate.templateIds)) return acc;
-      return {
-        ...acc,
-        [signedApiUpdate.signedApiName]: {
-          ...acc[signedApiUpdate.signedApiName],
-          [signedApiUpdate.updateDelay]: [
-            ...get(acc, [signedApiUpdate.signedApiName, signedApiUpdate.updateDelay], []),
-            ...signedApiUpdate.templateIds,
-          ],
-        },
-      };
-    },
-    {}
-  );
+  const signedApiUpdateDelayTemplateIdsMap = config.triggers.signedApiUpdates.reduce((acc, signedApiUpdate) => {
+    if (isEmpty(signedApiUpdate.templateIds)) return acc;
+
+    return {
+      ...acc,
+      [signedApiUpdate.signedApiName]: {
+        ...acc[signedApiUpdate.signedApiName],
+        [signedApiUpdate.updateDelay]: uniq([
+          ...get(acc, [signedApiUpdate.signedApiName, signedApiUpdate.updateDelay], []),
+          ...signedApiUpdate.templateIds,
+        ]),
+      },
+    };
+  }, {} as SignedApiUpdateDelayTemplateIdsMap);
 
   const signedApiUpdateDelayGroups: SignedApiNameUpdateDelayGroup[] = Object.entries(
     signedApiUpdateDelayTemplateIdsMap
