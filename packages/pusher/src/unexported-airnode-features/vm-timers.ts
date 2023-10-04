@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Timers (setTimeout, setInterval) do not work in Node.js vm, see: https://github.com/nodejs/help/issues/1875
  *

@@ -1,12 +1,13 @@
-import { go } from '@api3/promise-utils';
-import axios, { AxiosError } from 'axios';
-import { isEmpty, isNil, pick } from 'lodash';
-import { ethers } from 'ethers';
 import { deriveBeaconId } from '@api3/airnode-node';
+import { go } from '@api3/promise-utils';
+import axios, { type AxiosError } from 'axios';
+import { ethers } from 'ethers';
+import { isEmpty, isNil, pick } from 'lodash';
+
 import { logger } from '../logger';
 import { getState } from '../state';
-import { SignedApiNameUpdateDelayGroup } from '../update-signed-api';
-import { SignedApiPayload, signedApiResponseSchema } from '../validation/schema';
+import type { SignedApiNameUpdateDelayGroup } from '../update-signed-api';
+import { type SignedApiPayload, signedApiResponseSchema } from '../validation/schema';
 
 export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
   const {
@@ -69,7 +70,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     return { success: false };
   }
 
-  const count = parsedResponse.data.count;
+  const {count} = parsedResponse.data;
   logger.info(`Pushed signed data updates to the signed API.`, { ...logContext, count });
   return { success: true, count };
 };

@@ -1,6 +1,8 @@
-import { join } from 'path';
+import { join } from 'node:path';
+
 import dotenv from 'dotenv';
-import { EnvConfig, envConfigSchema } from './schema';
+
+import { type EnvConfig, envConfigSchema } from './schema';
 
 let env: EnvConfig | undefined;
 

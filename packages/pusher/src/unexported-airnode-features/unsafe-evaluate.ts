@@ -1,3 +1,4 @@
+/* eslint-disable */
 import assert from 'assert';
 import async_hooks from 'async_hooks';
 import buffer from 'buffer';

@@ -1,21 +1,23 @@
-import { isEmpty } from 'lodash';
 import { go } from '@api3/promise-utils';
+import { isEmpty } from 'lodash';
+
+import { makeTemplateRequests } from './api-requests/data-provider';
+import { NO_FETCH_EXIT_CODE } from './constants';
 import { logger } from './logger';
+import { signTemplateResponses } from './sign-template-data';
 import { getState } from './state';
 import { sleep } from './utils';
-import { SignedApiUpdate } from './validation/schema';
-import { NO_FETCH_EXIT_CODE } from './constants';
-import { makeTemplateRequests } from './api-requests/data-provider';
-import { signTemplateResponses } from './sign-template-data';
+import type { SignedApiUpdate } from './validation/schema';
 
 export const initiateFetchingBeaconData = () => {
   logger.debug('Initiating fetching all beacon data');
   const { config } = getState();
 
-  const signedApiUpdates = config.triggers.signedApiUpdates;
+  const { signedApiUpdates } = config.triggers;
 
   if (isEmpty(signedApiUpdates)) {
     logger.error('No signed API updates found. Stopping.');
+    // eslint-disable-next-line unicorn/no-process-exit
     process.exit(NO_FETCH_EXIT_CODE);
   }
 
@@ -25,11 +27,11 @@ export const initiateFetchingBeaconData = () => {
 const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
   const { templateValues } = getState();
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     const startTimestamp = Date.now();
     const templateResponses = await makeTemplateRequests(signedApiUpdate);
     const signedResponses = await signTemplateResponses(templateResponses);
+    // eslint-disable-next-line unicorn/no-array-for-each
     signedResponses.forEach(async ([templateId, signedResponse]) => {
       const goPut = await go(() => templateValues[templateId]!.put(signedResponse));
       if (!goPut.success) {
@@ -41,6 +43,6 @@ const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
     });
     const duration = Date.now() - startTimestamp;
 
-    await sleep(signedApiUpdate.fetchInterval * 1_000 - duration);
+    await sleep(signedApiUpdate.fetchInterval * 1000 - duration);
   }
 };

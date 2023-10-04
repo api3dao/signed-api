@@ -1,10 +1,11 @@
 import * as node from '@api3/airnode-node';
 import { isNil, pick } from 'lodash';
+
+import { logger } from '../logger';
+import type { TemplateResponse } from '../sign-template-data';
 import { getState } from '../state';
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
-import { SignedApiUpdate } from '../validation/schema';
-import { logger } from '../logger';
-import { TemplateResponse } from '../sign-template-data';
+import type { SignedApiUpdate } from '../validation/schema';
 
 export const callApi = async (payload: node.ApiCallPayload) => {
   logger.debug('Preprocessing API call payload', pick(payload.aggregatedApiCall, ['endpointName', 'oisTitle']));
@@ -46,7 +47,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   };
 
   const [_, apiCallResponse] = await (limiter
-    ? limiter.schedule({ expiration: 90_000 }, () => callApi(operationPayload))
+    ? limiter.schedule({ expiration: 90_000 }, async () => callApi(operationPayload))
     : callApi(operationPayload));
 
   if (node.api.isPerformApiCallFailure(apiCallResponse)) {

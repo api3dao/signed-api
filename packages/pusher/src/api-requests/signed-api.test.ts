@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { ZodError } from 'zod';
-import { postSignedApiData } from './signed-api';
+
 import { config, signedApiResponse, nodarySignedTemplateResponses } from '../../test/fixtures';
 import { logger } from '../logger';
 import * as stateModule from '../state';
+
+import { postSignedApiData } from './signed-api';
 
 describe(postSignedApiData.name, () => {
   it('posts data to central api', async () => {
@@ -21,7 +23,7 @@ describe(postSignedApiData.name, () => {
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
 
-    expect(response).toEqual({ count: 3, success: true });
+    expect(response).toStrictEqual({ count: 3, success: true });
   });
 
   it('handles invalid response from signed API', async () => {
@@ -40,7 +42,7 @@ describe(postSignedApiData.name, () => {
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
 
-    expect(response).toEqual({ success: false });
+    expect(response).toStrictEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to parse response from the signed API.', {
       errors: new ZodError([
         {
@@ -72,7 +74,7 @@ describe(postSignedApiData.name, () => {
 
     const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
 
-    expect(response).toEqual({ success: false });
+    expect(response).toStrictEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
       errorMessage: 'simulated-network-error',
       axiosResponse: {},

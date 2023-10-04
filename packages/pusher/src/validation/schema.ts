@@ -1,12 +1,13 @@
-import { isNil, uniqWith, isEqual } from 'lodash';
-import { z, SuperRefinement } from 'zod';
-import { ethers } from 'ethers';
-import { oisSchema, OIS, Endpoint as oisEndpoint } from '@api3/ois';
-import { config } from '@api3/airnode-validator';
 import * as abi from '@api3/airnode-abi';
-import * as node from '@api3/airnode-node';
-import { logFormatSchema, logLevelSchema } from 'signed-api/common';
+import type * as node from '@api3/airnode-node';
+import { config } from '@api3/airnode-validator';
+import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { goSync } from '@api3/promise-utils';
+import { ethers } from 'ethers';
+import { isNil, uniqWith, isEqual } from 'lodash';
+import { logFormatSchema, logLevelSchema } from 'signed-api/common';
+import { z, type SuperRefinement } from 'zod';
+
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
 export const limiterConfig = z.object({ minTime: z.number(), maxConcurrency: z.number() });
@@ -27,16 +28,16 @@ export const templateSchema = z
   .strict();
 
 export const templatesSchema = z.record(config.evmIdSchema, templateSchema).superRefine((templates, ctx) => {
-  Object.entries(templates).forEach(([templateId, template]) => {
+  for (const [templateId, template] of Object.entries(templates)) {
     // Verify that config.templates.<templateId> is valid by deriving the hash of the endpointId and parameters
     const goEncodeParameters = goSync(() => abi.encode(template.parameters));
     if (!goEncodeParameters.success) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Unable to encode parameters: ${goEncodeParameters.error}`,
+        message: `Unable to encode parameters: ${goEncodeParameters.error.message}`,
         path: ['templates', templateId, 'parameters'],
       });
-      return;
+      continue;
     }
 
     const derivedTemplateId = ethers.utils.solidityKeccak256(
@@ -50,7 +51,7 @@ export const templatesSchema = z.record(config.evmIdSchema, templateSchema).supe
         path: [templateId],
       });
     }
-  });
+  }
 });
 
 export const endpointSchema = z.object({
@@ -59,7 +60,7 @@ export const endpointSchema = z.object({
 });
 
 export const endpointsSchema = z.record(endpointSchema).superRefine((endpoints, ctx) => {
-  Object.entries(endpoints).forEach(([endpointId, endpoint]) => {
+  for (const [endpointId, endpoint] of Object.entries(endpoints)) {
     // Verify that config.endpoints.<endpointId> is valid
     // by deriving the hash of the oisTitle and endpointName
 
@@ -74,7 +75,7 @@ export const endpointsSchema = z.record(endpointSchema).superRefine((endpoints, 
         path: [endpointId],
       });
     }
-  });
+  }
 });
 
 export const baseBeaconUpdateSchema = z.object({
@@ -101,7 +102,7 @@ export const triggersSchema = z.object({
 });
 
 const validateTemplatesReferences: SuperRefinement<{ templates: Templates; endpoints: Endpoints }> = (config, ctx) => {
-  Object.entries(config.templates).forEach(([templateId, template]) => {
+  for (const [templateId, template] of Object.entries(config.templates)) {
     const endpoint = config.endpoints[template.endpointId];
     if (isNil(endpoint)) {
       ctx.addIssue({
@@ -110,11 +111,11 @@ const validateTemplatesReferences: SuperRefinement<{ templates: Templates; endpo
         path: ['templates', templateId, 'endpointId'],
       });
     }
-  });
+  }
 };
 
 const validateOisReferences: SuperRefinement<{ ois: OIS[]; endpoints: Endpoints }> = (config, ctx) => {
-  Object.entries(config.endpoints).forEach(([endpointId, { oisTitle, endpointName }]) => {
+  for (const [endpointId, { oisTitle, endpointName }] of Object.entries(config.endpoints)) {
     // Check existence of OIS related with oisTitle
     const oises = config.ois.filter(({ title }) => title === oisTitle);
     if (oises.length === 0) {
@@ -123,7 +124,7 @@ const validateOisReferences: SuperRefinement<{ ois: OIS[]; endpoints: Endpoints 
         message: `OIS titled "${oisTitle}" is not defined in the config.ois object`,
         path: ['endpoints', endpointId, 'oisTitle'],
       });
-      return;
+      continue;
     }
     // Take first OIS fits the filter rule, then check specific endpoint existence
     const ois = oises[0]!;
@@ -136,7 +137,7 @@ const validateOisReferences: SuperRefinement<{ ois: OIS[]; endpoints: Endpoints 
         path: ['endpoints', endpointId, 'endpointName'],
       });
     }
-  });
+  }
 };
 
 const validateTriggerReferences: SuperRefinement<{
@@ -152,7 +153,7 @@ const validateTriggerReferences: SuperRefinement<{
     const { templateIds } = signedApiUpdate;
 
     if (templateIds.length > 1) {
-      const operationPayloadPromises = templateIds.map((templateId) => {
+      const operationPayloadPromises = templateIds.map(async (templateId) => {
         const template = templates[templateId];
         if (!template) {
           ctx.addIssue({
@@ -214,15 +215,15 @@ const validateOisRateLimiterReferences: SuperRefinement<{
   ois: OIS[];
   rateLimiting: RateLimitingConfig;
 }> = (config, ctx) => {
-  Object.keys(config.rateLimiting).forEach((oisTitle) => {
-    if (!config.ois.find((ois) => ois.title === oisTitle)) {
+  for (const oisTitle of Object.keys(config.rateLimiting)) {
+    if (!config.ois.some((ois) => ois.title === oisTitle)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: `OIS Title "${oisTitle}" in rate limiting overrides is not defined in the config.ois array`,
         path: ['rateLimiting', 'overrides', 'directGateways', oisTitle],
       });
     }
-  });
+  }
 };
 
 export const signedApiSchema = z.object({
@@ -250,16 +251,16 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 export const configSchema = z
   .object({
     airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
+    apiCredentials: apisCredentialsSchema,
     beaconSets: z.any(),
     chains: z.any(),
+    endpoints: endpointsSchema,
     gateways: z.any(),
+    ois: oisesSchema,
+    rateLimiting: rateLimitingSchema,
+    signedApis: signedApisSchema,
     templates: templatesSchema,
     triggers: triggersSchema,
-    signedApis: signedApisSchema,
-    ois: oisesSchema,
-    apiCredentials: apisCredentialsSchema,
-    endpoints: endpointsSchema,
-    rateLimiting: rateLimitingSchema,
   })
   .strict()
   .superRefine(validateTemplatesReferences)
@@ -267,8 +268,8 @@ export const configSchema = z
   .superRefine(validateOisRateLimiterReferences)
   .superRefine(validateTriggerReferences);
 
-export const encodedValueSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/);
-export const signatureSchema = z.string().regex(/^0x[a-fA-F0-9]{130}$/);
+export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
+export const signatureSchema = z.string().regex(/^0x[\dA-Fa-f]{130}$/);
 export const signedDataSchema = z.object({
   timestamp: z.string(),
   encodedValue: encodedValueSchema,

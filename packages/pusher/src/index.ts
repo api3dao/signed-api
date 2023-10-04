@@ -1,14 +1,14 @@
-import { loadConfig } from './validation/config';
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
-import { initiateUpdatingSignedApi } from './update-signed-api';
 import { initializeState } from './state';
+import { initiateUpdatingSignedApi } from './update-signed-api';
+import { loadConfig } from './validation/config';
 
-async function main() {
+const main = async () => {
   const config = await loadConfig();
   initializeState(config);
 
   initiateFetchingBeaconData();
   initiateUpdatingSignedApi();
-}
+};
 
-main();
+void main();

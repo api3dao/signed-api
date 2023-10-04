@@ -1,11 +1,12 @@
-import { ethers } from 'ethers';
+import type * as node from '@api3/airnode-node';
 import { go } from '@api3/promise-utils';
-import * as node from '@api3/airnode-node';
+import { ethers } from 'ethers';
 import { isNil } from 'lodash';
+
 import { logger } from './logger';
 import { getState } from './state';
 import { signWithTemplateId } from './utils';
-import { SignedData, TemplateId } from './validation/schema';
+import type { SignedData, TemplateId } from './validation/schema';
 
 export type SignedResponse = [TemplateId, SignedData];
 
@@ -15,13 +16,13 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
   logger.debug('Signing template responses', { templateResponses });
 
   const signPromises = templateResponses.map(async ([templateId, response]) => {
-    const encodedValue = response.data.encodedValue;
+    const { encodedValue } = response.data;
     const timestamp = Math.floor(Date.now() / 1000).toString();
 
     const wallet = ethers.Wallet.fromMnemonic(getState().config.airnodeWalletMnemonic);
-    const goSignWithTemplateId = await go(() => signWithTemplateId(wallet, templateId, timestamp, encodedValue));
+    const goSignWithTemplateId = await go(async () => signWithTemplateId(wallet, templateId, timestamp, encodedValue));
     if (!goSignWithTemplateId.success) {
-      const message = `Failed to sign response. Error: "${goSignWithTemplateId.error}"`;
+      const message = `Failed to sign response. Error: "${goSignWithTemplateId.error.message}"`;
       logger.warn(message, {
         templateId,
       });
@@ -31,8 +32,8 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
     return [
       templateId,
       {
-        timestamp: timestamp,
-        encodedValue: encodedValue,
+        timestamp,
+        encodedValue,
         signature: goSignWithTemplateId.data,
       },
     ];

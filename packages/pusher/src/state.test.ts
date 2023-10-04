@@ -1,5 +1,6 @@
-import { DelayedSignedDataQueue } from './state';
 import { nodarySignedTemplateResponses } from '../test/fixtures';
+
+import { DelayedSignedDataQueue } from './state';
 
 describe(DelayedSignedDataQueue.name, () => {
   afterEach(() => {
@@ -12,30 +13,30 @@ describe(DelayedSignedDataQueue.name, () => {
 
     queue.put(data);
 
-    expect(queue.getAll()).toEqual([data]);
+    expect(queue.getAll()).toStrictEqual([data]);
   });
 
   it('can get signed data with delay', () => {
     const queue = new DelayedSignedDataQueue(30);
     const data3 = nodarySignedTemplateResponses[0]![1];
-    const timestamp = parseInt(data3.timestamp);
+    const timestamp = Number.parseInt(data3.timestamp, 10);
     const data2 = { ...data3, timestamp: (timestamp - 10).toString() };
     const data1 = { ...data3, timestamp: (timestamp - 20).toString() };
     queue.put(data1);
     queue.put(data2);
     queue.put(data3);
 
-    expect(queue.get(timestamp + 1)).toEqual(data3);
-    expect(queue.get(timestamp)).toEqual(data2);
-    expect(queue.get(timestamp - 5)).toEqual(data2);
-    expect(queue.get(timestamp - 15)).toEqual(data1);
-    expect(queue.get(timestamp - 30)).toEqual(undefined);
+    expect(queue.get(timestamp + 1)).toStrictEqual(data3);
+    expect(queue.get(timestamp)).toStrictEqual(data2);
+    expect(queue.get(timestamp - 5)).toStrictEqual(data2);
+    expect(queue.get(timestamp - 15)).toStrictEqual(data1);
+    expect(queue.get(timestamp - 30)).toBeUndefined();
   });
 
   it('ensures that data is inserted by increasing timestamp', () => {
     const queue = new DelayedSignedDataQueue(30);
     const data3 = nodarySignedTemplateResponses[0]![1];
-    const timestamp = parseInt(data3.timestamp);
+    const timestamp = Number.parseInt(data3.timestamp, 10);
     const data2 = { ...data3, timestamp: (timestamp - 10).toString() };
     const data1 = { ...data3, timestamp: (timestamp - 20).toString() };
     queue.put(data3);
@@ -49,7 +50,7 @@ describe(DelayedSignedDataQueue.name, () => {
 
     const queue = new DelayedSignedDataQueue(30);
     const data3 = nodarySignedTemplateResponses[0]![1];
-    const timestamp = parseInt(data3.timestamp);
+    const timestamp = Number.parseInt(data3.timestamp, 10);
     const data2 = { ...data3, timestamp: (timestamp - 40).toString() };
     const data1 = { ...data3, timestamp: (timestamp - 50).toString() };
     queue.put(data1);
@@ -58,6 +59,6 @@ describe(DelayedSignedDataQueue.name, () => {
 
     queue.prune();
 
-    expect(queue.getAll()).toEqual([data2, data3]);
+    expect(queue.getAll()).toStrictEqual([data2, data3]);
   });
 });

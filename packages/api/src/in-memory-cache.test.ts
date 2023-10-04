@@ -1,7 +1,9 @@
 import { groupBy } from 'lodash';
-import { get, getAll, getAllAirnodeAddresses, ignoreTooFreshData, prune, put, putAll } from './in-memory-cache';
-import * as cacheModule from './cache';
+
 import { createSignedData, generateRandomWallet } from '../test/utils';
+
+import * as cacheModule from './cache';
+import { get, getAll, getAllAirnodeAddresses, ignoreTooFreshData, prune, put, putAll } from './in-memory-cache';
 
 afterEach(() => {
   cacheModule.setCache({});
@@ -21,15 +23,15 @@ describe(ignoreTooFreshData.name, () => {
 
     const result = ignoreTooFreshData(data, 200);
 
-    expect(result).toEqual(data.slice(0, 3));
+    expect(result).toStrictEqual(data.slice(0, 3));
   });
 
   it('returns all data when compared with infinity', async () => {
     const data = await createData();
 
-    const result = ignoreTooFreshData(data, Infinity);
+    const result = ignoreTooFreshData(data, Number.POSITIVE_INFINITY);
 
-    expect(result).toEqual(data);
+    expect(result).toStrictEqual(data);
   });
 });
 
@@ -52,7 +54,7 @@ describe(get.name, () => {
   it('returns null if there is no data', async () => {
     const result = await get('non-existent-airnode', 'non-existent-template', 0);
 
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 
   it('returns null if data is too fresh', async () => {
@@ -60,39 +62,39 @@ describe(get.name, () => {
 
     const result = await get(data!.airnode, data!.templateId, 50);
 
-    expect(result).toEqual(null);
+    expect(result).toBeNull();
   });
 
   it('returns the freshest non-ignored data', async () => {
     const allData = await mockCacheData();
     const data = allData[0]!;
 
-    const result = await get(data!.airnode, data!.templateId, 101);
+    const result = await get(data.airnode, data.templateId, 101);
 
-    expect(result).toEqual(allData[1]);
-    expect(allData[1]!.timestamp).toEqual('101');
+    expect(result).toStrictEqual(allData[1]);
+    expect(allData[1]!.timestamp).toBe('101');
   });
 
   it('returns the freshest data available to be returned', async () => {
     const allData = await mockCacheData();
     const data = allData[0]!;
 
-    const result = await get(data.airnode, data.templateId, Infinity);
+    const result = await get(data.airnode, data.templateId, Number.POSITIVE_INFINITY);
 
-    expect(result).toEqual(allData[2]);
-    expect(allData[2]!.timestamp).toEqual('103');
+    expect(result).toStrictEqual(allData[2]);
+    expect(allData[2]!.timestamp).toBe('103');
   });
 });
 
 describe(getAll.name, () => {
   const mockCacheData = async () => {
     const airnodeWallet = generateRandomWallet();
-    const data = await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '100' });
+    const data = await createSignedData({ airnodeWallet, timestamp: '100' });
     const allData = [
       data,
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '105' }),
-      await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '300' }),
-      await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '400' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '105' }),
+      await createSignedData({ airnodeWallet, timestamp: '300' }),
+      await createSignedData({ airnodeWallet, timestamp: '400' }),
     ];
 
     // Ned to use mockReturnValue instead of mockReturnValueOnce because the getCache call is used multiple times
@@ -107,10 +109,10 @@ describe(getAll.name, () => {
   it('returns freshest data for the given airnode', async () => {
     const allData = await mockCacheData();
 
-    const result = await getAll(allData[0]!.airnode, Infinity);
+    const result = await getAll(allData[0]!.airnode, Number.POSITIVE_INFINITY);
 
     // The first data is overridden by the fresher (second) data.
-    expect(result).toEqual([allData[1], allData[2], allData[3]]);
+    expect(result).toStrictEqual([allData[1], allData[2], allData[3]]);
   });
 
   it('returns freshest data for the given airnode respecting delay', async () => {
@@ -118,7 +120,7 @@ describe(getAll.name, () => {
 
     const result = await getAll(allData[0]!.airnode, 100);
 
-    expect(result).toEqual([allData[0]]);
+    expect(result).toStrictEqual([allData[0]]);
   });
 });
 
@@ -150,18 +152,18 @@ describe(getAllAirnodeAddresses.name, () => {
 
     const result = await getAllAirnodeAddresses();
 
-    expect(result).toEqual(Object.keys(cache));
+    expect(result).toStrictEqual(Object.keys(cache));
   });
 });
 
 describe(put.name, () => {
   it('inserts the data in the correct position', async () => {
     const airnodeWallet = generateRandomWallet();
-    const data = await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '100' });
+    const data = await createSignedData({ airnodeWallet, timestamp: '100' });
     const allData = [
       data,
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '105' }),
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '110' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '105' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '110' }),
     ];
     // We can't mock because the implementation mutates the cache value directly.
     cacheModule.setCache({
@@ -169,25 +171,25 @@ describe(put.name, () => {
     });
     const newData = await createSignedData({
       airnodeWallet,
-      templateId: data!.templateId,
+      templateId: data.templateId,
       timestamp: '103',
     });
 
     await put(newData);
 
     const cache = cacheModule.getCache();
-    expect(cache[data!.airnode]![data!.templateId]).toEqual([allData[0], newData, allData[1], allData[2]]);
+    expect(cache[data.airnode]![data.templateId]).toStrictEqual([allData[0], newData, allData[1], allData[2]]);
   });
 });
 
 describe(putAll.name, () => {
   it('inserts the data in the correct positions', async () => {
     const airnodeWallet = generateRandomWallet();
-    const data = await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '100' });
+    const data = await createSignedData({ airnodeWallet, timestamp: '100' });
     const allData = [
       data,
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '105' }),
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '110' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '105' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '110' }),
     ];
     // We can't mock because the implementation mutates the cache value directly.
     cacheModule.setCache({
@@ -196,7 +198,7 @@ describe(putAll.name, () => {
     const newDataBatch = [
       await createSignedData({
         airnodeWallet,
-        templateId: data!.templateId,
+        templateId: data.templateId,
         timestamp: '103',
       }),
       await createSignedData(),
@@ -205,19 +207,19 @@ describe(putAll.name, () => {
     await putAll(newDataBatch);
 
     const cache = cacheModule.getCache();
-    expect(cache[data!.airnode]![data!.templateId]).toEqual([allData[0], newDataBatch[0], allData[1], allData[2]]);
-    expect(cache[newDataBatch[1]!.airnode]![newDataBatch[1]!.templateId]).toEqual([newDataBatch[1]]);
+    expect(cache[data.airnode]![data.templateId]).toStrictEqual([allData[0], newDataBatch[0], allData[1], allData[2]]);
+    expect(cache[newDataBatch[1]!.airnode]![newDataBatch[1]!.templateId]).toStrictEqual([newDataBatch[1]]);
   });
 });
 
 describe(prune.name, () => {
   it('removes all data that is too old', async () => {
     const airnodeWallet = generateRandomWallet();
-    const data = await createSignedData({ airnodeWallet: airnodeWallet, timestamp: '100' });
+    const data = await createSignedData({ airnodeWallet, timestamp: '100' });
     const insertData = [
       data,
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '105' }),
-      await createSignedData({ airnodeWallet: airnodeWallet, templateId: data.templateId, timestamp: '110' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '105' }),
+      await createSignedData({ airnodeWallet, templateId: data.templateId, timestamp: '110' }),
     ];
     const otherAirnodeWallet = generateRandomWallet();
     const otherAirnodeData = await createSignedData({ airnodeWallet: otherAirnodeWallet, timestamp: '80' });
@@ -239,7 +241,7 @@ describe(prune.name, () => {
     await prune(batchInsertData, 105);
 
     const cache = cacheModule.getCache();
-    expect(cache[data.airnode]![data.templateId]).toEqual([insertData[1], insertData[2]]);
-    expect(cache[otherAirnodeData.airnode]![otherAirnodeData.templateId]).toEqual([otherAirnodeInsertData[1]]);
+    expect(cache[data.airnode]![data.templateId]).toStrictEqual([insertData[1], insertData[2]]);
+    expect(cache[otherAirnodeData.airnode]![otherAirnodeData.templateId]).toStrictEqual([otherAirnodeInsertData[1]]);
   });
 });

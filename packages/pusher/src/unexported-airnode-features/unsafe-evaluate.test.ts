@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { unsafeEvaluate, unsafeEvaluateAsync } from './unsafe-evaluate';
 
 describe('unsafe evaluate - sync', () => {
