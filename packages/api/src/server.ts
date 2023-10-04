@@ -1,7 +1,8 @@
 import express from 'express';
+
 import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
 import { logger } from './logger';
-import { Config } from './schema';
+import type { Config } from './schema';
 
 export const startServer = (config: Config) => {
   const app = express();

@@ -1,13 +1,15 @@
 import { last, uniqBy } from 'lodash';
-import { isIgnored } from './utils';
-import { SignedData } from './schema';
+
 import { getCache } from './cache';
 import { logger } from './logger';
+import type { SignedData } from './schema';
+import { isIgnored } from './utils';
 
 export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimestamp: number) =>
   signedDatas.filter((data) => !isIgnored(data, ignoreAfterTimestamp));
 
 // The API is deliberately asynchronous to mimic a database call.
+// eslint-disable-next-line @typescript-eslint/require-await
 export const get = async (airnodeId: string, templateId: string, ignoreAfterTimestamp: number) => {
   logger.debug('Getting signed data', { airnodeId, templateId, ignoreAfterTimestamp });
 
@@ -38,6 +40,7 @@ export const getAll = async (airnodeId: string, ignoreAfterTimestamp: number) =>
 //
 // The Airnode addresses are returned independently of how old the data is. This means that an API can get all Airnode
 // addresses and then use a delayed endpoint to get data from each, but fail to get data from some of them.
+// eslint-disable-next-line @typescript-eslint/require-await
 export const getAllAirnodeAddresses = async () => {
   logger.debug('Getting all Airnode addresses');
 
@@ -45,18 +48,19 @@ export const getAllAirnodeAddresses = async () => {
 };
 
 // The API is deliberately asynchronous to mimic a database call.
+// eslint-disable-next-line @typescript-eslint/require-await
 export const put = async (signedData: SignedData) => {
   logger.debug('Putting signed data', { signedData });
 
   const signedDataCache = getCache();
-  const { airnode, templateId } = signedData;
+  const { airnode, templateId, timestamp } = signedData;
   signedDataCache[airnode] ??= {};
   signedDataCache[airnode]![templateId] ??= [];
 
   // We need to insert the signed data in the correct position in the array based on the timestamp. It would be more
   // efficient to use a priority queue, but the proper solution is not to store the data in memory.
   const signedDatas = signedDataCache[airnode]![templateId]!;
-  const index = signedDatas.findIndex((data) => parseInt(data.timestamp) > parseInt(signedData.timestamp));
+  const index = signedDatas.findIndex((data) => Number.parseInt(data.timestamp, 10) > Number.parseInt(timestamp, 10));
   if (index < 0) signedDatas.push(signedData);
   else signedDatas.splice(index, 0, signedData);
 };
@@ -73,6 +77,7 @@ export const putAll = async (signedDataArray: SignedData[]) => {
 // Removes all signed data that is no longer needed to be kept in memory (because it is too old and there exist a newer
 // signed data for each endpoint). The function is intended to be called after each insertion of new signed data for
 // performance reasons, because it only looks to prune the data that for beacons that have been just inserted.
+// eslint-disable-next-line @typescript-eslint/require-await
 export const prune = async (signedDataArray: SignedData[], maxIgnoreAfterTimestamp: number) => {
   const beaconsToPrune = uniqBy(signedDataArray, 'beaconId');
   logger.debug('Pruning signed data', { maxIgnoreAfterTimestamp });

@@ -1,4 +1,4 @@
-import { SignedData } from './schema';
+import type { SignedData } from './schema';
 
 type SignedDataCache = Record<
   string, // Airnode ID.

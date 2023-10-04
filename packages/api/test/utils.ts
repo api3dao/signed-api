@@ -1,6 +1,7 @@
 import { ethers } from 'ethers';
-import { SignedData } from '../src/schema';
+
 import { deriveBeaconId } from '../src/evm';
+import type { SignedData } from '../src/schema';
 
 export const deriveTemplateId = (endpointId: string, encodedParameters: string) =>
   ethers.utils.keccak256(ethers.utils.solidityPack(['bytes32', 'bytes'], [endpointId, encodedParameters]));
@@ -11,7 +12,7 @@ export const generateRandomWallet = () => ethers.Wallet.createRandom();
 
 export const generateRandomEvmAddress = () => generateRandomWallet().address;
 
-export const generateDataSignature = (wallet: ethers.Wallet, templateId: string, timestamp: string, data: string) => {
+export const generateDataSignature = async (wallet: ethers.Wallet, templateId: string, timestamp: string, data: string) => {
   return wallet.signMessage(
     ethers.utils.arrayify(
       ethers.utils.keccak256(

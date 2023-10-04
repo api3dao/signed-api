@@ -4,15 +4,6 @@ module.exports = {
     project: ['./tsconfig.json', './packages/*/tsconfig.json'],
   },
   rules: {
-    // TODO: Remove this once the eslint configuration is settled.
-    'multiline-comment-style': 'off',
-    'unicorn/no-array-callback-reference': 'off', // We prefer point free notation using "functional/prefer-tacit" rule.
-    '@typescript-eslint/unbound-method': 'off', // Reports issues for common patterns in tests (e.g. "expect(logger.warn)..."). Often the issue yields false positives.
-    'jest/no-hooks': [
-      'error', // Prefer using setup functions instead of beforeXXX hooks. AfterXyz are sometimes necessary (e.g. to reset Jest timers).
-      {
-        allow: ['afterEach', 'afterAll'],
-      },
-    ],
+    'unicorn/consistent-function-scoping': 'off', // Disabling due to the rule's constraints conflicting with established patterns, especially in test suites where local helper or mocking functions are prevalent and do not necessitate exports.
   },
 };

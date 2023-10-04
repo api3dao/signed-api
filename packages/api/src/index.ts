@@ -1,12 +1,12 @@
-import { startServer } from './server';
-import { logger } from './logger';
 import { fetchAndCacheConfig } from './config';
+import { logger } from './logger';
+import { startServer } from './server';
 
-async function main() {
+const main = async () => {
   const config = await fetchAndCacheConfig();
   logger.info('Using configuration', config);
 
   startServer(config);
-}
+};
 
-main();
+void main();

@@ -21,8 +21,8 @@ importers:
         specifier: ^6.7.3
         version: 6.7.3(eslint@8.50.0)(typescript@5.2.2)
       commons:
-        specifier: ^1.0.2
-        version: 1.0.2(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)
+        specifier: ^1.0.3
+        version: 1.0.3(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)
       eslint:
         specifier: ^8.50.0
         version: 8.50.0
@@ -3756,8 +3756,8 @@ packages:
       delayed-stream: 1.0.0
     dev: false
 
-  /commons@1.0.2(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-EfQiY5MPcOn4rDrgJr+VFN3njSuVNej6/yHxj/4jafGHqm1UXw4zT83/zDhEH46pnJpowzzAuW4wQUPOUShlbg==}
+  /commons@1.0.3(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-bPd7FgWIiu2XfLYJvTVfkoNJkljGCq+YZtDcPfbc4BWfIMKlJVQHCiEeqPFQx0N1AH9pe8FtQ28TWil8bpwbxQ==}
     engines: {node: ^18.14.0, pnpm: ^8.8.0}
     dependencies:
       '@typescript-eslint/eslint-plugin': 6.7.3(@typescript-eslint/parser@6.7.3)(eslint@8.50.0)(typescript@5.2.2)

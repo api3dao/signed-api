@@ -9,14 +9,15 @@ import * as cacheModule from './cache';
 import * as configModule from './config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 
-afterEach(() => {
-  cacheModule.setCache({});
-});
-
+// eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
   jest
     .spyOn(configModule, 'getConfig')
     .mockImplementation(() => JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8')));
+});
+
+afterEach(() => {
+  cacheModule.setCache({});
 });
 
 describe(batchInsertData.name, () => {
