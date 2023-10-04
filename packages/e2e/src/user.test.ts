@@ -1,7 +1,8 @@
 import axios from 'axios';
+
 import { airnode, formatData } from './utils';
 
-it('respects the delay', async () => {
+test('respects the delay', async () => {
   const start = Date.now();
   let [realCount, delayedCount] = [0, 0];
 
