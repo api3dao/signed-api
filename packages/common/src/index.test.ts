@@ -6,6 +6,7 @@ test('index file re-exports from all implementation folders', () => {
 
   const subFolders = entries.filter((entry) => entry.isDirectory()).map((dir) => dir.name);
   const mainExports = [
+    // eslint-disable-next-line prefer-named-capture-group
     ...readFileSync(join(__dirname, './index.ts'), 'utf8').matchAll(/export \* from '\.\/(.+)'/g),
   ].map((match) => match[1]);
 

@@ -1,6 +1,6 @@
 import winston from 'winston';
-import { z } from 'zod';
 import { consoleFormat } from 'winston-console-format';
+import { z } from 'zod';
 
 export const logFormatSchema = z.union([z.literal('json'), z.literal('pretty')]);
 
@@ -27,8 +27,9 @@ const createConsoleTransport = (config: LogConfig) => {
   }
 
   switch (format) {
-    case 'json':
+    case 'json': {
       return new winston.transports.Console({ format: winston.format.json() });
+    }
     case 'pretty': {
       const formats = [
         colorize ? winston.format.colorize({ all: true }) : null,
@@ -37,11 +38,11 @@ const createConsoleTransport = (config: LogConfig) => {
           showMeta: true,
           metaStrip: [],
           inspectOptions: {
-            depth: Infinity,
+            depth: Number.POSITIVE_INFINITY,
             colors: colorize,
-            maxArrayLength: Infinity,
+            maxArrayLength: Number.POSITIVE_INFINITY,
             breakLength: 120,
-            compact: Infinity,
+            compact: Number.POSITIVE_INFINITY,
           },
         }),
       ].filter(Boolean) as winston.Logform.Format[];
@@ -75,12 +76,11 @@ const createBaseLogger = (config: LogConfig) => {
 export type LogContext = Record<string, any>;
 
 export interface Logger {
-  debug(message: string, context?: LogContext): void;
-  info(message: string, context?: LogContext): void;
-  warn(message: string, context?: LogContext): void;
-  error(message: string, context?: LogContext): void;
-  error(message: string, error: Error, context?: LogContext): void;
-  child(options: { name: string }): Logger;
+  debug: (message: string, context?: LogContext) => void;
+  info: (message: string, context?: LogContext) => void;
+  warn: (message: string, context?: LogContext) => void;
+  error: ((message: string, context?: LogContext) => void) & ((message: string, error: Error, context?: LogContext) => void);
+  child: (options: { name: string }) => Logger;
 }
 
 // Winston by default merges content of `context` among the rest of the fields for the JSON format.
