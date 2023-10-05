@@ -6,7 +6,7 @@ export const endpointSchema = z
   .object({
     urlPath: z
       .string()
-      .regex(/^\/[\dA-Za-z\-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
+      .regex(/^\/[\dA-Za-z-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
     delaySeconds: z.number().nonnegative().int(),
   })
   .strict();
