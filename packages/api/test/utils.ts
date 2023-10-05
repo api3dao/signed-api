@@ -12,7 +12,12 @@ export const generateRandomWallet = () => ethers.Wallet.createRandom();
 
 export const generateRandomEvmAddress = () => generateRandomWallet().address;
 
-export const generateDataSignature = async (wallet: ethers.Wallet, templateId: string, timestamp: string, data: string) => {
+export const generateDataSignature = async (
+  wallet: ethers.Wallet,
+  templateId: string,
+  timestamp: string,
+  data: string
+) => {
   return wallet.signMessage(
     ethers.utils.arrayify(
       ethers.utils.keccak256(

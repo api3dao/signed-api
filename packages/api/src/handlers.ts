@@ -17,12 +17,12 @@ import { generateErrorResponse, isBatchUnique } from './utils';
 export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse> => {
   const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
   if (!goValidateSchema.success) {
- return generateErrorResponse(
+    return generateErrorResponse(
       400,
       'Invalid request, body must fit schema for batch of signed data',
       goValidateSchema.error.message
-    ); 
-}
+    );
+  }
 
   // Ensure there is at least one signed data to push
   const batchSignedData = goValidateSchema.data;
@@ -31,8 +31,8 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Check whether the size of batch exceeds a maximum batch size
   const { maxBatchSize, endpoints } = getConfig();
   if (size(batchSignedData) > maxBatchSize) {
- return generateErrorResponse(400, `Maximum batch size (${maxBatchSize}) exceeded`); 
-}
+    return generateErrorResponse(400, `Maximum batch size (${maxBatchSize}) exceeded`);
+  }
 
   // Check whether any duplications exist
   if (!isBatchUnique(batchSignedData)) return generateErrorResponse(400, 'No duplications are allowed');
@@ -41,26 +41,26 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   const signedDataValidationResults = batchSignedData.map((signedData) => {
     const goRecoverSigner = goSync(() => recoverSignerAddress(signedData));
     if (!goRecoverSigner.success) {
- return generateErrorResponse(400, 'Unable to recover signer address', goRecoverSigner.error.message, signedData); 
-}
+      return generateErrorResponse(400, 'Unable to recover signer address', goRecoverSigner.error.message, signedData);
+    }
 
     if (signedData.airnode !== goRecoverSigner.data) {
- return generateErrorResponse(400, 'Signature is invalid', undefined, signedData); 
-}
+      return generateErrorResponse(400, 'Signature is invalid', undefined, signedData);
+    }
 
     const goDeriveBeaconId = goSync(() => deriveBeaconId(signedData.airnode, signedData.templateId));
     if (!goDeriveBeaconId.success) {
- return generateErrorResponse(
+      return generateErrorResponse(
         400,
         'Unable to derive beaconId by given airnode and templateId',
         goDeriveBeaconId.error.message,
         signedData
-      ); 
-}
+      );
+    }
 
     if (signedData.beaconId !== goDeriveBeaconId.data) {
- return generateErrorResponse(400, 'beaconId is invalid', undefined, signedData); 
-}
+      return generateErrorResponse(400, 'beaconId is invalid', undefined, signedData);
+    }
 
     return null;
   });
@@ -70,16 +70,16 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Write batch of validated data to the database
   const goBatchWriteDb = await go(async () => putAll(batchSignedData));
   if (!goBatchWriteDb.success) {
- return generateErrorResponse(500, 'Unable to send batch of signed data to database', goBatchWriteDb.error.message); 
-}
+    return generateErrorResponse(500, 'Unable to send batch of signed data to database', goBatchWriteDb.error.message);
+  }
 
   // Prune the cache with the data that is too old (no endpoint will ever return it)
   const maxDelay = endpoints.reduce((acc, endpoint) => Math.max(acc, endpoint.delaySeconds), 0);
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
   const goPruneCache = await go(async () => prune(batchSignedData, maxIgnoreAfterTimestamp));
   if (!goPruneCache.success) {
- return generateErrorResponse(500, 'Unable to remove outdated cache data', goPruneCache.error.message); 
-}
+    return generateErrorResponse(500, 'Unable to remove outdated cache data', goPruneCache.error.message);
+  }
 
   return { statusCode: 201, headers: COMMON_HEADERS, body: JSON.stringify({ count: batchSignedData.length }) };
 };
@@ -92,14 +92,14 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
 
   const goValidateSchema = await go(async () => evmAddressSchema.parseAsync(airnodeAddress));
   if (!goValidateSchema.success) {
- return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address'); 
-}
+    return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address');
+  }
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
   const goReadDb = await go(async () => getAll(airnodeAddress, ignoreAfterTimestamp));
   if (!goReadDb.success) {
- return generateErrorResponse(500, 'Unable to get signed data from database', goReadDb.error.message); 
-}
+    return generateErrorResponse(500, 'Unable to get signed data from database', goReadDb.error.message);
+  }
 
   const data = goReadDb.data.reduce((acc, signedData) => {
     return { ...acc, [signedData.beaconId]: omit(signedData, 'beaconId') };
@@ -117,8 +117,8 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
 export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   const goAirnodeAddresses = await go(async () => getAllAirnodeAddresses());
   if (!goAirnodeAddresses.success) {
- return generateErrorResponse(500, 'Unable to scan database', goAirnodeAddresses.error.message); 
-}
+    return generateErrorResponse(500, 'Unable to scan database', goAirnodeAddresses.error.message);
+  }
   const airnodeAddresses = goAirnodeAddresses.data;
 
   return {

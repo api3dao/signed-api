@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@api3/commons':
+        specifier: ^0.1.0
+        version: 0.1.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)
       '@types/jest':
         specifier: ^29.5.5
         version: 29.5.5
@@ -20,9 +23,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.7.3
         version: 6.7.3(eslint@8.50.0)(typescript@5.2.2)
-      commons:
-        specifier: ^1.0.4
-        version: 1.0.4(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)
       eslint:
         specifier: ^8.50.0
         version: 8.50.0
@@ -303,6 +303,36 @@ packages:
       - bufferutil
       - utf-8-validate
     dev: false
+
+  /@api3/commons@0.1.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2):
+    resolution: {integrity: sha512-1kaS9YR56Cs4GmfaRy8TMQElMtpcnEX+8RJ1FVUD3XbViqEfOLvOSxkPHBRwmWHoVtVQttWU/+kL8YF0erLi5w==}
+    engines: {node: ^18.14.0, pnpm: ^8.8.0}
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 6.7.3(@typescript-eslint/parser@6.7.3)(eslint@8.50.0)(typescript@5.2.2)
+      '@typescript-eslint/parser': 6.7.3(eslint@8.50.0)(typescript@5.2.2)
+      eslint-config-next: 13.5.4(eslint@8.50.0)(typescript@5.2.2)
+      eslint-plugin-check-file: 2.6.2(eslint@8.50.0)
+      eslint-plugin-cypress: 2.15.1(eslint@8.50.0)
+      eslint-plugin-deprecation: 2.0.0(eslint@8.50.0)(typescript@5.2.2)
+      eslint-plugin-functional: 6.0.0(eslint@8.50.0)(typescript@5.2.2)
+      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.7.3)(eslint-import-resolver-typescript@3.6.1)(eslint@8.50.0)
+      eslint-plugin-jest: 27.4.2(@typescript-eslint/eslint-plugin@6.7.3)(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)
+      eslint-plugin-jest-formatting: 3.1.0(eslint@8.50.0)
+      eslint-plugin-no-only-tests: 3.1.0
+      eslint-plugin-prefer-arrow: 1.2.3(eslint@8.50.0)
+      eslint-plugin-promise: 6.1.1(eslint@8.50.0)
+      eslint-plugin-react: 7.33.2(eslint@8.50.0)
+      eslint-plugin-react-hooks: 4.6.0(eslint@8.50.0)
+      eslint-plugin-unicorn: 48.0.1(eslint@8.50.0)
+      lodash: 4.17.21
+    transitivePeerDependencies:
+      - eslint
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - jest
+      - supports-color
+      - typescript
+    dev: true
 
   /@api3/ois@2.1.0:
     resolution: {integrity: sha512-KcDzCNhC1z4XSrpz5G6XsvgUdJhTEtDwJLJX6VP8QNhIk6FWKgCqYUHuJ4PhOoSkMGUPPVu5jYqGbZj4q8ymEA==}
@@ -3755,36 +3785,6 @@ packages:
     dependencies:
       delayed-stream: 1.0.0
     dev: false
-
-  /commons@1.0.4(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2):
-    resolution: {integrity: sha512-I87yt6GBRf1kDPQjxVdZhrlhiIGaCaHu4q8xFcuf3aHRrI9NR2cUo/qUkGRJEDPc/3SlGiI+7N6043FH37b9+A==}
-    engines: {node: ^18.14.0, pnpm: ^8.8.0}
-    dependencies:
-      '@typescript-eslint/eslint-plugin': 6.7.3(@typescript-eslint/parser@6.7.3)(eslint@8.50.0)(typescript@5.2.2)
-      '@typescript-eslint/parser': 6.7.3(eslint@8.50.0)(typescript@5.2.2)
-      eslint-config-next: 13.5.4(eslint@8.50.0)(typescript@5.2.2)
-      eslint-plugin-check-file: 2.6.2(eslint@8.50.0)
-      eslint-plugin-cypress: 2.15.1(eslint@8.50.0)
-      eslint-plugin-deprecation: 2.0.0(eslint@8.50.0)(typescript@5.2.2)
-      eslint-plugin-functional: 6.0.0(eslint@8.50.0)(typescript@5.2.2)
-      eslint-plugin-import: 2.28.1(@typescript-eslint/parser@6.7.3)(eslint-import-resolver-typescript@3.6.1)(eslint@8.50.0)
-      eslint-plugin-jest: 27.4.2(@typescript-eslint/eslint-plugin@6.7.3)(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)
-      eslint-plugin-jest-formatting: 3.1.0(eslint@8.50.0)
-      eslint-plugin-no-only-tests: 3.1.0
-      eslint-plugin-prefer-arrow: 1.2.3(eslint@8.50.0)
-      eslint-plugin-promise: 6.1.1(eslint@8.50.0)
-      eslint-plugin-react: 7.33.2(eslint@8.50.0)
-      eslint-plugin-react-hooks: 4.6.0(eslint@8.50.0)
-      eslint-plugin-unicorn: 48.0.1(eslint@8.50.0)
-      lodash: 4.17.21
-    transitivePeerDependencies:
-      - eslint
-      - eslint-import-resolver-typescript
-      - eslint-import-resolver-webpack
-      - jest
-      - supports-color
-      - typescript
-    dev: true
 
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}

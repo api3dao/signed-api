@@ -70,7 +70,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     return { success: false };
   }
 
-  const {count} = parsedResponse.data;
+  const { count } = parsedResponse.data;
   logger.info(`Pushed signed data updates to the signed API.`, { ...logContext, count });
   return { success: true, count };
 };

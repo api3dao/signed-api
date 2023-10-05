@@ -39,7 +39,9 @@ app.get('/', (_req, res) => {
   logger.debug('Request GET /');
 
   for (const asset of assets) {
-    asset.value = Number.parseFloat((asset.value * (1 + ((Math.random() - 0.5) * asset.deltaPercent) / 100)).toFixed(5));
+    asset.value = Number.parseFloat(
+      (asset.value * (1 + ((Math.random() - 0.5) * asset.deltaPercent) / 100)).toFixed(5)
+    );
   }
 
   const response = Object.fromEntries(assets.map((asset) => [asset.name, asset.value]));
