@@ -50,7 +50,7 @@ AWS_S3_BUCKET_NAME=my-config-bucket
 AWS_S3_BUCKET_PATH=configs/my-app/signed-api.json
 ```
 
-<!-- NOTE: Keep the logger configuration in-sync with logger and pusher. -->
+<!-- NOTE: Keep the logger configuration in-sync with pusher. -->
 
 #### `LOGGER_ENABLED`
 

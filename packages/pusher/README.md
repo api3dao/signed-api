@@ -75,7 +75,7 @@ LOG_FORMAT=json
 LOG_LEVEL=info
 ```
 
-<!-- NOTE: Keep the logger configuration in-sync with logger and API. -->
+<!-- NOTE: Keep the logger configuration in-sync with API. -->
 
 #### `LOGGER_ENABLED`
 
