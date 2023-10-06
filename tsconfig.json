@@ -2,9 +2,9 @@
   "compilerOptions": {
     "noEmit": true,
     "lib": ["esnext"],
-    "module": "commonjs",
+    "module": "Node16",
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "strict": true,
     "target": "esnext",
     "skipLibCheck": true,

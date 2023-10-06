@@ -3,4 +3,7 @@ module.exports = {
   parserOptions: {
     project: ['./tsconfig.json', './packages/*/tsconfig.json'],
   },
+  rules: {
+    'import/no-unresolved': 'off',
+  },
 };

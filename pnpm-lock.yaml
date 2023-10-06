@@ -56,8 +56,8 @@ importers:
   packages/api:
     dependencies:
       '@api3/commons':
-        specifier: ^0.1.0
-        version: 0.1.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)(zod@3.22.2)
+        specifier: ^0.2.0
+        version: 0.2.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)(zod@3.22.2)
       '@api3/promise-utils':
         specifier: ^0.4.0
         version: 0.4.0
@@ -93,8 +93,8 @@ importers:
   packages/e2e:
     dependencies:
       '@api3/commons':
-        specifier: ^0.1.0
-        version: 0.1.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)(zod@3.22.2)
+        specifier: ^0.2.0
+        version: 0.2.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)(zod@3.22.2)
       '@api3/promise-utils':
         specifier: ^0.4.0
         version: 0.4.0
@@ -136,8 +136,8 @@ importers:
         specifier: ^0.12.0
         version: 0.12.0
       '@api3/commons':
-        specifier: ^0.1.0
-        version: 0.1.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)(zod@3.22.2)
+        specifier: ^0.2.0
+        version: 0.2.0(eslint@8.50.0)(jest@29.7.0)(typescript@5.2.2)(zod@3.22.2)
       '@api3/ois':
         specifier: ^2.2.0
         version: 2.2.0
@@ -8111,6 +8111,12 @@ packages:
       { integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q== }
     engines: { node: '>=10' }
 
+  /zod@3.22.2:
+    resolution:
+      { integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg== }
+    dev: false
+
   /zod@3.22.4:
     resolution:
       { integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg== }
+    dev: true

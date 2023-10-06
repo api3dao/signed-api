@@ -1,7 +1,7 @@
 import * as abi from '@api3/airnode-abi';
 import type * as node from '@api3/airnode-node';
 import { config } from '@api3/airnode-validator';
-import { logFormatSchema, logLevelSchema } from '@api3/commons/dist/logger';
+import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';

@@ -1,4 +1,4 @@
-import { logFormatSchema, logLevelSchema } from '@api3/commons/dist/logger';
+import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
 import { uniqBy } from 'lodash';
 import { z } from 'zod';
 
