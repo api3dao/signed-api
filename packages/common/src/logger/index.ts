@@ -93,6 +93,7 @@ const wrapper = (logger: Logger): Logger => {
     warn: (message, context) => logger.warn(message, context ? { context } : undefined),
     // We need to handle both overloads of the `error` function
     error: (message, errorOrContext, context) => {
+      // eslint-disable-next-line lodash/prefer-lodash-typecheck
       if (errorOrContext instanceof Error) {
         logger.error(message, errorOrContext, context ? { context } : undefined);
       } else {

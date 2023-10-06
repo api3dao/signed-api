@@ -29,7 +29,7 @@ export const initiateUpdatingSignedApi = () => {
         [signedApiUpdate.signedApiName]: {
           ...acc[signedApiUpdate.signedApiName],
           [signedApiUpdate.updateDelay]: uniq([
-            ...get(acc, [signedApiUpdate.signedApiName, signedApiUpdate.updateDelay], []),
+            ...get(acc, `${signedApiUpdate.signedApiName}.${signedApiUpdate.updateDelay}`, []),
             ...signedApiUpdate.templateIds,
           ]),
         },
@@ -52,7 +52,7 @@ export const initiateUpdatingSignedApi = () => {
     process.exit(NO_SIGNED_API_UPDATE_EXIT_CODE);
   }
 
-  signedApiUpdateDelayGroups.map(updateSignedApiInLoop);
+  signedApiUpdateDelayGroups.map(async (element) => updateSignedApiInLoop(element));
 };
 
 export const updateSignedApiInLoop = async (signedApiNameUpdateDelayGroup: SignedApiNameUpdateDelayGroup) => {

@@ -21,7 +21,7 @@ export const initiateFetchingBeaconData = () => {
     process.exit(NO_FETCH_EXIT_CODE);
   }
 
-  return signedApiUpdates.map(fetchBeaconDataInLoop);
+  return signedApiUpdates.map(async (element) => fetchBeaconDataInLoop(element));
 };
 
 const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
