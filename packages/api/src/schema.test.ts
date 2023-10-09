@@ -98,7 +98,7 @@ describe('env config schema', () => {
     expect(() => envConfigSchema.parse(env)).not.toThrow();
   });
 
-  it('aWS_REGION is set when CONFIG_SOURCE is aws-s3', () => {
+  it('the AWS_REGION is set when CONFIG_SOURCE is aws-s3', () => {
     const env = {
       CONFIG_SOURCE: 'aws-s3',
     };
