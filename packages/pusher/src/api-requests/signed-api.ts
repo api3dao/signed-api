@@ -22,6 +22,7 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
     // Calculate the reference timestamp based on the current time and update delay.
     const referenceTimestamp = Date.now() / 1000 - updateDelay;
     const delayedSignedData = templateValues[templateId]!.get(referenceTimestamp);
+    logger.debug('Getting delayed signed data.', { ...logContext, templateId, referenceTimestamp, delayedSignedData });
     templateValues[templateId]!.prune();
     if (isNil(delayedSignedData)) return null;
 
