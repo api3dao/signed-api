@@ -1,13 +1,14 @@
-import { readFileSync, readdirSync } from 'fs';
-import { join } from 'path';
+import { readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 
-it('index file re-exports from all implementation folders', () => {
+test('index file re-exports from all implementation folders', () => {
   const entries = readdirSync(__dirname, { withFileTypes: true });
 
   const subFolders = entries.filter((entry) => entry.isDirectory()).map((dir) => dir.name);
   const mainExports = [
+    // eslint-disable-next-line prefer-named-capture-group
     ...readFileSync(join(__dirname, './index.ts'), 'utf8').matchAll(/export \* from '\.\/(.+)'/g),
   ].map((match) => match[1]);
 
-  expect(subFolders).toEqual(mainExports);
+  expect(subFolders).toStrictEqual(mainExports);
 });

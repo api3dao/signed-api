@@ -1,16 +1,19 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { ZodError } from 'zod';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import dotenv from 'dotenv';
-import { Config, configSchema, signedApisSchema } from './schema';
-import { interpolateSecrets } from './utils';
+import { ZodError } from 'zod';
+
 import { config } from '../../test/fixtures';
 
-it('validates example config', async () => {
+import { type Config, configSchema, signedApisSchema } from './schema';
+import { interpolateSecrets } from './utils';
+
+test('validates example config', async () => {
   const exampleConfig = JSON.parse(readFileSync(join(__dirname, '../../config/pusher.example.json'), 'utf8'));
 
   // The mnemonic is not interpolated (and thus invalid).
-  await expect(configSchema.parseAsync(exampleConfig)).rejects.toEqual(
+  await expect(configSchema.parseAsync(exampleConfig)).rejects.toStrictEqual(
     new ZodError([
       {
         code: 'custom',
@@ -21,12 +24,12 @@ it('validates example config', async () => {
   );
 
   const exampleSecrets = dotenv.parse(readFileSync(join(__dirname, '../../config/secrets.example.env'), 'utf8'));
-  await expect(configSchema.parseAsync(interpolateSecrets(exampleConfig, exampleSecrets))).resolves.toEqual(
+  await expect(configSchema.parseAsync(interpolateSecrets(exampleConfig, exampleSecrets))).resolves.toStrictEqual(
     expect.any(Object)
   );
 });
 
-it('ensures signed API names are unique', () => {
+test('ensures signed API names are unique', () => {
   expect(() =>
     signedApisSchema.parse([
       { name: 'foo', url: 'https://example.com' },
@@ -42,7 +45,7 @@ it('ensures signed API names are unique', () => {
     ])
   );
 
-  expect(signedApisSchema.parse([{ name: 'foo', url: 'https://example.com' }])).toEqual([
+  expect(signedApisSchema.parse([{ name: 'foo', url: 'https://example.com' }])).toStrictEqual([
     {
       name: 'foo',
       url: 'https://example.com',
@@ -50,7 +53,7 @@ it('ensures signed API names are unique', () => {
   ]);
 });
 
-it('validates trigger references', async () => {
+test('validates trigger references', async () => {
   const invalidConfig: Config = {
     ...config,
     ois: [
@@ -59,7 +62,7 @@ it('validates trigger references', async () => {
     ],
   };
 
-  await expect(configSchema.parseAsync(invalidConfig)).rejects.toEqual(
+  await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
     new ZodError([
       {
         code: 'custom',

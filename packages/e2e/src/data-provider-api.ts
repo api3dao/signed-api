@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { logger } from './logger';
 
 const app = express();
@@ -28,7 +29,7 @@ const assets: Asset[] = [
     name: 'MOCK-ABC/DEF',
   },
   {
-    value: 50000,
+    value: 50_000,
     deltaPercent: 20,
     name: 'MOCK-HJK/KOP',
   },
@@ -38,7 +39,9 @@ app.get('/', (_req, res) => {
   logger.debug('Request GET /');
 
   for (const asset of assets) {
-    asset.value = parseFloat((asset.value * (1 + ((Math.random() - 0.5) * asset.deltaPercent) / 100)).toFixed(5));
+    asset.value = Number.parseFloat(
+      (asset.value * (1 + ((Math.random() - 0.5) * asset.deltaPercent) / 100)).toFixed(5)
+    );
   }
 
   const response = Object.fromEntries(assets.map((asset) => [asset.name, asset.value]));

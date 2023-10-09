@@ -6,7 +6,7 @@ export const endpointSchema = z
   .object({
     urlPath: z
       .string()
-      .regex(/^\/[a-zA-Z0-9\-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
+      .regex(/^\/[\dA-Za-z-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
     delaySeconds: z.number().nonnegative().int(),
   })
   .strict();
@@ -33,9 +33,9 @@ export const configSchema = z
 
 export type Config = z.infer<typeof configSchema>;
 
-export const evmAddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Must be a valid EVM address');
+export const evmAddressSchema = z.string().regex(/^0x[\dA-Fa-f]{40}$/, 'Must be a valid EVM address');
 
-export const evmIdSchema = z.string().regex(/^0x[a-fA-F0-9]{64}$/, 'Must be a valid EVM hash');
+export const evmIdSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/, 'Must be a valid EVM hash');
 
 export const signedDataSchema = z.object({
   airnode: evmAddressSchema,
@@ -58,18 +58,18 @@ export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')])
 // primarily focused on users and production usage.
 export const envConfigSchema = z
   .object({
-    LOGGER_ENABLED: envBooleanSchema.default('true'),
     LOG_COLORIZE: envBooleanSchema.default('false'),
     LOG_FORMAT: logFormatSchema.default('json'),
     LOG_LEVEL: logLevelSchema.default('info'),
+    LOGGER_ENABLED: envBooleanSchema.default('true'),
 
     CONFIG_SOURCE: z.union([z.literal('local'), z.literal('aws-s3')]).default('local'),
 
     AWS_ACCESS_KEY_ID: z.string().optional(),
-    AWS_SECRET_ACCESS_KEY: z.string().optional(),
     AWS_REGION: z.string().optional(),
     AWS_S3_BUCKET_NAME: z.string().optional(),
     AWS_S3_BUCKET_PATH: z.string().optional(),
+    AWS_SECRET_ACCESS_KEY: z.string().optional(),
   })
   .strip() // We parse from ENV variables of the process which has many variables that we don't care about.
   .superRefine((val, ctx) => {

@@ -1,8 +1,13 @@
-import { signTemplateResponses } from './sign-template-data';
-import * as stateModule from './state';
 import { config, nodarySignedTemplateResponses, nodaryTemplateResponses } from '../test/fixtures';
 
+import { signTemplateResponses } from './sign-template-data';
+import * as stateModule from './state';
+
 describe(signTemplateResponses.name, () => {
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it('signs template responses', async () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
@@ -10,10 +15,6 @@ describe(signTemplateResponses.name, () => {
 
     const signedTemplateResponses = await signTemplateResponses(nodaryTemplateResponses);
 
-    expect(signedTemplateResponses).toEqual(nodarySignedTemplateResponses);
-  });
-
-  afterEach(() => {
-    jest.useRealTimers();
+    expect(signedTemplateResponses).toStrictEqual(nodarySignedTemplateResponses);
   });
 });

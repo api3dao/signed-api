@@ -1,8 +1,9 @@
 import axios from 'axios';
+
 import { logger } from './logger';
 import { airnode, formatData } from './utils';
 
-async function main() {
+const main = async () => {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     logger.debug('Making requests');
@@ -15,6 +16,6 @@ async function main() {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
-}
+};
 
-main();
+void main();

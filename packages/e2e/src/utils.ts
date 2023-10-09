@@ -1,5 +1,5 @@
-import { ethers } from 'ethers';
 import { goSync } from '@api3/promise-utils';
+import { ethers } from 'ethers';
 
 export const formatData = (networkResponse: any) => {
   const goFormat = goSync(() =>

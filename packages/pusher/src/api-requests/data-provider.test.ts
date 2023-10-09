@@ -1,12 +1,14 @@
 import { api as nodeApiModule } from '@api3/airnode-node';
-import { makeTemplateRequests } from './data-provider';
-import * as stateModule from '../state';
+
 import {
   config,
   nodaryTemplateRequestErrorResponse,
   nodaryTemplateRequestResponseData,
   nodaryTemplateResponses,
 } from '../../test/fixtures';
+import * as stateModule from '../state';
+
+import { makeTemplateRequests } from './data-provider';
 
 describe(makeTemplateRequests.name, () => {
   it('makes a single template request for multiple beacons', async () => {
@@ -16,7 +18,7 @@ describe(makeTemplateRequests.name, () => {
 
     const response = await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
-    expect(response).toEqual(nodaryTemplateResponses);
+    expect(response).toStrictEqual(nodaryTemplateResponses);
   });
 
   it('handles request failure', async () => {
@@ -24,7 +26,7 @@ describe(makeTemplateRequests.name, () => {
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(nodeApiModule, 'performApiCall').mockRejectedValue(nodaryTemplateRequestErrorResponse);
 
-    await expect(makeTemplateRequests(config.triggers.signedApiUpdates[0]!)).rejects.toEqual({
+    await expect(makeTemplateRequests(config.triggers.signedApiUpdates[0]!)).rejects.toStrictEqual({
       errorMessage: 'Invalid API key',
       success: false,
     });

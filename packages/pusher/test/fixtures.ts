@@ -1,8 +1,9 @@
-import { PerformApiCallSuccess } from '@api3/airnode-node/dist/src/api';
-import { ApiCallErrorResponse } from '@api3/airnode-node';
-import { AxiosResponse } from 'axios';
-import { Config } from '../src/validation/schema';
-import { SignedResponse, TemplateResponse } from '../src/sign-template-data';
+import type { ApiCallErrorResponse } from '@api3/airnode-node';
+import type { PerformApiCallSuccess } from '@api3/airnode-node/dist/src/api';
+import type { AxiosResponse } from 'axios';
+
+import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
+import type { Config } from '../src/validation/schema';
 
 export const config: Config = {
   airnodeWalletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
@@ -104,9 +105,9 @@ export const config: Config = {
 
 export const nodaryTemplateRequestResponseData: PerformApiCallSuccess = {
   data: {
-    'WTI/USD': { value: 89.06, timestamp: 1695727965885, category: 'commodity' },
-    'XAG/USD': { value: 23.01525, timestamp: 1695728005891, category: 'commodity' },
-    'XAU/USD': { value: 1912.425, timestamp: 1695728005891, category: 'commodity' },
+    'WTI/USD': { value: 89.06, timestamp: 1_695_727_965_885, category: 'commodity' },
+    'XAG/USD': { value: 23.015_25, timestamp: 1_695_728_005_891, category: 'commodity' },
+    'XAU/USD': { value: 1912.425, timestamp: 1_695_728_005_891, category: 'commodity' },
   },
 };
 
@@ -132,7 +133,7 @@ export const nodaryTemplateResponses: TemplateResponse[] = [
     {
       data: {
         encodedValue: '0x0000000000000000000000000000000000000000000000013f6697ef5acf2000',
-        rawValue: 23.01525,
+        rawValue: 23.015_25,
         values: ['23015250000000000000'],
       },
       success: true,

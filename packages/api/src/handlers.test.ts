@@ -1,19 +1,23 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { omit } from 'lodash';
+
+import { createSignedData, generateRandomWallet } from '../test/utils';
+
 import * as cacheModule from './cache';
 import * as configModule from './config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
-import { createSignedData, generateRandomWallet } from '../test/utils';
 
-afterEach(() => {
-  cacheModule.setCache({});
-});
-
+// eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
   jest
     .spyOn(configModule, 'getConfig')
     .mockImplementation(() => JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8')));
+});
+
+afterEach(() => {
+  cacheModule.setCache({});
 });
 
 describe(batchInsertData.name, () => {
@@ -23,7 +27,7 @@ describe(batchInsertData.name, () => {
 
     const result = await batchInsertData(batchData);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       body: JSON.stringify({
         message: 'Unable to recover signer address',
         detail:
@@ -37,7 +41,7 @@ describe(batchInsertData.name, () => {
       },
       statusCode: 400,
     });
-    expect(cacheModule.getCache()).toEqual({});
+    expect(cacheModule.getCache()).toStrictEqual({});
   });
 
   it('inserts the batch if data is valid', async () => {
@@ -45,7 +49,7 @@ describe(batchInsertData.name, () => {
 
     const result = await batchInsertData(batchData);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       body: JSON.stringify({ count: 2 }),
       headers: {
         'access-control-allow-methods': '*',
@@ -54,7 +58,7 @@ describe(batchInsertData.name, () => {
       },
       statusCode: 201,
     });
-    expect(cacheModule.getCache()).toEqual({
+    expect(cacheModule.getCache()).toStrictEqual({
       [batchData[0]!.airnode]: {
         [batchData[0]!.templateId]: [batchData[0]],
       },
@@ -72,7 +76,7 @@ describe(getData.name, () => {
 
     const result = await getData('0xInvalid', 0);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       body: JSON.stringify({ message: 'Invalid request, airnode address must be an EVM address' }),
       headers: {
         'access-control-allow-methods': '*',
@@ -90,7 +94,7 @@ describe(getData.name, () => {
 
     const result = await getData(airnodeWallet.address, 0);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       body: JSON.stringify({
         count: 2,
         data: {
@@ -120,7 +124,7 @@ describe(getData.name, () => {
 
     const result = await getData(airnodeWallet.address, 30);
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       body: JSON.stringify({
         count: 1,
         data: {
@@ -147,7 +151,7 @@ describe(listAirnodeAddresses.name, () => {
 
     const result = await listAirnodeAddresses();
 
-    expect(result).toEqual({
+    expect(result).toStrictEqual({
       body: JSON.stringify({
         count: 1,
         'available-airnodes': [airnodeWallet.address],

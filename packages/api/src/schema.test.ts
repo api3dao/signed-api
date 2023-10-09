@@ -1,7 +1,9 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
-import { ZodError } from 'zod';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import dotenv from 'dotenv';
+import { ZodError } from 'zod';
+
 import { configSchema, endpointSchema, endpointsSchema, envBooleanSchema, envConfigSchema } from './schema';
 
 describe('endpointSchema', () => {
@@ -96,7 +98,7 @@ describe('env config schema', () => {
     expect(() => envConfigSchema.parse(env)).not.toThrow();
   });
 
-  it('AWS_REGION is set when CONFIG_SOURCE is aws-s3', () => {
+  it('aWS_REGION is set when CONFIG_SOURCE is aws-s3', () => {
     const env = {
       CONFIG_SOURCE: 'aws-s3',
     };

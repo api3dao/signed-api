@@ -1,16 +1,15 @@
 import { COMMON_HEADERS } from './constants';
-import { BatchSignedData, SignedData } from './schema';
-import { ApiResponse } from './types';
+import type { BatchSignedData, SignedData } from './schema';
+import type { ApiResponse } from './types';
 
 export const isBatchUnique = (batchSignedData: BatchSignedData) => {
   return (
-    batchSignedData.length ===
-    new Set(batchSignedData.map(({ airnode, templateId }) => airnode.concat(templateId))).size
+    batchSignedData.length === new Set(batchSignedData.map(({ airnode, templateId }) => [...airnode, templateId])).size
   );
 };
 
 export const isIgnored = (signedData: SignedData, ignoreAfterTimestamp: number) => {
-  return parseInt(signedData.timestamp) > ignoreAfterTimestamp;
+  return Number.parseInt(signedData.timestamp, 10) > ignoreAfterTimestamp;
 };
 
 export const generateErrorResponse = (

@@ -1,8 +1,9 @@
 import Bottleneck from 'bottleneck';
 import { last } from 'lodash';
-import { Config, SignedData, TemplateId } from './validation/schema';
+
 import { OIS_MAX_CONCURRENCY_DEFAULT, OIS_MIN_TIME_DEFAULT_MS } from './constants';
 import { deriveEndpointId, getRandomId } from './utils';
+import type { Config, SignedData, TemplateId } from './validation/schema';
 
 export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 
@@ -94,16 +95,18 @@ export const getState = () => {
 /**
  * Represents a queue-like data structure for managing and retrieving delayed signed data entries.
  */
+// eslint-disable-next-line functional/no-classes
 export class DelayedSignedDataQueue {
   private storage: SignedData[] = [];
-  private maxUpdateDelay: number;
+
+  private readonly maxUpdateDelay: number;
 
   /**
    * Creates the delayed signed data queue with the maximum update delay time. If there exists some signed data satisfying
    * this delay, all other signed data with smaller timestamps are removed.
    * @param maxUpdateDelay - The maximum update delay time in seconds.
    */
-  constructor(maxUpdateDelay: number) {
+  public constructor(maxUpdateDelay: number) {
     this.maxUpdateDelay = maxUpdateDelay;
   }
 
@@ -111,8 +114,9 @@ export class DelayedSignedDataQueue {
    * Checks if a signed data entry is delayed enough. This means that the timestamp of the entry must be smaller than
    * the reference timestamp.
    */
+  // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   private isDelayedEnough(data: SignedData, referenceTimestamp: number) {
-    return parseInt(data.timestamp) < referenceTimestamp;
+    return Number.parseInt(data.timestamp, 10) < referenceTimestamp;
   }
 
   /**
@@ -121,11 +125,15 @@ export class DelayedSignedDataQueue {
    */
   public put(data: SignedData): void {
     // Make sure the data is not older than other entries in the queue.
-    if (this.storage.length && parseInt(last(this.storage)!.timestamp) > parseInt(data.timestamp)) {
+    if (
+      this.storage.length > 0 &&
+      Number.parseInt(last(this.storage)!.timestamp, 10) > Number.parseInt(data.timestamp, 10)
+    ) {
       throw new Error('The signed data is too old');
     }
     this.storage.push(data);
   }
+
   /**
    * Retrieves the newest signed data entry from the queue that is delayed by a specified time.
    * @param referenceTimestamp - The reference timestamp in seconds. Signed data with newer or equal timestamp is

@@ -1,4 +1,5 @@
 import { createLogger, logConfigSchema } from 'signed-api/common';
+
 import { loadEnv } from './env';
 
 // We need to load the environment variables before we can use the logger. Because we want the logger to always be

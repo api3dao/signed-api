@@ -1,10 +1,12 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import { go } from '@api3/promise-utils';
 import { S3 } from '@aws-sdk/client-s3';
-import { logger } from './logger';
-import { Config, configSchema } from './schema';
+
 import { loadEnv } from './env';
+import { logger } from './logger';
+import { type Config, configSchema } from './schema';
 
 let config: Config | undefined;
 
@@ -23,13 +25,14 @@ export const fetchAndCacheConfig = async (): Promise<Config> => {
 const fetchConfig = async (): Promise<any> => {
   const env = loadEnv();
   const source = env.CONFIG_SOURCE;
-  if (!source || source === 'local') {
-    return JSON.parse(readFileSync(join(__dirname, '../config/signed-api.json'), 'utf8'));
+  switch (source) {
+    case 'local': {
+      return JSON.parse(readFileSync(join(__dirname, '../config/signed-api.json'), 'utf8'));
+    }
+    case 'aws-s3': {
+      return fetchConfigFromS3();
+    }
   }
-  if (source === 'aws-s3') {
-    return await fetchConfigFromS3();
-  }
-  throw new Error(`Unable to load config CONFIG_SOURCE:${source}`);
 };
 
 const fetchConfigFromS3 = async (): Promise<any> => {
@@ -43,7 +46,7 @@ const fetchConfigFromS3 = async (): Promise<any> => {
   };
 
   logger.info(`Fetching config from AWS S3 region:${region}...`);
-  const res = await go(() => s3.getObject(params), { retries: 1 });
+  const res = await go(async () => s3.getObject(params), { retries: 1 });
   if (!res.success) {
     logger.error('Error fetching config from AWS S3:', res.error);
     throw res.error;

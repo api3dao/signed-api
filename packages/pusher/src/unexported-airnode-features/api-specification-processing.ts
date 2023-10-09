@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Note that since the logic was last copied from Airnode, there has been some changes in the original Airnode
 // implementation. Notably, the reserved paramaters are now inaccessible in processing.
 //
