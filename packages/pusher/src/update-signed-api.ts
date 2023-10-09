@@ -29,7 +29,7 @@ export const initiateUpdatingSignedApi = () => {
         [signedApiUpdate.signedApiName]: {
           ...acc[signedApiUpdate.signedApiName],
           [signedApiUpdate.updateDelay]: uniq([
-            ...get(acc, `${signedApiUpdate.signedApiName}.${signedApiUpdate.updateDelay}`, []),
+            ...get(acc, [signedApiUpdate.signedApiName, signedApiUpdate.updateDelay], []),
             ...signedApiUpdate.templateIds,
           ]),
         },
