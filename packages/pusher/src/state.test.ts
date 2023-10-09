@@ -61,4 +61,22 @@ describe(DelayedSignedDataQueue.name, () => {
 
     expect(queue.getAll()).toStrictEqual([data2, data3]);
   });
+
+  it('keeps data in the queue if none of the items exceed maxUpdateDelay', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
+    const queue = new DelayedSignedDataQueue(30);
+    const data = nodarySignedTemplateResponses[0]![1];
+    const timestamp = Number.parseInt(data.timestamp, 10);
+    const oldData = [
+      { ...data, timestamp: (timestamp - 20).toString() },
+      { ...data, timestamp: (timestamp - 15).toString() },
+      { ...data, timestamp: (timestamp - 10).toString() },
+    ];
+    for (const item of oldData) queue.put(item);
+
+    queue.prune();
+
+    // All data points remain in the queue.
+    expect(queue.getAll()).toStrictEqual(oldData);
+  });
 });
