@@ -1,14 +1,12 @@
 import * as abi from '@api3/airnode-abi';
-import type * as node from '@api3/airnode-node';
 import { config } from '@api3/airnode-validator';
 import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
+import { preProcessApiCallParameters } from '@api3/commons/processing';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 import { isNil, uniqWith, isEqual } from 'lodash';
 import { z, type SuperRefinement } from 'zod';
-
-import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';
 
 export const limiterConfig = z.object({ minTime: z.number(), maxConcurrency: z.number() });
 
@@ -147,7 +145,7 @@ const validateTriggerReferences: SuperRefinement<{
   templates: Templates;
   apiCredentials: ApisCredentials;
 }> = async (config, ctx) => {
-  const { ois, templates, endpoints, apiCredentials, triggers } = config;
+  const { ois: oises, templates, endpoints, triggers } = config;
 
   for (const signedApiUpdate of triggers.signedApiUpdates) {
     const { templateIds } = signedApiUpdate;
@@ -174,25 +172,16 @@ const validateTriggerReferences: SuperRefinement<{
           return;
         }
 
-        const parameters = template.parameters.reduce((acc, parameter) => {
+        const ois = oises.find((o) => o.title === endpoint.oisTitle)!;
+        const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
+        const apiCallParameters = template.parameters.reduce((acc, parameter) => {
           return {
             ...acc,
             [parameter.name]: parameter.value,
           };
         }, {});
 
-        const aggregatedApiCall = {
-          parameters,
-          ...endpoint,
-        };
-
-        const payload: node.ApiCallPayload = {
-          type: 'http-gateway',
-          config: { ois, apiCredentials },
-          aggregatedApiCall,
-        };
-
-        return preProcessApiSpecifications(payload);
+        return preProcessApiCallParameters(oisEndpoint, apiCallParameters);
       });
 
       const operationsPayloads = await Promise.all(operationPayloadPromises);

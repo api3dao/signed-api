@@ -1,4 +1,4 @@
-import type * as node from '@api3/airnode-node';
+import type { ExtractedAndEncodedResponse } from '@api3/airnode-adapter';
 import { go } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 import { isNil } from 'lodash';
@@ -10,13 +10,13 @@ import type { SignedData, TemplateId } from './validation/schema';
 
 export type SignedResponse = [TemplateId, SignedData];
 
-export type TemplateResponse = [TemplateId, node.HttpGatewayApiCallSuccessResponse];
+export type TemplateResponse = [TemplateId, ExtractedAndEncodedResponse];
 
 export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
   logger.debug('Signing template responses', { templateResponses });
 
   const signPromises = templateResponses.map(async ([templateId, response]) => {
-    const { encodedValue } = response.data;
+    const { encodedValue } = response;
     const timestamp = Math.floor(Date.now() / 1000).toString();
 
     const wallet = ethers.Wallet.fromMnemonic(getState().config.airnodeWalletMnemonic);

@@ -9,3 +9,5 @@ export const OIS_MAX_CONCURRENCY_DEFAULT = 10;
 
 export const NO_SIGNED_API_UPDATE_EXIT_CODE = 1;
 export const NO_FETCH_EXIT_CODE = 2;
+
+export const API_CALL_TIMEOUT = 10_000;
