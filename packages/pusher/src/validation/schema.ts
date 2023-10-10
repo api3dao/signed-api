@@ -1,11 +1,11 @@
 import * as abi from '@api3/airnode-abi';
 import type * as node from '@api3/airnode-node';
 import { config } from '@api3/airnode-validator';
+import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 import { isNil, uniqWith, isEqual } from 'lodash';
-import { logFormatSchema, logLevelSchema } from 'signed-api/common';
 import { z, type SuperRefinement } from 'zod';
 
 import { preProcessApiSpecifications } from '../unexported-airnode-features/api-specification-processing';

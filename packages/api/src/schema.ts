@@ -1,5 +1,5 @@
+import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
 import { uniqBy } from 'lodash';
-import { logFormatSchema, logLevelSchema } from 'signed-api/common';
 import { z } from 'zod';
 
 export const endpointSchema = z

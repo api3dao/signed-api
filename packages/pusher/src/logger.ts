@@ -1,4 +1,4 @@
-import { createLogger, logConfigSchema } from 'signed-api/common';
+import { createLogger } from '@api3/commons/logger';
 
 import { loadEnv } from './validation/env';
 
@@ -6,11 +6,9 @@ import { loadEnv } from './validation/env';
 // available, we load the environment variables as a side effect during the module import.
 const env = loadEnv();
 
-const options = logConfigSchema.parse({
+export const logger = createLogger({
   colorize: env.LOG_COLORIZE,
   enabled: env.LOGGER_ENABLED,
   minLevel: env.LOG_LEVEL,
   format: env.LOG_FORMAT,
 });
-
-export const logger = createLogger(options);
