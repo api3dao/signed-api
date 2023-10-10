@@ -154,6 +154,7 @@ export class DelayedSignedDataQueue {
       this.isDelayedEnough(data, Date.now() / 1000 - this.maxUpdateDelay)
     );
 
+    if (index === -1) return;
     this.storage = this.storage.slice(index);
   }
 
