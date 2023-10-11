@@ -33,7 +33,6 @@ const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
     const signedResponses = await signTemplateResponses(templateResponses);
     // eslint-disable-next-line unicorn/no-array-for-each
     signedResponses.forEach(async ([templateId, signedResponse]) => {
-      logger.debug('WOOOW', { templateId, signedResponse });
       const goPut = await go(() => templateValues[templateId]!.put(signedResponse));
       if (!goPut.success) {
         // Because there can be multiple triggers for the same template ID it is possible that a race condition occurs,
