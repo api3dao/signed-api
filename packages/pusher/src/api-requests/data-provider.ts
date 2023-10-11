@@ -1,11 +1,7 @@
 import { buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-adapter';
 import type * as node from '@api3/airnode-node';
 import { getReservedParameters } from '@api3/airnode-node/dist/src/adapters/http/parameters';
-import {
-  preProcessApiCallParameters,
-  type ApiCallParameters,
-  postProcessApiCallResponse,
-} from '@api3/commons/processing';
+import { preProcessApiCallParameters, type ApiCallParameters, postProcessApiCallResponse } from '@api3/commons';
 import type { OIS, Endpoint as OisEndpoint } from '@api3/ois';
 import { go, goSync } from '@api3/promise-utils';
 import { isNil } from 'lodash';

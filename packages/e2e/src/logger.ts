@@ -1,4 +1,4 @@
-import { createLogger } from '@api3/commons/logger';
+import { createLogger } from '@api3/commons';
 
 export const logger = createLogger({
   colorize: true,

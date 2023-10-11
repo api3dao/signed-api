@@ -1,7 +1,12 @@
 import * as abi from '@api3/airnode-abi';
 import { config } from '@api3/airnode-validator';
-import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
-import { preProcessApiCallParameters } from '@api3/commons/processing';
+import {
+  type LogFormat,
+  type LogLevel,
+  logFormatOptions,
+  logLevelOptions,
+  preProcessApiCallParameters,
+} from '@api3/commons';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
@@ -311,8 +316,36 @@ export const envConfigSchema = z
   .object({
     LOGGER_ENABLED: envBooleanSchema.default('true'),
     LOG_COLORIZE: envBooleanSchema.default('false'),
-    LOG_FORMAT: logFormatSchema.default('json'),
-    LOG_LEVEL: logLevelSchema.default('info'),
+    LOG_FORMAT: z
+      .string()
+      .transform((value, ctx) => {
+        if (!logFormatOptions.includes(value as any)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid LOG_FORMAT',
+            path: ['LOG_FORMAT'],
+          });
+          return;
+        }
+
+        return value as LogFormat;
+      })
+      .default('json'),
+    LOG_LEVEL: z
+      .string()
+      .transform((value, ctx) => {
+        if (!logLevelOptions.includes(value as any)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid LOG_LEVEL',
+            path: ['LOG_LEVEL'],
+          });
+          return;
+        }
+
+        return value as LogLevel;
+      })
+      .default('info'),
   })
   .strip(); // We parse from ENV variables of the process which has many variables that we don't care about.
 

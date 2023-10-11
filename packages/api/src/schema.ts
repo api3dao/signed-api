@@ -1,4 +1,4 @@
-import { logFormatSchema, logLevelSchema } from '@api3/commons/logger';
+import { type LogFormat, logFormatOptions, logLevelOptions, type LogLevel } from '@api3/commons';
 import { uniqBy } from 'lodash';
 import { z } from 'zod';
 
@@ -59,8 +59,36 @@ export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')])
 export const envConfigSchema = z
   .object({
     LOG_COLORIZE: envBooleanSchema.default('false'),
-    LOG_FORMAT: logFormatSchema.default('json'),
-    LOG_LEVEL: logLevelSchema.default('info'),
+    LOG_FORMAT: z
+      .string()
+      .transform((value, ctx) => {
+        if (!logFormatOptions.includes(value as any)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid LOG_FORMAT',
+            path: ['LOG_FORMAT'],
+          });
+          return;
+        }
+
+        return value as LogFormat;
+      })
+      .default('json'),
+    LOG_LEVEL: z
+      .string()
+      .transform((value, ctx) => {
+        if (!logLevelOptions.includes(value as any)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: 'Invalid LOG_LEVEL',
+            path: ['LOG_LEVEL'],
+          });
+          return;
+        }
+
+        return value as LogLevel;
+      })
+      .default('info'),
     LOGGER_ENABLED: envBooleanSchema.default('true'),
 
     CONFIG_SOURCE: z.union([z.literal('local'), z.literal('aws-s3')]).default('local'),
