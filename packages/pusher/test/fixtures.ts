@@ -1,5 +1,3 @@
-import type { ApiCallErrorResponse } from '@api3/airnode-node';
-import type { PerformApiCallSuccess } from '@api3/airnode-node/dist/src/api';
 import type { AxiosResponse } from 'axios';
 
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
@@ -103,51 +101,39 @@ export const config: Config = {
   ],
 };
 
-export const nodaryTemplateRequestResponseData: PerformApiCallSuccess = {
+export const nodaryTemplateRequestResponseData = {
   data: {
     'WTI/USD': { value: 89.06, timestamp: 1_695_727_965_885, category: 'commodity' },
     'XAG/USD': { value: 23.015_25, timestamp: 1_695_728_005_891, category: 'commodity' },
     'XAU/USD': { value: 1912.425, timestamp: 1_695_728_005_891, category: 'commodity' },
   },
-};
+} as AxiosResponse;
 
-export const nodaryTemplateRequestErrorResponse: ApiCallErrorResponse = {
-  errorMessage: 'Invalid API key',
-  success: false,
-};
+export const nodaryTemplateRequestError = new Error('Invalid API key');
 
 export const nodaryTemplateResponses: TemplateResponse[] = [
   [
     '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd',
     {
-      data: {
-        encodedValue: '0x000000000000000000000000000000000000000000000004d3f4ae23d04a0000',
-        rawValue: 89.06,
-        values: ['89060000000000000000'],
-      },
-      success: true,
+      encodedValue: '0x000000000000000000000000000000000000000000000004d3f4ae23d04a0000',
+      rawValue: 89.06,
+      values: ['89060000000000000000'],
     },
   ],
   [
     '0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66',
     {
-      data: {
-        encodedValue: '0x0000000000000000000000000000000000000000000000013f6697ef5acf2000',
-        rawValue: 23.015_25,
-        values: ['23015250000000000000'],
-      },
-      success: true,
+      encodedValue: '0x0000000000000000000000000000000000000000000000013f6697ef5acf2000',
+      rawValue: 23.015_25,
+      values: ['23015250000000000000'],
     },
   ],
   [
     '0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9',
     {
-      data: {
-        encodedValue: '0x000000000000000000000000000000000000000000000067ac3a7509c06a8000',
-        rawValue: 1912.425,
-        values: ['1912425000000000000000'],
-      },
-      success: true,
+      encodedValue: '0x000000000000000000000000000000000000000000000067ac3a7509c06a8000',
+      rawValue: 1912.425,
+      values: ['1912425000000000000000'],
     },
   ],
 ];
