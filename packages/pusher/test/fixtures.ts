@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
 import type { Config } from '../src/validation/schema';
@@ -109,9 +109,7 @@ export const nodaryTemplateRequestResponseData = {
   },
 } as AxiosResponse;
 
-export const nodaryTemplateRequestErrorResponse = {
-  message: 'Invalid API key',
-} as AxiosError;
+export const nodaryTemplateRequestError = new Error('Invalid API key');
 
 export const nodaryTemplateResponses: TemplateResponse[] = [
   [
