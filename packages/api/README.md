@@ -169,13 +169,13 @@ For example:
 
 ```sh
 # Assuming the current folder contains the "config" folder and ".env" file and the API port is 8090.
-docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api:latest
+docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest
 ```
 
 As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
 
 ```sh
-docker build --target api --tag api:latest ../../
+docker build --target api --tag api3/signed-api:latest ../../
 ```
 
 ### Development only docker instructions

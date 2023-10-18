@@ -361,13 +361,13 @@ For example:
 
 ```sh
 # Assuming the current folder contains the "config" folder and ".env" file.
-docker run -it --init --volume $(pwd)/config:/app/config --env-file .env --rm pusher:latest
+docker run -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/pusher:latest
 ```
 
 As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
 
 ```sh
-docker build --target pusher --tag pusher:latest ../../
+docker build --target pusher --tag api3/pusher:latest ../../
 ```
 
 ### Development only docker instructions
