@@ -1,4 +1,4 @@
-import { createLogger } from '@api3/commons/logger';
+import { createLogger } from '@api3/commons';
 
 import { loadEnv } from './validation/env';
 
