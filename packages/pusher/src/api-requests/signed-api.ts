@@ -1,7 +1,6 @@
 import { deriveBeaconId } from '@api3/airnode-node';
 import { go } from '@api3/promise-utils';
 import axios, { type AxiosError } from 'axios';
-import { ethers } from 'ethers';
 import { isEmpty, isNil, pick } from 'lodash';
 
 import { logger } from '../logger';
@@ -11,13 +10,14 @@ import { type SignedApiPayload, signedApiResponseSchema } from '../validation/sc
 
 export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
   const {
-    config: { signedApis, airnodeWalletMnemonic },
+    config: { signedApis },
     templateValues,
+    airnodeWallet,
   } = getState();
   const { signedApiName, templateIds, updateDelay } = group;
   const logContext = { signedApiName, updateDelay };
 
-  const airnode = ethers.Wallet.fromMnemonic(airnodeWalletMnemonic).address;
+  const airnode = airnodeWallet.address;
   const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
     // Calculate the reference timestamp based on the current time and update delay.
     const referenceTimestamp = Date.now() / 1000 - updateDelay;
