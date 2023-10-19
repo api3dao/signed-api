@@ -4,8 +4,9 @@ import { isEmpty, isNil, omit, size } from 'lodash';
 import { getConfig } from './config';
 import { CACHE_HEADERS, COMMON_HEADERS } from './constants';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
-import { getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
-import { batchSignedDataSchema, evmAddressSchema } from './schema';
+import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
+import { logger } from './logger';
+import { type SignedData, batchSignedDataSchema, evmAddressSchema } from './schema';
 import type { ApiResponse } from './types';
 import { generateErrorResponse, isBatchUnique } from './utils';
 
@@ -67,8 +68,22 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   const firstError = signedDataValidationResults.find(Boolean);
   if (firstError) return firstError;
 
+  const newSignedData: SignedData[] = [];
+  // Because pushers do not keep track of the last timestamp they pushed, they may push the same data twice, which
+  // is acceptable, but we only want to store one data for each timestamp.
+  for (const signedData of batchSignedData) {
+    const requestTimestamp = Number.parseInt(signedData.timestamp, 10);
+    const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId, requestTimestamp));
+    if (goReadDb.data && requestTimestamp === Number.parseInt(goReadDb.data.timestamp, 10)) {
+      logger.debug('Skipping signed data because signed data with the same timestamp already exists', { signedData });
+      continue;
+    }
+
+    newSignedData.push(signedData);
+  }
+
   // Write batch of validated data to the database
-  const goBatchWriteDb = await go(async () => putAll(batchSignedData));
+  const goBatchWriteDb = await go(async () => putAll(newSignedData));
   if (!goBatchWriteDb.success) {
     return generateErrorResponse(500, 'Unable to send batch of signed data to database', goBatchWriteDb.error.message);
   }
@@ -76,12 +91,16 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Prune the cache with the data that is too old (no endpoint will ever return it)
   const maxDelay = endpoints.reduce((acc, endpoint) => Math.max(acc, endpoint.delaySeconds), 0);
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
-  const goPruneCache = await go(async () => prune(batchSignedData, maxIgnoreAfterTimestamp));
+  const goPruneCache = await go(async () => prune(newSignedData, maxIgnoreAfterTimestamp));
   if (!goPruneCache.success) {
     return generateErrorResponse(500, 'Unable to remove outdated cache data', goPruneCache.error.message);
   }
 
-  return { statusCode: 201, headers: COMMON_HEADERS, body: JSON.stringify({ count: batchSignedData.length }) };
+  return {
+    statusCode: 201,
+    headers: COMMON_HEADERS,
+    body: JSON.stringify({ count: newSignedData.length, skipped: batchSignedData.length - newSignedData.length }),
+  };
 };
 
 // Returns the most fresh signed data for each templateId for the given airnode address. The API can be delayed, which
