@@ -1,5 +1,6 @@
 import type { AxiosResponse } from 'axios';
 
+import packageJson from '../package.json';
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
 import type { Config } from '../src/validation/schema';
 
@@ -99,6 +100,9 @@ export const config: Config = {
       securitySchemeValue: 'invalid-api-key',
     },
   ],
+  nodeSettings: {
+    nodeVersion: packageJson.version,
+  },
 };
 
 export const nodaryTemplateRequestResponseData = {

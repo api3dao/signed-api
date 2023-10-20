@@ -13,6 +13,8 @@ import { ethers } from 'ethers';
 import { isNil, uniqWith, isEqual } from 'lodash';
 import { z, type SuperRefinement } from 'zod';
 
+import packageJson from '../../package.json';
+
 export const limiterConfig = z.object({ minTime: z.number(), maxConcurrency: z.number() });
 
 export const parameterSchema = z
@@ -242,6 +244,10 @@ export const oisesSchema = z.array(oisSchema);
 
 export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
+export const nodeSettingsSchema = z.object({
+  nodeVersion: z.string().refine((version) => version === packageJson.version, 'Invalid node version'),
+});
+
 export const configSchema = z
   .object({
     airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
@@ -250,6 +256,7 @@ export const configSchema = z
     chains: z.any(),
     endpoints: endpointsSchema,
     gateways: z.any(),
+    nodeSettings: nodeSettingsSchema,
     ois: oisesSchema,
     rateLimiting: rateLimitingSchema,
     signedApis: signedApisSchema,

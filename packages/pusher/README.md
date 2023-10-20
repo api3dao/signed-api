@@ -337,6 +337,14 @@ Refer to the [OIS documentation](https://dapi-docs.api3.org/reference/ois/latest
 Refer to Airnode's
 [API credentials](https://dapi-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
 
+#### `nodeSettings`
+
+Contains general deployment parameters of the pusher.
+
+##### `nodeVersion`
+
+The version of the pusher. The version specified in the config must match the version of the pusher at deployment time.
+
 ## Deployment
 
 TODO: Write example how to deploy on AWS

@@ -16,7 +16,7 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
-    "start-prod": "node --enable-source-maps dist/index.js",
+    "start-prod": "node dist/index.js",
     "test": "jest",
     "tsc": "tsc --project ."
   },

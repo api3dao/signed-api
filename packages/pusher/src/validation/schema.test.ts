@@ -29,6 +29,26 @@ test('validates example config', async () => {
   );
 });
 
+test('ensures nodeVersion matches pusher version', async () => {
+  const invalidConfig: Config = {
+    ...config,
+    nodeSettings: {
+      ...config.nodeSettings,
+      nodeVersion: '0.0.1',
+    },
+  };
+
+  await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
+    new ZodError([
+      {
+        code: 'custom',
+        message: 'Invalid node version',
+        path: ['nodeSettings', 'nodeVersion'],
+      },
+    ])
+  );
+});
+
 test('ensures signed API names are unique', () => {
   expect(() =>
     signedApisSchema.parse([
