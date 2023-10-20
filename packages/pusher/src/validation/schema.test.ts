@@ -18,7 +18,7 @@ test('validates example config', async () => {
       {
         code: 'custom',
         message: 'Invalid mnemonic',
-        path: ['airnodeWalletMnemonic'],
+        path: ['nodeSettings', 'airnodeWalletMnemonic'],
       },
     ])
   );

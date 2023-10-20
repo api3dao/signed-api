@@ -1,6 +1,4 @@
 {
-  "airnodeWalletMnemonic": "diamond result history offer forest diagram crop armed stumble orchard stage glance",
-  "rateLimiting": { "Mock API": { "maxConcurrency": 25, "minTime": 0 } },
   "templates": {
     "0xd1c9c79ccb6e24f77c14456b9b037ded9bfd0709468297e4e1e1bedbfe1bbf1a": {
       "endpointId": "0xa02c7e24d1d73f429927eedb78185a7d7d7c82d410acc3914cf6213aa29fea3f",
@@ -109,6 +107,8 @@
   ],
   "apiCredentials": [],
   "nodeSettings": {
-    "nodeVersion": "0.1.0"
+    "nodeVersion": "0.1.0",
+    "airnodeWalletMnemonic": "diamond result history offer forest diagram crop armed stumble orchard stage glance",
+    "rateLimiting": { "Mock API": { "maxConcurrency": 25, "minTime": 0 } }
   }
 }

@@ -209,14 +209,17 @@ export const rateLimitingSchema = z.record(limiterConfig);
 
 const validateOisRateLimiterReferences: SuperRefinement<{
   ois: OIS[];
-  rateLimiting: RateLimitingConfig;
+  nodeSettings: NodeSettings;
 }> = (config, ctx) => {
-  for (const oisTitle of Object.keys(config.rateLimiting)) {
-    if (!config.ois.some((ois) => ois.title === oisTitle)) {
+  const { ois, nodeSettings } = config;
+  const { rateLimiting } = nodeSettings;
+
+  for (const oisTitle of Object.keys(rateLimiting)) {
+    if (!ois.some((ois) => ois.title === oisTitle)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `OIS Title "${oisTitle}" in rate limiting overrides is not defined in the config.ois array`,
-        path: ['rateLimiting', 'overrides', 'directGateways', oisTitle],
+        message: `OIS Title "${oisTitle}" in rate limiting does not exist`,
+        path: ['rateLimiting', oisTitle],
       });
     }
   }
@@ -246,11 +249,14 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
 export const nodeSettingsSchema = z.object({
   nodeVersion: z.string().refine((version) => version === packageJson.version, 'Invalid node version'),
+  airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
+  rateLimiting: rateLimitingSchema,
 });
+
+export type NodeSettings = z.infer<typeof nodeSettingsSchema>;
 
 export const configSchema = z
   .object({
-    airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
     apiCredentials: apisCredentialsSchema,
     beaconSets: z.any(),
     chains: z.any(),
@@ -258,7 +264,6 @@ export const configSchema = z
     gateways: z.any(),
     nodeSettings: nodeSettingsSchema,
     ois: oisesSchema,
-    rateLimiting: rateLimitingSchema,
     signedApis: signedApisSchema,
     templates: templatesSchema,
     triggers: triggersSchema,

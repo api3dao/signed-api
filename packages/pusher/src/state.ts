@@ -24,14 +24,17 @@ export const initializeState = (config: Config) => {
 };
 
 export const buildApiLimiters = (config: Config) => {
-  if (!config.ois) {
+  const { ois, nodeSettings, templates } = config;
+  const { rateLimiting } = nodeSettings;
+
+  if (!ois) {
     return {};
   }
 
   const oisLimiters = Object.fromEntries(
-    config.ois.map((ois) => {
-      if (config.rateLimiting[ois.title]) {
-        const { minTime, maxConcurrency } = config.rateLimiting[ois.title]!;
+    ois.map((ois) => {
+      if (rateLimiting[ois.title]) {
+        const { minTime, maxConcurrency } = rateLimiting[ois.title]!;
 
         return [
           ois.title,
@@ -54,14 +57,12 @@ export const buildApiLimiters = (config: Config) => {
     })
   );
   const endpointTitles = Object.fromEntries(
-    config.ois.flatMap((ois) =>
-      ois.endpoints.map((endpoint) => [deriveEndpointId(ois.title, endpoint.name), ois.title])
-    )
+    ois.flatMap((ois) => ois.endpoints.map((endpoint) => [deriveEndpointId(ois.title, endpoint.name), ois.title]))
   );
 
   // Make use of the reference/pointer nature of objects
   const apiLimiters = Object.fromEntries(
-    Object.entries(config.templates).map(([templateId, template]) => {
+    Object.entries(templates).map(([templateId, template]) => {
       const title = endpointTitles[template.endpointId]!;
       return [templateId, oisLimiters[title]];
     })
@@ -84,7 +85,7 @@ export const getInitialState = (config: Config): State => {
     config,
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
-    airnodeWallet: ethers.Wallet.fromMnemonic(config.airnodeWalletMnemonic),
+    airnodeWallet: ethers.Wallet.fromMnemonic(config.nodeSettings.airnodeWalletMnemonic),
   };
 };
 
