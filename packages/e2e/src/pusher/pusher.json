@@ -107,5 +107,8 @@
       ]
     }
   ],
-  "apiCredentials": []
+  "apiCredentials": [],
+  "nodeSettings": {
+    "nodeVersion": "0.1.0"
+  }
 }
