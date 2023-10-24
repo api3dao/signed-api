@@ -81,6 +81,22 @@ describe(batchInsertData.name, () => {
     expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(1);
   });
 
+  it('rejects a batch if there is a beacon with timestamp too far in the future', async () => {
+    const batchData = [await createSignedData({ timestamp: (Math.floor(Date.now() / 1000) + 60 * 60 * 2).toString() })];
+
+    const result = await batchInsertData(batchData);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({ message: 'Request timestamp is too far in the future', extra: batchData[0] }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 400,
+    });
+  });
+
   it('inserts the batch if data is valid', async () => {
     const batchData = [await createSignedData(), await createSignedData()];
 

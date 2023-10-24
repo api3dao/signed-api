@@ -40,6 +40,12 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
 
   // Check validations that can be done without using http request, returns fail response in first error
   const signedDataValidationResults = batchSignedData.map((signedData) => {
+    // The on-chain contract prevents time drift by making sure the timestamp is at most 1 hour in the future. System
+    // time drift is less common, but we mirror the contract implementation.
+    if (Number.parseInt(signedData.timestamp, 10) > Math.floor(Date.now() / 1000) + 60 * 60) {
+      return generateErrorResponse(400, 'Request timestamp is too far in the future', undefined, signedData);
+    }
+
     const goRecoverSigner = goSync(() => recoverSignerAddress(signedData));
     if (!goRecoverSigner.success) {
       return generateErrorResponse(400, 'Unable to recover signer address', goRecoverSigner.error.message, signedData);
