@@ -117,44 +117,6 @@ sensitive information inside secrets.
 
 You can also refer to the [example configuration](./config).
 
-#### `airnodeWalletMnemonic`
-
-Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from
-secrets. For example:
-
-```jsonc
-// The mnemonic is interpolated from the "WALLET_MNEMONIC" secret.
-"airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
-```
-
-#### `rateLimiting`
-
-Configuration for rate limiting OIS requests. Rate limiting can be configured for each OIS separately. For example:
-
-```jsonc
-// Defines no rate limiting.
-"rateLimiting": { },
-```
-
-or
-
-```jsonc
-// Defines rate limiting for OIS with title "Nodary"
-"rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
-```
-
-##### `rateLimiting[<OIS_TITLE>]`
-
-The configuration for the OIS with title `<OIS_TITLE>`.
-
-###### `maxConcurrency`
-
-Maximum number of concurrent requests to the OIS.
-
-###### `minTime`
-
-Minimum time in milliseconds between two requests to the OIS.
-
 #### `templates`
 
 Configuration for the template requests. Each template request is defined by a `templateId` and a `template` object. For
@@ -344,6 +306,44 @@ Contains general deployment parameters of the pusher.
 ##### `nodeVersion`
 
 The version of the pusher. The version specified in the config must match the version of the pusher at deployment time.
+
+##### `airnodeWalletMnemonic`
+
+Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from
+secrets. For example:
+
+```jsonc
+// The mnemonic is interpolated from the "WALLET_MNEMONIC" secret.
+"airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
+```
+
+##### `rateLimiting`
+
+Configuration for rate limiting OIS requests. Rate limiting can be configured for each OIS separately. For example:
+
+```jsonc
+// Defines no rate limiting.
+"rateLimiting": { },
+```
+
+or
+
+```jsonc
+// Defines rate limiting for OIS with title "Nodary"
+"rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
+```
+
+###### `rateLimiting[<OIS_TITLE>]`
+
+The configuration for the OIS with title `<OIS_TITLE>`.
+
+`maxConcurrency`
+
+Maximum number of concurrent requests to the OIS.
+
+`minTime`
+
+Minimum time in milliseconds between two requests to the OIS.
 
 ## Deployment
 
