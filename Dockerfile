@@ -9,8 +9,8 @@
 # stage.
 #
 # Debugging tips (assuming CWD = ./packages/pusher):
-#   1. Build: docker build --target pusher --tag pusher:latest ../../
-#   2. Inspect: docker run -it --init -v $(pwd)/config:/app/config --env-file .env --entrypoint /bin/sh pusher:latest
+#   1. Build: docker build --target pusher --tag api3/pusher:latest ../../
+#   2. Inspect: docker run -it --init -v $(pwd)/config:/app/config --env-file .env --entrypoint /bin/sh api3/pusher:latest
 # The above commands will allow you to inspect the output of the build stage. You can change the target to debug other
 # stages and verify that the image is correct.
 
