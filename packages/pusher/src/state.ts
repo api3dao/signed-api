@@ -1,4 +1,5 @@
 import Bottleneck from 'bottleneck';
+import { ethers } from 'ethers';
 import { last } from 'lodash';
 
 import { OIS_MAX_CONCURRENCY_DEFAULT, OIS_MIN_TIME_DEFAULT_MS } from './constants';
@@ -11,6 +12,8 @@ export interface State {
   config: Config;
   templateValues: TemplateValueStorage;
   apiLimiters: Record<string, Bottleneck | undefined>;
+  // We persist the derived Airnode wallet in memory as a performance optimization.
+  airnodeWallet: ethers.Wallet;
 }
 
 let state: State;
@@ -81,6 +84,7 @@ export const getInitialState = (config: Config): State => {
     config,
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
+    airnodeWallet: ethers.Wallet.fromMnemonic(config.airnodeWalletMnemonic),
   };
 };
 
