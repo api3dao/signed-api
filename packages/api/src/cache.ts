@@ -1,7 +1,7 @@
 import type { SignedData } from './schema';
 
 type SignedDataCache = Record<
-  string, // Airnode ID.
+  string, // Airnode address.
   Record<
     string, // Template ID.
     SignedData[] // Signed data is ordered by timestamp (oldest first).

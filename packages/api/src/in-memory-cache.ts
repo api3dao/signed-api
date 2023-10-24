@@ -10,26 +10,26 @@ export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimesta
 
 // The API is deliberately asynchronous to mimic a database call.
 // eslint-disable-next-line @typescript-eslint/require-await
-export const get = async (airnodeId: string, templateId: string, ignoreAfterTimestamp: number) => {
-  logger.debug('Getting signed data', { airnodeId, templateId, ignoreAfterTimestamp });
+export const get = async (airnodeAddress: string, templateId: string, ignoreAfterTimestamp: number) => {
+  logger.debug('Getting signed data', { airnodeAddress, templateId, ignoreAfterTimestamp });
 
   const signedDataCache = getCache();
-  if (!signedDataCache[airnodeId]) return null;
-  const signedDatas = signedDataCache[airnodeId]![templateId];
+  if (!signedDataCache[airnodeAddress]) return null;
+  const signedDatas = signedDataCache[airnodeAddress]![templateId];
   if (!signedDatas) return null;
 
   return last(ignoreTooFreshData(signedDatas, ignoreAfterTimestamp)) ?? null;
 };
 
 // The API is deliberately asynchronous to mimic a database call.
-export const getAll = async (airnodeId: string, ignoreAfterTimestamp: number) => {
-  logger.debug('Getting all signed data', { airnodeId, ignoreAfterTimestamp });
+export const getAll = async (airnodeAddress: string, ignoreAfterTimestamp: number) => {
+  logger.debug('Getting all signed data', { airnodeAddress, ignoreAfterTimestamp });
 
   const signedDataCache = getCache();
-  const signedDataByTemplateId = signedDataCache[airnodeId] ?? {};
+  const signedDataByTemplateId = signedDataCache[airnodeAddress] ?? {};
   const freshestSignedData: SignedData[] = [];
   for (const templateId of Object.keys(signedDataByTemplateId)) {
-    const freshest = await get(airnodeId, templateId, ignoreAfterTimestamp);
+    const freshest = await get(airnodeAddress, templateId, ignoreAfterTimestamp);
     if (freshest) freshestSignedData.push(freshest);
   }
 

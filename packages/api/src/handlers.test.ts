@@ -8,6 +8,7 @@ import { createSignedData, generateRandomWallet } from '../test/utils';
 import * as cacheModule from './cache';
 import * as configModule from './config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
+import { logger } from './logger';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
@@ -44,13 +45,49 @@ describe(batchInsertData.name, () => {
     expect(cacheModule.getCache()).toStrictEqual({});
   });
 
+  it('skips signed data if there exists one with the same timestamp', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const storedSignedData = await createSignedData({ airnodeWallet });
+    cacheModule.setCache({
+      [storedSignedData.airnode]: {
+        [storedSignedData.templateId]: [storedSignedData],
+      },
+    });
+    const batchData = [
+      await createSignedData({
+        airnodeWallet,
+        templateId: storedSignedData.templateId,
+        timestamp: storedSignedData.timestamp,
+      }),
+      await createSignedData(),
+    ];
+    jest.spyOn(logger, 'debug');
+
+    const result = await batchInsertData(batchData);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({ count: 1, skipped: 1 }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 201,
+    });
+    expect(logger.debug).toHaveBeenCalledWith(
+      'Skipping signed data because signed data with the same timestamp already exists',
+      expect.any(Object)
+    );
+    expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(1);
+  });
+
   it('inserts the batch if data is valid', async () => {
     const batchData = [await createSignedData(), await createSignedData()];
 
     const result = await batchInsertData(batchData);
 
     expect(result).toStrictEqual({
-      body: JSON.stringify({ count: 2 }),
+      body: JSON.stringify({ count: 2, skipped: 0 }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
