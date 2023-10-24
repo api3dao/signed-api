@@ -1,11 +1,10 @@
 import type { AxiosResponse } from 'axios';
 
+import packageJson from '../package.json';
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
 import type { Config } from '../src/validation/schema';
 
 export const config: Config = {
-  airnodeWalletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
-  rateLimiting: { Nodary: { maxConcurrency: 25, minTime: 10 } },
   templates: {
     '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd': {
       endpointId: '0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc',
@@ -99,6 +98,11 @@ export const config: Config = {
       securitySchemeValue: 'invalid-api-key',
     },
   ],
+  nodeSettings: {
+    nodeVersion: packageJson.version,
+    airnodeWalletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
+    rateLimiting: { Nodary: { maxConcurrency: 25, minTime: 10 } },
+  },
 };
 
 export const nodaryTemplateRequestResponseData = {

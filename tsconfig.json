@@ -12,6 +12,7 @@
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,
+    "resolveJsonModule": true,
 
     // Disabled because they are covered by Eslint rules
     "noUnusedLocals": false,

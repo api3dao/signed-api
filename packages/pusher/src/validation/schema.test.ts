@@ -18,7 +18,7 @@ test('validates example config', async () => {
       {
         code: 'custom',
         message: 'Invalid mnemonic',
-        path: ['airnodeWalletMnemonic'],
+        path: ['nodeSettings', 'airnodeWalletMnemonic'],
       },
     ])
   );
@@ -26,6 +26,26 @@ test('validates example config', async () => {
   const exampleSecrets = dotenv.parse(readFileSync(join(__dirname, '../../config/secrets.example.env'), 'utf8'));
   await expect(configSchema.parseAsync(interpolateSecrets(exampleConfig, exampleSecrets))).resolves.toStrictEqual(
     expect.any(Object)
+  );
+});
+
+test('ensures nodeVersion matches pusher version', async () => {
+  const invalidConfig: Config = {
+    ...config,
+    nodeSettings: {
+      ...config.nodeSettings,
+      nodeVersion: '0.0.1',
+    },
+  };
+
+  await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
+    new ZodError([
+      {
+        code: 'custom',
+        message: 'Invalid node version',
+        path: ['nodeSettings', 'nodeVersion'],
+      },
+    ])
   );
 });
 

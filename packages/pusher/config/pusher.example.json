@@ -1,6 +1,4 @@
 {
-  "airnodeWalletMnemonic": "${WALLET_MNEMONIC}",
-  "rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
   "templates": {
     "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd": {
       "endpointId": "0x3528e42b017a5fbf9d2993a2df04efc3ed474357575065a111b054ddf9de2acc",
@@ -93,5 +91,10 @@
       "securitySchemeName": "NodarySecurityScheme1ApiKey",
       "securitySchemeValue": "${NODARY_API_KEY}"
     }
-  ]
+  ],
+  "nodeSettings": {
+    "nodeVersion": "0.1.0",
+    "airnodeWalletMnemonic": "${WALLET_MNEMONIC}",
+    "rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } }
+  }
 }

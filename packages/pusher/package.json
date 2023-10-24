@@ -1,6 +1,6 @@
 {
   "name": "pusher",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "engines": {
     "node": "^18.14.0",
     "pnpm": "^8.8.0"
@@ -15,7 +15,7 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
-    "start-prod": "node --enable-source-maps dist/index.js",
+    "start-prod": "node dist/src/index.js",
     "test": "jest",
     "tsc": "tsc --project ."
   },

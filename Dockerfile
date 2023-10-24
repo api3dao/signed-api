@@ -40,8 +40,7 @@ FROM node:18-alpine as pusher
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=deployed-pusher /app/deployed-pusher .
-# Enabling source maps adds small runtime overhead, but improves debugging experience and the performance is worth it.
-ENTRYPOINT ["node", "--enable-source-maps", "dist/index.js"]
+ENTRYPOINT ["node", "dist/src/index.js"]
 
 # Create a separate stage for api package. We create a temporary stage for deployment and then copy the result into
 # the final stage. Only the production dependencies and package implementation is part of this last stage.
@@ -51,5 +50,4 @@ FROM node:18-alpine as api
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=deployed-api /app/deployed-api .
-# Enabling source maps adds small runtime overhead, but improves debugging experience and the performance is worth it.
-ENTRYPOINT ["node", "--enable-source-maps", "dist/index.js"]
+ENTRYPOINT ["node", "dist/index.js"]
