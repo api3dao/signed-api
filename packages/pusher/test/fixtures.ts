@@ -1,4 +1,5 @@
 import type { AxiosResponse } from 'axios';
+import { ethers } from 'ethers';
 
 import packageJson from '../package.json';
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
@@ -183,4 +184,27 @@ export const signedApiResponse: Partial<AxiosResponse> = {
     'access-control-allow-methods': '*',
   },
   data: { count: 3 },
+};
+
+export const parseHeartbeatLog = (logMessage: string) => {
+  const [airnodeAddress, stage, nodeVersion, heartbeatTimestamp, deploymentTimestamp, configHash, signature] =
+    logMessage.split(' - ');
+
+  // Verify that the signature is valid.
+  const heartbeatPayload = [airnodeAddress, stage, nodeVersion, heartbeatTimestamp, deploymentTimestamp, configHash];
+  const signaturePayload = ethers.utils.arrayify(
+    ethers.utils.keccak256(ethers.utils.toUtf8Bytes(JSON.stringify(heartbeatPayload)))
+  );
+  const recoveredAddress = ethers.utils.verifyMessage(signaturePayload, signature!);
+  if (recoveredAddress !== airnodeAddress) throw new Error('Invalid signature');
+
+  return {
+    airnodeAddress,
+    stage,
+    nodeVersion,
+    deploymentTimestamp,
+    heartbeatTimestamp,
+    configHash,
+    signature,
+  };
 };

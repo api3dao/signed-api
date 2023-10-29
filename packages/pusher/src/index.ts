@@ -1,4 +1,5 @@
 import { initiateFetchingBeaconData } from './fetch-beacon-data';
+import { initiateHeartbeat } from './heartbeat';
 import { initializeState } from './state';
 import { initiateUpdatingSignedApi } from './update-signed-api';
 import { loadConfig } from './validation/config';
@@ -9,6 +10,7 @@ const main = async () => {
 
   initiateFetchingBeaconData();
   initiateUpdatingSignedApi();
+  initiateHeartbeat();
 };
 
 void main();
