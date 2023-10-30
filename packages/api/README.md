@@ -134,6 +134,25 @@ The port on which the API is served.
 
 The maximum age of the cache header in seconds.
 
+#### `allowedAirnodes`
+
+The list of allowed Airnode addresses. If the list is empty, no Airnode is allowed. To whitelist all Airnodes, set the
+value to `"all"` instead of an array.
+
+Example:
+
+```jsonc
+// Allows pushing signed data from any Airnode.
+"allowedAirnodes": "all"
+```
+
+or
+
+```jsonc
+// Allows pushing signed data only from the specific Airnode.
+"allowedAirnodes": ["0xB47E3D8734780430ee6EfeF3c5407090601Dcd15"]
+```
+
 ## API
 
 The API provides the following endpoints:

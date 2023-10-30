@@ -1,8 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
-
 import { omit } from 'lodash';
 
+import { getMockedConfig } from '../test/fixtures';
 import { createSignedData, generateRandomWallet } from '../test/utils';
 
 import * as cacheModule from './cache';
@@ -12,9 +10,7 @@ import { logger } from './logger';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
-  jest
-    .spyOn(configModule, 'getConfig')
-    .mockImplementation(() => JSON.parse(readFileSync(join(__dirname, '../config/signed-api.example.json'), 'utf8')));
+  jest.spyOn(configModule, 'getConfig').mockImplementation(getMockedConfig);
 });
 
 afterEach(() => {
@@ -41,6 +37,26 @@ describe(batchInsertData.name, () => {
         'content-type': 'application/json',
       },
       statusCode: 400,
+    });
+    expect(cacheModule.getCache()).toStrictEqual({});
+  });
+
+  it('drops the batch if the airnode address is not allowed', async () => {
+    const config = getMockedConfig();
+    config.allowedAirnodes = [];
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    const batchData = [await createSignedData()];
+
+    const result = await batchInsertData(batchData);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({ message: 'Unauthorized Airnode address' }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 403,
     });
     expect(cacheModule.getCache()).toStrictEqual({});
   });

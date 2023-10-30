@@ -4,7 +4,14 @@ import { join } from 'node:path';
 import dotenv from 'dotenv';
 import { ZodError } from 'zod';
 
-import { configSchema, endpointSchema, endpointsSchema, envBooleanSchema, envConfigSchema } from './schema';
+import {
+  allowedAirnodesSchema,
+  configSchema,
+  endpointSchema,
+  endpointsSchema,
+  envBooleanSchema,
+  envConfigSchema,
+} from './schema';
 
 describe('endpointSchema', () => {
   it('validates urlPath', () => {
@@ -112,5 +119,19 @@ describe('env config schema', () => {
         },
       ])
     );
+  });
+});
+
+describe('allowed Airnodes schema', () => {
+  it('accepts valid configuration', () => {
+    const allValid = allowedAirnodesSchema.parse('all');
+    expect(allValid).toBe('all');
+
+    expect(
+      allowedAirnodesSchema.parse([
+        '0xB47E3D8734780430ee6EfeF3c5407090601Dcd15',
+        '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11',
+      ])
+    ).toStrictEqual(['0xB47E3D8734780430ee6EfeF3c5407090601Dcd15', '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11']);
   });
 });
