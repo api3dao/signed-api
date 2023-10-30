@@ -5,6 +5,8 @@ import { logger } from '../logger';
 import { getState } from '../state';
 import { loadRawConfig } from '../validation/config';
 
+import { heartbeatLogger } from './logger';
+
 export const initiateHeartbeat = () => {
   logger.debug('Initiating heartbeat loop');
   setInterval(async () => {
@@ -47,8 +49,7 @@ export const logHeartbeat = async () => {
   const heartbeatSignature = await signHeartbeat(airnodeWallet, heartbeatPayload);
   const heartbeatLog = [...heartbeatPayload, heartbeatSignature].join(' - ');
 
-  // We ensure in config validation that INFO level logs are not disabled. The logs are sent to API3 for validation
-  // (that the data provider deployed deployed the correct configuration) and monitoring purposes (whether the instance
-  // is running).
-  logger.info(heartbeatLog);
+  // The logs are sent to API3 for validation (that the data provider deployed deployed the correct configuration) and
+  // monitoring purposes (whether the instance is running).
+  heartbeatLogger.info(heartbeatLog);
 };

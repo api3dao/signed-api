@@ -1,9 +1,10 @@
 import * as promiseUtilsModule from '@api3/promise-utils';
 
 import { config, parseHeartbeatLog } from '../../test/fixtures';
-import { logger } from '../logger';
 import * as stateModule from '../state';
 import { loadRawConfig } from '../validation/config';
+
+import { heartbeatLogger } from './logger';
 
 import { initiateHeartbeat, logHeartbeat, createHash } from '.';
 
@@ -30,12 +31,12 @@ describe(logHeartbeat.name, () => {
   it('sends the correct heartbeat log', async () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    jest.spyOn(logger, 'info');
+    jest.spyOn(heartbeatLogger, 'info').mockImplementation();
     jest.advanceTimersByTime(1000 * 3); // Advance time by 3 seconds to ensure the timestamp of the log is different from deployment timestamp.
 
     await logHeartbeat();
 
-    expect(logger.info).toHaveBeenCalledWith(expectedLogMessage);
+    expect(heartbeatLogger.info).toHaveBeenCalledWith(expectedLogMessage);
   });
 
   it('the heartbeat log can be parsed', () => {
