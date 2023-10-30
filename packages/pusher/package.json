@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "engines": {
     "node": "^18.14.0",
-    "pnpm": "^8.8.0"
+    "pnpm": "^8.10.0"
   },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
