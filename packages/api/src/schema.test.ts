@@ -134,4 +134,20 @@ describe('allowed Airnodes schema', () => {
       ])
     ).toStrictEqual(['0xB47E3D8734780430ee6EfeF3c5407090601Dcd15', '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11']);
   });
+
+  it('disallows empty list', () => {
+    expect(() => allowedAirnodesSchema.parse([])).toThrow(
+      new ZodError([
+        {
+          code: 'too_small',
+          minimum: 1,
+          type: 'array',
+          inclusive: true,
+          exact: false,
+          message: 'Array must contain at least 1 element(s)',
+          path: [],
+        },
+      ])
+    );
+  });
 });

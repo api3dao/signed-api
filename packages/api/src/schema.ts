@@ -24,7 +24,7 @@ export const endpointsSchema = z
     'Each "urlPath" of an endpoint must be unique'
   );
 
-export const allowedAirnodesSchema = z.union([z.literal('all'), z.array(evmAddressSchema)]);
+export const allowedAirnodesSchema = z.union([z.literal('all'), z.array(evmAddressSchema).nonempty()]);
 
 export const configSchema = z
   .object({
