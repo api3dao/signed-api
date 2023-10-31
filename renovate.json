@@ -28,5 +28,6 @@
   "lockFileMaintenance": {
     "enabled": false
   },
+  "reviewers": ["Siegrift"],
   "dependencyDashboard": false
 }
