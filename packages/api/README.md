@@ -137,13 +137,13 @@ The maximum age of the cache header in seconds.
 #### `allowedAirnodes`
 
 The list of allowed Airnode addresses. If the list is empty, no Airnode is allowed. To whitelist all Airnodes, set the
-value to `"all"` instead of an array.
+value to `"*"` instead of an array.
 
 Example:
 
 ```jsonc
 // Allows pushing signed data from any Airnode.
-"allowedAirnodes": "all"
+"allowedAirnodes": "*"
 ```
 
 or

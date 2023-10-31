@@ -28,7 +28,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Ensure that the batch of signed that comes from a whitelisted Airnode.
   const { maxBatchSize, endpoints, allowedAirnodes } = getConfig();
   if (
-    allowedAirnodes !== 'all' &&
+    allowedAirnodes !== '*' &&
     !goValidateSchema.data.every((signedData) => allowedAirnodes.includes(signedData.airnode))
   ) {
     return generateErrorResponse(403, 'Unauthorized Airnode address');
@@ -129,7 +129,7 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
   }
 
   const { allowedAirnodes } = getConfig();
-  if (allowedAirnodes !== 'all' && !allowedAirnodes.includes(airnodeAddress)) {
+  if (allowedAirnodes !== '*' && !allowedAirnodes.includes(airnodeAddress)) {
     return generateErrorResponse(403, 'Unauthorized Airnode address');
   }
 
@@ -151,7 +151,7 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
 };
 
 // Returns all airnode addresses for which there is data. Note, that the delayed endpoint may not be allowed to show it.
-// We do not return the allowed Airnode addresses in the configuration, because the value can be set to "all" and we
+// We do not return the allowed Airnode addresses in the configuration, because the value can be set to "*" and we
 // would have to scan the database anyway.
 export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   const goAirnodeAddresses = await go(async () => getAllAirnodeAddresses());

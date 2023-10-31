@@ -124,8 +124,8 @@ describe('env config schema', () => {
 
 describe('allowed Airnodes schema', () => {
   it('accepts valid configuration', () => {
-    const allValid = allowedAirnodesSchema.parse('all');
-    expect(allValid).toBe('all');
+    const allValid = allowedAirnodesSchema.parse('*');
+    expect(allValid).toBe('*');
 
     expect(
       allowedAirnodesSchema.parse([
