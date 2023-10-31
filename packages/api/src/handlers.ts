@@ -25,12 +25,20 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     );
   }
 
+  // Ensure that the batch of signed that comes from a whitelisted Airnode.
+  const { maxBatchSize, endpoints, allowedAirnodes } = getConfig();
+  if (
+    allowedAirnodes !== '*' &&
+    !goValidateSchema.data.every((signedData) => allowedAirnodes.includes(signedData.airnode))
+  ) {
+    return generateErrorResponse(403, 'Unauthorized Airnode address');
+  }
+
   // Ensure there is at least one signed data to push
   const batchSignedData = goValidateSchema.data;
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
 
   // Check whether the size of batch exceeds a maximum batch size
-  const { maxBatchSize, endpoints } = getConfig();
   if (size(batchSignedData) > maxBatchSize) {
     return generateErrorResponse(400, `Maximum batch size (${maxBatchSize}) exceeded`);
   }
@@ -120,6 +128,11 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
     return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address');
   }
 
+  const { allowedAirnodes } = getConfig();
+  if (allowedAirnodes !== '*' && !allowedAirnodes.includes(airnodeAddress)) {
+    return generateErrorResponse(403, 'Unauthorized Airnode address');
+  }
+
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
   const goReadDb = await go(async () => getAll(airnodeAddress, ignoreAfterTimestamp));
   if (!goReadDb.success) {
@@ -137,8 +150,9 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
   };
 };
 
-// Returns all airnode addresses for which there is data. Note, that the delayed endpoint may not be allowed to show
-// it.
+// Returns all airnode addresses for which there is data. Note, that the delayed endpoint may not be allowed to show it.
+// We do not return the allowed Airnode addresses in the configuration, because the value can be set to "*" and we
+// would have to scan the database anyway.
 export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   const goAirnodeAddresses = await go(async () => getAllAirnodeAddresses());
   if (!goAirnodeAddresses.success) {

@@ -2,6 +2,10 @@ import { type LogFormat, logFormatOptions, logLevelOptions, type LogLevel } from
 import { uniqBy } from 'lodash';
 import { z } from 'zod';
 
+export const evmAddressSchema = z.string().regex(/^0x[\dA-Fa-f]{40}$/, 'Must be a valid EVM address');
+
+export const evmIdSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/, 'Must be a valid EVM ID');
+
 export const endpointSchema = z
   .object({
     urlPath: z
@@ -20,6 +24,8 @@ export const endpointsSchema = z
     'Each "urlPath" of an endpoint must be unique'
   );
 
+export const allowedAirnodesSchema = z.union([z.literal('*'), z.array(evmAddressSchema).nonempty()]);
+
 export const configSchema = z
   .object({
     endpoints: endpointsSchema,
@@ -28,14 +34,11 @@ export const configSchema = z
     cache: z.object({
       maxAgeSeconds: z.number().nonnegative().int(),
     }),
+    allowedAirnodes: allowedAirnodesSchema,
   })
   .strict();
 
 export type Config = z.infer<typeof configSchema>;
-
-export const evmAddressSchema = z.string().regex(/^0x[\dA-Fa-f]{40}$/, 'Must be a valid EVM address');
-
-export const evmIdSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/, 'Must be a valid EVM hash');
 
 export const signedDataSchema = z.object({
   airnode: evmAddressSchema,
