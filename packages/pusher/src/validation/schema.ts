@@ -15,22 +15,16 @@ import { z, type SuperRefinement } from 'zod';
 
 import packageJson from '../../package.json';
 
-export const limiterConfig = z.object({ minTime: z.number(), maxConcurrency: z.number() });
+export const parameterSchema = z.strictObject({
+  name: z.string(),
+  type: z.string(),
+  value: z.string(),
+});
 
-export const parameterSchema = z
-  .object({
-    name: z.string(),
-    type: z.string(),
-    value: z.string(),
-  })
-  .strict();
-
-export const templateSchema = z
-  .object({
-    endpointId: config.evmIdSchema,
-    parameters: z.array(parameterSchema),
-  })
-  .strict();
+export const templateSchema = z.strictObject({
+  endpointId: config.evmIdSchema,
+  parameters: z.array(parameterSchema),
+});
 
 export const templatesSchema = z.record(config.evmIdSchema, templateSchema).superRefine((templates, ctx) => {
   for (const [templateId, template] of Object.entries(templates)) {
@@ -59,7 +53,7 @@ export const templatesSchema = z.record(config.evmIdSchema, templateSchema).supe
   }
 });
 
-export const endpointSchema = z.object({
+export const endpointSchema = z.strictObject({
   oisTitle: z.string(),
   endpointName: z.string(),
 });
@@ -83,26 +77,25 @@ export const endpointsSchema = z.record(endpointSchema).superRefine((endpoints, 
   }
 });
 
-export const baseBeaconUpdateSchema = z.object({
+export const baseBeaconUpdateSchema = z.strictObject({
   deviationThreshold: z.number(),
   heartbeatInterval: z.number().int(),
 });
 
 export const beaconUpdateSchema = z
-  .object({
+  .strictObject({
     beaconId: config.evmIdSchema,
   })
-  .merge(baseBeaconUpdateSchema)
-  .strict();
+  .merge(baseBeaconUpdateSchema);
 
-export const signedApiUpdateSchema = z.object({
+export const signedApiUpdateSchema = z.strictObject({
   signedApiName: z.string(),
   templateIds: z.array(config.evmIdSchema),
   fetchInterval: z.number(),
   updateDelay: z.number(),
 });
 
-export const triggersSchema = z.object({
+export const triggersSchema = z.strictObject({
   signedApiUpdates: z.array(signedApiUpdateSchema),
 });
 
@@ -205,7 +198,7 @@ const validateTriggerReferences: SuperRefinement<{
   }
 };
 
-export const signedApiSchema = z.object({
+export const signedApiSchema = z.strictObject({
   name: z.string(),
   url: z.string().url(),
 });
@@ -227,7 +220,7 @@ export const oisesSchema = z.array(oisSchema);
 
 export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
-export const nodeSettingsSchema = z.object({
+export const nodeSettingsSchema = z.strictObject({
   nodeVersion: z.string().refine((version) => version === packageJson.version, 'Invalid node version'),
   airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
   stage: z
@@ -238,7 +231,7 @@ export const nodeSettingsSchema = z.object({
 export type NodeSettings = z.infer<typeof nodeSettingsSchema>;
 
 export const configSchema = z
-  .object({
+  .strictObject({
     apiCredentials: apisCredentialsSchema,
     beaconSets: z.any(),
     chains: z.any(),
@@ -250,14 +243,13 @@ export const configSchema = z
     templates: templatesSchema,
     triggers: triggersSchema,
   })
-  .strict()
   .superRefine(validateTemplatesReferences)
   .superRefine(validateOisReferences)
   .superRefine(validateTriggerReferences);
 
 export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
 export const signatureSchema = z.string().regex(/^0x[\dA-Fa-f]{130}$/);
-export const signedDataSchema = z.object({
+export const signedDataSchema = z.strictObject({
   timestamp: z.string(),
   encodedValue: encodedValueSchema,
   signature: signatureSchema,
@@ -286,17 +278,14 @@ export type EndpointId = z.infer<typeof config.evmIdSchema>;
 export type SignedData = z.infer<typeof signedDataSchema>;
 export type Endpoint = z.infer<typeof endpointSchema>;
 export type Endpoints = z.infer<typeof endpointsSchema>;
-export type LimiterConfig = z.infer<typeof limiterConfig>;
 export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
 export type Parameter = z.infer<typeof parameterSchema>;
 
 export const secretsSchema = z.record(z.string());
 
-export const signedApiResponseSchema = z
-  .object({
-    count: z.number(),
-  })
-  .strict();
+export const signedApiResponseSchema = z.strictObject({
+  count: z.number(),
+});
 
 export type SignedApiResponse = z.infer<typeof signedApiResponseSchema>;
 
@@ -305,6 +294,7 @@ export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')])
 // We apply default values to make it convenient to omit certain environment variables. The default values should be
 // primarily focused on users and production usage.
 export const envConfigSchema = z
+  // Intentionally not using strictObject here because we want to allow other environment variables to be present.
   .object({
     LOGGER_ENABLED: envBooleanSchema.default('true'),
     LOG_COLORIZE: envBooleanSchema.default('false'),
