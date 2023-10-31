@@ -253,7 +253,7 @@ export const nodeSettingsSchema = z.object({
   rateLimiting: rateLimitingSchema,
   stage: z
     .string()
-    .regex(/^[\da-z-]{1,16}$/, 'Only lowercase letters, numbers and hyphens are allowed (max 16 characters)'),
+    .regex(/^[\da-z-]{1,256}$/, 'Only lowercase letters, numbers and hyphens are allowed (max 256 characters)'),
 });
 
 export type NodeSettings = z.infer<typeof nodeSettingsSchema>;
