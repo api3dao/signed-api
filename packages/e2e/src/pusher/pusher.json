@@ -109,7 +109,6 @@
   "nodeSettings": {
     "nodeVersion": "0.1.0",
     "airnodeWalletMnemonic": "diamond result history offer forest diagram crop armed stumble orchard stage glance",
-    "rateLimiting": { "Mock API": { "maxConcurrency": 25, "minTime": 0 } },
     "stage": "local-example"
   }
 }

@@ -323,34 +323,6 @@ An identifier of the deployment stage. This is used to distinguish between diffe
 `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include lowercase
 alphanumeric characters and hyphens.
 
-##### `rateLimiting`
-
-Configuration for rate limiting OIS requests. Rate limiting can be configured for each OIS separately. For example:
-
-```jsonc
-// Defines no rate limiting.
-"rateLimiting": { },
-```
-
-or
-
-```jsonc
-// Defines rate limiting for OIS with title "Nodary"
-"rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
-```
-
-###### `rateLimiting[<OIS_TITLE>]`
-
-The configuration for the OIS with title `<OIS_TITLE>`.
-
-`maxConcurrency`
-
-Maximum number of concurrent requests to the OIS.
-
-`minTime`
-
-Minimum time in milliseconds between two requests to the OIS.
-
 ## Deployment
 
 TODO: Write example how to deploy on AWS

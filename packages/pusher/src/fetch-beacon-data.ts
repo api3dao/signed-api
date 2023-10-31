@@ -15,6 +15,7 @@ export const initiateFetchingBeaconData = () => {
 
   const { signedApiUpdates } = config.triggers;
 
+  // TODO: Validate using zod schema
   if (isEmpty(signedApiUpdates)) {
     logger.error('No signed API updates found. Stopping.');
     // eslint-disable-next-line unicorn/no-process-exit

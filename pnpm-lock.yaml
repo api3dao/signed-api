@@ -148,9 +148,6 @@ importers:
       axios:
         specifier: ^1.5.1
         version: 1.5.1
-      bottleneck:
-        specifier: ^2.19.5
-        version: 2.19.5
       dotenv:
         specifier: ^16.3.1
         version: 16.3.1
@@ -3064,10 +3061,6 @@ packages:
       unpipe: 1.0.0
     transitivePeerDependencies:
       - supports-color
-    dev: false
-
-  /bottleneck@2.19.5:
-    resolution: {integrity: sha512-VHiNCbI1lKdl44tGrhNfU3lup0Tj/ZBMJB5/2ZbNXRCPuRCO7ed2mgcK4r17y+KB2EfuYuRaVlwNbAeaWGSpbw==}
     dev: false
 
   /bowser@2.11.0:

@@ -95,7 +95,6 @@
   "nodeSettings": {
     "nodeVersion": "0.1.0",
     "airnodeWalletMnemonic": "${WALLET_MNEMONIC}",
-    "rateLimiting": { "Nodary": { "maxConcurrency": 25, "minTime": 10 } },
     "stage": "local-example"
   }
 }

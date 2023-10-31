@@ -205,26 +205,6 @@ const validateTriggerReferences: SuperRefinement<{
   }
 };
 
-export const rateLimitingSchema = z.record(limiterConfig);
-
-const validateOisRateLimiterReferences: SuperRefinement<{
-  ois: OIS[];
-  nodeSettings: NodeSettings;
-}> = (config, ctx) => {
-  const { ois, nodeSettings } = config;
-  const { rateLimiting } = nodeSettings;
-
-  for (const oisTitle of Object.keys(rateLimiting)) {
-    if (!ois.some((ois) => ois.title === oisTitle)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `OIS Title "${oisTitle}" in rate limiting does not exist`,
-        path: ['rateLimiting', oisTitle],
-      });
-    }
-  }
-};
-
 export const signedApiSchema = z.object({
   name: z.string(),
   url: z.string().url(),
@@ -250,7 +230,6 @@ export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 export const nodeSettingsSchema = z.object({
   nodeVersion: z.string().refine((version) => version === packageJson.version, 'Invalid node version'),
   airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
-  rateLimiting: rateLimitingSchema,
   stage: z
     .string()
     .regex(/^[\da-z-]{1,256}$/, 'Only lowercase letters, numbers and hyphens are allowed (max 256 characters)'),
@@ -274,7 +253,6 @@ export const configSchema = z
   .strict()
   .superRefine(validateTemplatesReferences)
   .superRefine(validateOisReferences)
-  .superRefine(validateOisRateLimiterReferences)
   .superRefine(validateTriggerReferences);
 
 export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
@@ -309,7 +287,6 @@ export type SignedData = z.infer<typeof signedDataSchema>;
 export type Endpoint = z.infer<typeof endpointSchema>;
 export type Endpoints = z.infer<typeof endpointsSchema>;
 export type LimiterConfig = z.infer<typeof limiterConfig>;
-export type RateLimitingConfig = z.infer<typeof rateLimitingSchema>;
 export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
 export type Parameter = z.infer<typeof parameterSchema>;
 

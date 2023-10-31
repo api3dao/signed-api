@@ -42,7 +42,6 @@ export const callApi = async (
 export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponse[]> => {
   const {
     config: { endpoints, templates, ois: oises, apiCredentials },
-    apiLimiters,
   } = getState();
   logger.debug('Making template requests', signedApiUpdate);
   const { templateIds } = signedApiUpdate;
@@ -61,13 +60,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     };
   }, {});
 
-  const limiter = apiLimiters[operationTemplateId];
-
-  const goCallApi = await (limiter
-    ? limiter.schedule({ expiration: 90_000 }, async () =>
-        callApi(ois, operationOisEndpoint, operationApiCallParameters, apiCredentials)
-      )
-    : callApi(ois, operationOisEndpoint, operationApiCallParameters, apiCredentials));
+  const goCallApi = await callApi(ois, operationOisEndpoint, operationApiCallParameters, apiCredentials);
 
   if (!goCallApi.success) {
     logger.warn(`Failed to make API call`, {
