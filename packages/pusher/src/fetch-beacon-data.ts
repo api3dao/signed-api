@@ -43,7 +43,11 @@ const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
       }
     });
     const duration = Date.now() - startTimestamp;
+    // Take at most 10% of the fetch interval as extra time to avoid all API requests be done at the same time. This
+    // delay is taken for each interval, so if the system runs for a sufficiently long time, the requests should happen
+    // at random intervals.
+    const extraTime = Math.random() * signedApiUpdate.fetchInterval * 1000 * 0.1;
 
-    await sleep(signedApiUpdate.fetchInterval * 1000 - duration);
+    await sleep(signedApiUpdate.fetchInterval * 1000 - duration + extraTime);
   }
 };
