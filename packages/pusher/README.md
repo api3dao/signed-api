@@ -317,6 +317,12 @@ secrets. For example:
 "airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
 ```
 
+##### `stage`
+
+An identifier of the deployment stage. This is used to distinguish between different deployments of pusher, for example
+`dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include lowercase
+alphanumeric characters and hyphens.
+
 ##### `rateLimiting`
 
 Configuration for rate limiting OIS requests. Rate limiting can be configured for each OIS separately. For example:

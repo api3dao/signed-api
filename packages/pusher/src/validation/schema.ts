@@ -251,6 +251,9 @@ export const nodeSettingsSchema = z.object({
   nodeVersion: z.string().refine((version) => version === packageJson.version, 'Invalid node version'),
   airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
   rateLimiting: rateLimitingSchema,
+  stage: z
+    .string()
+    .regex(/^[\da-z-]{1,256}$/, 'Only lowercase letters, numbers and hyphens are allowed (max 256 characters)'),
 });
 
 export type NodeSettings = z.infer<typeof nodeSettingsSchema>;

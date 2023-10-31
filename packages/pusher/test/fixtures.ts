@@ -102,6 +102,7 @@ export const config: Config = {
     nodeVersion: packageJson.version,
     airnodeWalletMnemonic: 'diamond result history offer forest diagram crop armed stumble orchard stage glance',
     rateLimiting: { Nodary: { maxConcurrency: 25, minTime: 10 } },
+    stage: 'test',
   },
 };
 
