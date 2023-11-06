@@ -1,7 +1,9 @@
 import type { AxiosResponse } from 'axios';
 import { ethers } from 'ethers';
+import { omit } from 'lodash';
 
 import packageJson from '../package.json';
+import { type HeartbeatPayload, createHash, stringifyUnsignedHeartbeatPayload } from '../src/heartbeat';
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
 import type { Config } from '../src/validation/schema';
 
@@ -186,25 +188,14 @@ export const signedApiResponse: Partial<AxiosResponse> = {
   data: { count: 3 },
 };
 
-export const parseHeartbeatLog = (logMessage: string) => {
-  const [airnodeAddress, stage, nodeVersion, heartbeatTimestamp, deploymentTimestamp, configHash, signature] =
-    logMessage.split(' - ');
-
+export const verifyHeartbeatLog = (heartbeatPayload: HeartbeatPayload, rawConfig: string) => {
   // Verify that the signature is valid.
-  const heartbeatPayload = [airnodeAddress, stage, nodeVersion, heartbeatTimestamp, deploymentTimestamp, configHash];
-  const signaturePayload = ethers.utils.arrayify(
-    ethers.utils.keccak256(ethers.utils.toUtf8Bytes(JSON.stringify(heartbeatPayload)))
-  );
-  const recoveredAddress = ethers.utils.verifyMessage(signaturePayload, signature!);
-  if (recoveredAddress !== airnodeAddress) throw new Error('Invalid signature');
+  const unsignedHeartbeatPayload = omit(heartbeatPayload, 'signature');
+  const messageToSign = ethers.utils.arrayify(createHash(stringifyUnsignedHeartbeatPayload(unsignedHeartbeatPayload)));
+  const expectedAirnodeAddress = ethers.utils.verifyMessage(messageToSign, heartbeatPayload.signature);
+  if (expectedAirnodeAddress !== heartbeatPayload.airnode) throw new Error('Invalid signature');
 
-  return {
-    airnodeAddress,
-    stage,
-    nodeVersion,
-    deploymentTimestamp,
-    heartbeatTimestamp,
-    configHash,
-    signature,
-  };
+  // Verify that the config hash is valid.
+  const expectedConfigHash = createHash(rawConfig);
+  if (expectedConfigHash !== heartbeatPayload.configHash) throw new Error('Invalid config hash');
 };

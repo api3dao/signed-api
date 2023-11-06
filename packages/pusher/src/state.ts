@@ -15,7 +15,7 @@ export interface State {
   // We persist the derived Airnode wallet in memory as a performance optimization.
   airnodeWallet: ethers.Wallet;
   // The timestamp of when the service was initialized. This can be treated as a "deployment" timestamp.
-  deploymentTimestamp: number;
+  deploymentTimestamp: string;
 }
 
 let state: State;
@@ -88,7 +88,7 @@ export const getInitialState = (config: Config): State => {
     templateValues: buildTemplateStorages(config),
     apiLimiters: buildApiLimiters(config),
     airnodeWallet: ethers.Wallet.fromMnemonic(config.nodeSettings.airnodeWalletMnemonic),
-    deploymentTimestamp: Math.floor(Date.now() / 1000),
+    deploymentTimestamp: Math.floor(Date.now() / 1000).toString(),
   };
 };
 
