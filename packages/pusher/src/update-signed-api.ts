@@ -46,6 +46,7 @@ export const initiateUpdatingSignedApi = () => {
     }))
   );
 
+  // TODO: Validate using zod schema
   if (isEmpty(signedApiUpdateDelayGroups)) {
     logger.error('No signed API updates found. Stopping.');
     // eslint-disable-next-line unicorn/no-process-exit

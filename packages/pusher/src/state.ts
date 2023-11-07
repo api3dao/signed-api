@@ -1,9 +1,6 @@
-import Bottleneck from 'bottleneck';
 import { ethers } from 'ethers';
 import { last } from 'lodash';
 
-import { OIS_MAX_CONCURRENCY_DEFAULT, OIS_MIN_TIME_DEFAULT_MS } from './constants';
-import { deriveEndpointId, getRandomId } from './utils';
 import type { Config, SignedData, TemplateId } from './validation/schema';
 
 export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
@@ -11,7 +8,6 @@ export type TemplateValueStorage = Record<TemplateId, DelayedSignedDataQueue>;
 export interface State {
   config: Config;
   templateValues: TemplateValueStorage;
-  apiLimiters: Record<string, Bottleneck | undefined>;
   // We persist the derived Airnode wallet in memory as a performance optimization.
   airnodeWallet: ethers.Wallet;
   // The timestamp of when the service was initialized. This can be treated as a "deployment" timestamp.
@@ -23,54 +19,6 @@ let state: State;
 export const initializeState = (config: Config) => {
   state = getInitialState(config);
   return state;
-};
-
-export const buildApiLimiters = (config: Config) => {
-  const { ois, nodeSettings, templates } = config;
-  const { rateLimiting } = nodeSettings;
-
-  if (!ois) {
-    return {};
-  }
-
-  const oisLimiters = Object.fromEntries(
-    ois.map((ois) => {
-      if (rateLimiting[ois.title]) {
-        const { minTime, maxConcurrency } = rateLimiting[ois.title]!;
-
-        return [
-          ois.title,
-          new Bottleneck({
-            id: getRandomId(),
-            minTime: minTime ?? OIS_MIN_TIME_DEFAULT_MS,
-            maxConcurrent: maxConcurrency ?? OIS_MAX_CONCURRENCY_DEFAULT,
-          }),
-        ];
-      }
-
-      return [
-        ois.title,
-        new Bottleneck({
-          id: getRandomId(),
-          minTime: OIS_MIN_TIME_DEFAULT_MS,
-          maxConcurrent: OIS_MAX_CONCURRENCY_DEFAULT,
-        }),
-      ];
-    })
-  );
-  const endpointTitles = Object.fromEntries(
-    ois.flatMap((ois) => ois.endpoints.map((endpoint) => [deriveEndpointId(ois.title, endpoint.name), ois.title]))
-  );
-
-  // Make use of the reference/pointer nature of objects
-  const apiLimiters = Object.fromEntries(
-    Object.entries(templates).map(([templateId, template]) => {
-      const title = endpointTitles[template.endpointId]!;
-      return [templateId, oisLimiters[title]];
-    })
-  );
-
-  return apiLimiters;
 };
 
 export const buildTemplateStorages = (config: Config) => {
@@ -86,7 +34,6 @@ export const getInitialState = (config: Config): State => {
   return {
     config,
     templateValues: buildTemplateStorages(config),
-    apiLimiters: buildApiLimiters(config),
     airnodeWallet: ethers.Wallet.fromMnemonic(config.nodeSettings.airnodeWalletMnemonic),
     deploymentTimestamp: Math.floor(Date.now() / 1000).toString(),
   };

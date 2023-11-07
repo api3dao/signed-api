@@ -6,14 +6,12 @@ export const evmAddressSchema = z.string().regex(/^0x[\dA-Fa-f]{40}$/, 'Must be 
 
 export const evmIdSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/, 'Must be a valid EVM ID');
 
-export const endpointSchema = z
-  .object({
-    urlPath: z
-      .string()
-      .regex(/^\/[\dA-Za-z-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
-    delaySeconds: z.number().nonnegative().int(),
-  })
-  .strict();
+export const endpointSchema = z.strictObject({
+  urlPath: z
+    .string()
+    .regex(/^\/[\dA-Za-z-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
+  delaySeconds: z.number().nonnegative().int(),
+});
 
 export type Endpoint = z.infer<typeof endpointSchema>;
 
@@ -26,21 +24,19 @@ export const endpointsSchema = z
 
 export const allowedAirnodesSchema = z.union([z.literal('*'), z.array(evmAddressSchema).nonempty()]);
 
-export const configSchema = z
-  .object({
-    endpoints: endpointsSchema,
-    maxBatchSize: z.number().nonnegative().int(),
-    port: z.number().nonnegative().int(),
-    cache: z.object({
-      maxAgeSeconds: z.number().nonnegative().int(),
-    }),
-    allowedAirnodes: allowedAirnodesSchema,
-  })
-  .strict();
+export const configSchema = z.strictObject({
+  endpoints: endpointsSchema,
+  maxBatchSize: z.number().nonnegative().int(),
+  port: z.number().nonnegative().int(),
+  cache: z.strictObject({
+    maxAgeSeconds: z.number().nonnegative().int(),
+  }),
+  allowedAirnodes: allowedAirnodesSchema,
+});
 
 export type Config = z.infer<typeof configSchema>;
 
-export const signedDataSchema = z.object({
+export const signedDataSchema = z.strictObject({
   airnode: evmAddressSchema,
   templateId: evmIdSchema,
   beaconId: evmIdSchema,
@@ -60,6 +56,7 @@ export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')])
 // We apply default values to make it convenient to omit certain environment variables. The default values should be
 // primarily focused on users and production usage.
 export const envConfigSchema = z
+  // Intentionally not using strictObject here because we want to allow other environment variables to be present.
   .object({
     LOG_COLORIZE: envBooleanSchema.default('false'),
     LOG_FORMAT: z

@@ -2,11 +2,6 @@ import { ethers } from 'ethers';
 
 export const sleep = async (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/**
- * Generates a random ID used when creating Bottleneck limiters.
- */
-export const getRandomId = () => ethers.utils.randomBytes(16).toString();
-
 export const deriveEndpointId = (oisTitle: string, endpointName: string) =>
   ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 
