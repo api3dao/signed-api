@@ -6,13 +6,13 @@
     },
     {
       "urlPath": "/delayed",
-      "delaySeconds": 10
+      "delaySeconds": 15
     }
   ],
+  "allowedAirnodes": "*",
   "maxBatchSize": 10,
-  "port": 8090,
+  "port": 80,
   "cache": {
-    "maxAgeSeconds": 0
-  },
-  "allowedAirnodes": ["0xbF3137b0a7574563a23a8fC8badC6537F98197CC"]
+    "maxAgeSeconds": 300
+  }
 }

@@ -177,7 +177,7 @@ The API provides the following endpoints:
 
 ## Deployment
 
-TODO: Write example how to deploy on AWS.
+To deploy signed API on AWS you can use a CloudFormation template in the `deployment` folder. TODO: What to change
 
 To deploy on premise you can use the Docker instructions below.
 

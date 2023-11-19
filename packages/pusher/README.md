@@ -333,7 +333,8 @@ alphanumeric characters and hyphens.
 
 ## Deployment
 
-TODO: Write example how to deploy on AWS
+To deploy Pusher on AWS you can use the Cloud Formation template created by the API integrations team. The template can
+be found [here](https://github.com/api3dao/api-integrations/blob/main/data/cloudformation-template.json).
 
 To deploy on premise you can use the Docker instructions below.
 
