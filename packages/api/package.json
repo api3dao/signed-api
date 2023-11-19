@@ -11,7 +11,7 @@
     "clean": "rm -rf coverage dist",
     "dev": "nodemon --ext ts,js,json,env  --exec \"pnpm ts-node src/index.ts\"",
     "docker:build": "docker build --target api --tag api3/signed-api:latest ../../",
-    "docker:start": "docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest",
+    "docker:run": "docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest",
     "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
