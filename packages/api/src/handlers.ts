@@ -1,6 +1,8 @@
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, isNil, omit, size } from 'lodash';
 
+import type { SignedApiResponse } from '../../pusher/src/validation/schema';
+
 import { getConfig } from './config';
 import { CACHE_HEADERS, COMMON_HEADERS } from './constants';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
@@ -110,10 +112,15 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     return generateErrorResponse(500, 'Unable to remove outdated cache data', goPruneCache.error.message);
   }
 
+  const response: SignedApiResponse = {
+    count: newSignedData.length,
+    skipped: batchSignedData.length - newSignedData.length,
+  };
+
   return {
     statusCode: 201,
     headers: COMMON_HEADERS,
-    body: JSON.stringify({ count: newSignedData.length, skipped: batchSignedData.length - newSignedData.length }),
+    body: JSON.stringify(response),
   };
 };
 

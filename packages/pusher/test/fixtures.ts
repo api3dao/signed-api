@@ -184,7 +184,7 @@ export const signedApiResponse: Partial<AxiosResponse> = {
     'access-control-allow-origin': '*',
     'access-control-allow-methods': '*',
   },
-  data: { count: 3 },
+  data: { count: 3, skipped: 1 },
 };
 
 export const verifyHeartbeatLog = (heartbeatPayload: HeartbeatPayload, rawConfig: string) => {
