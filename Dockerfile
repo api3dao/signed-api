@@ -34,20 +34,40 @@ RUN pnpm run --recursive build
 
 # Create a separate stage for pusher package. We create a temporary stage for deployment and then copy the result into
 # the final stage. Only the production dependencies and package implementation is part of this last stage.
+ENV name="deployed-pusher"
+LABEL application="deployed-pusher" description="Deployed Pusher container"
+
 FROM build AS deployed-pusher
+
 RUN pnpm --filter=pusher --prod deploy deployed-pusher
 FROM node:18-alpine as pusher
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=deployed-pusher /app/deployed-pusher .
+
+RUN addgroup -S deployed-pusher && \
+    adduser -h /app -s /bin/false -S -D -H -G deployed-pusher deployed-pusher && \
+    chown -R deployed-pusher /app
+USER deployed-pusher
+
+COPY --chown=deployed-pusher:deployed-pusher --from=deployed-pusher /app/deployed-pusher .
 ENTRYPOINT ["node", "dist/src/index.js"]
 
 # Create a separate stage for api package. We create a temporary stage for deployment and then copy the result into
 # the final stage. Only the production dependencies and package implementation is part of this last stage.
+ENV name="deployed-api"
+LABEL application="deployed-api" description="Deployed API container"
+
 FROM build AS deployed-api
+
 RUN pnpm --filter=api --prod deploy deployed-api
 FROM node:18-alpine as api
 WORKDIR /app
 ENV NODE_ENV=production
-COPY --from=deployed-api /app/deployed-api .
+
+RUN addgroup -S deployed-api && \
+    adduser -h /app -s /bin/false -S -D -H -G deployed-api deployed-api && \
+    chown -R deployed-api /app
+USER deployed-api
+
+COPY --chown=deployed-api:deployed-api --from=deployed-api /app/deployed-api .
 ENTRYPOINT ["node", "dist/index.js"]
