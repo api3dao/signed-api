@@ -2,8 +2,8 @@
   "name": "api",
   "version": "1.0.0",
   "engines": {
-    "node": "^18.14.0",
-    "pnpm": "^8.10.5"
+    "node": "^18.x",
+    "pnpm": "^8.x"
   },
   "main": "index.js",
   "scripts": {
