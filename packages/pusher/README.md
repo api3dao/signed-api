@@ -84,6 +84,8 @@ Enables or disables logging. Options:
 - `true` - Enables logging.
 - `false` - Disables logging.
 
+Default: `true`.
+
 #### `LOG_FORMAT`
 
 The format of the log output. Options:
@@ -91,6 +93,8 @@ The format of the log output. Options:
 - `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
 - `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
   development.
+
+Default: `json`.
 
 #### `LOG_COLORIZE`
 
@@ -100,6 +104,8 @@ Enables or disables colors in the log output. Options:
   Recommended when running locally and in development.
 - `false` - Disables colors in the log output. Recommended for production.
 
+Default: `false`.
+
 #### `LOG_LEVEL`
 
 Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
@@ -108,6 +114,8 @@ Defines the minimum level of logs. Logs with smaller level (severity) will be si
 - `info` - Enables logs with level `info`, `warn` and `error`.
 - `warn` - Enables logs with level `warn` and `error`.
 - `error` - Enables logs with level `error`.
+
+Default: `info`.
 
 ### Configuration files
 
