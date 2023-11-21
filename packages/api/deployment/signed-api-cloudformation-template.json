@@ -30,7 +30,7 @@
         "ContainerDefinitions": [
           {
             "Name": "signed-api-container",
-            "Image": "siegrift/api3-signed-api:8feb122755282d6450e5529205e5ad8565d35f33",
+            "Image": "<DOCKER_IMAGE>",
             "Environment": [
               {
                 "Name": "CONFIG_SOURCE",
@@ -44,7 +44,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "wget -O - https://raw.githubusercontent.com/api3dao/signed-api/deployment-template/packages/e2e/src/signed-api/signed-api.json >> ./config/signed-api.json && node dist/index.js"
+              "wget -O - <SIGNED_API_CONFIGURATION_URL> >> ./config/signed-api.json && node dist/index.js"
             ],
             "PortMappings": [
               {

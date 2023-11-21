@@ -177,7 +177,12 @@ The API provides the following endpoints:
 
 ## Deployment
 
-To deploy signed API on AWS you can use a CloudFormation template in the `deployment` folder. TODO: What to change
+To deploy signed API on AWS you can use a CloudFormation template in the `deployment` folder. You need to specify the
+docker image of the signed API and the URL of the signed API configuration which will be download when the service is
+started.
+
+The template will create all necessary AWS resources and assign a domain name to access the the API. You can get the URL
+from the output parameters of the CloudFormation stack or by checking the DNS record of the load balancer.
 
 To deploy on premise you can use the Docker instructions below.
 
