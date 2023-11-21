@@ -14,9 +14,9 @@
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
     "start:data-provider-api": "ts-node src/data-provider-api.ts",
     "start:pusher": "docker run -it --init --volume $(pwd)/src/pusher:/app/config --network host --env-file ./src/pusher/.env --rm --memory=256m api3/pusher:latest",
-    "start:signed-api": "docker run --publish 8090:8090 -it --init --volume $(pwd)/src/signed-api:/app/config --env-file ./src/signed-api/.env --rm --memory=256m api3/signed-api:latest",
+    "start:signed-api": "docker run --publish 8090:80 -it --init --volume $(pwd)/src/signed-api:/app/config --env-file ./src/signed-api/.env --rm --memory=256m api3/signed-api:latest",
     "start:ci:pusher": "docker run --init --volume $(pwd)/src/pusher:/app/config --network host --env-file ./src/pusher/.env --rm --memory=256m api3/pusher:latest",
-    "start:ci:signed-api": "docker run --publish 8090:8090 --init --volume $(pwd)/src/signed-api:/app/config --env-file ./src/signed-api/.env --rm --memory=256m api3/signed-api:latest",
+    "start:ci:signed-api": "docker run --publish 8090:80 --init --volume $(pwd)/src/signed-api:/app/config --env-file ./src/signed-api/.env --rm --memory=256m api3/signed-api:latest",
     "start:user": "ts-node src/user.ts",
     "test:e2e": "jest",
     "tsc": "tsc --project ."

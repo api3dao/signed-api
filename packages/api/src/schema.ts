@@ -27,7 +27,6 @@ export const allowedAirnodesSchema = z.union([z.literal('*'), z.array(evmAddress
 export const configSchema = z.strictObject({
   endpoints: endpointsSchema,
   maxBatchSize: z.number().nonnegative().int(),
-  port: z.number().nonnegative().int(),
   cache: z.strictObject({
     maxAgeSeconds: z.number().nonnegative().int(),
   }),

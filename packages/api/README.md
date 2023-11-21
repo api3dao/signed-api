@@ -10,7 +10,8 @@ the data in memory and provides endpoints to push and retrieve beacon data.
 1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally
    change the defaults.
 2. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
-3. `pnpm run dev` - To start the API server. The port number can be configured in the configuration file.
+3. `pnpm run dev` - To start the API server. The port number can be configured by `DEV_SERVER_PORT` environment
+   variable.
 
 ### Testing
 
@@ -134,10 +135,6 @@ The delay in seconds for the endpoint. The endpoint will only serve data that is
 The maximum number of signed data entries that can be inserted in one batch. This is a safety measure to prevent
 spamming theAPI with large payloads. The batch is rejected if it contains more entries than this value.
 
-#### `port`
-
-The port on which the API is served.
-
 #### `cache.maxAgeSeconds`
 
 The maximum age of the cache header in seconds.
@@ -190,7 +187,8 @@ To deploy on premise you can use the Docker instructions below.
 
 The API is also dockerized. To run the dockerized APi, you need to:
 
-1. Publish the port of the API to the host machine using the `--publish` flag.
+1. Publish the port of the API to the host machine. The port number of signed API in the container is set to `80`. So
+   the command should look like `--publish <HOST_PORT>:80`.
 2. Mount config folder to `/app/config`. The folder should contain the `signed-api.json` file.
 3. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
@@ -200,8 +198,8 @@ The API is also dockerized. To run the dockerized APi, you need to:
 For example:
 
 ```sh
-# Assuming the current folder contains the "config" folder and ".env" file and the API port is 8090.
-docker run --publish 8090:8090 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest
+# Assuming the current folder contains the "config" folder and ".env" file and the intended host port is 8090.
+docker run --publish 8090:80 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest
 ```
 
 As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
