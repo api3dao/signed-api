@@ -285,6 +285,7 @@ export const secretsSchema = z.record(z.string());
 
 export const signedApiResponseSchema = z.strictObject({
   count: z.number(),
+  skipped: z.number(),
 });
 
 export type SignedApiResponse = z.infer<typeof signedApiResponseSchema>;

@@ -113,7 +113,10 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   return {
     statusCode: 201,
     headers: COMMON_HEADERS,
-    body: JSON.stringify({ count: newSignedData.length, skipped: batchSignedData.length - newSignedData.length }),
+    body: JSON.stringify({
+      count: newSignedData.length,
+      skipped: batchSignedData.length - newSignedData.length,
+    }),
   };
 };
 
