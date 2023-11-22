@@ -22,17 +22,22 @@
       "MinLength": 10,
       "Description": "Loki endpoint (This should be handed to you)."
     },
-    "nodaryApiKey": {
+    "apiKey1": {
       "Type": "String",
       "MinLength": 10,
-      "Description": "Nodary API key."
+      "Description": "API secret 1."
+    },
+    "apiKey2": {
+      "Type": "String",
+      "MinLength": 10,
+      "Description": "API secret 2."
     }
   },
   "Resources": {
     "CloudWatchLogsGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "PusherLogGroup-1700644945",
+        "LogGroupName": "PusherLogGroup",
         "RetentionInDays": 7
       }
     },
@@ -41,7 +46,7 @@
       "Properties": {
         "NetworkMode": "awsvpc",
         "Cpu": 256,
-        "Memory": 1024,
+        "Memory": 512,
         "ExecutionRoleArn": {
           "Ref": "ECSTaskRole"
         },
@@ -50,7 +55,7 @@
           {
             "Essential": true,
             "Image": "grafana/fluent-bit-plugin-loki:2.9.1-amd64",
-            "Name": "PusherLogForwarder-1700644945",
+            "Name": "PusherLogForwarder",
             "FirelensConfiguration": {
               "Type": "fluentbit",
               "Options": {
@@ -73,8 +78,8 @@
             "MemoryReservation": 50
           },
           {
-            "Name": "Pusher-8feb122755282d6450e5529205e5ad8565d35f33",
-            "Image": "siegrift/api3-pusher:8feb122755282d6450e5529205e5ad8565d35f33",
+            "Name": "Pusher",
+            "Image": "<IMAGE>",
             "Environment": [
               {
                 "Name": "SECRETS_ENV",
@@ -88,33 +93,39 @@
                         "Ref": "airnodeMnemonic"
                       },
                       "\\n",
-                      "NODARY_API_KEY",
+                      "APIKEY1_VALUE",
                       "=",
                       {
-                        "Ref": "nodaryApiKey"
+                        "Ref": "apiKey1"
+                      },
+                      "\\n",
+                      "APIKEY2_VALUE",
+                      "=",
+                      {
+                        "Ref": "apiKey2"
                       },
                       "\\n",
                       "STAGE",
                       "=",
-                      "aws-1700644945"
+                      "aws",
+                      "\\n",
+                      "LOG_LEVEL",
+                      "=",
+                      "debug"
                     ]
                   ]
                 }
-              },
-              {
-                "Name": "LOG_LEVEL",
-                "Value": "debug"
               }
             ],
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/api3dao/signed-api/8f2740a93c9b9fc90b588ed11c91cad1ffade46c/packages/api/deployment/deployment-files/nodary.pusher.json >> ./config/pusher.json && node dist/src/index.js"
+              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - <PUBLIC_CONFIG_URL> >> ./config/pusher.json && node dist/src/index.js"
             ],
             "LogConfiguration": {
               "LogDriver": "awsfirelens",
               "Options": {
-                "Name": "grafana-loki-1700644945",
+                "Name": "grafana-loki",
                 "Url": {
                   "Fn::Join": [
                     "",
@@ -135,7 +146,7 @@
                     ]
                   ]
                 },
-                "Labels": "{app=\"pusher\",airnode=\"0xF35E2f96544db1A5330A1F68012Fe34C5219EE7b\"}",
+                "Labels": "{app=\"pusher\",airnode=\"<AIRNODE_ADDRESS>\"}",
                 "RemoveKeys": "container_id,container_name,ecs_task_definition,source,ecs_cluster",
                 "LabelKeys": "ecs_task_arn",
                 "LineFormat": "json"
@@ -148,7 +159,7 @@
     "AppCluster": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
-        "ClusterName": "PusherCluster-1700644945"
+        "ClusterName": "PusherCluster"
       }
     },
     "AppService": {
@@ -157,7 +168,7 @@
         "Cluster": {
           "Ref": "AppCluster"
         },
-        "ServiceName": "PusherService-1700644945",
+        "ServiceName": "PusherService",
         "DesiredCount": 1,
         "LaunchType": "FARGATE",
         "TaskDefinition": {
