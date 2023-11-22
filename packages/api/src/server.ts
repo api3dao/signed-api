@@ -4,7 +4,12 @@ import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
 import { logger } from './logger';
 import type { Config } from './schema';
 
-export const startServer = (config: Config) => {
+// The port number is defaulted to 80 because the service is dockerized and users can re-publish the container to any
+// port they want. The CloudFormation template needs to know what is the container port so we hardcode it to 80. We
+// still want the port to be configurable when running the signed API in development (by running it with node).
+export const DEFAULT_PORT = 80;
+
+export const startServer = (config: Config, port: number) => {
   const app = express();
 
   app.use(express.json());
@@ -41,7 +46,7 @@ export const startServer = (config: Config) => {
     });
   }
 
-  app.listen(config.port, () => {
-    logger.info(`Server listening at http://localhost:${config.port}`);
+  app.listen(port, () => {
+    logger.info(`Server listening at http://localhost:${port}`);
   });
 };
