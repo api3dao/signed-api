@@ -3,11 +3,7 @@
   "extends": ["config:base"],
   "packageRules": [
     {
-      "matchPackageNames": ["node"],
-      "enabled": false
-    },
-    {
-      "matchPackageNames": ["ethers"],
+      "matchPackageNames": ["ethers", "node"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
@@ -15,13 +11,13 @@
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
       "schedule": ["before 1am on the first day of the month"],
-      "groupName": "devDependencies (non-major)"
+      "groupName": "non-major-devDependencies"
     },
     {
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["patch", "minor"],
       "schedule": ["before 1am on the first day of the month"],
-      "groupName": "dependencies (non-major)"
+      "groupName": "non-major-dependencies"
     }
   ],
   "rangeStrategy": "bump",
@@ -29,5 +25,7 @@
     "enabled": false
   },
   "reviewers": ["Siegrift"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
   "dependencyDashboard": false
 }

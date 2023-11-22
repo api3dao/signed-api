@@ -7,6 +7,10 @@ A monorepo for managing signed data. Consists of:
 - [pusher](./packages/pusher/README.md) - A service for pushing data provider signed data.
 - [e2e](./packages/e2e/README.md) - End to end test utilizing Mock API, pusher and signed API.
 
+Read the
+[specification](https://docs.google.com/document/d/1-kUPIXSD4ZW1SGs_P8HsejC9k9aHB-NXs9_6-OclnmE/edit#heading=h.i307237rdfda)
+for more details on the architecture and the components.
+
 ## Getting started
 
 The repo uses `pnpm` workspaces. To install the dependencies:

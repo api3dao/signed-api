@@ -2,8 +2,8 @@
   "name": "e2e",
   "version": "1.0.0",
   "engines": {
-    "node": "^18.14.0",
-    "pnpm": "^8.10.2"
+    "node": "^18.18.2",
+    "pnpm": "^8.10.5"
   },
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
