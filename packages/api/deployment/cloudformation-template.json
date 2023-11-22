@@ -47,7 +47,7 @@
           {
             "Essential": true,
             "Image": "grafana/fluent-bit-plugin-loki:2.9.1-amd64",
-            "Name": "SignedApiLogForwarder-<SOME_ID>",
+            "Name": "SignedApiLogForwarder",
             "FirelensConfiguration": {
               "Type": "fluentbit",
               "Options": {
