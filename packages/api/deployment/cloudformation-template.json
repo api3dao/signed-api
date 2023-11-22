@@ -31,14 +31,13 @@
     "SignedApiLogsGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/signedApi",
+        "LogGroupName": "/ecs/signedApi-<SOME_ID>",
         "RetentionInDays": 7
       }
     },
     "SignedApiTaskDefinition": {
       "Type": "AWS::ECS::TaskDefinition",
       "Properties": {
-        "Family": "signed-api-task",
         "Cpu": "256",
         "Memory": "512",
         "NetworkMode": "awsvpc",
@@ -48,7 +47,7 @@
           {
             "Essential": true,
             "Image": "grafana/fluent-bit-plugin-loki:2.9.1-amd64",
-            "Name": "SignedApiLogForwarder",
+            "Name": "SignedApiLogForwarder-<SOME_ID>",
             "FirelensConfiguration": {
               "Type": "fluentbit",
               "Options": {
@@ -72,7 +71,7 @@
           },
           {
             "Name": "signed-api-container",
-            "Image": "siegrift/api3-signed-api:8feb122755282d6450e5529205e5ad8565d35f33",
+            "Image": "<DOCKER_IMAGE>",
             "Environment": [
               {
                 "Name": "CONFIG_SOURCE",
@@ -86,7 +85,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "wget -O - https://raw.githubusercontent.com/api3dao/signed-api/d91fa91e739eed2798fae3f22ca1f4102ab4054d/packages/e2e/src/signed-api/signed-api.json >> ./config/signed-api.json && node dist/index.js"
+              "wget -O - <SIGNED_API_CONFIGURATION_URL> >> ./config/signed-api.json && node dist/index.js"
             ],
             "PortMappings": [
               {
@@ -118,7 +117,7 @@
                     ]
                   ]
                 },
-                "Labels": "{app=\"signed-api\",airnode=\"0xfDfd2820c52Bc22db4bfa7cb13685E538a7729A1\"}",
+                "Labels": "{app=\"signed-api\",signedApiId=\"<SIGNED_API_ID>\"}",
                 "RemoveKeys": "container_id,container_name,ecs_task_definition,source,ecs_cluster",
                 "LabelKeys": "ecs_task_arn",
                 "LineFormat": "json"
@@ -155,13 +154,13 @@
     "ECSCluster": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
-        "ClusterName": "signed-api-cluster"
+        "ClusterName": "signed-api-cluster-<SOME_ID>"
       }
     },
     "ELB": {
       "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
       "Properties": {
-        "Name": "signed-api-elb",
+        "Name": "signed-api-elb-<SOME_ID>",
         "Subnets": [{ "Ref": "PublicSubnet1" }, { "Ref": "PublicSubnet2" }],
         "SecurityGroups": [{ "Ref": "ELBSecurityGroup" }],
         "Scheme": "internet-facing"
@@ -303,7 +302,7 @@
         "Path": "/",
         "Policies": [
           {
-            "PolicyName": "ecs-service",
+            "PolicyName": "ECSTaskExecutionRolePolicy",
             "PolicyDocument": {
               "Version": "2012-10-17",
               "Statement": [
