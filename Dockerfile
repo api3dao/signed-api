@@ -34,7 +34,6 @@ RUN pnpm run --recursive build
 
 # Create a separate stage for pusher package. We create a temporary stage for deployment and then copy the result into
 # the final stage. Only the production dependencies and package implementation is part of this last stage.
-ENV name="deployed-pusher"
 LABEL application="deployed-pusher" description="Deployed Pusher container"
 
 FROM build AS deployed-pusher
@@ -54,7 +53,6 @@ ENTRYPOINT ["node", "dist/src/index.js"]
 
 # Create a separate stage for api package. We create a temporary stage for deployment and then copy the result into
 # the final stage. Only the production dependencies and package implementation is part of this last stage.
-ENV name="deployed-api"
 LABEL application="deployed-api" description="Deployed API container"
 
 FROM build AS deployed-api
