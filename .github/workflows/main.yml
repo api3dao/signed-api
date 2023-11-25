@@ -59,11 +59,12 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
       - name: Build
         run: pnpm run build
       - name: Build Docker images
         run: pnpm run docker:build
+      - name: Copy pusher secrets
+        run: cp pusher/secrets.example.env pusher/secrets.env
       - name: Start services
         # Start the e2e services in the background and wait a small amount of time for them to start.
         run: |

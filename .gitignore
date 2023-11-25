@@ -16,6 +16,5 @@ signed-api.json
 
 # Do not ignore e2e config files. These don't need to be listed on Dockerignore because e2e package is not dockerized.
 !packages/e2e/**/pusher.json
-!packages/e2e/**/secrets.env
 !packages/e2e/**/.env
 !packages/e2e/**/signed-api.json
