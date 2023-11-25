@@ -96,7 +96,7 @@ export const signedApiUpdateSchema = z.strictObject({
 });
 
 export const triggersSchema = z.strictObject({
-  signedApiUpdates: z.array(signedApiUpdateSchema),
+  signedApiUpdates: z.array(signedApiUpdateSchema).nonempty(),
 });
 
 const validateTemplatesReferences: SuperRefinement<{ templates: Templates; endpoints: Endpoints }> = (config, ctx) => {
@@ -203,18 +203,21 @@ export const signedApiSchema = z.strictObject({
   url: z.string().url(),
 });
 
-export const signedApisSchema = z.array(signedApiSchema).superRefine((apis, ctx) => {
-  const names = apis.map((api) => api.name);
-  const uniqueNames = [...new Set(names)];
+export const signedApisSchema = z
+  .array(signedApiSchema)
+  .nonempty()
+  .superRefine((apis, ctx) => {
+    const names = apis.map((api) => api.name);
+    const uniqueNames = [...new Set(names)];
 
-  if (names.length !== uniqueNames.length) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      message: `Signed API names must be unique`,
-      path: ['signedApis'],
-    });
-  }
-});
+    if (names.length !== uniqueNames.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Signed API names must be unique`,
+        path: ['signedApis'],
+      });
+    }
+  });
 
 export const oisesSchema = z.array(oisSchema);
 

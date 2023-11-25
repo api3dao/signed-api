@@ -1,8 +1,6 @@
 import { go } from '@api3/promise-utils';
-import { isEmpty } from 'lodash';
 
 import { makeTemplateRequests } from './api-requests/data-provider';
-import { NO_FETCH_EXIT_CODE } from './constants';
 import { logger } from './logger';
 import { signTemplateResponses } from './sign-template-data';
 import { getState } from './state';
@@ -13,16 +11,7 @@ export const initiateFetchingBeaconData = () => {
   logger.debug('Initiating fetching all beacon data');
   const { config } = getState();
 
-  const { signedApiUpdates } = config.triggers;
-
-  // TODO: Validate using zod schema
-  if (isEmpty(signedApiUpdates)) {
-    logger.error('No signed API updates found. Stopping.');
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(NO_FETCH_EXIT_CODE);
-  }
-
-  return signedApiUpdates.map(async (element) => fetchBeaconDataInLoop(element));
+  return config.triggers.signedApiUpdates.map(async (element) => fetchBeaconDataInLoop(element));
 };
 
 const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
