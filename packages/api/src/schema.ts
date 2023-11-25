@@ -33,7 +33,6 @@ export type Cache = z.infer<typeof cacheSchema>;
 
 export const configSchema = z.strictObject({
   endpoints: endpointsSchema,
-  maxBatchSize: z.number().nonnegative().int(),
   cache: cacheSchema.optional(),
   allowedAirnodes: allowedAirnodesSchema,
 });

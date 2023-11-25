@@ -1,5 +1,5 @@
 import { go, goSync } from '@api3/promise-utils';
-import { isEmpty, isNil, omit, size } from 'lodash';
+import { isEmpty, isNil, omit } from 'lodash';
 
 import { getConfig } from './config';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
@@ -26,7 +26,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   }
 
   // Ensure that the batch of signed that comes from a whitelisted Airnode.
-  const { maxBatchSize, endpoints, allowedAirnodes } = getConfig();
+  const { endpoints, allowedAirnodes } = getConfig();
   if (
     allowedAirnodes !== '*' &&
     !goValidateSchema.data.every((signedData) => allowedAirnodes.includes(signedData.airnode))
@@ -37,11 +37,6 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Ensure there is at least one signed data to push
   const batchSignedData = goValidateSchema.data;
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
-
-  // Check whether the size of batch exceeds a maximum batch size
-  if (size(batchSignedData) > maxBatchSize) {
-    return generateErrorResponse(400, `Maximum batch size (${maxBatchSize}) exceeded`);
-  }
 
   // Check whether any duplications exist
   if (!isBatchUnique(batchSignedData)) return generateErrorResponse(400, 'No duplications are allowed');
