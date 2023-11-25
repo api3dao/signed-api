@@ -1,7 +1,7 @@
 import { type BuildRequestOptions, buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-adapter';
 import type * as node from '@api3/airnode-node';
 import { getReservedParameters } from '@api3/airnode-node/dist/src/adapters/http/parameters';
-import { preProcessApiCallParameters, type ApiCallParameters, postProcessApiCallResponse } from '@api3/commons';
+import { preProcessEndpointParameters, type EndpointParameters, postProcessResponse } from '@api3/commons';
 import type { OIS, Endpoint as OisEndpoint } from '@api3/ois';
 import { go, goSync } from '@api3/promise-utils';
 import { isNil } from 'lodash';
@@ -15,14 +15,17 @@ import type { SignedApiUpdate } from '../validation/schema';
 export const callApi = async (
   ois: OIS,
   endpoint: OisEndpoint,
-  apiCallParameters: ApiCallParameters,
+  endpointParameters: EndpointParameters,
   apiCredentials: node.ApiCredentials[]
 ) => {
   return go(async () => {
     const logContext = { endpointName: endpoint.name, oisTitle: ois.title };
     logger.debug('Preprocessing API call payload', logContext);
-    const processedApiCallParameters = await preProcessApiCallParameters(endpoint, apiCallParameters);
-    logger.debug('Performing API call', { ...logContext, processedApiCallParameters });
+    const { endpointParameters: processedEndpointParameters } = await preProcessEndpointParameters(
+      endpoint,
+      endpointParameters
+    );
+    logger.debug('Performing API call', { ...logContext, processedEndpointParameters });
 
     const response = await buildAndExecuteRequest(
       {
@@ -53,14 +56,14 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   const operationEndpoint = endpoints[operationTemplate.endpointId]!;
   const ois = oises.find((o) => o.title === operationEndpoint.oisTitle)!;
   const operationOisEndpoint = ois.endpoints.find((e) => e.name === operationEndpoint.endpointName)!;
-  const operationApiCallParameters = operationTemplate.parameters.reduce((acc, parameter) => {
+  const endpointParameters = operationTemplate.parameters.reduce((acc, parameter) => {
     return {
       ...acc,
       [parameter.name]: parameter.value,
     };
   }, {});
 
-  const goCallApi = await callApi(ois, operationOisEndpoint, operationApiCallParameters, apiCredentials);
+  const goCallApi = await callApi(ois, operationOisEndpoint, endpointParameters, apiCredentials);
 
   if (!goCallApi.success) {
     logger.warn(`Failed to make API call`, {
@@ -77,7 +80,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     const endpoint = endpoints[template.endpointId]!;
     const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
 
-    const apiCallParameters = template.parameters.reduce((acc, parameter) => {
+    const endpointParameters = template.parameters.reduce((acc, parameter) => {
       return {
         ...acc,
         [parameter.name]: parameter.value,
@@ -85,9 +88,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     }, {});
 
     logger.debug('Processing successful API call', { templateId, operationTemplateId });
-    const goPostProcess = await go(async () =>
-      postProcessApiCallResponse(apiCallResponse, oisEndpoint, apiCallParameters)
-    );
+    const goPostProcess = await go(async () => postProcessResponse(apiCallResponse, oisEndpoint, endpointParameters));
     if (!goPostProcess.success) {
       const message = `Failed to post process successful API call`;
       logger.warn(message, { templateId, operationTemplateId, errorMessage: goPostProcess.error.message });

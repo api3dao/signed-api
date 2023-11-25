@@ -67,17 +67,17 @@
             { "name": "_type", "fixed": "int256" },
             { "name": "_times", "fixed": "1000000000000000000" }
           ],
-          "preProcessingSpecifications": [
+          "preProcessingSpecificationV2": [
             {
               "environment": "Node",
-              "value": "const output = {};",
+              "value": "() => { return { endpointParameters: {} }; }",
               "timeoutMs": 5000
             }
           ],
-          "postProcessingSpecifications": [
+          "postProcessingSpecificationV2": [
             {
               "environment": "Node",
-              "value": "const output = input[endpointParameters.name].value;",
+              "value": "({ endpointParameters, response }) => { return { response: response[endpointParameters.name].value }; }",
               "timeoutMs": 5000
             }
           ]
