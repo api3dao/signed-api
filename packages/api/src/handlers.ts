@@ -2,8 +2,8 @@ import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, isNil, omit, size } from 'lodash';
 
 import { getConfig } from './config';
-import { CACHE_HEADERS, COMMON_HEADERS } from './constants';
 import { deriveBeaconId, recoverSignerAddress } from './evm';
+import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
 import { type SignedData, batchSignedDataSchema, evmAddressSchema } from './schema';
@@ -112,7 +112,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
 
   return {
     statusCode: 201,
-    headers: COMMON_HEADERS,
+    headers: createResponseHeaders(getConfig().cache),
     body: JSON.stringify({
       count: newSignedData.length,
       skipped: batchSignedData.length - newSignedData.length,
@@ -148,7 +148,7 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
 
   return {
     statusCode: 200,
-    headers: { ...COMMON_HEADERS, ...CACHE_HEADERS },
+    headers: createResponseHeaders(getConfig().cache),
     body: JSON.stringify({ count: goReadDb.data.length, data }),
   };
 };
@@ -165,7 +165,7 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
 
   return {
     statusCode: 200,
-    headers: { ...COMMON_HEADERS, ...CACHE_HEADERS, 'cdn-cache-control': `max-age=${getConfig().cache.maxAgeSeconds}` },
+    headers: createResponseHeaders(getConfig().cache),
     body: JSON.stringify({ count: airnodeAddresses.length, 'available-airnodes': airnodeAddresses }),
   };
 };

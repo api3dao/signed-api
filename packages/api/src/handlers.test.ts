@@ -174,8 +174,6 @@ describe(getData.name, () => {
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
-        'cache-control': 'no-store',
-        'cdn-cache-control': 'max-age=10',
         'content-type': 'application/json',
       },
       statusCode: 200,
@@ -203,8 +201,6 @@ describe(getData.name, () => {
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
-        'cache-control': 'no-store',
-        'cdn-cache-control': 'max-age=10',
         'content-type': 'application/json',
       },
       statusCode: 200,
@@ -228,8 +224,6 @@ describe(listAirnodeAddresses.name, () => {
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
-        'cache-control': 'no-store',
-        'cdn-cache-control': 'max-age=300',
         'content-type': 'application/json',
       },
       statusCode: 200,
