@@ -33,7 +33,9 @@ The API is configured via combination of [environment variables](#environment-va
 ### Environment variables
 
 Parts of the API needs to be initialized prior the configuration files are loaded. This is done via environment
-variables. For example:
+variables. All of the environment variables are optional and or set with default values for convenience.
+
+Example:
 
 ```sh
 # Defines a logger suitable for production.
@@ -53,7 +55,7 @@ AWS_S3_BUCKET_PATH=configs/my-app/signed-api.json
 
 <!-- NOTE: Keep the logger configuration in-sync with pusher. -->
 
-#### `LOGGER_ENABLED`
+#### `LOGGER_ENABLED` _(optional)_
 
 Enables or disables logging. Options:
 
@@ -62,7 +64,7 @@ Enables or disables logging. Options:
 
 Default: `true`.
 
-#### `LOG_FORMAT`
+#### `LOG_FORMAT` _(optional)_
 
 The format of the log output. Options:
 
@@ -72,7 +74,7 @@ The format of the log output. Options:
 
 Default: `json`.
 
-#### `LOG_COLORIZE`
+#### `LOG_COLORIZE` _(optional)_
 
 Enables or disables colors in the log output. Options:
 
@@ -82,7 +84,7 @@ Enables or disables colors in the log output. Options:
 
 Default: `false`.
 
-#### `LOG_LEVEL`
+#### `LOG_LEVEL` _(optional)_
 
 Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
 
@@ -92,6 +94,35 @@ Defines the minimum level of logs. Logs with smaller level (severity) will be si
 - `error` - Enables logs with level `error`.
 
 Default: `info`.
+
+#### `CONFIG_SOURCE` _(optional)_
+
+Defines the source of the configuration file. Options:
+
+- `aws-s3` - The configuration file is downloaded from AWS S3.
+- `local` - The configuration file is loaded from the local file system.
+
+Default: `local`.
+
+#### `AWS_ACCESS_KEY_ID` _(optional)_
+
+The AWS access key ID. Required when `CONFIG_SOURCE` is set to `aws-s3`.
+
+#### `AWS_SECRET_ACCESS_KEY` _(optional)_
+
+The AWS secret access key. Required when `CONFIG_SOURCE` is set to `aws-s3`.
+
+#### `AWS_REGION` _(optional)_
+
+The AWS region. Required when `CONFIG_SOURCE` is set to `aws-s3`.
+
+#### `AWS_S3_BUCKET_NAME` _(optional)_
+
+The name of the AWS S3 bucket. Required when `CONFIG_SOURCE` is set to `aws-s3`.
+
+#### `AWS_S3_BUCKET_PATH` _(optional)_
+
+The path to the configuration file in the AWS S3 bucket. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
 ### Configuration file
 
@@ -135,7 +166,7 @@ The delay in seconds for the endpoint. The endpoint will only serve data that is
 The maximum number of signed data entries that can be inserted in one batch. This is a safety measure to prevent
 spamming theAPI with large payloads. The batch is rejected if it contains more entries than this value.
 
-#### `cache`
+#### `cache` _(optional)_
 
 Configures the cache for the API endpoints.
 
