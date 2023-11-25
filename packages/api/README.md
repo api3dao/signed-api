@@ -135,9 +135,22 @@ The delay in seconds for the endpoint. The endpoint will only serve data that is
 The maximum number of signed data entries that can be inserted in one batch. This is a safety measure to prevent
 spamming theAPI with large payloads. The batch is rejected if it contains more entries than this value.
 
-#### `cache.maxAgeSeconds`
+#### `cache`
 
-The maximum age of the cache header in seconds.
+Configures the cache for the API endpoints.
+
+Defaults to no cache.
+
+##### `type`
+
+The type of the cache. Options:
+
+- `browser` - Uses the browser cache.
+- `cdn` - Uses the CDN cache. The CDN network needs to support `cdn-cache-control` header.
+
+##### `maxAgeSeconds`
+
+The maximum age of the cache in seconds. The cache is cleared after this time.
 
 #### `allowedAirnodes`
 
