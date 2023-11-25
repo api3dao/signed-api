@@ -20,16 +20,16 @@ The pusher needs a configuration in order to run. The `config` folder contains e
 
 To start the the pusher in dev mode run the following:
 
-1. `cp pusher.example.json pusher.json` - To copy the pusher configuration from the example. Note, the `pusher.json`
-   file is ignored by git. If you are using Docker Desktop, you need to change the URL from localhost to
+1. `cp config/pusher.example.json config/pusher.json` - To copy the pusher configuration from the example. Note, the
+   `pusher.json` file is ignored by git. If you are using Docker Desktop, you need to change the URL from localhost to
    `host.docker.internal`. For example:
 
    ```jsonc
    "url": "http://host.docker.internal:8090"
    ```
 
-2. `cp secrets.example.env secrets.env` - To copy the secrets.env needed for the configuration. This file is also
-   ignored by git.
+2. `cp config/secrets.example.env config/secrets.env` - To copy the secrets.env needed for the configuration. This file
+   is also ignored by git.
 3. Set the `NODARY_API_KEY` inside the secrets file. Ask someone from development team for the key.
 4. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
 5. `pnpm run dev` - To run the pusher. This step assumes already running signed API as specified in the `pusher.json`
@@ -120,7 +120,7 @@ Default: `info`.
 ### Configuration files
 
 Pusher needs two configuration files, `pusher.json` and `secrets.env`. All expressions of a form `${SECRET_NAME}` are
-referring to values from secrets and are interpolated inside the `config.json` at runtime. You are advised to put
+referring to values from secrets and are interpolated inside the `pusher.json` at runtime. You are advised to put
 sensitive information inside secrets.
 
 You can also refer to the [example configuration](./config).
