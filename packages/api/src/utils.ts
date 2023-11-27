@@ -1,4 +1,4 @@
-import { COMMON_HEADERS } from './constants';
+import { createResponseHeaders } from './headers';
 import type { BatchSignedData, SignedData } from './schema';
 import type { ApiResponse } from './types';
 
@@ -18,5 +18,5 @@ export const generateErrorResponse = (
   detail?: string,
   extra?: unknown
 ): ApiResponse => {
-  return { statusCode, headers: COMMON_HEADERS, body: JSON.stringify({ message, detail, extra }) };
+  return { statusCode, headers: createResponseHeaders(), body: JSON.stringify({ message, detail, extra }) };
 };

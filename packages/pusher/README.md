@@ -54,8 +54,10 @@ Pusher can be configured via a combination of [environment variables](#environme
 
 ### Environment variables
 
-Logging needs to be initialized prior the configuration files are loaded. This is done via environment variables. For
-example:
+Logging needs to be initialized prior the configuration files are loaded. This is done via environment variables. All of
+the environment variables are optional and or set with default values for convenience.
+
+Example:
 
 ```sh
 # Defines a logger suitable for production.
@@ -77,7 +79,7 @@ LOG_LEVEL=info
 
 <!-- NOTE: Keep the logger configuration in-sync with API. -->
 
-#### `LOGGER_ENABLED`
+#### `LOGGER_ENABLED` _(optional)_
 
 Enables or disables logging. Options:
 
@@ -86,7 +88,7 @@ Enables or disables logging. Options:
 
 Default: `true`.
 
-#### `LOG_FORMAT`
+#### `LOG_FORMAT` _(optional)_
 
 The format of the log output. Options:
 
@@ -96,7 +98,7 @@ The format of the log output. Options:
 
 Default: `json`.
 
-#### `LOG_COLORIZE`
+#### `LOG_COLORIZE` _(optional)_
 
 Enables or disables colors in the log output. Options:
 
@@ -106,7 +108,7 @@ Enables or disables colors in the log output. Options:
 
 Default: `false`.
 
-#### `LOG_LEVEL`
+#### `LOG_LEVEL` _(optional)_
 
 Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
 

@@ -24,12 +24,17 @@ export const endpointsSchema = z
 
 export const allowedAirnodesSchema = z.union([z.literal('*'), z.array(evmAddressSchema).nonempty()]);
 
+export const cacheSchema = z.strictObject({
+  type: z.union([z.literal('browser'), z.literal('cdn')]),
+  maxAgeSeconds: z.number().nonnegative().int(),
+});
+
+export type Cache = z.infer<typeof cacheSchema>;
+
 export const configSchema = z.strictObject({
   endpoints: endpointsSchema,
   maxBatchSize: z.number().nonnegative().int(),
-  cache: z.strictObject({
-    maxAgeSeconds: z.number().nonnegative().int(),
-  }),
+  cache: cacheSchema.optional(),
   allowedAirnodes: allowedAirnodesSchema,
 });
 
