@@ -1,7 +1,7 @@
 import { get, isEmpty, uniq } from 'lodash';
 
 import { postSignedApiData } from './api-requests/signed-api';
-import { NO_SIGNED_API_UPDATE_EXIT_CODE, SIGNED_DATA_PUSH_POLLING_INTERVAL } from './constants';
+import { SIGNED_DATA_PUSH_POLLING_INTERVAL } from './constants';
 import { logger } from './logger';
 import { getState } from './state';
 import { sleep } from './utils';
@@ -45,13 +45,6 @@ export const initiateUpdatingSignedApi = () => {
       templateIds,
     }))
   );
-
-  // TODO: Validate using zod schema
-  if (isEmpty(signedApiUpdateDelayGroups)) {
-    logger.error('No signed API updates found. Stopping.');
-    // eslint-disable-next-line unicorn/no-process-exit
-    process.exit(NO_SIGNED_API_UPDATE_EXIT_CODE);
-  }
 
   signedApiUpdateDelayGroups.map(async (element) => updateSignedApiInLoop(element));
 };

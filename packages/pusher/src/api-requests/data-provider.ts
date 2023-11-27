@@ -1,4 +1,4 @@
-import { buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-adapter';
+import { type BuildRequestOptions, buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-adapter';
 import type * as node from '@api3/airnode-node';
 import { getReservedParameters } from '@api3/airnode-node/dist/src/adapters/http/parameters';
 import { preProcessApiCallParameters, type ApiCallParameters, postProcessApiCallResponse } from '@api3/commons';
@@ -27,7 +27,7 @@ export const callApi = async (
     const response = await buildAndExecuteRequest(
       {
         endpointName: endpoint.name,
-        ois: ois as any, // TODO: The OIS type from Airnode does not match the one from @api3/ois.
+        ois: ois as BuildRequestOptions['ois'], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
         parameters: processedApiCallParameters,
         metadata: null,
         apiCredentials,
@@ -96,7 +96,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
 
     const goEncodedResponse = goSync(() => {
       const { _type, _path, _times } = getReservedParameters(
-        oisEndpoint as any, // TODO: The Endpoint type from @api3/ois does not match the one from Airnode.
+        oisEndpoint as Parameters<typeof getReservedParameters>[0], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
         apiCallParameters
       );
       return extractAndEncodeResponse(goPostProcess.data, {
