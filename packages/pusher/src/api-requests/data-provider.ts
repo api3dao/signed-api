@@ -31,7 +31,7 @@ export const callApi = async (
       {
         endpointName: endpoint.name,
         ois: ois as BuildRequestOptions['ois'], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
-        parameters: processedApiCallParameters,
+        parameters: processedEndpointParameters,
         metadata: null,
         apiCredentials,
       },
@@ -98,9 +98,9 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     const goEncodedResponse = goSync(() => {
       const { _type, _path, _times } = getReservedParameters(
         oisEndpoint as Parameters<typeof getReservedParameters>[0], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
-        apiCallParameters
+        endpointParameters
       );
-      return extractAndEncodeResponse(goPostProcess.data, {
+      return extractAndEncodeResponse(goPostProcess.data.response, {
         _type,
         _path,
         _times,
