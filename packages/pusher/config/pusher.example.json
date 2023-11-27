@@ -41,7 +41,7 @@
   ],
   "ois": [
     {
-      "oisFormat": "2.2.0",
+      "oisFormat": "2.3.0",
       "title": "Nodary",
       "version": "0.2.0",
       "apiSpecifications": {
@@ -67,20 +67,16 @@
             { "name": "_type", "fixed": "int256" },
             { "name": "_times", "fixed": "1000000000000000000" }
           ],
-          "preProcessingSpecifications": [
-            {
-              "environment": "Node",
-              "value": "const output = {};",
-              "timeoutMs": 5000
-            }
-          ],
-          "postProcessingSpecifications": [
-            {
-              "environment": "Node",
-              "value": "const output = input[endpointParameters.name].value;",
-              "timeoutMs": 5000
-            }
-          ]
+          "preProcessingSpecificationV2": {
+            "environment": "Node",
+            "value": "() => { return { endpointParameters: {} }; }",
+            "timeoutMs": 5000
+          },
+          "postProcessingSpecificationV2": {
+            "environment": "Node",
+            "value": "({ endpointParameters, response }) => { return { response: response[endpointParameters.name].value }; }",
+            "timeoutMs": 5000
+          }
         }
       ]
     }

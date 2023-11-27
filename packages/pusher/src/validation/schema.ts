@@ -5,7 +5,7 @@ import {
   type LogLevel,
   logFormatOptions,
   logLevelOptions,
-  preProcessApiCallParameters,
+  preProcessEndpointParameters,
 } from '@api3/commons';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { goSync } from '@api3/promise-utils';
@@ -174,14 +174,14 @@ const validateTriggerReferences: SuperRefinement<{
 
         const ois = oises.find((o) => o.title === endpoint.oisTitle)!;
         const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
-        const apiCallParameters = template.parameters.reduce((acc, parameter) => {
+        const endpointParameters = template.parameters.reduce((acc, parameter) => {
           return {
             ...acc,
             [parameter.name]: parameter.value,
           };
         }, {});
 
-        return preProcessApiCallParameters(oisEndpoint, apiCallParameters);
+        return preProcessEndpointParameters(oisEndpoint, endpointParameters);
       });
 
       const operationsPayloads = await Promise.all(operationPayloadPromises);
