@@ -161,11 +161,6 @@ dashes.
 
 The delay in seconds for the endpoint. The endpoint will only serve data that is older than the delay.
 
-#### `maxBatchSize`
-
-The maximum number of signed data entries that can be inserted in one batch. This is a safety measure to prevent
-spamming theAPI with large payloads. The batch is rejected if it contains more entries than this value.
-
 #### `cache` _(optional)_
 
 Configures the cache for the API endpoints.
