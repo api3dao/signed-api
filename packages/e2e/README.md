@@ -4,8 +4,9 @@
 
 ## Getting started
 
-1. If you are using Docker Desktop, you need to change the URL in `pusher/secrets.env` from `localhost` to
-   `host.docker.internal`, because pusher is running inside a Docker container.
+1. Copy the pusher secrets. Run `cp pusher/secrets.example.env pusher/secrets.env`. If you are using Docker Desktop, you
+   need to change the URL in `pusher/secrets.env` from `localhost` to `host.docker.internal`, because pusher is running
+   inside a Docker container.
 2. Build the latest Docker images. Run `pnpm run docker:build` from the monorepo root. The e2e flow uses the docker
    images.
 3. This module contains services (or configurations) that are integrated together. Specifically:

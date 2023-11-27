@@ -59,7 +59,7 @@
   "signedApis": [
     {
       "name": "localhost",
-      "url": "http://${HOST_IP}:8090"
+      "url": "${SIGNED_API_URL}"
     }
   ],
   "ois": [
@@ -74,7 +74,7 @@
         "paths": {
           "/": { "get": { "parameters": [] } }
         },
-        "servers": [{ "url": "http://${HOST_IP}:9876" }],
+        "servers": [{ "url": "${DATA_PROVIDER_API}" }],
         "security": {}
       },
       "endpoints": [
