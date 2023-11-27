@@ -95,11 +95,11 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       return null;
     }
 
+    const { _type, _path, _times } = getReservedParameters(
+      oisEndpoint as Parameters<typeof getReservedParameters>[0], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
+      endpointParameters
+    );
     const goEncodedResponse = goSync(() => {
-      const { _type, _path, _times } = getReservedParameters(
-        oisEndpoint as Parameters<typeof getReservedParameters>[0], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
-        endpointParameters
-      );
       return extractAndEncodeResponse(goPostProcess.data.response, {
         _type,
         _path,
@@ -107,9 +107,13 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       });
     });
     if (!goEncodedResponse.success) {
-      logger.warn(`Failed to encode response`, {
+      logger.error(`Failed to encode response`, {
         templateId,
         operationTemplateId,
+        response: goPostProcess.data.response,
+        _type,
+        _path,
+        _times,
         errorMessage: goEncodedResponse.error.message,
       });
       return null;

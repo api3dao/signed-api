@@ -94,7 +94,7 @@
           },
           "postProcessingSpecificationV2": {
             "environment": "Node",
-            "value": "({ endpointParameters, response }) => { return { response: response[endpointParameters.name].value }; }",
+            "value": "({ endpointParameters, response }) => { return { response: response[endpointParameters.name] }; }",
             "timeoutMs": 5000
           }
         }
