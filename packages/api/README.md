@@ -13,6 +13,16 @@ the data in memory and provides endpoints to push and retrieve beacon data.
 3. `pnpm run dev` - To start the API server. The port number can be configured by `DEV_SERVER_PORT` environment
    variable.
 
+### Docker instructions
+
+You can use shorthands from package.json. To understand how the docker image is built, read the
+[Dockerfile](../../Dockerfile).
+
+```sh
+pnpm run docker:build
+pnpm run docker:run
+```
+
 ### Testing
 
 To run the tests:
@@ -211,6 +221,26 @@ The API provides the following endpoints:
   - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
     delayed endpoints (in case the data is too fresh and there is not an older alternative).
 
+## Versioning and release
+
+Signed API uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The
+package is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
+[api3/signed-api](https://hub.docker.com/r/api3/signed-api).
+
+To release a new version:
+
+1. `git checkout main` - Always version from `main` branch. Also, ensure that the working directory is clean (has no
+   uncommitted changes).
+2. `cd packages/api` - Change directory to the API package.
+3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
+   commit it.
+4. `pnpm run docker:build` - Build the docker image with tag `api3/signed-api:latest`.
+5. `docker tag api3/signed-api:latest api3/signed-api:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace the
+   `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
+6. `docker push api3/signed-api:latest && docker push api3/signed-api:<MAJOR.MINOR.PATCH>` - Push the image upstream.
+   Both the latest and the versioned tag should be published.
+7. `git push --follow-tags` - Push the tagged commit upstream.
+
 ## Deployment
 
 To deploy signed API on AWS you can use a CloudFormation template in the `deployment` folder. You need to specify the
@@ -245,16 +275,6 @@ As of now, the docker image is not published anywhere. You need to build it loca
 
 ```sh
 docker build --target api --tag api3/signed-api:latest ../../
-```
-
-### Development only docker instructions
-
-You can use shorthands from package.json. To understand how the docker image is built, read the
-[Dockerfile](../../Dockerfile).
-
-```sh
-pnpm run docker:build
-pnpm run docker:run
 ```
 
 ### Examples
