@@ -18,11 +18,9 @@ import { generateErrorResponse, isBatchUnique } from './utils';
 export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse> => {
   const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
   if (!goValidateSchema.success) {
-    return generateErrorResponse(
-      400,
-      'Invalid request, body must fit schema for batch of signed data',
-      goValidateSchema.error.message
-    );
+    return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
+      detail: goValidateSchema.error.message,
+    });
   }
 
   // Ensure that the batch of signed that comes from a whitelisted Airnode.
@@ -31,7 +29,10 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     allowedAirnodes !== '*' &&
     !goValidateSchema.data.every((signedData) => allowedAirnodes.includes(signedData.airnode))
   ) {
-    return generateErrorResponse(403, 'Unauthorized Airnode address');
+    const disallowedAirnodeAddress = goValidateSchema.data.find(
+      (signedData) => !allowedAirnodes.includes(signedData.airnode)
+    )!.airnode;
+    return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress: disallowedAirnodeAddress });
   }
 
   // Ensure there is at least one signed data to push
@@ -46,30 +47,31 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     // The on-chain contract prevents time drift by making sure the timestamp is at most 1 hour in the future. System
     // time drift is less common, but we mirror the contract implementation.
     if (Number.parseInt(signedData.timestamp, 10) > Math.floor(Date.now() / 1000) + 60 * 60) {
-      return generateErrorResponse(400, 'Request timestamp is too far in the future', undefined, signedData);
+      return generateErrorResponse(400, 'Request timestamp is too far in the future', { signedData });
     }
 
     const goRecoverSigner = goSync(() => recoverSignerAddress(signedData));
     if (!goRecoverSigner.success) {
-      return generateErrorResponse(400, 'Unable to recover signer address', goRecoverSigner.error.message, signedData);
+      return generateErrorResponse(400, 'Unable to recover signer address', {
+        detail: goRecoverSigner.error.message,
+        signedData,
+      });
     }
 
     if (signedData.airnode !== goRecoverSigner.data) {
-      return generateErrorResponse(400, 'Signature is invalid', undefined, signedData);
+      return generateErrorResponse(400, 'Signature is invalid', { signedData });
     }
 
     const goDeriveBeaconId = goSync(() => deriveBeaconId(signedData.airnode, signedData.templateId));
     if (!goDeriveBeaconId.success) {
-      return generateErrorResponse(
-        400,
-        'Unable to derive beaconId by given airnode and templateId',
-        goDeriveBeaconId.error.message,
-        signedData
-      );
+      return generateErrorResponse(400, 'Unable to derive beaconId by given airnode and templateId', {
+        detail: goDeriveBeaconId.error.message,
+        signedData,
+      });
     }
 
     if (signedData.beaconId !== goDeriveBeaconId.data) {
-      return generateErrorResponse(400, 'beaconId is invalid', undefined, signedData);
+      return generateErrorResponse(400, 'beaconId is invalid', { signedData });
     }
 
     return null;
@@ -96,7 +98,9 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Write batch of validated data to the database
   const goBatchWriteDb = await go(async () => putAll(newSignedData));
   if (!goBatchWriteDb.success) {
-    return generateErrorResponse(500, 'Unable to send batch of signed data to database', goBatchWriteDb.error.message);
+    return generateErrorResponse(500, 'Unable to send batch of signed data to database', {
+      detail: goBatchWriteDb.error.message,
+    });
   }
 
   // Prune the cache with the data that is too old (no endpoint will ever return it)
@@ -104,7 +108,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
   const goPruneCache = await go(async () => prune(newSignedData, maxIgnoreAfterTimestamp));
   if (!goPruneCache.success) {
-    return generateErrorResponse(500, 'Unable to remove outdated cache data', goPruneCache.error.message);
+    return generateErrorResponse(500, 'Unable to remove outdated cache data', { detail: goPruneCache.error.message });
   }
 
   return {
@@ -130,13 +134,13 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
 
   const { allowedAirnodes } = getConfig();
   if (allowedAirnodes !== '*' && !allowedAirnodes.includes(airnodeAddress)) {
-    return generateErrorResponse(403, 'Unauthorized Airnode address');
+    return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
   }
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
   const goReadDb = await go(async () => getAll(airnodeAddress, ignoreAfterTimestamp));
   if (!goReadDb.success) {
-    return generateErrorResponse(500, 'Unable to get signed data from database', goReadDb.error.message);
+    return generateErrorResponse(500, 'Unable to get signed data from database', { detail: goReadDb.error.message });
   }
 
   const data = goReadDb.data.reduce((acc, signedData) => {
@@ -156,7 +160,7 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
 export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   const goAirnodeAddresses = await go(async () => getAllAirnodeAddresses());
   if (!goAirnodeAddresses.success) {
-    return generateErrorResponse(500, 'Unable to scan database', goAirnodeAddresses.error.message);
+    return generateErrorResponse(500, 'Unable to scan database', { detail: goAirnodeAddresses.error.message });
   }
   const airnodeAddresses = goAirnodeAddresses.data;
 

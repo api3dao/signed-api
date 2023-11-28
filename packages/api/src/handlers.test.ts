@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { omit } from 'lodash';
 
 import { getMockedConfig } from '../test/fixtures';
@@ -27,9 +28,11 @@ describe(batchInsertData.name, () => {
     expect(result).toStrictEqual({
       body: JSON.stringify({
         message: 'Unable to recover signer address',
-        detail:
-          'signature missing v and recoveryParam (argument="signature", value="0xInvalid", code=INVALID_ARGUMENT, version=bytes/5.7.0)',
-        extra: invalidData,
+        context: {
+          detail:
+            'signature missing v and recoveryParam (argument="signature", value="0xInvalid", code=INVALID_ARGUMENT, version=bytes/5.7.0)',
+          signedData: invalidData,
+        },
       }),
       headers: {
         'access-control-allow-methods': '*',
@@ -45,12 +48,18 @@ describe(batchInsertData.name, () => {
     const config = getMockedConfig();
     config.allowedAirnodes = [];
     jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
-    const batchData = [await createSignedData()];
+    const airnodeWallet = ethers.Wallet.fromMnemonic(
+      'wear lawsuit design cry express certain knock shrug credit wealth update walk'
+    );
+    const batchData = [await createSignedData({ airnodeWallet })];
 
     const result = await batchInsertData(batchData);
 
     expect(result).toStrictEqual({
-      body: JSON.stringify({ message: 'Unauthorized Airnode address' }),
+      body: JSON.stringify({
+        message: 'Unauthorized Airnode address',
+        context: { airnodeAddress: '0x05E4B3cb2A6875bdD4CCb867B6aA833934EDDCBf' },
+      }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
@@ -103,7 +112,10 @@ describe(batchInsertData.name, () => {
     const result = await batchInsertData(batchData);
 
     expect(result).toStrictEqual({
-      body: JSON.stringify({ message: 'Request timestamp is too far in the future', extra: batchData[0] }),
+      body: JSON.stringify({
+        message: 'Request timestamp is too far in the future',
+        context: { signedData: batchData[0] },
+      }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',

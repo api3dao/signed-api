@@ -4,7 +4,7 @@ import { fetchAndCacheConfig } from './config';
 import { logger } from './logger';
 import { DEFAULT_PORT, startServer } from './server';
 
-const portSchema = z.number().int().positive();
+const portSchema = z.coerce.number().int().positive();
 
 const startDevServer = async () => {
   const config = await fetchAndCacheConfig();
