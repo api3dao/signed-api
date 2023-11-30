@@ -47,6 +47,16 @@ pnpm run test schema
 LOGGER_ENABLED=true pnpm run test
 ```
 
+### Docker instructions
+
+You can use shorthands from package.json. To understand how the docker image is built, read the
+[Dockerfile](../../Dockerfile).
+
+```sh
+pnpm run docker:build
+pnpm run docker:run
+```
+
 ## Configuration
 
 Pusher can be configured via a combination of [environment variables](#environment-variables) and
@@ -333,21 +343,41 @@ An identifier of the deployment stage. This is used to distinguish between diffe
 `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include lowercase
 alphanumeric characters and hyphens.
 
+## Versioning and release
+
+Pusher uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The package
+is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
+[api3/pusher](https://hub.docker.com/r/api3/pusher).
+
+To release a new version:
+
+1. `git checkout main` - Always version from `main` branch. Also, ensure that the working directory is clean (has no
+   uncommitted changes).
+2. `cd packages/pusher` - Navigate to the pusher package.
+3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
+   commit it.
+4. `pnpm run docker:build` - Build the docker image with tag `api3/pusher:latest`.
+5. `docker tag api3/pusher:latest api3/pusher:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace the
+   `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
+6. `docker push api3/pusher:latest && docker push api3/pusher:<MAJOR.MINOR.PATCH>` - Push the image upstream. Both the
+   latest and the versioned tag should be published.
+7. `git push --follow-tags` - Push the tagged commit upstream.
+
 ## Deployment
 
 <!-- markdown-link-check-disable -->
 
-To deploy Pusher on AWS you can use the Cloud Formation template created by the API integrations team. The template can
+To deploy pusher on AWS you can use the Cloud Formation template created by the API integrations team. The template can
 be found in the private api-integrations repository
 [here](https://github.com/api3dao/api-integrations/blob/main/data/cloudformation-template.json).
 
 <!-- markdown-link-check-enable -->
 
-To deploy on premise you can use the Docker instructions below.
+To deploy on premise you can use the Docker image by reading the instructions below.
 
-## Docker
+### Run pusher with Docker
 
-Pusher is also dockerized. To run the dockerized pusher you need to:
+To run the pusher docker image you need to:
 
 1. Mount config folder to `/app/config`. The folder should contain the `pusher.json` and `secrets.env` files.
 2. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
@@ -364,20 +394,4 @@ For example:
 ```sh
 # Assuming the current folder contains the "config" folder and ".env" file.
 docker run -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/pusher:latest
-```
-
-As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
-
-```sh
-docker build --target pusher --tag api3/pusher:latest ../../
-```
-
-### Development only docker instructions
-
-You can use shorthands from package.json. To understand how the docker image is built, read the
-[Dockerfile](../../Dockerfile).
-
-```sh
-pnpm run docker:build
-pnpm run docker:run
 ```
