@@ -15,8 +15,11 @@ export const isIgnored = (signedData: SignedData, ignoreAfterTimestamp: number) 
 export const generateErrorResponse = (
   statusCode: number,
   message: string,
-  detail?: string,
-  extra?: unknown
+  context?: Record<string, unknown>
 ): ApiResponse => {
-  return { statusCode, headers: createResponseHeaders(), body: JSON.stringify({ message, detail, extra }) };
+  return {
+    statusCode,
+    headers: createResponseHeaders(),
+    body: JSON.stringify(context ? { message, context } : { message }),
+  };
 };
