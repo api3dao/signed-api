@@ -17,7 +17,7 @@ export interface SignedApiNameUpdateDelayGroup {
 }
 
 export const initiateUpdatingSignedApi = () => {
-  logger.debug('Initiating updating signed API');
+  logger.debug('Initiating updating signed API.');
   const { config } = getState();
 
   const signedApiUpdateDelayTemplateIdsMap =

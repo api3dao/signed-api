@@ -20,12 +20,12 @@ export const callApi = async (
 ) => {
   return go(async () => {
     const logContext = { endpointName: endpoint.name, oisTitle: ois.title };
-    logger.debug('Preprocessing API call payload', logContext);
+    logger.debug('Preprocessing API call payload.', logContext);
     const { endpointParameters: processedEndpointParameters } = await preProcessEndpointParameters(
       endpoint,
       endpointParameters
     );
-    logger.debug('Performing API call', { ...logContext, processedEndpointParameters });
+    logger.debug('Performing API call.', { ...logContext, processedEndpointParameters });
 
     const response = await buildAndExecuteRequest(
       {
@@ -46,7 +46,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   const {
     config: { endpoints, templates, ois: oises, apiCredentials },
   } = getState();
-  logger.debug('Making template requests', signedApiUpdate);
+  logger.debug('Making template requests.', signedApiUpdate);
   const { templateIds } = signedApiUpdate;
 
   // Because each template has the same operation, just take first one as operational template. See the validation logic
@@ -66,7 +66,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   const goCallApi = await callApi(ois, operationOisEndpoint, endpointParameters, apiCredentials);
 
   if (!goCallApi.success) {
-    logger.warn(`Failed to make API call`, {
+    logger.warn(`Failed to make API call.`, {
       ...operationEndpoint,
       operationTemplateId,
       errorMessage: goCallApi.error.message,
@@ -87,7 +87,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       };
     }, {});
 
-    logger.debug('Processing successful API call', { templateId, operationTemplateId });
+    logger.debug('Processing successful API call.', { templateId, operationTemplateId });
     const goPostProcess = await go(async () => postProcessResponse(apiCallResponse, oisEndpoint, endpointParameters));
     if (!goPostProcess.success) {
       const message = `Failed to post process successful API call`;
@@ -107,7 +107,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       });
     });
     if (!goEncodedResponse.success) {
-      logger.error(`Failed to encode response`, {
+      logger.error(`Failed to encode response.`, {
         templateId,
         operationTemplateId,
         response: goPostProcess.data.response,

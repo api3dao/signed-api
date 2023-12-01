@@ -86,7 +86,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     const requestTimestamp = Number.parseInt(signedData.timestamp, 10);
     const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId, requestTimestamp));
     if (goReadDb.data && requestTimestamp === Number.parseInt(goReadDb.data.timestamp, 10)) {
-      logger.debug('Not storing signed data because signed data with the same timestamp already exists', {
+      logger.debug('Not storing signed data because signed data with the same timestamp already exists.', {
         signedData,
       });
       continue;

@@ -12,7 +12,7 @@ export type SignedResponse = [TemplateId, SignedData];
 export type TemplateResponse = [TemplateId, ExtractedAndEncodedResponse];
 
 export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
-  logger.debug('Signing template responses', { templateResponses });
+  logger.debug('Signing template responses.', { templateResponses });
 
   const signPromises = templateResponses.map(async ([templateId, response]) => {
     const { encodedValue } = response;

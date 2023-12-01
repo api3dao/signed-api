@@ -4,7 +4,7 @@ import { DEFAULT_PORT, startServer } from './server';
 
 const main = async () => {
   const config = await fetchAndCacheConfig();
-  logger.info('Using configuration', config);
+  logger.info('Using configuration.', config);
 
   startServer(config, DEFAULT_PORT);
 };
