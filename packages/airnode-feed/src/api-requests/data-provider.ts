@@ -18,28 +18,29 @@ export const callApi = async (
   endpointParameters: EndpointParameters,
   apiCredentials: node.ApiCredentials[]
 ) => {
-  return go(async () => {
-    const logContext = { endpointName: endpoint.name, oisTitle: ois.title };
-    logger.debug('Preprocessing API call payload.', logContext);
-    const { endpointParameters: processedEndpointParameters } = await preProcessEndpointParameters(
-      endpoint,
-      endpointParameters
-    );
-    logger.debug('Performing API call.', { ...logContext, processedEndpointParameters });
+  return go(async () =>
+    logger.runWithContext({ endpointName: endpoint.name, oisTitle: ois.title }, async () => {
+      logger.debug('Preprocessing API call payload.');
+      const { endpointParameters: processedEndpointParameters } = await preProcessEndpointParameters(
+        endpoint,
+        endpointParameters
+      );
+      logger.debug('Performing API call.', { processedEndpointParameters });
 
-    const response = await buildAndExecuteRequest(
-      {
-        endpointName: endpoint.name,
-        ois: ois as BuildRequestOptions['ois'], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
-        parameters: processedEndpointParameters,
-        metadata: null,
-        apiCredentials,
-      },
-      { timeout: API_CALL_TIMEOUT }
-    );
+      const response = await buildAndExecuteRequest(
+        {
+          endpointName: endpoint.name,
+          ois: ois as BuildRequestOptions['ois'], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
+          parameters: processedEndpointParameters,
+          metadata: null,
+          apiCredentials,
+        },
+        { timeout: API_CALL_TIMEOUT }
+      );
 
-    return response.data;
-  });
+      return response.data;
+    })
+  );
 };
 
 export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponse[]> => {
@@ -90,8 +91,11 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
     logger.debug('Processing successful API call.', { templateId, operationTemplateId });
     const goPostProcess = await go(async () => postProcessResponse(apiCallResponse, oisEndpoint, endpointParameters));
     if (!goPostProcess.success) {
-      const message = `Failed to post process successful API call`;
-      logger.warn(message, { templateId, operationTemplateId, errorMessage: goPostProcess.error.message });
+      logger.warn(`Failed to post process successful API call`, {
+        templateId,
+        operationTemplateId,
+        errorMessage: goPostProcess.error.message,
+      });
       return null;
     }
 

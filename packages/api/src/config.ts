@@ -45,7 +45,7 @@ const fetchConfigFromS3 = async (): Promise<any> => {
     Key: env.AWS_S3_BUCKET_PATH,
   };
 
-  logger.info(`Fetching config from AWS S3 region:${region}...`);
+  logger.info(`Fetching config from AWS S3 region.`, { region });
   const res = await go(async () => s3.getObject(params), { retries: 1 });
   if (!res.success) {
     logger.error('Error fetching config from AWS S3.', res.error);

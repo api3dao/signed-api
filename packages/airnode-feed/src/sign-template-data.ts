@@ -22,9 +22,9 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
       signWithTemplateId(getState().airnodeWallet, templateId, timestamp, encodedValue)
     );
     if (!goSignWithTemplateId.success) {
-      const message = `Failed to sign response. Error: "${goSignWithTemplateId.error.message}"`;
-      logger.warn(message, {
+      logger.warn(`Failed to sign response.`, {
         templateId,
+        cause: goSignWithTemplateId.error.message,
       });
       return null;
     }
