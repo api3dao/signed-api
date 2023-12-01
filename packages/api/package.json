@@ -29,7 +29,7 @@
   "dependencies": {
     "@api3/commons": "^0.5.0",
     "@api3/promise-utils": "^0.4.0",
-    "@aws-sdk/client-s3": "^3.430.0",
+    "@aws-sdk/client-s3": "^3.456.0",
     "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
