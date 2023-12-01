@@ -38,7 +38,7 @@
               },
               {
                 "Name": "LOG_LEVEL",
-                "Value": "debug"
+                "Value": "warn"
               }
             ],
             "EntryPoint": [
