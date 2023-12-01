@@ -22,8 +22,8 @@
       "Type": "AWS::ECS::TaskDefinition",
       "Properties": {
         "Family": "signed-api-task",
-        "Cpu": "1024",
-        "Memory": "2048",
+        "Cpu": "2048",
+        "Memory": "4096",
         "NetworkMode": "awsvpc",
         "RequiresCompatibilities": ["FARGATE"],
         "ExecutionRoleArn": { "Ref": "ECSTaskRole" },

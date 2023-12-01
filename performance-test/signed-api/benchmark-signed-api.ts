@@ -6,7 +6,7 @@ async function main() {
     // eslint-disable-next-line functional/no-try-statements
     try {
       await fetch(
-        'http://signed-api-elb-1866331738.us-east-2.elb.amazonaws.com/0s-delay/0xaca247c17580BEEc0DC2Fd229FfdbC3718fF8232'
+        'http://signed-api-elb-914814978.us-east-2.elb.amazonaws.com/0s-delay/0xaca247c17580BEEc0DC2Fd229FfdbC3718fF8232'
       ).then((res) => res.json() as any);
       successCount++;
     } catch {
