@@ -7,6 +7,10 @@ import { loadRawConfig } from '../validation/config';
 
 import { heartbeatLogger } from './logger';
 
+// Intentionally making the message as constant so that it is not accidentally changed. API integrations team (and maybe
+// other teams, such as monitoring) will listen for this exact message to parse the heartbeat.
+const HEARTBEAT_LOG_MESSAGE = 'Sending heartbeat log.';
+
 export const initiateHeartbeat = () => {
   logger.debug('Initiating heartbeat loop.');
   setInterval(async () => {
@@ -67,5 +71,5 @@ export const logHeartbeat = async () => {
 
   // The logs are sent to API3 for validation (that the data provider deployed deployed the correct configuration) and
   // monitoring purposes (whether the instance is running).
-  heartbeatLogger.info('Sending heartbeat log.', heartbeatPayload);
+  heartbeatLogger.info(HEARTBEAT_LOG_MESSAGE, heartbeatPayload);
 };
