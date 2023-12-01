@@ -9,7 +9,7 @@ build
 dist
 node_modules
 coverage
-pusher.json
+airnode-feed.json
 secrets.env
 signed-api.json
 .DS_Store

@@ -32,7 +32,7 @@ describe(logHeartbeat.name, () => {
       signature:
         '0xd0f84a62705585e03c14ebfda2688a4e4c733aa42a3d13f98d4fe390d482fd1c3e698e91939df28b9565a9de82f3495b053824ffe61239fdd4fa0e4a970523a81b',
     };
-    const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/pusher.example.json'), 'utf8'));
+    const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
     jest.spyOn(configModule, 'loadRawConfig').mockReturnValue(rawConfig);
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
@@ -65,7 +65,7 @@ describe(verifyHeartbeatLog.name, () => {
     };
     // The config hash is taken from config with all spaces removed.
     const rawConfig = JSON.stringify(
-      JSON.parse(readFileSync(join(__dirname, '../../config/pusher.example.json'), 'utf8'))
+      JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'))
     );
 
     expect(() => verifyHeartbeatLog(jsonLog.context, rawConfig)).not.toThrow();

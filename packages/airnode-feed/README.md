@@ -1,28 +1,28 @@
-# pusher
+# airnode-feed
 
 > A service for storing and accessing signed data.
 
-Pusher is a Node.js service, dockerized and deployable on any cloud provider or hostable on premise. It is continuously
-running two core loops:
+Airnode feed is a Node.js service, dockerized and deployable on any cloud provider or hostable on premise. It is
+continuously running two core loops:
 
-1. `Fetch beacon data` - Each `triggers.signedApiUpdates` entry defines a group of templates. Pusher makes a template
-   request to the API specified in the OIS to get the template data. Pusher's wallet is used to sign the responses and
-   these are then saved to in-memory storage.
+1. `Fetch beacon data` - Each `triggers.signedApiUpdates` entry defines a group of templates. Airnode feed makes a
+   template request to the API specified in the OIS to get the template data. Airnode feed's wallet is used to sign the
+   responses and these are then saved to in-memory storage.
 2. `Push signed beacon data to signed API` - For each `triggers.signedApiUpdates`, periodically checks the in-memory
    storage and pushes the signed data to the configured API.
 
 ## Local development
 
-The pusher needs a configuration in order to run. The `config` folder contains example configuration which uses:
+The Airnode feed needs a configuration in order to run. The `config` folder contains example configuration which uses:
 
 - [Nodary](https://nodary.io/) as the data provider, from which the data is fetched.
 - Signed API running on `http://localhost:8090` where the data is pushed.
 
-To start the the pusher in dev mode run the following:
+To start the the Airnode feed in dev mode run the following:
 
-1. `cp config/pusher.example.json config/pusher.json` - To copy the pusher configuration from the example. Note, the
-   `pusher.json` file is ignored by git. If you are using Docker Desktop, you need to change the URL from localhost to
-   `host.docker.internal`. For example:
+1. `cp config/airnode-feed.example.json config/airnode-feed.json` - To copy the Airnode feed configuration from the
+   example. Note, the `airnode-feed.json` file is ignored by git. If you are using Docker Desktop, you need to change
+   the URL from localhost to `host.docker.internal`. For example:
 
    ```jsonc
    "url": "http://host.docker.internal:8090"
@@ -32,8 +32,8 @@ To start the the pusher in dev mode run the following:
    is also ignored by git.
 3. Set the `NODARY_API_KEY` inside the secrets file. Ask someone from development team for the key.
 4. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
-5. `pnpm run dev` - To run the pusher. This step assumes already running signed API as specified in the `pusher.json`
-   configuration.
+5. `pnpm run dev` - To run the Airnode feed. This step assumes already running signed API as specified in the
+   `airnode-feed.json` configuration.
 
 ### Testing
 
@@ -59,7 +59,7 @@ pnpm run docker:run
 
 ## Configuration
 
-Pusher can be configured via a combination of [environment variables](#environment-variables) and
+Airnode feed can be configured via a combination of [environment variables](#environment-variables) and
 [configuration files](#configuration-files).
 
 ### Environment variables
@@ -131,9 +131,9 @@ Default: `info`.
 
 ### Configuration files
 
-Pusher needs two configuration files, `pusher.json` and `secrets.env`. All expressions of a form `${SECRET_NAME}` are
-referring to values from secrets and are interpolated inside the `pusher.json` at runtime. You are advised to put
-sensitive information inside secrets.
+Airnode feed needs two configuration files, `airnode-feed.json` and `secrets.env`. All expressions of a form
+`${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `airnode-feed.json` at runtime.
+You are advised to put sensitive information inside secrets.
 
 You can also refer to the [example configuration](./config).
 
@@ -252,14 +252,14 @@ For example:
 
 ##### `triggers.signedApiUpdates[n]`
 
-Configuration for one of the signed API update triggers. Pusher periodically pushes the data to the signed API. The
-period is `2.5` seconds.
+Configuration for one of the signed API update triggers. Airnode feed periodically pushes the data to the signed API.
+The period is `2.5` seconds.
 
-Pusher only makes a single template request independently of the number of template IDs specified. This is to reduce the
-number of data provider calls. This implies that all of the templates in the trigger must use the same endpoint and
-parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html) to remove the
-parameters before making the request (using pre-processing) and later get the corresponding template value based on the
-endpoint parameters (using-processing). Refer to the [example configuration](./config) for details.
+Airnode feed only makes a single template request independently of the number of template IDs specified. This is to
+reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same
+endpoint and parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html)
+to remove the parameters before making the request (using pre-processing) and later get the corresponding template value
+based on the endpoint parameters (using-processing). Refer to the [example configuration](./config) for details.
 
 ###### `signedApiName`
 
@@ -321,11 +321,12 @@ Refer to Airnode's
 
 #### `nodeSettings`
 
-Contains general deployment parameters of the pusher.
+Contains general deployment parameters of the Airnode feed.
 
 ##### `nodeVersion`
 
-The version of the pusher. The version specified in the config must match the version of the pusher at deployment time.
+The version of the Airnode feed. The version specified in the config must match the version of the Airnode feed at
+deployment time.
 
 ##### `airnodeWalletMnemonic`
 
@@ -339,47 +340,47 @@ secrets. For example:
 
 ##### `stage`
 
-An identifier of the deployment stage. This is used to distinguish between different deployments of pusher, for example
-`dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include lowercase
-alphanumeric characters and hyphens.
+An identifier of the deployment stage. This is used to distinguish between different deployments of Airnode feed, for
+example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
+lowercase alphanumeric characters and hyphens.
 
 ## Versioning and release
 
-Pusher uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The package
-is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
-[api3/pusher](https://hub.docker.com/r/api3/pusher).
+Airnode feed uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The
+package is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
+[api3/airnode-feed](https://hub.docker.com/r/api3/airnode-feed).
 
 To release a new version:
 
 1. `git checkout main` - Always version from `main` branch. Also, ensure that the working directory is clean (has no
    uncommitted changes).
-2. `cd packages/pusher` - Navigate to the pusher package.
+2. `cd packages/airnode-feed` - Navigate to the Airnode feed package.
 3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
    commit it.
-4. `pnpm run docker:build` - Build the docker image with tag `api3/pusher:latest`.
-5. `docker tag api3/pusher:latest api3/pusher:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace the
-   `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
-6. `docker push api3/pusher:latest && docker push api3/pusher:<MAJOR.MINOR.PATCH>` - Push the image upstream. Both the
-   latest and the versioned tag should be published.
+4. `pnpm run docker:build` - Build the docker image with tag `api3/airnode-feed:latest`.
+5. `docker tag api3/airnode-feed:latest api3/airnode-feed:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace
+   the `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
+6. `docker push api3/airnode-feed:latest && docker push api3/airnode-feed:<MAJOR.MINOR.PATCH>` - Push the image
+   upstream. Both the latest and the versioned tag should be published.
 7. `git push --follow-tags` - Push the tagged commit upstream.
 
 ## Deployment
 
 <!-- markdown-link-check-disable -->
 
-To deploy pusher on AWS you can use the Cloud Formation template created by the API integrations team. The template can
-be found in the private api-integrations repository
+To deploy Airnode feed on AWS you can use the Cloud Formation template created by the API integrations team. The
+template can be found in the private api-integrations repository
 [here](https://github.com/api3dao/api-integrations/blob/main/data/cloudformation-template.json).
 
 <!-- markdown-link-check-enable -->
 
 To deploy on premise you can use the Docker image by reading the instructions below.
 
-### Run pusher with Docker
+### Run Airnode feed with Docker
 
-To run the pusher docker image you need to:
+To run the Airnode feed docker image you need to:
 
-1. Mount config folder to `/app/config`. The folder should contain the `pusher.json` and `secrets.env` files.
+1. Mount config folder to `/app/config`. The folder should contain the `airnode-feed.json` and `secrets.env` files.
 2. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
 3. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
@@ -393,5 +394,5 @@ For example:
 
 ```sh
 # Assuming the current folder contains the "config" folder and ".env" file.
-docker run -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/pusher:latest
+docker run -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/airnode-feed:latest
 ```

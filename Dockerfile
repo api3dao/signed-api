@@ -8,9 +8,9 @@
 # Note, that Dockerfile assumes the context (path) is the root of the monorepo in order to generate the common "build"
 # stage.
 #
-# Debugging tips (assuming CWD = ./packages/pusher):
-#   1. Build: docker build --target pusher --tag api3/pusher:latest ../../
-#   2. Inspect: docker run -it --init -v $(pwd)/config:/app/config --env-file .env --entrypoint /bin/sh api3/pusher:latest
+# Debugging tips (assuming CWD = ./packages/airnode-feed):
+#   1. Build: docker build --target airnode-feed --tag api3/airnode-feed:latest ../../
+#   2. Inspect: docker run -it --init -v $(pwd)/config:/app/config --env-file .env --entrypoint /bin/sh api3/airnode-feed:latest
 # The above commands will allow you to inspect the output of the build stage. You can change the target to debug other
 # stages and verify that the image is correct.
 
@@ -32,23 +32,23 @@ RUN pnpm install --recursive --prefer-offline
 # Build all packages in the monorepo.
 RUN pnpm run --recursive build
 
-# Create a separate stage for pusher package. We create a temporary stage for deployment and then copy the result into
-# the final stage. Only the production dependencies and package implementation is part of this last stage.
-LABEL application="deployed-pusher" description="Deployed Pusher container"
+# Create a separate stage for Airnode feed package. We create a temporary stage for deployment and then copy the result
+# into the final stage. Only the production dependencies and package implementation is part of this last stage.
+LABEL application="deployed-airnode-feed" description="Deployed Airnode feed container"
 
-FROM build AS deployed-pusher
+FROM build AS deployed-airnode-feed
 
-RUN pnpm --filter=pusher --prod deploy deployed-pusher
-FROM node:18-alpine as pusher
+RUN pnpm --filter=airnode-feed --prod deploy deployed-airnode-feed
+FROM node:18-alpine as airnode-feed
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN addgroup -S deployed-pusher && \
-    adduser -h /app -s /bin/false -S -D -H -G deployed-pusher deployed-pusher && \
-    chown -R deployed-pusher /app
-USER deployed-pusher
+RUN addgroup -S deployed-airnode-feed && \
+    adduser -h /app -s /bin/false -S -D -H -G deployed-airnode-feed deployed-airnode-feed && \
+    chown -R deployed-airnode-feed /app
+USER deployed-airnode-feed
 
-COPY --chown=deployed-pusher:deployed-pusher --from=deployed-pusher /app/deployed-pusher .
+COPY --chown=deployed-airnode-feed:deployed-airnode-feed --from=deployed-airnode-feed /app/deployed-airnode-feed .
 ENTRYPOINT ["node", "dist/src/index.js"]
 
 # Create a separate stage for api package. We create a temporary stage for deployment and then copy the result into
