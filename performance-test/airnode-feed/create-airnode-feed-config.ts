@@ -27,7 +27,7 @@ const configTemplate = {
   ois: [
     {
       oisFormat: '2.3.0',
-      title: 'Nodary pool',
+      title: 'Nodary pool 1',
       version: '0.2.0',
       apiSpecifications: {
         components: {
@@ -36,7 +36,61 @@ const configTemplate = {
         paths: {
           // NOTE: Will be populated by the script.
         } as any,
-        servers: [{ url: 'https://pool.nodary.io' }],
+        servers: [{ url: 'https://cloudflare-nodary-layer1.emanuel-tesar.workers.dev/' }],
+        security: {},
+      },
+      endpoints: [
+        // NOTE: Will be populated by the script.
+      ] as any[],
+    },
+    {
+      oisFormat: '2.3.0',
+      title: 'Nodary pool 2',
+      version: '0.2.0',
+      apiSpecifications: {
+        components: {
+          securitySchemes: {},
+        },
+        paths: {
+          // NOTE: Will be populated by the script.
+        } as any,
+        servers: [{ url: 'https://cloudflare-nodary-layer2.emanuel-tesar.workers.dev/' }],
+        security: {},
+      },
+      endpoints: [
+        // NOTE: Will be populated by the script.
+      ] as any[],
+    },
+    {
+      oisFormat: '2.3.0',
+      title: 'Nodary pool 3',
+      version: '0.2.0',
+      apiSpecifications: {
+        components: {
+          securitySchemes: {},
+        },
+        paths: {
+          // NOTE: Will be populated by the script.
+        } as any,
+        servers: [{ url: 'https://cloudflare-nodary-layer3.emanuel-tesar.workers.dev/' }],
+        security: {},
+      },
+      endpoints: [
+        // NOTE: Will be populated by the script.
+      ] as any[],
+    },
+    {
+      oisFormat: '2.3.0',
+      title: 'Nodary pool 4',
+      version: '0.2.0',
+      apiSpecifications: {
+        components: {
+          securitySchemes: {},
+        },
+        paths: {
+          // NOTE: Will be populated by the script.
+        } as any,
+        servers: [{ url: 'https://cloudflare-nodary-layer4.emanuel-tesar.workers.dev/' }],
         security: {},
       },
       endpoints: [
@@ -76,7 +130,8 @@ async function main() {
   const availableAirnodes: string[] = availableAirnodesResponse['available-airnodes'];
 
   console.info(`Creating configuration for ${availableAirnodesResponse.count} Airnode(s).`);
-  for (const airnode of availableAirnodes) {
+  for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
+    const airnode = availableAirnode;
     console.info(`Creating configuration for ${airnode}.`);
 
     // Create OIS endpoint and API specification path.
@@ -85,14 +140,17 @@ async function main() {
       name: airnode,
       operation: { method: 'get', path: `/${airnode}` },
     };
-    configTemplate.ois[0]!.endpoints.push(endpoint);
-    configTemplate.ois[0]!.apiSpecifications.paths[`/${airnode}`] = { get: { parameters: [] } };
+    for (const ois of configTemplate.ois) {
+      ois.endpoints.push(endpoint);
+      ois.apiSpecifications.paths[`/${airnode}`] = { get: { parameters: [] } };
+    }
 
     // Create endpoint.
-    const endpointId = deriveEndpointId(configTemplate.ois[0]!.title, endpoint.name);
+    const oisIndex = airnodeIndex % configTemplate.ois.length;
+    const endpointId = deriveEndpointId(configTemplate.ois[oisIndex]!.title, endpoint.name);
     configTemplate.endpoints[endpointId] = {
       endpointName: endpoint.name,
-      oisTitle: configTemplate.ois[0]!.title,
+      oisTitle: configTemplate.ois[oisIndex]!.title,
     };
 
     // Create template(s).
@@ -119,7 +177,7 @@ async function main() {
     configTemplate.triggers.signedApiUpdates.push({
       signedApiName: 'perf-test-signed-api',
       templateIds,
-      fetchInterval: 60, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
+      fetchInterval: 30, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
       updateDelay: 0,
     });
   }
