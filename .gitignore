@@ -18,3 +18,5 @@ signed-api.json
 !packages/e2e/**/airnode-feed.json
 !packages/e2e/**/.env
 !packages/e2e/**/signed-api.json
+
+!performance-test/**
