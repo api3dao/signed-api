@@ -17,5 +17,3 @@ docker run --publish 8090:80 -it --init --volume $(pwd)/signed-api:/app/config -
 ```sh
 docker run --init --volume $(pwd)/airnode-feed:/app/config --network host --env-file ./airnode-feed/.env --rm api3/airnode-feed:latest
 ```
-
-<!-- TODO: Change URL for real test -->

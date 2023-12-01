@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://host.docker.internal:8090',
+      url: 'http://signed-api-elb-1367111006.us-east-2.elb.amazonaws.com',
     },
   ],
   ois: [
