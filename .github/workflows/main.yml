@@ -63,14 +63,14 @@ jobs:
         run: pnpm run build
       - name: Build Docker images
         run: pnpm run docker:build
-      - name: Copy pusher secrets
-        run: cd packages/e2e/src && cp pusher/secrets.example.env pusher/secrets.env
+      - name: Copy Airnode feed secrets
+        run: cd packages/e2e/src && cp airnode-feed/secrets.example.env airnode-feed/secrets.env
       - name: Start services
         # Start the e2e services in the background and wait a small amount of time for them to start.
         run: |
           pnpm run --recursive --filter e2e start:data-provider-api &
           pnpm run --recursive --filter e2e start:ci:signed-api &
-          pnpm run --recursive --filter e2e start:ci:pusher &
+          pnpm run --recursive --filter e2e start:ci:airnode-feed &
           sleep 5
       - name: Run e2e tests
         run: pnpm run --recursive --filter e2e test:e2e

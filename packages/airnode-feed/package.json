@@ -1,5 +1,5 @@
 {
-  "name": "pusher",
+  "name": "airnode-feed",
   "version": "0.1.0",
   "engines": {
     "node": "^18.18.2",
@@ -9,8 +9,8 @@
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf coverage dist",
     "dev": "nodemon --ext ts,js,json,env  --exec \"pnpm ts-node src/index.ts\"",
-    "docker:build": "docker build --target pusher --tag api3/pusher:latest ../../",
-    "docker:run": "docker run -it --init --volume $(pwd)/config:/app/config --network host --env-file .env --rm api3/pusher:latest",
+    "docker:build": "docker build --target airnode-feed --tag api3/airnode-feed:latest ../../",
+    "docker:run": "docker run -it --init --volume $(pwd)/config:/app/config --network host --env-file .env --rm api3/airnode-feed:latest",
     "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",

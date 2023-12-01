@@ -80,7 +80,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   if (firstError) return firstError;
 
   const newSignedData: SignedData[] = [];
-  // Because pushers do not keep track of the last timestamp they pushed, they may push the same data twice, which
+  // Because Airnode feed does not keep track of the last timestamp they pushed, it may push the same data twice, which
   // is acceptable, but we only want to store one data for each timestamp.
   for (const signedData of batchSignedData) {
     const requestTimestamp = Number.parseInt(signedData.timestamp, 10);

@@ -10,7 +10,7 @@ import { type Config, configSchema, signedApisSchema } from './schema';
 import { interpolateSecrets } from './utils';
 
 test('validates example config', async () => {
-  const exampleConfig = JSON.parse(readFileSync(join(__dirname, '../../config/pusher.example.json'), 'utf8'));
+  const exampleConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
 
   // The mnemonic is not interpolated (and thus invalid).
   await expect(configSchema.parseAsync(exampleConfig)).rejects.toStrictEqual(
@@ -29,7 +29,7 @@ test('validates example config', async () => {
   );
 });
 
-test('ensures nodeVersion matches pusher version', async () => {
+test('ensures nodeVersion matches Airnode feed version', async () => {
   const invalidConfig: Config = {
     ...config,
     nodeSettings: {

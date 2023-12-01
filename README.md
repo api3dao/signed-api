@@ -4,8 +4,8 @@ A monorepo for managing signed data. Consists of:
 
 - [api](./packages/api/README.md) - A service for storing and accessing signed data. It provides endpoints to handle
   signed data for a specific airnode.
-- [pusher](./packages/pusher/README.md) - A service for pushing data provider signed data.
-- [e2e](./packages/e2e/README.md) - End to end test utilizing Mock API, pusher and signed API.
+- [airnode-feed](./packages/airnode-feed/README.md) - A service for pushing data provider signed data.
+- [e2e](./packages/e2e/README.md) - End to end test utilizing Mock API, Airnode feed and signed API.
 
 Read the
 [specification](https://docs.google.com/document/d/1-kUPIXSD4ZW1SGs_P8HsejC9k9aHB-NXs9_6-OclnmE/edit#heading=h.i307237rdfda)
