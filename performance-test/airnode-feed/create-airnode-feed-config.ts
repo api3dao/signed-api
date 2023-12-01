@@ -119,7 +119,7 @@ async function main() {
     configTemplate.triggers.signedApiUpdates.push({
       signedApiName: 'perf-test-signed-api',
       templateIds,
-      fetchInterval: 3,
+      fetchInterval: 60, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
       updateDelay: 0,
     });
   }
