@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://signed-api-elb-910640069.us-east-2.elb.amazonaws.com/',
+      url: 'http://signed-api-elb-733097220.us-east-2.elb.amazonaws.com/',
     },
   ],
   ois: [
@@ -131,6 +131,8 @@ async function main() {
 
   console.info(`Creating configuration for ${availableAirnodesResponse.count} Airnode(s).`);
   for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
+    if (airnodeIndex === 4) break;
+
     const airnode = availableAirnode;
     console.info(`Creating configuration for ${airnode}.`);
 
