@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://signed-api-elb-736924722.us-east-2.elb.amazonaws.com/',
+      url: 'http://signed-api-elb-215128271.us-east-2.elb.amazonaws.com/',
     },
   ],
   ois: [
@@ -179,7 +179,7 @@ async function main() {
     configTemplate.triggers.signedApiUpdates.push({
       signedApiName: 'perf-test-signed-api',
       templateIds,
-      fetchInterval: 30, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
+      fetchInterval: 1, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
       updateDelay: 0,
     });
   }

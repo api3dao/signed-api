@@ -4122,7 +4122,7 @@
           "0xbcc08e0b1f7056cab6d679de9df70a81ccdc8ca6ba68f7aa5ad690f9407024d4",
           "0x2c84845686ae5eff78b88825c3a010c81ce171625f0b5413b911b56866700602"
         ],
-        "fetchInterval": 30,
+        "fetchInterval": 1,
         "updateDelay": 0
       },
       {
@@ -4163,7 +4163,7 @@
           "0xe25797402d64a74a0320d35f928a903715bd7879c725989b30b1337641bcefea",
           "0x9139caa8cef4fd5250491052a01a73ca7f0894d74c3dfec49c72f9b2422bb8e8"
         ],
-        "fetchInterval": 30,
+        "fetchInterval": 1,
         "updateDelay": 0
       },
       {
@@ -4310,7 +4310,7 @@
           "0x805df73a6b0dd67bb033417f6d4fe26c86047cdad5db67b28282c432c786997e",
           "0xd6eea35566432d805e3586ac65bebcba04f2548e9ff1d2785325026e8b2d1bbe"
         ],
-        "fetchInterval": 30,
+        "fetchInterval": 1,
         "updateDelay": 0
       },
       {
@@ -4435,7 +4435,7 @@
           "0x9cc20fbf325939e584fa868d1d281bb86cdd0dc9a55389ce46b3e05e67325805",
           "0x067a1948811ef577c027456e5fb98ff2737a5d336fc191bae599a7231aa4d728"
         ],
-        "fetchInterval": 30,
+        "fetchInterval": 1,
         "updateDelay": 0
       }
     ]
@@ -4443,7 +4443,7 @@
   "signedApis": [
     {
       "name": "perf-test-signed-api",
-      "url": "http://signed-api-elb-736924722.us-east-2.elb.amazonaws.com/"
+      "url": "http://signed-api-elb-215128271.us-east-2.elb.amazonaws.com/"
     }
   ],
   "ois": [
