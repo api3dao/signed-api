@@ -2,7 +2,10 @@ async function main() {
   let successCount = 0,
     failCount = 0;
 
-  while (true) {
+  const requestTimes: number[] = [];
+  for (let i = 0; i < 30; i++) {
+    const start = performance.now();
+
     // eslint-disable-next-line functional/no-try-statements
     try {
       await fetch(
@@ -12,10 +15,17 @@ async function main() {
     } catch {
       failCount++;
     }
+    const end = performance.now();
+    requestTimes.push(end - start);
 
     console.info(`Success: ${successCount}, Fail: ${failCount}`);
     await new Promise((resolve) => setTimeout(resolve, 1000));
   }
+
+  console.info(`Min time: ${Math.min(...requestTimes)}`);
+  console.info(`Max time: ${Math.max(...requestTimes)}`);
+  const averageTime = requestTimes.reduce((acc, curr) => acc + curr, 0) / requestTimes.length;
+  console.info(`Average time: ${averageTime}`);
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
