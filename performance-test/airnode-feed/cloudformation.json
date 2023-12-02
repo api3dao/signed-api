@@ -14,8 +14,8 @@
       "Type": "AWS::ECS::TaskDefinition",
       "Properties": {
         "NetworkMode": "awsvpc",
-        "Cpu": "2048",
-        "Memory": "4096",
+        "Cpu": "256",
+        "Memory": "512",
         "ExecutionRoleArn": {
           "Ref": "ECSTaskRole"
         },
