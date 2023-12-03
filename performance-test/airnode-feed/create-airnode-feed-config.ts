@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://signed-api-elb-679853871.us-east-2.elb.amazonaws.com/',
+      url: 'http://signed-api-elb-298235943.eu-central-1.elb.amazonaws.com/',
     },
   ],
   ois: [
