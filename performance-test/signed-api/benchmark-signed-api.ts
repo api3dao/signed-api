@@ -24,6 +24,7 @@ async function main() {
 
   console.info(`Min time: ${Math.min(...requestTimes)}`);
   console.info(`Max time: ${Math.max(...requestTimes)}`);
+  console.info(`Median time: ${requestTimes.toSorted()[requestTimes.length / 2]}`);
   const averageTime = requestTimes.reduce((acc, curr) => acc + curr, 0) / requestTimes.length;
   console.info(`Average time: ${averageTime}`);
 }
