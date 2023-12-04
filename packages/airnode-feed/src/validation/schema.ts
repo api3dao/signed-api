@@ -225,6 +225,8 @@ export const signedApiSchema = z.strictObject({
   url: z.string().url(),
 });
 
+export type SignedApi = z.infer<typeof signedApiSchema>;
+
 export const signedApisSchema = z
   .array(signedApiSchema)
   .nonempty()
@@ -240,6 +242,22 @@ export const signedApisSchema = z
       });
     }
   });
+
+const validateSignedApiReferences: SuperRefinement<{
+  triggers: Triggers;
+  signedApis: SignedApi[];
+}> = (config, ctx) => {
+  for (const [index, trigger] of config.triggers.signedApiUpdates.entries()) {
+    const api = config.signedApis.find((api) => api.name === trigger.signedApiName);
+    if (!api) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Unable to find signed API with name: ${trigger.signedApiName}`,
+        path: ['triggers', 'signedApiUpdates', index, 'signedApiName'],
+      });
+    }
+  }
+};
 
 export const oisesSchema = z.array(oisSchema);
 
@@ -272,7 +290,8 @@ export const configSchema = z
   })
   .superRefine(validateTemplatesReferences)
   .superRefine(validateOisReferences)
-  .superRefine(validateTriggerReferences);
+  .superRefine(validateTriggerReferences)
+  .superRefine(validateSignedApiReferences);
 
 export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
 
