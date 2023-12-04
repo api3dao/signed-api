@@ -207,6 +207,12 @@ or
 "allowedAirnodes": ["0xB47E3D8734780430ee6EfeF3c5407090601Dcd15"]
 ```
 
+##### `stage`
+
+An identifier of the deployment stage. This is used to distinguish between different deployments of Signed API, for
+example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
+lowercase alphanumeric characters and hyphens.
+
 ## API
 
 The API provides the following endpoints:

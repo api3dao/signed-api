@@ -35,6 +35,9 @@ export const configSchema = z.strictObject({
   endpoints: endpointsSchema,
   cache: cacheSchema.optional(),
   allowedAirnodes: allowedAirnodesSchema,
+  stage: z
+    .string()
+    .regex(/^[\da-z-]{1,256}$/, 'Only lowercase letters, numbers and hyphens are allowed (max 256 characters)'),
 });
 
 export type Config = z.infer<typeof configSchema>;
