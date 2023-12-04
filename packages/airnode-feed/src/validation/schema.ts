@@ -15,16 +15,26 @@ import { z, type SuperRefinement } from 'zod';
 
 import packageJson from '../../package.json';
 
+export type Config = z.infer<typeof configSchema>;
+export type Address = z.infer<typeof config.evmAddressSchema>;
+export type BeaconId = z.infer<typeof config.evmIdSchema>;
+export type TemplateId = z.infer<typeof config.evmIdSchema>;
+export type EndpointId = z.infer<typeof config.evmIdSchema>;
+
 export const parameterSchema = z.strictObject({
   name: z.string(),
   type: z.string(),
   value: z.string(),
 });
 
+export type Parameter = z.infer<typeof parameterSchema>;
+
 export const templateSchema = z.strictObject({
   endpointId: config.evmIdSchema,
   parameters: z.array(parameterSchema),
 });
+
+export type Template = z.infer<typeof templateSchema>;
 
 export const templatesSchema = z.record(config.evmIdSchema, templateSchema).superRefine((templates, ctx) => {
   for (const [templateId, template] of Object.entries(templates)) {
@@ -53,10 +63,14 @@ export const templatesSchema = z.record(config.evmIdSchema, templateSchema).supe
   }
 });
 
+export type Templates = z.infer<typeof templatesSchema>;
+
 export const endpointSchema = z.strictObject({
   oisTitle: z.string(),
   endpointName: z.string(),
 });
+
+export type Endpoint = z.infer<typeof endpointSchema>;
 
 export const endpointsSchema = z.record(endpointSchema).superRefine((endpoints, ctx) => {
   for (const [endpointId, endpoint] of Object.entries(endpoints)) {
@@ -77,6 +91,8 @@ export const endpointsSchema = z.record(endpointSchema).superRefine((endpoints, 
   }
 });
 
+export type Endpoints = z.infer<typeof endpointsSchema>;
+
 export const baseBeaconUpdateSchema = z.strictObject({
   deviationThreshold: z.number(),
   heartbeatInterval: z.number().int(),
@@ -88,6 +104,8 @@ export const beaconUpdateSchema = z
   })
   .merge(baseBeaconUpdateSchema);
 
+export type BeaconUpdate = z.infer<typeof beaconUpdateSchema>;
+
 export const signedApiUpdateSchema = z.strictObject({
   signedApiName: z.string(),
   templateIds: z.array(config.evmIdSchema),
@@ -95,9 +113,13 @@ export const signedApiUpdateSchema = z.strictObject({
   updateDelay: z.number(),
 });
 
+export type SignedApiUpdate = z.infer<typeof signedApiUpdateSchema>;
+
 export const triggersSchema = z.strictObject({
   signedApiUpdates: z.array(signedApiUpdateSchema).nonempty(),
 });
+
+export type Triggers = z.infer<typeof triggersSchema>;
 
 const validateTemplatesReferences: SuperRefinement<{ templates: Templates; endpoints: Endpoints }> = (config, ctx) => {
   for (const [templateId, template] of Object.entries(config.templates)) {
@@ -223,6 +245,8 @@ export const oisesSchema = z.array(oisSchema);
 
 export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
+export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
+
 export const nodeSettingsSchema = z.strictObject({
   nodeVersion: z.string().refine((version) => version === packageJson.version, 'Invalid node version'),
   airnodeWalletMnemonic: z.string().refine((mnemonic) => ethers.utils.isValidMnemonic(mnemonic), 'Invalid mnemonic'),
@@ -251,12 +275,16 @@ export const configSchema = z
   .superRefine(validateTriggerReferences);
 
 export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
+
 export const signatureSchema = z.string().regex(/^0x[\dA-Fa-f]{130}$/);
+
 export const signedDataSchema = z.strictObject({
   timestamp: z.string(),
   encodedValue: encodedValueSchema,
   signature: signatureSchema,
 });
+
+export type SignedData = z.infer<typeof signedDataSchema>;
 
 export const signedApiPayloadSchema = signedDataSchema.extend({
   beaconId: config.evmIdSchema,
@@ -264,25 +292,11 @@ export const signedApiPayloadSchema = signedDataSchema.extend({
   templateId: config.evmIdSchema,
 });
 
+export type SignedApiPayload = z.infer<typeof signedApiPayloadSchema>;
+
 export const signedApiBatchPayloadSchema = z.array(signedApiPayloadSchema);
 
-export type SignedApiPayload = z.infer<typeof signedApiPayloadSchema>;
 export type SignedApiBatchPayload = z.infer<typeof signedApiBatchPayloadSchema>;
-export type Config = z.infer<typeof configSchema>;
-export type Template = z.infer<typeof templateSchema>;
-export type Templates = z.infer<typeof templatesSchema>;
-export type BeaconUpdate = z.infer<typeof beaconUpdateSchema>;
-export type SignedApiUpdate = z.infer<typeof signedApiUpdateSchema>;
-export type Triggers = z.infer<typeof triggersSchema>;
-export type Address = z.infer<typeof config.evmAddressSchema>;
-export type BeaconId = z.infer<typeof config.evmIdSchema>;
-export type TemplateId = z.infer<typeof config.evmIdSchema>;
-export type EndpointId = z.infer<typeof config.evmIdSchema>;
-export type SignedData = z.infer<typeof signedDataSchema>;
-export type Endpoint = z.infer<typeof endpointSchema>;
-export type Endpoints = z.infer<typeof endpointsSchema>;
-export type ApisCredentials = z.infer<typeof apisCredentialsSchema>;
-export type Parameter = z.infer<typeof parameterSchema>;
 
 export const secretsSchema = z.record(z.string());
 
