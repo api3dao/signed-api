@@ -8,7 +8,7 @@ const portSchema = z.coerce.number().int().positive();
 
 const startDevServer = async () => {
   const config = await fetchAndCacheConfig();
-  logger.info('Using configuration', config);
+  logger.info('Using configuration.', config);
 
   const parsedPort = portSchema.safeParse(process.env.DEV_SERVER_PORT);
   let port: number;

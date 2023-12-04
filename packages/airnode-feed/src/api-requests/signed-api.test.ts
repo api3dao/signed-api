@@ -53,8 +53,6 @@ describe(postSignedApiData.name, () => {
           message: 'Required',
         },
       ]),
-      signedApiName: 'localhost',
-      updateDelay: 5,
     });
   });
 
@@ -78,8 +76,6 @@ describe(postSignedApiData.name, () => {
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
       errorMessage: 'simulated-network-error',
       axiosResponse: {},
-      signedApiName: 'localhost',
-      updateDelay: 5,
     });
   });
 });

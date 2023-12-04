@@ -45,13 +45,13 @@ const fetchConfigFromS3 = async (): Promise<any> => {
     Key: env.AWS_S3_BUCKET_PATH,
   };
 
-  logger.info(`Fetching config from AWS S3 region:${region}...`);
+  logger.info(`Fetching config from AWS S3 region.`, { region });
   const res = await go(async () => s3.getObject(params), { retries: 1 });
   if (!res.success) {
-    logger.error('Error fetching config from AWS S3:', res.error);
+    logger.error('Error fetching config from AWS S3.', res.error);
     throw res.error;
   }
-  logger.info('Config fetched successfully from AWS S3');
+  logger.info('Config fetched successfully from AWS S3.');
   const stringifiedConfig = await res.data.Body!.transformToString();
   return JSON.parse(stringifiedConfig);
 };

@@ -41,7 +41,7 @@ describe(logHeartbeat.name, () => {
 
     await logHeartbeat();
 
-    expect(heartbeatLogger.info).toHaveBeenCalledWith('Sending heartbeat log', expectedLogMessage);
+    expect(heartbeatLogger.info).toHaveBeenCalledWith('Sending heartbeat log.', expectedLogMessage);
   });
 });
 

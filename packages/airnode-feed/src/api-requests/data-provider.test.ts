@@ -36,7 +36,7 @@ describe(makeTemplateRequests.name, () => {
     await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
     expect(logger.warn).toHaveBeenCalledTimes(1);
-    expect(logger.warn).toHaveBeenCalledWith('Failed to make API call', {
+    expect(logger.warn).toHaveBeenCalledWith('Failed to make API call.', {
       endpointName: 'feed',
       errorMessage: 'Invalid API key',
       oisTitle: 'Nodary',

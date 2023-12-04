@@ -45,7 +45,7 @@ app.get('/', (_req, res) => {
   }
 
   const response = Object.fromEntries(assets.map((asset) => [asset.name, asset.value]));
-  logger.debug('Response GET /', response);
+  logger.debug('Response "GET /".', response);
 
   res.json(response);
 });
