@@ -213,6 +213,10 @@ An identifier of the deployment stage. This is used to distinguish between diffe
 example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
 lowercase alphanumeric characters and hyphens.
 
+##### `version`
+
+The version specified in the config must match the version of the Signed API at deployment time.
+
 ## API
 
 The API provides the following endpoints:
