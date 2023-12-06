@@ -10,5 +10,6 @@
     }
   ],
   "allowedAirnodes": ["0xbF3137b0a7574563a23a8fC8badC6537F98197CC"],
-  "stage": "e2e-test"
+  "stage": "e2e-test",
+  "version": "0.1.0"
 }

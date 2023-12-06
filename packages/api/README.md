@@ -234,8 +234,7 @@ The API provides the following endpoints:
 ## Versioning and release
 
 Signed API uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The
-package is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
-[api3/signed-api](https://hub.docker.com/r/api3/signed-api).
+package is not published to NPM, but instead dockerized and published to Docker Hub.
 
 To release a new version:
 
