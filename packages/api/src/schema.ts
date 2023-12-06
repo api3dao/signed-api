@@ -2,6 +2,8 @@ import { type LogFormat, logFormatOptions, logLevelOptions, type LogLevel } from
 import { uniqBy } from 'lodash';
 import { z } from 'zod';
 
+import packageJson from '../package.json';
+
 export const evmAddressSchema = z.string().regex(/^0x[\dA-Fa-f]{40}$/, 'Must be a valid EVM address');
 
 export const evmIdSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/, 'Must be a valid EVM ID');
@@ -35,6 +37,10 @@ export const configSchema = z.strictObject({
   endpoints: endpointsSchema,
   cache: cacheSchema.optional(),
   allowedAirnodes: allowedAirnodesSchema,
+  stage: z
+    .string()
+    .regex(/^[\da-z-]{1,256}$/, 'Only lowercase letters, numbers and hyphens are allowed (max 256 characters)'),
+  version: z.string().refine((version) => version === packageJson.version, 'Invalid Signed API version'),
 });
 
 export type Config = z.infer<typeof configSchema>;

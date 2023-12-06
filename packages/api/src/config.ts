@@ -1,5 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { cwd } from 'node:process';
 
 import { go } from '@api3/promise-utils';
 import { S3 } from '@aws-sdk/client-s3';
@@ -22,12 +23,21 @@ export const fetchAndCacheConfig = async (): Promise<Config> => {
   return config;
 };
 
+// When Signed API is built, the "/dist" file contains "src" folder and "package.json" and the config is expected to be
+// located next to the "/dist" folder. When run in development, the config is expected to be located next to the "src"
+// folder (one less import level). We resolve the config by CWD as a workaround. Since the Signed API is dockerized,
+// this is hidden from the user.
+const getConfigPath = () => join(cwd(), './config');
+
+export const loadConfigFromFilesystem = () =>
+  JSON.parse(readFileSync(join(getConfigPath(), 'signed-api.json'), 'utf8'));
+
 const fetchConfig = async (): Promise<any> => {
   const env = loadEnv();
   const source = env.CONFIG_SOURCE;
   switch (source) {
     case 'local': {
-      return JSON.parse(readFileSync(join(__dirname, '../config/signed-api.json'), 'utf8'));
+      return loadConfigFromFilesystem();
     }
     case 'aws-s3': {
       return fetchConfigFromS3();

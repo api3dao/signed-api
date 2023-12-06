@@ -347,8 +347,7 @@ lowercase alphanumeric characters and hyphens.
 ## Versioning and release
 
 Airnode feed uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The
-package is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
-[api3/airnode-feed](https://hub.docker.com/r/api3/airnode-feed).
+package is not published to NPM, but instead dockerized and published to Docker Hub.
 
 To release a new version:
 

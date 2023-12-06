@@ -207,6 +207,16 @@ or
 "allowedAirnodes": ["0xB47E3D8734780430ee6EfeF3c5407090601Dcd15"]
 ```
 
+##### `stage`
+
+An identifier of the deployment stage. This is used to distinguish between different deployments of Signed API, for
+example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
+lowercase alphanumeric characters and hyphens.
+
+##### `version`
+
+The version specified in the config must match the version of the Signed API at deployment time.
+
 ## API
 
 The API provides the following endpoints:
@@ -224,8 +234,7 @@ The API provides the following endpoints:
 ## Versioning and release
 
 Signed API uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The
-package is not published to NPM, but instead dockerized and published to Docker Hub. The image is called
-[api3/signed-api](https://hub.docker.com/r/api3/signed-api).
+package is not published to NPM, but instead dockerized and published to Docker Hub.
 
 To release a new version:
 

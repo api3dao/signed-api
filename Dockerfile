@@ -68,4 +68,4 @@ RUN addgroup -S deployed-api && \
 USER deployed-api
 
 COPY --chown=deployed-api:deployed-api --from=deployed-api /app/deployed-api .
-ENTRYPOINT ["node", "dist/index.js"]
+ENTRYPOINT ["node", "dist/src/index.js"]

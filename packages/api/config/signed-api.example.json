@@ -9,5 +9,7 @@
       "delaySeconds": 15
     }
   ],
-  "allowedAirnodes": ["0xbF3137b0a7574563a23a8fC8badC6537F98197CC"]
+  "allowedAirnodes": ["0xbF3137b0a7574563a23a8fC8badC6537F98197CC"],
+  "stage": "local",
+  "version": "0.1.0"
 }

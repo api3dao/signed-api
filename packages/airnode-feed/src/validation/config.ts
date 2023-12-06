@@ -8,10 +8,10 @@ import dotenv from 'dotenv';
 import { configSchema } from './schema';
 import { interpolateSecrets, parseSecrets } from './utils';
 
-// When Airnode feed is built the "/dist" file contains "src" folder and "package.json" and the config is expected to be
-// located next to the "/dist" folder. When run in development, the config is expected to be located next to the "src"
-// folder (one less import level). We resolve the config by CWD as a workaround. Since the Airnode feed is dockerized,
-// this is hidden from the user.
+// When Airnode feed is built, the "/dist" file contains "src" folder and "package.json" and the config is expected to
+// be located next to the "/dist" folder. When run in development, the config is expected to be located next to the
+// "src" folder (one less import level). We resolve the config by CWD as a workaround. Since the Airnode feed is
+// dockerized, this is hidden from the user.
 const getConfigPath = () => join(cwd(), './config');
 
 export const loadRawConfig = () => JSON.parse(fs.readFileSync(join(getConfigPath(), 'airnode-feed.json'), 'utf8'));
