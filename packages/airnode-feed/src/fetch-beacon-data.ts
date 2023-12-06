@@ -4,17 +4,18 @@ import { makeTemplateRequests } from './api-requests/data-provider';
 import { logger } from './logger';
 import { signTemplateResponses } from './sign-template-data';
 import { getState } from './state';
+import { schedulePushingSignedData } from './update-signed-api';
 import { sleep } from './utils';
 import type { SignedApiUpdate } from './validation/schema';
 
-export const initiateFetchingBeaconData = () => {
-  logger.debug('Initiating fetching all beacon data.');
+export const initiateSignedApiUpdateLoops = () => {
+  logger.debug('Initiating feed loop.');
   const { config } = getState();
 
-  return config.triggers.signedApiUpdates.map(async (element) => fetchBeaconDataInLoop(element));
+  return config.triggers.signedApiUpdates.map(async (signedApiUpdate) => initiateSignedApiUpdateLoop(signedApiUpdate));
 };
 
-const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
+const initiateSignedApiUpdateLoop = async (signedApiUpdate: SignedApiUpdate) => {
   const { templateValues } = getState();
 
   while (true) {
@@ -41,6 +42,11 @@ const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
         }
       })
     );
+
+    // We want to send the data to the Signed API "in background" without waiting for the response to avoid blocking the
+    // fetch interval loop.
+    logger.debug('Scheduling pushing signed data to the API.');
+    schedulePushingSignedData(signedApiUpdate);
 
     const duration = Date.now() - startTimestamp;
     // Take at most 10% of the fetch interval as extra time to avoid all API requests be done at the same time. This
