@@ -12,7 +12,8 @@ export const DEFAULT_PORT = 80;
 export const startServer = (config: Config, port: number) => {
   const app = express();
 
-  app.use(express.json());
+  // The default limit is 100kb, which is not enough for the signed API because some payloads can be quite large.
+  app.use(express.json({ limit: '10mb' }));
 
   app.post('/', async (req, res) => {
     logger.info('Received request "POST /".', req.body);
@@ -45,6 +46,17 @@ export const startServer = (config: Config, port: number) => {
       logger.debug('Responded to request "GET /:airnode".', result);
     });
   }
+
+  // Inline error handling middleware
+  app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    logger.error('An unexpected error occurred.', { err });
+
+    res.status(err.status || 500).json({
+      error: {
+        message: err.message || 'An unexpected error occurred.',
+      },
+    });
+  });
 
   app.listen(port, () => {
     logger.info(`Server listening at http://localhost:${port}.`);
