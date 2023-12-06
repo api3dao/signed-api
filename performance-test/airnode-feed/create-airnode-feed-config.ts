@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://signed-api-elb-298235943.eu-central-1.elb.amazonaws.com/',
+      url: 'http://signed-api-elb-1476980402.eu-central-1.elb.amazonaws.com/',
     },
   ],
   ois: [
@@ -130,10 +130,17 @@ async function main() {
   const availableAirnodes: string[] = availableAirnodesResponse['available-airnodes'];
 
   console.info(`Creating configuration for ${availableAirnodesResponse.count} Airnode(s).`);
+  let count = 0;
   for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
-    if (airnodeIndex === 4) break;
-
     const airnode = availableAirnode;
+    const signedDatasResponse = await fetch(`https://pool.nodary.io/${airnode}`).then((res) => res.json() as any);
+    const signedDatas = signedDatasResponse.data;
+    if (Object.keys(signedDatas).length < 100) {
+      console.info('Skipping this Airnode because it does not have enough beacons');
+      continue;
+    }
+    if (count++ === 3) break;
+
     console.info(`Creating configuration for ${airnode}.`);
 
     // Create OIS endpoint and API specification path.
@@ -156,10 +163,8 @@ async function main() {
     };
 
     // Create template(s).
-    const signedDatasResponse = await fetch(`https://pool.nodary.io/${airnode}`).then((res) => res.json() as any);
-    const signedDatas = signedDatasResponse.data;
     const templateIds: string[] = [];
-    for (const beaconId of Object.keys(signedDatas)) {
+    for (const beaconId of Object.keys(signedDatas).slice(0, 100)) {
       const template = {
         endpointId,
         parameters: [

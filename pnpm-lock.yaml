@@ -11,6 +11,9 @@ importers:
       '@api3/airnode-abi':
         specifier: ^0.12.0
         version: 0.12.0
+      ethers:
+        specifier: ^5.7.2
+        version: 5.7.2
     devDependencies:
       '@api3/commons':
         specifier: ^0.5.0
