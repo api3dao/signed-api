@@ -1,7 +1,9 @@
 import { ethers } from 'ethers';
 
-import { deriveBeaconId } from '../src/evm';
 import type { SignedData } from '../src/schema';
+
+export const deriveBeaconId = (airnode: string, templateId: string) =>
+  ethers.utils.keccak256(ethers.utils.solidityPack(['address', 'bytes32'], [airnode, templateId]));
 
 export const deriveTemplateId = (endpointId: string, encodedParameters: string) =>
   ethers.utils.keccak256(ethers.utils.solidityPack(['bytes32', 'bytes'], [endpointId, encodedParameters]));

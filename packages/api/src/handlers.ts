@@ -1,11 +1,9 @@
-import { go, goSync } from '@api3/promise-utils';
+import { go } from '@api3/promise-utils';
 import { isEmpty, isNil, omit } from 'lodash';
 
 import { getConfig } from './config';
-import { deriveBeaconId, recoverSignerAddress } from './evm';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
-import { logger } from './logger';
 import { type SignedData, batchSignedDataSchema, evmAddressSchema } from './schema';
 import type { ApiResponse } from './types';
 import { generateErrorResponse, isBatchUnique } from './utils';
@@ -42,42 +40,16 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // Check whether any duplications exist
   if (!isBatchUnique(batchSignedData)) return generateErrorResponse(400, 'No duplications are allowed');
 
-  // Check validations that can be done without using http request, returns fail response in first error
-  const signedDataValidationResults = batchSignedData.map((signedData) => {
+  // Ensure the signed data timestamp does not drift too far into the future.
+  //
+  // NOTE: We are intentionally not validating the signature or beacon ID for performance reasons.
+  for (const signedData of batchSignedData) {
     // The on-chain contract prevents time drift by making sure the timestamp is at most 1 hour in the future. System
     // time drift is less common, but we mirror the contract implementation.
     if (Number.parseInt(signedData.timestamp, 10) > Math.floor(Date.now() / 1000) + 60 * 60) {
       return generateErrorResponse(400, 'Request timestamp is too far in the future', { signedData });
     }
-
-    const goRecoverSigner = goSync(() => recoverSignerAddress(signedData));
-    if (!goRecoverSigner.success) {
-      return generateErrorResponse(400, 'Unable to recover signer address', {
-        detail: goRecoverSigner.error.message,
-        signedData,
-      });
-    }
-
-    if (signedData.airnode !== goRecoverSigner.data) {
-      return generateErrorResponse(400, 'Signature is invalid', { signedData });
-    }
-
-    const goDeriveBeaconId = goSync(() => deriveBeaconId(signedData.airnode, signedData.templateId));
-    if (!goDeriveBeaconId.success) {
-      return generateErrorResponse(400, 'Unable to derive beaconId by given airnode and templateId', {
-        detail: goDeriveBeaconId.error.message,
-        signedData,
-      });
-    }
-
-    if (signedData.beaconId !== goDeriveBeaconId.data) {
-      return generateErrorResponse(400, 'beaconId is invalid', { signedData });
-    }
-
-    return null;
-  });
-  const firstError = signedDataValidationResults.find(Boolean);
-  if (firstError) return firstError;
+  }
 
   const newSignedData: SignedData[] = [];
   // Because Airnode feed does not keep track of the last timestamp they pushed, it may push the same data twice, which
@@ -86,10 +58,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     const requestTimestamp = Number.parseInt(signedData.timestamp, 10);
     const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId, requestTimestamp));
     if (goReadDb.data && requestTimestamp === Number.parseInt(goReadDb.data.timestamp, 10)) {
-      logger.debug('Not storing signed data because signed data with the same timestamp already exists.', {
-        signedData,
-      });
-      continue;
+      continue; // Intentionally not logging a message here, because this is a common case and it would be too noisy.
     }
 
     newSignedData.push(signedData);

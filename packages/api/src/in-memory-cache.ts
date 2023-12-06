@@ -11,8 +11,6 @@ export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimesta
 // The API is deliberately asynchronous to mimic a database call.
 // eslint-disable-next-line @typescript-eslint/require-await
 export const get = async (airnodeAddress: string, templateId: string, ignoreAfterTimestamp: number) => {
-  logger.debug('Getting signed data.', { airnodeAddress, templateId, ignoreAfterTimestamp });
-
   const signedDataCache = getCache();
   if (!signedDataCache[airnodeAddress]) return null;
   const signedDatas = signedDataCache[airnodeAddress]![templateId];
@@ -50,8 +48,6 @@ export const getAllAirnodeAddresses = async () => {
 // The API is deliberately asynchronous to mimic a database call.
 // eslint-disable-next-line @typescript-eslint/require-await
 export const put = async (signedData: SignedData) => {
-  logger.debug('Putting signed data.', { signedData });
-
   const signedDataCache = getCache();
   const { airnode, templateId, timestamp } = signedData;
   signedDataCache[airnode] ??= {};
@@ -67,8 +63,6 @@ export const put = async (signedData: SignedData) => {
 
 // The API is deliberately asynchronous to mimic a database call.
 export const putAll = async (signedDataArray: SignedData[]) => {
-  logger.debug('Putting all signed data.', { signedDataArray });
-
   for (const signedData of signedDataArray) await put(signedData);
 };
 

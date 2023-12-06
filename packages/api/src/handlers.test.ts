@@ -2,7 +2,7 @@ import { ethers } from 'ethers';
 import { omit } from 'lodash';
 
 import { getMockedConfig } from '../test/fixtures';
-import { createSignedData, generateRandomWallet } from '../test/utils';
+import { createSignedData, deriveBeaconId, generateRandomBytes, generateRandomWallet } from '../test/utils';
 
 import * as cacheModule from './cache';
 import * as configModule from './config';
@@ -19,29 +19,38 @@ afterEach(() => {
 });
 
 describe(batchInsertData.name, () => {
-  it('drops the batch if it is invalid', async () => {
+  it('does not validate signature (for performance reasons)', async () => {
     const invalidData = await createSignedData({ signature: '0xInvalid' });
     const batchData = [await createSignedData(), invalidData];
 
     const result = await batchInsertData(batchData);
 
     expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'Unable to recover signer address',
-        context: {
-          detail:
-            'signature missing v and recoveryParam (argument="signature", value="0xInvalid", code=INVALID_ARGUMENT, version=bytes/5.7.0)',
-          signedData: invalidData,
-        },
-      }),
+      body: JSON.stringify({ count: 2, skipped: 0 }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
         'content-type': 'application/json',
       },
-      statusCode: 400,
+      statusCode: 201,
     });
-    expect(cacheModule.getCache()).toStrictEqual({});
+  });
+
+  it('does not validate beacon ID (for performance reasons)', async () => {
+    const data = await createSignedData();
+    const invalidData = { ...data, beaconId: deriveBeaconId(data.airnode, generateRandomBytes(32)) };
+
+    const result = await batchInsertData([invalidData]);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({ count: 1, skipped: 0 }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 201,
+    });
   });
 
   it('drops the batch if the airnode address is not allowed', async () => {
@@ -99,10 +108,6 @@ describe(batchInsertData.name, () => {
       },
       statusCode: 201,
     });
-    expect(logger.debug).toHaveBeenCalledWith(
-      'Not storing signed data because signed data with the same timestamp already exists.',
-      expect.any(Object)
-    );
     expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(1);
   });
 
