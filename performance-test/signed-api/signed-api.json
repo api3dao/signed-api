@@ -17,5 +17,7 @@
       "delaySeconds": 20
     }
   ],
-  "allowedAirnodes": "*"
+  "allowedAirnodes": "*",
+  "version": "0.1.0",
+  "stage": "perf-test"
 }
