@@ -19,7 +19,7 @@ async function main() {
     requestTimes.push(end - start);
 
     console.info(`Success: ${successCount}, Fail: ${failCount}`);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
   console.info(`Min time: ${Math.min(...requestTimes)}`);
