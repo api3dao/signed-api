@@ -23,30 +23,32 @@ const initiateSignedApiUpdateLoop = async (signedApiUpdate: SignedApiUpdate) => 
     logger.debug('Making template requests.');
     const templateResponses = await makeTemplateRequests(signedApiUpdate);
 
-    logger.debug('Signing template responses.');
-    const signedResponses = await signTemplateResponses(templateResponses);
+    if (templateResponses) {
+      logger.debug('Signing template responses.');
+      const signedResponses = await signTemplateResponses(templateResponses);
 
-    logger.debug('Putting signed responses to storage.');
-    await Promise.all(
-      signedResponses.map(async ([templateId, signedResponse]) => {
-        const goPut = await go(() => templateValues[templateId]!.put(signedResponse));
-        if (!goPut.success) {
-          // Because there can be multiple triggers for the same template ID it is possible that a race condition
-          // occurs, where the (newer) response from a different trigger is put first. This throws, because the signed
-          // data must be inserted increasingly by timestamp.
-          logger.debug(`Could not put signed response.`, {
-            templateId,
-            signedResponse,
-            errorMessage: goPut.error.message,
-          });
-        }
-      })
-    );
+      logger.debug('Putting signed responses to storage.');
+      await Promise.all(
+        signedResponses.map(async ([templateId, signedResponse]) => {
+          const goPut = await go(() => templateValues[templateId]!.put(signedResponse));
+          if (!goPut.success) {
+            // Because there can be multiple triggers for the same template ID it is possible that a race condition
+            // occurs, where the (newer) response from a different trigger is put first. This throws, because the signed
+            // data must be inserted increasingly by timestamp.
+            logger.debug(`Could not put signed response.`, {
+              templateId,
+              signedResponse,
+              errorMessage: goPut.error.message,
+            });
+          }
+        })
+      );
 
-    // We want to send the data to the Signed API "in background" without waiting for the response to avoid blocking the
-    // fetch interval loop.
-    logger.debug('Scheduling pushing signed data to the API.');
-    schedulePushingSignedData(signedApiUpdate);
+      // We want to send the data to the Signed API "in background" without waiting for the response to avoid blocking the
+      // fetch interval loop.
+      logger.debug('Scheduling pushing signed data to the API.');
+      schedulePushingSignedData(signedApiUpdate);
+    }
 
     const duration = Date.now() - startTimestamp;
     // Take at most 10% of the fetch interval as extra time to avoid all API requests be done at the same time. This
