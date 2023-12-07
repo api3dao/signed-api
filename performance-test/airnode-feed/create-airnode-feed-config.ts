@@ -85,11 +85,7 @@ async function main() {
       `http://signed-api-elb-1946820200.eu-central-1.elb.amazonaws.com/0s-delay/${airnode}`
     ).then((res) => res.json() as any);
     const signedDatas = signedDatasResponse.data;
-    if (Object.keys(signedDatas).length < 100) {
-      console.info('Skipping this Airnode because it does not have enough beacons');
-      continue;
-    }
-    if (count++ === 3) break;
+    if (count++ === 300) break;
 
     console.info(`Creating configuration for ${airnode}.`);
 
@@ -115,7 +111,7 @@ async function main() {
 
     // Create template(s).
     const templateIds: string[] = [];
-    for (const beaconId of Object.keys(signedDatas).slice(0, 100)) {
+    for (const beaconId of Object.keys(signedDatas).slice(0, 1)) {
       const template = {
         endpointId,
         parameters: [
