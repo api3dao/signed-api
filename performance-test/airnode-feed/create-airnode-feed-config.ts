@@ -129,15 +129,15 @@ async function main() {
       const templateId = deriveTemplateId(endpointId, encode(template.parameters));
       templateIds.push(templateId);
       configTemplate.templates[templateId] = template;
-    }
 
-    // Create trigger.
-    configTemplate.triggers.signedApiUpdates.push({
-      signedApiName: 'perf-test-signed-api',
-      templateIds,
-      fetchInterval: 1, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
-      updateDelay: 0,
-    });
+      // Create trigger.
+      configTemplate.triggers.signedApiUpdates.push({
+        signedApiName: 'perf-test-signed-api',
+        templateIds: [templateId],
+        fetchInterval: 1, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
+        updateDelay: 0,
+      });
+    }
   }
 
   console.info('Writing configuration to "airnode-feed.json".');
