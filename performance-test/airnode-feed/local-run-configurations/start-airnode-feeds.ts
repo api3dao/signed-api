@@ -1,7 +1,7 @@
 import cluster from 'node:cluster';
 import path from 'node:path';
 
-const totalServices = 30;
+const totalServices = 15; // NOTE: Running more than 15 services on my machine causes request failures.
 
 if (cluster.isPrimary) {
   console.info(`Primary ${process.pid} is running`);

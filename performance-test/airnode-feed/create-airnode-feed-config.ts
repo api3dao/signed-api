@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://signed-api-elb-1476980402.eu-central-1.elb.amazonaws.com/',
+      url: 'http://signed-api-elb-target-id-1962349495.eu-central-1.elb.amazonaws.com/',
     },
   ],
   ois: [
@@ -36,61 +36,7 @@ const configTemplate = {
         paths: {
           // NOTE: Will be populated by the script.
         } as any,
-        servers: [{ url: 'https://cloudflare-nodary-layer1.emanuel-tesar.workers.dev/' }],
-        security: {},
-      },
-      endpoints: [
-        // NOTE: Will be populated by the script.
-      ] as any[],
-    },
-    {
-      oisFormat: '2.3.0',
-      title: 'Nodary pool 2',
-      version: '0.2.0',
-      apiSpecifications: {
-        components: {
-          securitySchemes: {},
-        },
-        paths: {
-          // NOTE: Will be populated by the script.
-        } as any,
-        servers: [{ url: 'https://cloudflare-nodary-layer2.emanuel-tesar.workers.dev/' }],
-        security: {},
-      },
-      endpoints: [
-        // NOTE: Will be populated by the script.
-      ] as any[],
-    },
-    {
-      oisFormat: '2.3.0',
-      title: 'Nodary pool 3',
-      version: '0.2.0',
-      apiSpecifications: {
-        components: {
-          securitySchemes: {},
-        },
-        paths: {
-          // NOTE: Will be populated by the script.
-        } as any,
-        servers: [{ url: 'https://cloudflare-nodary-layer3.emanuel-tesar.workers.dev/' }],
-        security: {},
-      },
-      endpoints: [
-        // NOTE: Will be populated by the script.
-      ] as any[],
-    },
-    {
-      oisFormat: '2.3.0',
-      title: 'Nodary pool 4',
-      version: '0.2.0',
-      apiSpecifications: {
-        components: {
-          securitySchemes: {},
-        },
-        paths: {
-          // NOTE: Will be populated by the script.
-        } as any,
-        servers: [{ url: 'https://cloudflare-nodary-layer4.emanuel-tesar.workers.dev/' }],
+        servers: [{ url: 'http://signed-api-elb-1946820200.eu-central-1.elb.amazonaws.com' }],
         security: {},
       },
       endpoints: [
@@ -126,14 +72,18 @@ const endpointTemplate = {
 };
 
 async function main() {
-  const availableAirnodesResponse = await fetch('https://pool.nodary.io/').then((res) => res.json() as any);
+  const availableAirnodesResponse = await fetch(
+    'http://signed-api-elb-1946820200.eu-central-1.elb.amazonaws.com/'
+  ).then((res) => res.json() as any);
   const availableAirnodes: string[] = availableAirnodesResponse['available-airnodes'];
 
   console.info(`Creating configuration for ${availableAirnodesResponse.count} Airnode(s).`);
   let count = 0;
   for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
     const airnode = availableAirnode;
-    const signedDatasResponse = await fetch(`https://pool.nodary.io/${airnode}`).then((res) => res.json() as any);
+    const signedDatasResponse = await fetch(
+      `http://signed-api-elb-1946820200.eu-central-1.elb.amazonaws.com/0s-delay/${airnode}`
+    ).then((res) => res.json() as any);
     const signedDatas = signedDatasResponse.data;
     if (Object.keys(signedDatas).length < 100) {
       console.info('Skipping this Airnode because it does not have enough beacons');
@@ -144,14 +94,15 @@ async function main() {
     console.info(`Creating configuration for ${airnode}.`);
 
     // Create OIS endpoint and API specification path.
+    const path = `/0s-delay/${airnode}`;
     const endpoint = {
       ...endpointTemplate,
       name: airnode,
-      operation: { method: 'get', path: `/${airnode}` },
+      operation: { method: 'get', path },
     };
     for (const ois of configTemplate.ois) {
       ois.endpoints.push(endpoint);
-      ois.apiSpecifications.paths[`/${airnode}`] = { get: { parameters: [] } };
+      ois.apiSpecifications.paths[path] = { get: { parameters: [] } };
     }
 
     // Create endpoint.
