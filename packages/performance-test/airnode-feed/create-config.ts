@@ -73,7 +73,8 @@ async function main() {
   if (!process.env.SOURCE_SIGNED_API_URL) throw new Error('SOURCE_SIGNED_API_URL is not set');
   const sourceSignedApiUrl = process.env.SOURCE_SIGNED_API_URL.replace(/\/+$/, '');
   if (!process.env.SOURCE_SIGNED_API_ENDPOINT_PATH) throw new Error('SOURCE_SIGNED_API_ENDPOINT_PATH is not set');
-  const sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replace(/\/+$/, '');
+  let sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replace(/\/+$/, '');
+  if (!sourceSignedApiEndpointPath.startsWith('/')) sourceSignedApiEndpointPath = `/${sourceSignedApiEndpointPath}`;
   if (!process.env.SIGNED_DATAS_PER_API_RESPONSE) throw new Error('SIGNED_DATAS_PER_API_RESPONSE is not set');
   const beaconsCount = Number(process.env.SIGNED_DATAS_PER_API_RESPONSE!);
   if (!process.env.TARGET_SIGNED_API_URL) throw new Error('TARGET_SIGNED_API_URL is not set');
@@ -101,8 +102,8 @@ async function main() {
     }
 
     const airnode = availableAirnode;
-    const path = sourceSignedApiEndpointPath ? `/${sourceSignedApiEndpointPath}/${airnode}` : `/${airnode}`; // Trick for the old style of Signed API (e.g. legacy Nodary implementation).
-    const signedDatasResponse = await fetch(`${sourceSignedApiUrl}/${path}`).then((res) => res.json() as any);
+    const path = sourceSignedApiEndpointPath === '/' ? `/${airnode}` : `${sourceSignedApiEndpointPath}/${airnode}`; // Trick for the old style of Signed API (e.g. legacy Nodary implementation).
+    const signedDatasResponse = await fetch(`${sourceSignedApiUrl}${path}`).then((res) => res.json() as any);
     const signedDatas = signedDatasResponse.data;
     if (Object.keys(signedDatas).length < beaconsCount) {
       console.info(
