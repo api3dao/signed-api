@@ -6,7 +6,7 @@
     "CloudWatchLogsGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "AirnodeFeedLogGroup-perf-test4",
+        "LogGroupName": "AirnodeFeedLogGroup-perf-test",
         "RetentionInDays": 7
       }
     },
@@ -37,7 +37,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/api3dao/signed-api/performance-test/performance-test/airnode-feed/airnode-feed.json >> ./config/airnode-feed.json && node dist/src/index.js"
+              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - <AIRNODE_FEED_CONFIG_URL> >> ./config/airnode-feed.json && node dist/src/index.js"
             ],
             "LogConfiguration": {
               "LogDriver": "awslogs",
@@ -48,7 +48,7 @@
                 "awslogs-region": {
                   "Ref": "AWS::Region"
                 },
-                "awslogs-stream-prefix": "airnode-feed-perf-test4"
+                "awslogs-stream-prefix": "airnode-feed-perf-test"
               }
             }
           }
@@ -58,7 +58,7 @@
     "AppCluster": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
-        "ClusterName": "AirnodeFeedCluster-perf-test4"
+        "ClusterName": "AirnodeFeedCluster-perf-test"
       }
     },
     "AppService": {
@@ -67,7 +67,7 @@
         "Cluster": {
           "Ref": "AppCluster"
         },
-        "ServiceName": "AirnodeFeedService-perf-test4",
+        "ServiceName": "AirnodeFeedService-perf-test",
         "DesiredCount": 1,
         "LaunchType": "FARGATE",
         "TaskDefinition": {

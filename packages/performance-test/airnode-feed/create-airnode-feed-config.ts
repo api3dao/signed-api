@@ -1,10 +1,9 @@
 import { writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 
 import { encode } from '@api3/airnode-abi';
 
-import { deriveEndpointId } from '../../../../airnode-feed/src/utils';
-import { deriveTemplateId } from '../../../../api/test/utils';
+import { deriveEndpointId } from '../../airnode-feed/src/utils';
+import { deriveTemplateId } from '../../api/test/utils';
 
 const configTemplate = {
   templates: {
@@ -27,7 +26,7 @@ const configTemplate = {
   ois: [
     {
       oisFormat: '2.3.0',
-      title: 'Nodary pool 1',
+      title: 'API',
       version: '0.2.0',
       apiSpecifications: {
         components: {
@@ -74,11 +73,15 @@ async function main() {
   if (!process.env.SOURCE_SIGNED_API_URL) throw new Error('SOURCE_SIGNED_API_URL is not set');
   const sourceSignedApiUrl = process.env.SOURCE_SIGNED_API_URL.replace(/\/+$/, '');
   if (!process.env.SOURCE_SIGNED_API_ENDPOINT_PATH) throw new Error('SOURCE_SIGNED_API_ENDPOINT_PATH is not set');
-  const sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replaceAll('/', '');
+  const sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replace(/\/+$/, '');
   if (!process.env.BEACONS_COUNT) throw new Error('BEACONS_COUNT is not set');
   const beaconsCount = Number(process.env.BEACONS_COUNT!);
   if (!process.env.TARGET_SIGNED_API_URL) throw new Error('TARGET_SIGNED_API_URL is not set');
   const targetSignedApiUrl = process.env.TARGET_SIGNED_API_URL;
+  if (!process.env.FETCH_INTERVAL) throw new Error('FETCH_INTERVAL is not set');
+  const fetchInterval = Number(process.env.FETCH_INTERVAL!);
+  if (!process.env.AIRNODE_FEED_CONFIG_PATH) throw new Error('AIRNODE_FEED_CONFIG_PATH is not set');
+  const airnodeFeedConfigPath = process.env.AIRNODE_FEED_CONFIG_PATH;
 
   // Populate the source and target Signed API URLs.
   configTemplate.signedApis[0]!.url = targetSignedApiUrl;
@@ -90,9 +93,8 @@ async function main() {
 
   for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
     const airnode = availableAirnode;
-    const signedDatasResponse = await fetch(`${sourceSignedApiUrl}/${sourceSignedApiEndpointPath}/${airnode}`).then(
-      (res) => res.json() as any
-    );
+    const path = sourceSignedApiEndpointPath ? `/${sourceSignedApiEndpointPath}/${airnode}` : `/${airnode}`; // Trick for the old style of Signed API (e.g. legacy Nodary implementation).
+    const signedDatasResponse = await fetch(`${sourceSignedApiUrl}/${path}`).then((res) => res.json() as any);
     const signedDatas = signedDatasResponse.data;
     if (Object.keys(signedDatas).length < beaconsCount) {
       console.info(
@@ -105,7 +107,6 @@ async function main() {
     console.info(`Using Airnode ${airnode} to create the configuration.`);
 
     // Create OIS endpoint and API specification path.
-    const path = `/${sourceSignedApiEndpointPath}/${airnode}`;
     const endpoint = {
       ...endpointTemplate,
       name: airnode,
@@ -145,7 +146,7 @@ async function main() {
       configTemplate.triggers.signedApiUpdates.push({
         signedApiName: 'perf-test-signed-api',
         templateIds: [templateId],
-        fetchInterval: 1, // Set to a larger value so that we don't spam the Nodary pool API that much because it rate limits us.
+        fetchInterval,
         updateDelay: 0,
       });
     }
@@ -153,8 +154,8 @@ async function main() {
     break;
   }
 
-  console.info('Writing configuration to "airnode-feed.json".');
-  writeFileSync(join(__dirname, 'airnode-feed.json'), `${JSON.stringify(configTemplate, null, 2)}\n`);
+  console.info(`Writing configuration to: ${airnodeFeedConfigPath}.`);
+  writeFileSync(airnodeFeedConfigPath, `${JSON.stringify(configTemplate, null, 2)}\n`);
 }
 
 // eslint-disable-next-line unicorn/prefer-top-level-await

@@ -5,15 +5,6 @@ import { join } from 'node:path';
 import { ethers } from 'ethers';
 import prettier from 'prettier';
 
-const changeAirnodeFeedMnemonic = async (mnemonic: string) => {
-  const configPath = join(__dirname, 'config/airnode-feed.json');
-  const config = JSON.parse(readFileSync(configPath, 'utf8'));
-  config.nodeSettings.airnodeWalletMnemonic = mnemonic;
-  const options = await prettier.resolveConfig(configPath);
-  const formattedFile = await prettier.format(JSON.stringify(config, null, 2), { ...options, parser: 'json' });
-  writeFileSync(configPath, formattedFile);
-};
-
 // The script creates a random mnemonic and writes it into airnode-feed.json configuration and starts an Airnode feed
 // service which reads this configuration and populates the Signed API (as specified in the configuration). These
 // Airnode feeds are started in parallel with a small delay to respect the source API and the host machine.
@@ -41,10 +32,8 @@ const main = async () => {
       });
     }
 
-    cluster.on('exit', async (worker, code, signal) => {
-      console.info(`Worker ${worker.process.pid} died with code: ${code}, and signal: ${signal}`);
-      console.info('Main process is exiting. Reverting the Airnode feed configuration.');
-      await changeAirnodeFeedMnemonic('destroy manual orange pole pioneer enemy detail lady cake bus shed visa');
+    cluster.on('exit', (worker, code, signal) => {
+      console.info(`Main process ${worker.process.pid} died with code: ${code}, and signal: ${signal}`);
     });
 
     return;
@@ -58,10 +47,15 @@ const main = async () => {
   // Change the Airnode feed mnemonic.
   const mnemonic = ethers.Wallet.createRandom().mnemonic.phrase;
   console.info(`Worker ${process.env.SERVICE_DIR} is using mnemonic: ${mnemonic}`);
-  await changeAirnodeFeedMnemonic(mnemonic);
+  const configPath = join(__dirname, 'config/airnode-feed.json');
+  const config = JSON.parse(readFileSync(configPath, 'utf8'));
+  config.nodeSettings.airnodeWalletMnemonic = mnemonic;
+  const options = await prettier.resolveConfig(configPath);
+  const formattedFile = await prettier.format(JSON.stringify(config, null, 2), { ...options, parser: 'json' });
+  writeFileSync(configPath, formattedFile);
 
   // Start the Airnode feed service.
-  require('../../../packages/airnode-feed/dist/src/index.js');
+  require('../../../airnode-feed/dist/src/index.js');
 
   // Wait for 5 seconds for the service to push the signed data to Signed API.
   await new Promise((resolve) => setTimeout(resolve, 5000));

@@ -1,0 +1,96 @@
+{
+  "templates": {
+    "0x5f64022373e074f477f1ee997801bb3212adbc0a97e7daf3a305e67337f77f00": {
+      "endpointId": "0xb01ca13815db12df631e62e00460477c766333d797a6aa34b60b4d96c886bfcf",
+      "parameters": [
+        {
+          "type": "string",
+          "name": "responseDataKey",
+          "value": "0x919e95709b0bef160849e92d2b2a362bbf1409dbd4ac982af32a959b696c4ecc"
+        }
+      ]
+    }
+  },
+  "endpoints": {
+    "0xb01ca13815db12df631e62e00460477c766333d797a6aa34b60b4d96c886bfcf": {
+      "endpointName": "0x59C5D694ae5c20E5b62FCD40A0068481c66a4712",
+      "oisTitle": "API"
+    }
+  },
+  "triggers": {
+    "signedApiUpdates": [
+      {
+        "signedApiName": "perf-test-signed-api",
+        "templateIds": [
+          "0x5f64022373e074f477f1ee997801bb3212adbc0a97e7daf3a305e67337f77f00"
+        ],
+        "fetchInterval": 86400,
+        "updateDelay": 0
+      }
+    ]
+  },
+  "signedApis": [
+    {
+      "name": "perf-test-signed-api",
+      "url": "http://signed-api-elb-source-id-2-45327119.eu-west-1.elb.amazonaws.com/"
+    }
+  ],
+  "ois": [
+    {
+      "oisFormat": "2.3.0",
+      "title": "API",
+      "version": "0.2.0",
+      "apiSpecifications": {
+        "components": {
+          "securitySchemes": {}
+        },
+        "paths": {
+          "/0x59C5D694ae5c20E5b62FCD40A0068481c66a4712": {
+            "get": {
+              "parameters": []
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "https://pool.nodary.io"
+          }
+        ],
+        "security": {}
+      },
+      "endpoints": [
+        {
+          "fixedOperationParameters": [],
+          "parameters": [],
+          "reservedParameters": [
+            {
+              "name": "_type",
+              "fixed": "bytes32"
+            }
+          ],
+          "preProcessingSpecificationV2": {
+            "environment": "Node",
+            "value": "() => { return { endpointParameters: {} }; }",
+            "timeoutMs": 5000
+          },
+          "postProcessingSpecificationV2": {
+            "environment": "Node",
+            "value": "({ endpointParameters, response }) => { return { response: response.data[endpointParameters.responseDataKey].encodedValue }; }",
+            "timeoutMs": 5000
+          },
+          "name": "0x59C5D694ae5c20E5b62FCD40A0068481c66a4712",
+          "operation": {
+            "method": "get",
+            "path": "/0x59C5D694ae5c20E5b62FCD40A0068481c66a4712"
+          }
+        }
+      ]
+    }
+  ],
+  "apiCredentials": [],
+  "nodeSettings": {
+    "nodeVersion": "0.1.0",
+    "airnodeWalletMnemonic": "destroy manual orange pole pioneer enemy detail lady cake bus shed visa",
+    "stage": "performance-test"
+  }
+}
