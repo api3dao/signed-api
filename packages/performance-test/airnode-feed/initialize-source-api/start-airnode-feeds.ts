@@ -6,8 +6,8 @@ import { ethers } from 'ethers';
 import prettier from 'prettier';
 
 // The script creates a random mnemonic and writes it into airnode-feed.json configuration and starts an Airnode feed
-// service which reads this configuration and populates the Signed API (as specified in the configuration). These
-// Airnode feeds are started in parallel with a small delay to respect the source API and the host machine.
+// service which reads this configuration and sets the Signed API (as specified in the configuration). These Airnode
+// feeds are started in parallel with a small delay to respect the source API and the host machine.
 const main = async () => {
   if (cluster.isPrimary) {
     console.info(`Primary ${process.pid} is running`);

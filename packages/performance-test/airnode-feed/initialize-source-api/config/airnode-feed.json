@@ -32,7 +32,7 @@
   "signedApis": [
     {
       "name": "perf-test-signed-api",
-      "url": "http://signed-api-elb-source-id-2-45327119.eu-west-1.elb.amazonaws.com/"
+      "url": "http://signed-api-elb-source-45327119.eu-west-1.elb.amazonaws.com/"
     }
   ],
   "ois": [

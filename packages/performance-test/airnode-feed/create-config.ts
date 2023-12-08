@@ -7,20 +7,20 @@ import { deriveTemplateId } from '../../api/test/utils';
 
 const configTemplate = {
   templates: {
-    // NOTE: Will be populated by the script.
+    // NOTE: Will be set by the script.
   } as any,
   endpoints: {
-    // NOTE: Will be populated by the script.
+    // NOTE: Will be set by the script.
   } as any,
   triggers: {
     signedApiUpdates: [
-      // NOTE: Will be populated by the script.
+      // NOTE: Will be set by the script.
     ] as any[],
   },
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: '', // NOTE: The "url" will be populated by the script.
+      url: '', // NOTE: The "url" will be set by the script.
     },
   ],
   ois: [
@@ -33,13 +33,13 @@ const configTemplate = {
           securitySchemes: {},
         },
         paths: {
-          // NOTE: Will be populated by the script.
+          // NOTE: Will be set by the script.
         } as any,
-        servers: [{ url: '' }], // NOTE: Will be populated by the script.
+        servers: [{ url: '' }], // NOTE: Will be set by the script.
         security: {},
       },
       endpoints: [
-        // NOTE: Will be populated by the script.
+        // NOTE: Will be set by the script.
       ] as any[],
     },
   ],
@@ -51,7 +51,7 @@ const configTemplate = {
   },
 };
 
-// NOTE: The name and operation of the endpoint are populated by the script.
+// NOTE: The name and operation of the endpoint are set by the script.
 const endpointTemplate = {
   fixedOperationParameters: [],
   parameters: [],
@@ -74,16 +74,18 @@ async function main() {
   const sourceSignedApiUrl = process.env.SOURCE_SIGNED_API_URL.replace(/\/+$/, '');
   if (!process.env.SOURCE_SIGNED_API_ENDPOINT_PATH) throw new Error('SOURCE_SIGNED_API_ENDPOINT_PATH is not set');
   const sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replace(/\/+$/, '');
-  if (!process.env.BEACONS_COUNT) throw new Error('BEACONS_COUNT is not set');
-  const beaconsCount = Number(process.env.BEACONS_COUNT!);
+  if (!process.env.SIGNED_DATAS_PER_API_RESPONSE) throw new Error('SIGNED_DATAS_PER_API_RESPONSE is not set');
+  const beaconsCount = Number(process.env.SIGNED_DATAS_PER_API_RESPONSE!);
   if (!process.env.TARGET_SIGNED_API_URL) throw new Error('TARGET_SIGNED_API_URL is not set');
   const targetSignedApiUrl = process.env.TARGET_SIGNED_API_URL;
   if (!process.env.FETCH_INTERVAL) throw new Error('FETCH_INTERVAL is not set');
   const fetchInterval = Number(process.env.FETCH_INTERVAL!);
   if (!process.env.AIRNODE_FEED_CONFIG_PATH) throw new Error('AIRNODE_FEED_CONFIG_PATH is not set');
   const airnodeFeedConfigPath = process.env.AIRNODE_FEED_CONFIG_PATH;
+  if (!process.env.TRIGGERS_COUNT) throw new Error('TRIGGERS_COUNT is not set');
+  const triggersCount = Number(process.env.TRIGGERS_COUNT!);
 
-  // Populate the source and target Signed API URLs.
+  // Initialize the source and target Signed API URLs.
   configTemplate.signedApis[0]!.url = targetSignedApiUrl;
   configTemplate.ois[0]!.apiSpecifications.servers[0]!.url = sourceSignedApiUrl;
 
@@ -91,7 +93,13 @@ async function main() {
   const availableAirnodes: string[] = availableAirnodesResponse['available-airnodes'];
   console.info(`There are ${availableAirnodesResponse.count} available Airnode(s).`);
 
+  let currentTriggersCount = 0;
   for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
+    if (currentTriggersCount === triggersCount) {
+      console.info('The required number of triggers has been created.');
+      break;
+    }
+
     const airnode = availableAirnode;
     const path = sourceSignedApiEndpointPath ? `/${sourceSignedApiEndpointPath}/${airnode}` : `/${airnode}`; // Trick for the old style of Signed API (e.g. legacy Nodary implementation).
     const signedDatasResponse = await fetch(`${sourceSignedApiUrl}/${path}`).then((res) => res.json() as any);
@@ -141,17 +149,16 @@ async function main() {
       const templateId = deriveTemplateId(endpointId, encode(template.parameters));
       templateIds.push(templateId);
       configTemplate.templates[templateId] = template;
-
-      // Create trigger.
-      configTemplate.triggers.signedApiUpdates.push({
-        signedApiName: 'perf-test-signed-api',
-        templateIds: [templateId],
-        fetchInterval,
-        updateDelay: 0,
-      });
     }
 
-    break;
+    // Create trigger.
+    configTemplate.triggers.signedApiUpdates.push({
+      signedApiName: 'perf-test-signed-api',
+      templateIds,
+      fetchInterval,
+      updateDelay: 0,
+    });
+    currentTriggersCount++;
   }
 
   console.info(`Writing configuration to: ${airnodeFeedConfigPath}.`);
