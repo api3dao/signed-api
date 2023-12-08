@@ -6,6 +6,8 @@ A monorepo for managing signed data. Consists of:
   signed data for a specific airnode.
 - [airnode-feed](./packages/airnode-feed/README.md) - A service for pushing data provider signed data.
 - [e2e](./packages/e2e/README.md) - End to end test utilizing Mock API, Airnode feed and signed API.
+- [performance-test](./packages/performance-test/README.md) - Configurations and scripts to allow running performance
+  tests and benchmarks on AWS.
 
 Read the
 [specification](https://docs.google.com/document/d/1-kUPIXSD4ZW1SGs_P8HsejC9k9aHB-NXs9_6-OclnmE/edit#heading=h.i307237rdfda)

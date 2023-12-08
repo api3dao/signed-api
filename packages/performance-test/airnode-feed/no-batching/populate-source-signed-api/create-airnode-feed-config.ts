@@ -3,8 +3,8 @@ import { join } from 'node:path';
 
 import { encode } from '@api3/airnode-abi';
 
-import { deriveEndpointId } from '../../../../packages/airnode-feed/src/utils';
-import { deriveTemplateId } from '../../../../packages/api/test/utils';
+import { deriveEndpointId } from '../../../../airnode-feed/src/utils';
+import { deriveTemplateId } from '../../../../api/test/utils';
 
 const configTemplate = {
   templates: {

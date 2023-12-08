@@ -14,9 +14,11 @@ secrets.env
 signed-api.json
 .DS_Store
 
-# Do not ignore e2e config files. These don't need to be listed on Dockerignore because e2e package is not dockerized.
+# Do not ignore e2e config files. These don't need to be listed in Dockerignore because e2e package is not dockerized.
 !packages/e2e/**/airnode-feed.json
 !packages/e2e/**/.env
 !packages/e2e/**/signed-api.json
 
-!performance-test/**
+# Do not ignore performance-test config files. These don't need to be listed on Dockerignore because e2e package is not dockerized.
+!packages/performance-test/**/airnode-feed.json
+!packages/performance-test/**/signed-api.json
