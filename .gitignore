@@ -22,3 +22,4 @@ signed-api.json
 # Do not ignore performance-test config files. These don't need to be listed on Dockerignore because e2e package is not dockerized.
 !packages/performance-test/airnode-feed/airnode-feed.json
 !packages/performance-test/signed-api/signed-api.json
+!packages/performance-test/airnode-feed/initialize-source-api/config/secrets.env

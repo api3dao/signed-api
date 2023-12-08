@@ -162,6 +162,8 @@ async function main() {
     currentTriggersCount++;
   }
 
+  if (currentTriggersCount !== triggersCount) throw new Error('Not enough Airnodes to create the configuration.');
+
   console.info(`Writing configuration to: ${airnodeFeedConfigPath}.`);
   writeFileSync(airnodeFeedConfigPath, `${JSON.stringify(configTemplate, null, 2)}\n`);
 }
