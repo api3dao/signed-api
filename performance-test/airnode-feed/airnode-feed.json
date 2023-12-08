@@ -4207,2401 +4207,1801 @@
     "signedApiUpdates": [
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x753f94cabebc223498e00e4fe076f9c906ef80bd5062954da7622aea912f4261"
-        ],
+        "templateIds": ["0x753f94cabebc223498e00e4fe076f9c906ef80bd5062954da7622aea912f4261"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x39d8f4899b7c1c717a030ce66716df659c6c40578143d1e94b534fb11b9f8a7f"
-        ],
+        "templateIds": ["0x39d8f4899b7c1c717a030ce66716df659c6c40578143d1e94b534fb11b9f8a7f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9c0523281dff9ee58916b0cdae7bfd7c98cc54c6599f56f6fd74b7267dc0cd00"
-        ],
+        "templateIds": ["0x9c0523281dff9ee58916b0cdae7bfd7c98cc54c6599f56f6fd74b7267dc0cd00"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x518b9d578d351056c16afbd3a8fd2f516aef63b9dc77f37041ea24cb59ff2804"
-        ],
+        "templateIds": ["0x518b9d578d351056c16afbd3a8fd2f516aef63b9dc77f37041ea24cb59ff2804"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6ce46511bd502b671c47c2648ad1bc7032d063258dfa2b69e07c95e2ea7ee2a4"
-        ],
+        "templateIds": ["0x6ce46511bd502b671c47c2648ad1bc7032d063258dfa2b69e07c95e2ea7ee2a4"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd34ccc7b8004ebf0b08290f2ad5dd8fdd312a5f139aacbfa7e6fb3263c29d49f"
-        ],
+        "templateIds": ["0xd34ccc7b8004ebf0b08290f2ad5dd8fdd312a5f139aacbfa7e6fb3263c29d49f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8d89d45b9f31673084db604feef1403775e548aa45c8d84c53b768535c088f3f"
-        ],
+        "templateIds": ["0x8d89d45b9f31673084db604feef1403775e548aa45c8d84c53b768535c088f3f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd40949056a601dba791e7f4a1631ad930f9645792a53cb06f65859f4af440d4e"
-        ],
+        "templateIds": ["0xd40949056a601dba791e7f4a1631ad930f9645792a53cb06f65859f4af440d4e"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc38965fef1c0974ac778c6c89724a462e46481eaeab7aa9c1b427b833898c367"
-        ],
+        "templateIds": ["0xc38965fef1c0974ac778c6c89724a462e46481eaeab7aa9c1b427b833898c367"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3b668c45eeb90729206f2110935e0fef60a585870719b080f123ba227dab1302"
-        ],
+        "templateIds": ["0x3b668c45eeb90729206f2110935e0fef60a585870719b080f123ba227dab1302"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xdb7cc0d7044c9cc436e1d67c50cb65e997a4cd719f39d027caa111b1be788d8d"
-        ],
+        "templateIds": ["0xdb7cc0d7044c9cc436e1d67c50cb65e997a4cd719f39d027caa111b1be788d8d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa1de05c3a3144fa6e5c1761f86c75ef3e0742dc027abd4cae740c4dbd499005d"
-        ],
+        "templateIds": ["0xa1de05c3a3144fa6e5c1761f86c75ef3e0742dc027abd4cae740c4dbd499005d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf7c1231462683d72afa5b1783bea9b4a9d4fff50b1b0854ec30920d2be837742"
-        ],
+        "templateIds": ["0xf7c1231462683d72afa5b1783bea9b4a9d4fff50b1b0854ec30920d2be837742"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe591f01a70f026d1f639f04a3866812e6fb1961ca48643a12ca4b010e0ee050a"
-        ],
+        "templateIds": ["0xe591f01a70f026d1f639f04a3866812e6fb1961ca48643a12ca4b010e0ee050a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x61bd34a6bb21824f10d78db84791738f470fe9edcff9b5d0db093158b12dab5b"
-        ],
+        "templateIds": ["0x61bd34a6bb21824f10d78db84791738f470fe9edcff9b5d0db093158b12dab5b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe8e18dd572dffa1aa0a46b5e5215cb4560a4e814ccc0401fa14efed2d72cb907"
-        ],
+        "templateIds": ["0xe8e18dd572dffa1aa0a46b5e5215cb4560a4e814ccc0401fa14efed2d72cb907"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa6164c94de41701bff7ee527edaee12af94cd1d11d47eb7ef5d3987da9a7d96f"
-        ],
+        "templateIds": ["0xa6164c94de41701bff7ee527edaee12af94cd1d11d47eb7ef5d3987da9a7d96f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x471f68c278ca8c7778b2ffa5197ea5329a3bc3145b20ad210fc1748b9552c4ba"
-        ],
+        "templateIds": ["0x471f68c278ca8c7778b2ffa5197ea5329a3bc3145b20ad210fc1748b9552c4ba"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9f3129969b41d6e67da6cee015444aedd9f09a874aaa150f256c19e55e69908f"
-        ],
+        "templateIds": ["0x9f3129969b41d6e67da6cee015444aedd9f09a874aaa150f256c19e55e69908f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8b39eeb4b99d2a3a40e7994fdf5959107f1acb844fa1c8948b92b320de8ea25a"
-        ],
+        "templateIds": ["0x8b39eeb4b99d2a3a40e7994fdf5959107f1acb844fa1c8948b92b320de8ea25a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xea3f3a4a70d25c0779964b4a692d9433d6d61f128088f820eb6e7c79cfffa6ea"
-        ],
+        "templateIds": ["0xea3f3a4a70d25c0779964b4a692d9433d6d61f128088f820eb6e7c79cfffa6ea"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1bede408040242008169c72442f6a90a9785bcd4968edcafe73c124ce3c72c20"
-        ],
+        "templateIds": ["0x1bede408040242008169c72442f6a90a9785bcd4968edcafe73c124ce3c72c20"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe96c93c620b8cb03bc9b87c43aa5985935f6a22d0041e661ff8930f159bf9a95"
-        ],
+        "templateIds": ["0xe96c93c620b8cb03bc9b87c43aa5985935f6a22d0041e661ff8930f159bf9a95"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfa65c217a1749b957cefd5585ed8795119c15b66d05537b1e0453c9c38530d60"
-        ],
+        "templateIds": ["0xfa65c217a1749b957cefd5585ed8795119c15b66d05537b1e0453c9c38530d60"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf01fdd1dc57e9b024c8bd65ad50978d222bdcad751f34a865cebc988534d236c"
-        ],
+        "templateIds": ["0xf01fdd1dc57e9b024c8bd65ad50978d222bdcad751f34a865cebc988534d236c"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x4878b4a6a6c724782b633f91990c553df905c5cc83576eae1741a452a0f0a5cf"
-        ],
+        "templateIds": ["0x4878b4a6a6c724782b633f91990c553df905c5cc83576eae1741a452a0f0a5cf"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xba3d56c7714a66c03f76e5f7751177afbfc905bc8f254aee2fe98ad400bab446"
-        ],
+        "templateIds": ["0xba3d56c7714a66c03f76e5f7751177afbfc905bc8f254aee2fe98ad400bab446"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0315414fb6a85187e0548b11e9018ca9d0dcaa1c7b37d04b3b8a6167d4151d79"
-        ],
+        "templateIds": ["0x0315414fb6a85187e0548b11e9018ca9d0dcaa1c7b37d04b3b8a6167d4151d79"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc81a694ee1adfda91478e38e9bf51c0c9980e9719cc4f3739fe053d75dd0ecca"
-        ],
+        "templateIds": ["0xc81a694ee1adfda91478e38e9bf51c0c9980e9719cc4f3739fe053d75dd0ecca"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc4d0a083a1b70b5067c21e5d8e422b29fc822f210b31f9b19b8b4203061526d7"
-        ],
+        "templateIds": ["0xc4d0a083a1b70b5067c21e5d8e422b29fc822f210b31f9b19b8b4203061526d7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8c96a119be74dabfe7fd0dcab51caa879695089a71386d5d2f922055d25b2661"
-        ],
+        "templateIds": ["0x8c96a119be74dabfe7fd0dcab51caa879695089a71386d5d2f922055d25b2661"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xbf38a7d76859bd8b2b8548fa196a4bd5a24a68d2a588dd0d722bcf16cfe854fc"
-        ],
+        "templateIds": ["0xbf38a7d76859bd8b2b8548fa196a4bd5a24a68d2a588dd0d722bcf16cfe854fc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xcfb073e00d9a1af0fa2ad4d97ee1e4f09791a95c3889889cb17a10cad4e7c5d0"
-        ],
+        "templateIds": ["0xcfb073e00d9a1af0fa2ad4d97ee1e4f09791a95c3889889cb17a10cad4e7c5d0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x4651cb9c4107de576a479aea8845e39468013ac08a7b82fec3cede1164b3c6dd"
-        ],
+        "templateIds": ["0x4651cb9c4107de576a479aea8845e39468013ac08a7b82fec3cede1164b3c6dd"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x158797825956c16f4ee19d5044cbdea297cd84b42a5073d04f329801b1d8f675"
-        ],
+        "templateIds": ["0x158797825956c16f4ee19d5044cbdea297cd84b42a5073d04f329801b1d8f675"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x64a340e8b4df3018f2d6b70257099f68c777adc1e1330ca05c87656ac8a85ba3"
-        ],
+        "templateIds": ["0x64a340e8b4df3018f2d6b70257099f68c777adc1e1330ca05c87656ac8a85ba3"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x478cd8fb823bf9852c33a06b001521cc6c5cef516107143aa03cf946dda29d65"
-        ],
+        "templateIds": ["0x478cd8fb823bf9852c33a06b001521cc6c5cef516107143aa03cf946dda29d65"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xff7ca0b824f7c37776feebe76554eccccfe42d38b18038fe00ce6f0ede2e9d84"
-        ],
+        "templateIds": ["0xff7ca0b824f7c37776feebe76554eccccfe42d38b18038fe00ce6f0ede2e9d84"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x97abd7fc88d6440da39db349d9f6bc046b134da64bf64b711746a590a7370541"
-        ],
+        "templateIds": ["0x97abd7fc88d6440da39db349d9f6bc046b134da64bf64b711746a590a7370541"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xcf820b20bacfddf9c5ac274221c86049f670d4f8bdccba23d3157f9df26ff73b"
-        ],
+        "templateIds": ["0xcf820b20bacfddf9c5ac274221c86049f670d4f8bdccba23d3157f9df26ff73b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb34a927f31e40e35bb41addb5b0cc297fc7f7ae4d3a39a5960e351e182b58d9b"
-        ],
+        "templateIds": ["0xb34a927f31e40e35bb41addb5b0cc297fc7f7ae4d3a39a5960e351e182b58d9b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf4c1024e87abeb82ff7a0b3cefd97fc86e0f29d10debd0e0f2a3b889d479d74a"
-        ],
+        "templateIds": ["0xf4c1024e87abeb82ff7a0b3cefd97fc86e0f29d10debd0e0f2a3b889d479d74a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8bd009a122cac1393b6ae3ea1afaac37c7a4c386f3c4fe93918c39144e27be9f"
-        ],
+        "templateIds": ["0x8bd009a122cac1393b6ae3ea1afaac37c7a4c386f3c4fe93918c39144e27be9f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x147dd5edf2525ae3e7d4d121a18389124375a2db799cc75e1256244c924d20e4"
-        ],
+        "templateIds": ["0x147dd5edf2525ae3e7d4d121a18389124375a2db799cc75e1256244c924d20e4"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x85a0418f7f7709a332b815abd9b522a81a59d2345b5b55a41031eded025a5403"
-        ],
+        "templateIds": ["0x85a0418f7f7709a332b815abd9b522a81a59d2345b5b55a41031eded025a5403"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x18034735c04c0c5a14042f972e557b7ca1b2870f8b0eaaad4cf16079fefb5d17"
-        ],
+        "templateIds": ["0x18034735c04c0c5a14042f972e557b7ca1b2870f8b0eaaad4cf16079fefb5d17"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf7ee69d521c9f0ca87370f70c6ce8ef5df4207008bbe430d010aa1789e2172c9"
-        ],
+        "templateIds": ["0xf7ee69d521c9f0ca87370f70c6ce8ef5df4207008bbe430d010aa1789e2172c9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf6779193e22bb9f4e2bb392fbc9441d61573388bf9be4b83c2e2e20ec8a04199"
-        ],
+        "templateIds": ["0xf6779193e22bb9f4e2bb392fbc9441d61573388bf9be4b83c2e2e20ec8a04199"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x391fa663f0a910741690c7886909b511a4aa895633d8938b6ed49b3ae2430f28"
-        ],
+        "templateIds": ["0x391fa663f0a910741690c7886909b511a4aa895633d8938b6ed49b3ae2430f28"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7515756bebdddc037f32cc435509b360f589939ec99d39923c944c39da5c0094"
-        ],
+        "templateIds": ["0x7515756bebdddc037f32cc435509b360f589939ec99d39923c944c39da5c0094"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb0abbabfcf82ba51dc8d5f90ebb9dee0bd82d11e5612eed6861304a946decf23"
-        ],
+        "templateIds": ["0xb0abbabfcf82ba51dc8d5f90ebb9dee0bd82d11e5612eed6861304a946decf23"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa3c51585e66fe84695cc11e597de4b8cb6bc60290ba2e1e71e1dfe3a4f5053b2"
-        ],
+        "templateIds": ["0xa3c51585e66fe84695cc11e597de4b8cb6bc60290ba2e1e71e1dfe3a4f5053b2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x95f76f1f2ce4dd0b37367faf7d12ada1d2ad0d6143b49b382e5fd6906d9e6813"
-        ],
+        "templateIds": ["0x95f76f1f2ce4dd0b37367faf7d12ada1d2ad0d6143b49b382e5fd6906d9e6813"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6ae6b81535f1bcec2d5d0ec7b5529a50652e725d61bea78bb0c0e746ec94e5c3"
-        ],
+        "templateIds": ["0x6ae6b81535f1bcec2d5d0ec7b5529a50652e725d61bea78bb0c0e746ec94e5c3"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd48801dc9b50c706f8188dca0fd067bd7333bdac86d235b4d4f099e44336bb31"
-        ],
+        "templateIds": ["0xd48801dc9b50c706f8188dca0fd067bd7333bdac86d235b4d4f099e44336bb31"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfebebd2ed4715fbdb83c60441e3f6dc1fc43c3473a531dfc2883b99be011e7c1"
-        ],
+        "templateIds": ["0xfebebd2ed4715fbdb83c60441e3f6dc1fc43c3473a531dfc2883b99be011e7c1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0afe78dd470be70ee69d62fac64c763597b453ef3a5d96ebef07508312bda6a7"
-        ],
+        "templateIds": ["0x0afe78dd470be70ee69d62fac64c763597b453ef3a5d96ebef07508312bda6a7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5171bf2830467948b48804445acb04589b34fa791e26fc606dc944053bc36eed"
-        ],
+        "templateIds": ["0x5171bf2830467948b48804445acb04589b34fa791e26fc606dc944053bc36eed"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1fad5320bd318f126a79dc3cb977d565f9460efbc296d2cc3f708884f96e62b0"
-        ],
+        "templateIds": ["0x1fad5320bd318f126a79dc3cb977d565f9460efbc296d2cc3f708884f96e62b0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7b8260d70c6da14f79be0e01fb00556bfd3009e86c960940e9fa7b6e4725ceeb"
-        ],
+        "templateIds": ["0x7b8260d70c6da14f79be0e01fb00556bfd3009e86c960940e9fa7b6e4725ceeb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6b30901ba52d0f95d75f0f65094593703dea17386b7552ebd42a917700220771"
-        ],
+        "templateIds": ["0x6b30901ba52d0f95d75f0f65094593703dea17386b7552ebd42a917700220771"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb5bee20cb5631c3330984ad50194901dfd8b5ab2db10273469e340cabbbc8f8b"
-        ],
+        "templateIds": ["0xb5bee20cb5631c3330984ad50194901dfd8b5ab2db10273469e340cabbbc8f8b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd517c426535e0b45c964409eadc0994da7c8d56c7d7784c48f63c4f4f998f93d"
-        ],
+        "templateIds": ["0xd517c426535e0b45c964409eadc0994da7c8d56c7d7784c48f63c4f4f998f93d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8b9da8abf2a62d20f7950ee1a1c975fbc3e34e264bac33de5d94833cd1ae5130"
-        ],
+        "templateIds": ["0x8b9da8abf2a62d20f7950ee1a1c975fbc3e34e264bac33de5d94833cd1ae5130"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3f937b9aaffce14098c3f0c6043b984e2d47bc0f87e1114453a9e0387210db26"
-        ],
+        "templateIds": ["0x3f937b9aaffce14098c3f0c6043b984e2d47bc0f87e1114453a9e0387210db26"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb89e769b6db260d64a8d5bf60e5bcfd4657a079679ebbb2014715f2818317ef3"
-        ],
+        "templateIds": ["0xb89e769b6db260d64a8d5bf60e5bcfd4657a079679ebbb2014715f2818317ef3"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xbfacb1e967774f4d5501a18f3d70ef714f82a07dbb41a4575db2aa7d65457595"
-        ],
+        "templateIds": ["0xbfacb1e967774f4d5501a18f3d70ef714f82a07dbb41a4575db2aa7d65457595"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x50b22b03e0d97f8772dcda9a7073ade5dfdde9198e6dc6fb500c1911c55fdc91"
-        ],
+        "templateIds": ["0x50b22b03e0d97f8772dcda9a7073ade5dfdde9198e6dc6fb500c1911c55fdc91"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x21703348ad25926266c11d8d98ce0ffcbc63955136d24c735029bf6612ffd128"
-        ],
+        "templateIds": ["0x21703348ad25926266c11d8d98ce0ffcbc63955136d24c735029bf6612ffd128"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3c7b9e601e5a340cee2853d4af939f8d7fa6095923878ecebe21ba73900e5b40"
-        ],
+        "templateIds": ["0x3c7b9e601e5a340cee2853d4af939f8d7fa6095923878ecebe21ba73900e5b40"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xaba8b2192ea70758043255fb041174d1001acc051dbc71fa4eb1c26f43a785af"
-        ],
+        "templateIds": ["0xaba8b2192ea70758043255fb041174d1001acc051dbc71fa4eb1c26f43a785af"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xdfec1eb55a02fa0f82d9514ffd3645ae19134ea71eb392ffbdccd262bf798190"
-        ],
+        "templateIds": ["0xdfec1eb55a02fa0f82d9514ffd3645ae19134ea71eb392ffbdccd262bf798190"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb12fa0a1c589d9a3a8f6cda8a89e8ebda1a7451a936bba7ff10aea977b7db7d9"
-        ],
+        "templateIds": ["0xb12fa0a1c589d9a3a8f6cda8a89e8ebda1a7451a936bba7ff10aea977b7db7d9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9a675402f3617f46b78d39b936fbce5dbc7f0f8e9e2a8a3c18bf18f4378bdfcc"
-        ],
+        "templateIds": ["0x9a675402f3617f46b78d39b936fbce5dbc7f0f8e9e2a8a3c18bf18f4378bdfcc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xbbb0a733a7083bc09229d3b9b99d30df9de6861fe73e471a8ee1ed539c65368d"
-        ],
+        "templateIds": ["0xbbb0a733a7083bc09229d3b9b99d30df9de6861fe73e471a8ee1ed539c65368d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2aaa807370103f23254d23739235d91047c34d41a631104b8779a4901edd10fc"
-        ],
+        "templateIds": ["0x2aaa807370103f23254d23739235d91047c34d41a631104b8779a4901edd10fc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xda0f868f341901846ce80b2526f718b432ee01f15a156bb2add8b8a64a6e2104"
-        ],
+        "templateIds": ["0xda0f868f341901846ce80b2526f718b432ee01f15a156bb2add8b8a64a6e2104"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x624d774cfcece278f5adcff73a97ec8ed32101fa7bc9bd7ea2c228e5d58e2af9"
-        ],
+        "templateIds": ["0x624d774cfcece278f5adcff73a97ec8ed32101fa7bc9bd7ea2c228e5d58e2af9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x73c1d9460890a092757293eb1a885d228e9bc8169848d016a2177c9b6c7982cf"
-        ],
+        "templateIds": ["0x73c1d9460890a092757293eb1a885d228e9bc8169848d016a2177c9b6c7982cf"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x10d69289795ee2d75028d80c2c5dd958ba88e7adb9c0aef601d7b42006a88dcb"
-        ],
+        "templateIds": ["0x10d69289795ee2d75028d80c2c5dd958ba88e7adb9c0aef601d7b42006a88dcb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x073e2be26a1f5216a07c79dae63d6b5506e6d195df5dc884995c42a5386ea155"
-        ],
+        "templateIds": ["0x073e2be26a1f5216a07c79dae63d6b5506e6d195df5dc884995c42a5386ea155"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5f660a688d00be88117e13022744f88a7212ea0ea582ff584cd25d1f3d1e9ff1"
-        ],
+        "templateIds": ["0x5f660a688d00be88117e13022744f88a7212ea0ea582ff584cd25d1f3d1e9ff1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa0dc1ee4edb7d0540b4a5c773c01ad9f0b6509a9917e8d60627ed1139257eea0"
-        ],
+        "templateIds": ["0xa0dc1ee4edb7d0540b4a5c773c01ad9f0b6509a9917e8d60627ed1139257eea0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xba6703b9f23e0359f8a6328497c6b83e88ac13f5f7a270f00131509a9fad16fe"
-        ],
+        "templateIds": ["0xba6703b9f23e0359f8a6328497c6b83e88ac13f5f7a270f00131509a9fad16fe"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x35fc9f0d8b3eaca95c8be2b9b2fa84dc89abfab285ae93d419df6e0f3400943a"
-        ],
+        "templateIds": ["0x35fc9f0d8b3eaca95c8be2b9b2fa84dc89abfab285ae93d419df6e0f3400943a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x911fccb50e1abde368f2959dbdf76efa55b9de7aff080f895b5fd9e42eafdea9"
-        ],
+        "templateIds": ["0x911fccb50e1abde368f2959dbdf76efa55b9de7aff080f895b5fd9e42eafdea9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xaca47ff039e0f23ba5d9f8abd4141a4af68e1b34b91cc625e5e86533255d52f1"
-        ],
+        "templateIds": ["0xaca47ff039e0f23ba5d9f8abd4141a4af68e1b34b91cc625e5e86533255d52f1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd58ef0cba39c577948cae0d70422beca2e9ddf07a92af38e90cc89b62cc3a711"
-        ],
+        "templateIds": ["0xd58ef0cba39c577948cae0d70422beca2e9ddf07a92af38e90cc89b62cc3a711"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfd88bf51d173d56a5d5a4b65221ef51fc755deac3c306478efffcf12007aac5d"
-        ],
+        "templateIds": ["0xfd88bf51d173d56a5d5a4b65221ef51fc755deac3c306478efffcf12007aac5d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x58c70f1f9947d08c29f08705cece9fcab7b6db8a4df178e9454a7de47aed7cc6"
-        ],
+        "templateIds": ["0x58c70f1f9947d08c29f08705cece9fcab7b6db8a4df178e9454a7de47aed7cc6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc3ea2daddf76b927d63be935fe3383331794c8e29b733dfececebe477350657b"
-        ],
+        "templateIds": ["0xc3ea2daddf76b927d63be935fe3383331794c8e29b733dfececebe477350657b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1634b3a52f3a4c52aefcd3137c67a466c9df2db340f0ef8d56f0fdbaa128e7c2"
-        ],
+        "templateIds": ["0x1634b3a52f3a4c52aefcd3137c67a466c9df2db340f0ef8d56f0fdbaa128e7c2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1e1e8a930e83ec4f87a37f713a0587badcfe0592451e59098a3dc15b25208f70"
-        ],
+        "templateIds": ["0x1e1e8a930e83ec4f87a37f713a0587badcfe0592451e59098a3dc15b25208f70"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x246f0081a54729093e33c5311177972da1418ce93ce9a830f56f0c0026483520"
-        ],
+        "templateIds": ["0x246f0081a54729093e33c5311177972da1418ce93ce9a830f56f0c0026483520"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5b7fa3648240267fd32346fe66967dca64641676517bd19a01dd7513d37e12e9"
-        ],
+        "templateIds": ["0x5b7fa3648240267fd32346fe66967dca64641676517bd19a01dd7513d37e12e9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x765395a3047e651fa833143fcb6caaeb2b404dea315a25066064d8ad728483fa"
-        ],
+        "templateIds": ["0x765395a3047e651fa833143fcb6caaeb2b404dea315a25066064d8ad728483fa"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2290d28547a22822058cc653f0398f65f28c99aeec1400cae351e9b8ff24ad82"
-        ],
+        "templateIds": ["0x2290d28547a22822058cc653f0398f65f28c99aeec1400cae351e9b8ff24ad82"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfd2cc01d1cca7aab7661cf9a2625e647e90c018f5039c5b5ef0794e430f54862"
-        ],
+        "templateIds": ["0xfd2cc01d1cca7aab7661cf9a2625e647e90c018f5039c5b5ef0794e430f54862"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x77fa172e5aac102d66469460aa704ffbda3ad1aaa282a3e77ea45c16a6a924a0"
-        ],
+        "templateIds": ["0x77fa172e5aac102d66469460aa704ffbda3ad1aaa282a3e77ea45c16a6a924a0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1ea7cdab7e655860a80ede6fe4b605f5871365c049409ec75add27f794ef9914"
-        ],
+        "templateIds": ["0x1ea7cdab7e655860a80ede6fe4b605f5871365c049409ec75add27f794ef9914"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5823ae9351b6372a5b07cce7fdcc90b4e2e241dd4af0bc1d0428e8486538442c"
-        ],
+        "templateIds": ["0x5823ae9351b6372a5b07cce7fdcc90b4e2e241dd4af0bc1d0428e8486538442c"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfce3bedfbdb6a70f0285cc99db74588eb5511c2665ba43f339077c1f5cb45b7f"
-        ],
+        "templateIds": ["0xfce3bedfbdb6a70f0285cc99db74588eb5511c2665ba43f339077c1f5cb45b7f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1c4f6f0b1c286e8588b90e895aa0f302b5380eba050d5d39ea3ef29a6833303a"
-        ],
+        "templateIds": ["0x1c4f6f0b1c286e8588b90e895aa0f302b5380eba050d5d39ea3ef29a6833303a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x35e91515ae86d7b153d61c2df5ddbf92cec35f4ef67c371c4813e9a44e35e68f"
-        ],
+        "templateIds": ["0x35e91515ae86d7b153d61c2df5ddbf92cec35f4ef67c371c4813e9a44e35e68f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe4e2df9876d682ea129c6417d7064e339c55c27a8f90c6cbd5dd622b2f618d44"
-        ],
+        "templateIds": ["0xe4e2df9876d682ea129c6417d7064e339c55c27a8f90c6cbd5dd622b2f618d44"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd7782566372744894e7f4c509333f85fbca129b74ec4bcbfd289c7f57440e921"
-        ],
+        "templateIds": ["0xd7782566372744894e7f4c509333f85fbca129b74ec4bcbfd289c7f57440e921"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x602982cd9886aa20a3448b86e04466a5bc20f7ba5d919c0a129b3f1b731a13e0"
-        ],
+        "templateIds": ["0x602982cd9886aa20a3448b86e04466a5bc20f7ba5d919c0a129b3f1b731a13e0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf82f9ee5fe3fad7c33bf6e1a17876cfc9e879a261fafbef9c368ed2c0aead20e"
-        ],
+        "templateIds": ["0xf82f9ee5fe3fad7c33bf6e1a17876cfc9e879a261fafbef9c368ed2c0aead20e"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x042aac9e69d4aaff9fc01fec09401075b2042f23537b93f76a4df37a37298f63"
-        ],
+        "templateIds": ["0x042aac9e69d4aaff9fc01fec09401075b2042f23537b93f76a4df37a37298f63"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3d6f28235253714f49cdb52d65d04270e76f166f8d5ec9d3e3b768ae22ce3079"
-        ],
+        "templateIds": ["0x3d6f28235253714f49cdb52d65d04270e76f166f8d5ec9d3e3b768ae22ce3079"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x61ec890a46e99b7888448496b16bb535ffba5f74ce3eed33ae18aa00f8ef5838"
-        ],
+        "templateIds": ["0x61ec890a46e99b7888448496b16bb535ffba5f74ce3eed33ae18aa00f8ef5838"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xcc4d18940bc16d9a8396ac21017455682512150b2749739629db23572ad8139c"
-        ],
+        "templateIds": ["0xcc4d18940bc16d9a8396ac21017455682512150b2749739629db23572ad8139c"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x90dcc1da29a2e0492b6d2a728f7a7dfe001128e78f1e3a10252e05cb666aa990"
-        ],
+        "templateIds": ["0x90dcc1da29a2e0492b6d2a728f7a7dfe001128e78f1e3a10252e05cb666aa990"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x911aab92f240d93f332c4285b0c5c650bdf1bd677fb65d3c60c627de8461485b"
-        ],
+        "templateIds": ["0x911aab92f240d93f332c4285b0c5c650bdf1bd677fb65d3c60c627de8461485b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x85f3f868c083a26a09f808fbfb30cb3a0fd0ed6857f6ab78734fa4c5508b6d39"
-        ],
+        "templateIds": ["0x85f3f868c083a26a09f808fbfb30cb3a0fd0ed6857f6ab78734fa4c5508b6d39"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3568d5fc1e4ff665a357f30c41c25c5bce6af09d0202af3913555371ffbaa813"
-        ],
+        "templateIds": ["0x3568d5fc1e4ff665a357f30c41c25c5bce6af09d0202af3913555371ffbaa813"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x40bc8490a6870796dd55f39fa438e433d48d399971296a45439d9956564cbb80"
-        ],
+        "templateIds": ["0x40bc8490a6870796dd55f39fa438e433d48d399971296a45439d9956564cbb80"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1e1f5f3f77dade4f626c7be802bdcfa72aec0bee02b4099f64bcce2b674c8fdf"
-        ],
+        "templateIds": ["0x1e1f5f3f77dade4f626c7be802bdcfa72aec0bee02b4099f64bcce2b674c8fdf"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe0c9b9c5285d4c103bf39d21f67931b8f618465d017717060450d1d5e2217210"
-        ],
+        "templateIds": ["0xe0c9b9c5285d4c103bf39d21f67931b8f618465d017717060450d1d5e2217210"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xcd61786a5a8b27eac4c5a7c3f8dd88d693c86f99afae88f484233779652ba44b"
-        ],
+        "templateIds": ["0xcd61786a5a8b27eac4c5a7c3f8dd88d693c86f99afae88f484233779652ba44b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9487dffdbebdd86a9778f642a77e1863743bf42571025120ba039ca15e722352"
-        ],
+        "templateIds": ["0x9487dffdbebdd86a9778f642a77e1863743bf42571025120ba039ca15e722352"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd48472a5a95e9c18efcd4e9fec2e4355a82ed94eeae900bcebdd55e18904d6f0"
-        ],
+        "templateIds": ["0xd48472a5a95e9c18efcd4e9fec2e4355a82ed94eeae900bcebdd55e18904d6f0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb1e856ac4d6a0572f9803334e4721ce5afebc23a85706d335f6a233c5eab8b45"
-        ],
+        "templateIds": ["0xb1e856ac4d6a0572f9803334e4721ce5afebc23a85706d335f6a233c5eab8b45"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6dfccd662a7bffe2fb0aaa952df3eb71036c37ea73d7863bc2ad2b59f9189bf6"
-        ],
+        "templateIds": ["0x6dfccd662a7bffe2fb0aaa952df3eb71036c37ea73d7863bc2ad2b59f9189bf6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xda6c1f1350d787a26a4f922dc9c7fb3da76cf95664b74ab20ba1ed5f49b5be7e"
-        ],
+        "templateIds": ["0xda6c1f1350d787a26a4f922dc9c7fb3da76cf95664b74ab20ba1ed5f49b5be7e"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2494025976b1879fc896fc3bab4c51fad32527f05404727176b12af2cb15b0c8"
-        ],
+        "templateIds": ["0x2494025976b1879fc896fc3bab4c51fad32527f05404727176b12af2cb15b0c8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xdb0aac9b8e37c374c6edd3c4c6219f494529e726761745c340bb233c92d52e3d"
-        ],
+        "templateIds": ["0xdb0aac9b8e37c374c6edd3c4c6219f494529e726761745c340bb233c92d52e3d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb1837c45ff16a867221a5a289249e841e16b63ada8af8573efa485c882606621"
-        ],
+        "templateIds": ["0xb1837c45ff16a867221a5a289249e841e16b63ada8af8573efa485c882606621"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x748899fd32dec4a10156e9b60393e5ba2b150a9a924bc57796987caeda828f1d"
-        ],
+        "templateIds": ["0x748899fd32dec4a10156e9b60393e5ba2b150a9a924bc57796987caeda828f1d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2e05a0834bc48577cdd19c6cd61b0562095d0557a9ea5c6957685f5891e8a6a8"
-        ],
+        "templateIds": ["0x2e05a0834bc48577cdd19c6cd61b0562095d0557a9ea5c6957685f5891e8a6a8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9ad966342f30a826264974b7f7e3b020d3bcd759ade048cf85713e7707d0cbc7"
-        ],
+        "templateIds": ["0x9ad966342f30a826264974b7f7e3b020d3bcd759ade048cf85713e7707d0cbc7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd32c931698dcf78dd20811a5231d0ef47997d901f45b932b8571b70e87a73abe"
-        ],
+        "templateIds": ["0xd32c931698dcf78dd20811a5231d0ef47997d901f45b932b8571b70e87a73abe"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xde13ce3fb550d813ebbce338e87f1a04de6f8f5828f256808aae121461de07bc"
-        ],
+        "templateIds": ["0xde13ce3fb550d813ebbce338e87f1a04de6f8f5828f256808aae121461de07bc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x69a886d6b1ae39ad5543e76ea0a418bb666e9aebc855da17b9bf15c1e76fdef6"
-        ],
+        "templateIds": ["0x69a886d6b1ae39ad5543e76ea0a418bb666e9aebc855da17b9bf15c1e76fdef6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfb749a40343094b8bdc9102b60f036d785c38ddd3d28d2f175cca825ad5d67c1"
-        ],
+        "templateIds": ["0xfb749a40343094b8bdc9102b60f036d785c38ddd3d28d2f175cca825ad5d67c1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa1b53209e0abf1c5ef4efedea5b2417d02f1360540a916c163f11cdf0081dd34"
-        ],
+        "templateIds": ["0xa1b53209e0abf1c5ef4efedea5b2417d02f1360540a916c163f11cdf0081dd34"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xaabbfa13071a3dc1a6c4e47e4bf7d465ad1c1df168fd6da4958deb06c29ac457"
-        ],
+        "templateIds": ["0xaabbfa13071a3dc1a6c4e47e4bf7d465ad1c1df168fd6da4958deb06c29ac457"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8c6ea44ff6725ebe7c1b37e79b2744a3f93486efb5bf42103adc695cbaa7efca"
-        ],
+        "templateIds": ["0x8c6ea44ff6725ebe7c1b37e79b2744a3f93486efb5bf42103adc695cbaa7efca"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9e70f77c15ac9660baaffcace5c29b77f0564ce52adcc3056ba9da31f4c894a7"
-        ],
+        "templateIds": ["0x9e70f77c15ac9660baaffcace5c29b77f0564ce52adcc3056ba9da31f4c894a7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x379d1f15b23c0346e444168ffc439442a7695753a08a039990ac44bd4aef95b2"
-        ],
+        "templateIds": ["0x379d1f15b23c0346e444168ffc439442a7695753a08a039990ac44bd4aef95b2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf4a0d8caa6c802ff9d53eccf37f30c42caf76013537885db5753d8d87df80f92"
-        ],
+        "templateIds": ["0xf4a0d8caa6c802ff9d53eccf37f30c42caf76013537885db5753d8d87df80f92"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x86fc00a7850d711bcd9c63a2c4e033ee4bd74fb8b22a95dd20e967d40540eb4b"
-        ],
+        "templateIds": ["0x86fc00a7850d711bcd9c63a2c4e033ee4bd74fb8b22a95dd20e967d40540eb4b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7ca59ef49a017fd23c6c7e8ed71fdda3eb623178b6d7f921592b6f14ed72c8f0"
-        ],
+        "templateIds": ["0x7ca59ef49a017fd23c6c7e8ed71fdda3eb623178b6d7f921592b6f14ed72c8f0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x935918781bc7bf78e4393ecea0c2bc06301a00d7621ac4af453e894062aaf454"
-        ],
+        "templateIds": ["0x935918781bc7bf78e4393ecea0c2bc06301a00d7621ac4af453e894062aaf454"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8d401f0ba46b73a7c59c31152a2da3792a7d334535f046f1030d4f6c7cac84b4"
-        ],
+        "templateIds": ["0x8d401f0ba46b73a7c59c31152a2da3792a7d334535f046f1030d4f6c7cac84b4"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x54335823646ba8b80b240ab5ba26f30eeeba5d7f02dda1671f3e01fd0ab995c0"
-        ],
+        "templateIds": ["0x54335823646ba8b80b240ab5ba26f30eeeba5d7f02dda1671f3e01fd0ab995c0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9b05c971dcd34adc43393797e4cb39612dd438a40216a0aaf37c16516604d0ca"
-        ],
+        "templateIds": ["0x9b05c971dcd34adc43393797e4cb39612dd438a40216a0aaf37c16516604d0ca"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x21d290817f631728b86ae68fe69da5cf40cdd8b3b6230050b763607253ee2170"
-        ],
+        "templateIds": ["0x21d290817f631728b86ae68fe69da5cf40cdd8b3b6230050b763607253ee2170"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe93b13b1c86a400c96857099d8cb4845b8e919d3d5659db48b2705104b37cc72"
-        ],
+        "templateIds": ["0xe93b13b1c86a400c96857099d8cb4845b8e919d3d5659db48b2705104b37cc72"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x16fa5dc3889f26cc9158fb6eab14db0d5b3c238b1ccfc5c81527d87dc596539d"
-        ],
+        "templateIds": ["0x16fa5dc3889f26cc9158fb6eab14db0d5b3c238b1ccfc5c81527d87dc596539d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x63e67c70f06229b4e0d3ae428eedcf3b1441f02292e10e1001a133ed37121290"
-        ],
+        "templateIds": ["0x63e67c70f06229b4e0d3ae428eedcf3b1441f02292e10e1001a133ed37121290"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0402e026d795b530ddff3baf51b9ffb6c357c291bfb517a29f74233a0fcf4166"
-        ],
+        "templateIds": ["0x0402e026d795b530ddff3baf51b9ffb6c357c291bfb517a29f74233a0fcf4166"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7753b248672ce0c4d8645df6b0b40488c3b2ee00f2702f57b0603da4c8898907"
-        ],
+        "templateIds": ["0x7753b248672ce0c4d8645df6b0b40488c3b2ee00f2702f57b0603da4c8898907"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x61c296bc798a4ace562c458b01154abcc99a1258d95edc2aaa5f21857e19df11"
-        ],
+        "templateIds": ["0x61c296bc798a4ace562c458b01154abcc99a1258d95edc2aaa5f21857e19df11"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe0e8d632b0952c0a1ba7a7fc6ffbcc0cd19ee29836160b8732a90fd7a8d978f4"
-        ],
+        "templateIds": ["0xe0e8d632b0952c0a1ba7a7fc6ffbcc0cd19ee29836160b8732a90fd7a8d978f4"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x01cb658560633e4a0c4fb478fec98bc89154cd49e2a5aa30b7b4a545d902c97d"
-        ],
+        "templateIds": ["0x01cb658560633e4a0c4fb478fec98bc89154cd49e2a5aa30b7b4a545d902c97d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x112611fcf12cb882d77548ac3fe061a4eb3ad68daa1892b7cd9807f97fd6c9bf"
-        ],
+        "templateIds": ["0x112611fcf12cb882d77548ac3fe061a4eb3ad68daa1892b7cd9807f97fd6c9bf"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe10d7e43e5ed7845733e48477c93a24eca22c1c9dd29aea83b53fb2eb6ee0686"
-        ],
+        "templateIds": ["0xe10d7e43e5ed7845733e48477c93a24eca22c1c9dd29aea83b53fb2eb6ee0686"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3cf38337051b9f6a97b71ad3a6cee85f7c301345aaa51c7b7dc9ad65adf62764"
-        ],
+        "templateIds": ["0x3cf38337051b9f6a97b71ad3a6cee85f7c301345aaa51c7b7dc9ad65adf62764"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x12a001a34e9a4407a58ee0451506bca389db0a2b6324a95cc03339382675267f"
-        ],
+        "templateIds": ["0x12a001a34e9a4407a58ee0451506bca389db0a2b6324a95cc03339382675267f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x75c2d3c9431988e31b0cf2679c4418b8c00545fffe01f0fd1e698affc4c45062"
-        ],
+        "templateIds": ["0x75c2d3c9431988e31b0cf2679c4418b8c00545fffe01f0fd1e698affc4c45062"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x201ffa7a8d6e45189885804f4aaadadce535350fe7324400e2d46d1e1d82e608"
-        ],
+        "templateIds": ["0x201ffa7a8d6e45189885804f4aaadadce535350fe7324400e2d46d1e1d82e608"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x4d21870d613f0a0eb1c3ba63961bce8deb2f7cf8b02eccf270fb63d2a0f0421a"
-        ],
+        "templateIds": ["0x4d21870d613f0a0eb1c3ba63961bce8deb2f7cf8b02eccf270fb63d2a0f0421a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x404e39001672674197d30cd278e136d927b070cf595117d67892e5864a748a64"
-        ],
+        "templateIds": ["0x404e39001672674197d30cd278e136d927b070cf595117d67892e5864a748a64"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x91336a8ee29421bd57606d0a487bc9242181207d1b746bcf2385eab7496b0aa1"
-        ],
+        "templateIds": ["0x91336a8ee29421bd57606d0a487bc9242181207d1b746bcf2385eab7496b0aa1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x28d6492aab16f1ce9203d9f9429b34edb62536ee09329b4f390a5f12e71ec842"
-        ],
+        "templateIds": ["0x28d6492aab16f1ce9203d9f9429b34edb62536ee09329b4f390a5f12e71ec842"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe88ab18d80870d01d9e27bbb81ee6f01a5c879926ec7bd2d9c39dee34934b311"
-        ],
+        "templateIds": ["0xe88ab18d80870d01d9e27bbb81ee6f01a5c879926ec7bd2d9c39dee34934b311"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x426ff9e3d2858bd217260c1c8857bd7e2c823bee3f178daf05c0b23c9eb9a4eb"
-        ],
+        "templateIds": ["0x426ff9e3d2858bd217260c1c8857bd7e2c823bee3f178daf05c0b23c9eb9a4eb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5e39bf8dcdb4a6613b5f0b6784ce42a326c1881bd49501b907d38be24742a9ae"
-        ],
+        "templateIds": ["0x5e39bf8dcdb4a6613b5f0b6784ce42a326c1881bd49501b907d38be24742a9ae"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x339dd17d067c33e3359c86e124a8caa3e861674e5bd5ced4f24d55e3effc98dd"
-        ],
+        "templateIds": ["0x339dd17d067c33e3359c86e124a8caa3e861674e5bd5ced4f24d55e3effc98dd"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x85c5deccfc331c15132960339606ab66504fe2bcadd8fa8b8bb0744330c16cfc"
-        ],
+        "templateIds": ["0x85c5deccfc331c15132960339606ab66504fe2bcadd8fa8b8bb0744330c16cfc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x079bc4bb1776488bc342917ad6a6bd7cbd7253a271696b7e31ad57ca96e7ff91"
-        ],
+        "templateIds": ["0x079bc4bb1776488bc342917ad6a6bd7cbd7253a271696b7e31ad57ca96e7ff91"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x60c343fae9317c2535fd8f79fbf2b68c6b826d16ffcf4f615ff4b0223a8a20db"
-        ],
+        "templateIds": ["0x60c343fae9317c2535fd8f79fbf2b68c6b826d16ffcf4f615ff4b0223a8a20db"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0e6924761e515a1311ee8eaff58439f91e8495db853ea745567d1e36ba7ca42a"
-        ],
+        "templateIds": ["0x0e6924761e515a1311ee8eaff58439f91e8495db853ea745567d1e36ba7ca42a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x09a2e6564c4bd2b9b9e7d60f346e17a270ae205f509c2885d37cbf39f434976f"
-        ],
+        "templateIds": ["0x09a2e6564c4bd2b9b9e7d60f346e17a270ae205f509c2885d37cbf39f434976f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x42e522ce008d6e93239b3156884820aa2841f8f24a8dfa42f3476fc6629a9462"
-        ],
+        "templateIds": ["0x42e522ce008d6e93239b3156884820aa2841f8f24a8dfa42f3476fc6629a9462"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7b0416a939c8c2688cba032438496c523ab2f0b31195cf6dc3a5f0b3994107eb"
-        ],
+        "templateIds": ["0x7b0416a939c8c2688cba032438496c523ab2f0b31195cf6dc3a5f0b3994107eb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6f988385537e1c3b4e677d4123fc98a52d2db2b2a48b0d05e10ccb75f89820a7"
-        ],
+        "templateIds": ["0x6f988385537e1c3b4e677d4123fc98a52d2db2b2a48b0d05e10ccb75f89820a7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x035af6e64abeb67e05ba4f644070e80029a4cd6ae67386e3b160c14378054705"
-        ],
+        "templateIds": ["0x035af6e64abeb67e05ba4f644070e80029a4cd6ae67386e3b160c14378054705"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x39a09b89722ffcd572883cdd20b5abcdc4ad60288e42b897e96a1d81f527fe3c"
-        ],
+        "templateIds": ["0x39a09b89722ffcd572883cdd20b5abcdc4ad60288e42b897e96a1d81f527fe3c"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa6812ecd800873f436c1256d038476bbe75db1e6163ca7abfc0376309a38d23d"
-        ],
+        "templateIds": ["0xa6812ecd800873f436c1256d038476bbe75db1e6163ca7abfc0376309a38d23d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1a623c8bf8e8235fc280c37f421747cf8e2c35a52f2d918449c52c80c98afdeb"
-        ],
+        "templateIds": ["0x1a623c8bf8e8235fc280c37f421747cf8e2c35a52f2d918449c52c80c98afdeb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7d85aa0c49e31c8a1a922b9179b7ba68cb5beed96075527f9fee18181241dfa6"
-        ],
+        "templateIds": ["0x7d85aa0c49e31c8a1a922b9179b7ba68cb5beed96075527f9fee18181241dfa6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3fadbb7d5673b9c44cb8a5487d7414c948d5029cd0195a13bab02cb636993f35"
-        ],
+        "templateIds": ["0x3fadbb7d5673b9c44cb8a5487d7414c948d5029cd0195a13bab02cb636993f35"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3b6b4ce1949715f628b652e10cb12f1ad8cb9ddc43d76f775d00a42c1744f051"
-        ],
+        "templateIds": ["0x3b6b4ce1949715f628b652e10cb12f1ad8cb9ddc43d76f775d00a42c1744f051"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x08fd37df1fc513c241e58401697d1e560c9ea3c5b8f164b458bd1ab2891b8607"
-        ],
+        "templateIds": ["0x08fd37df1fc513c241e58401697d1e560c9ea3c5b8f164b458bd1ab2891b8607"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5f4f54b994130fba17a5207fe0668ec84a6705e16a9e435944cc85866b2ff708"
-        ],
+        "templateIds": ["0x5f4f54b994130fba17a5207fe0668ec84a6705e16a9e435944cc85866b2ff708"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5e2f50b9c572dbc334e72a4d99e56dc073fcc58a0270aa6fefa13175a9e5eb04"
-        ],
+        "templateIds": ["0x5e2f50b9c572dbc334e72a4d99e56dc073fcc58a0270aa6fefa13175a9e5eb04"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x435828381501aa30dcc6e0cfb067d0c20c436fd182a71bc1e2284ca92c542d9b"
-        ],
+        "templateIds": ["0x435828381501aa30dcc6e0cfb067d0c20c436fd182a71bc1e2284ca92c542d9b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x378758e1603ae18cefa436698f7e19d39c8bc588d8f91dd23fbd15cc8bf520dc"
-        ],
+        "templateIds": ["0x378758e1603ae18cefa436698f7e19d39c8bc588d8f91dd23fbd15cc8bf520dc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7a1fe8d1553b53b288a04bc0ce82834810dbdcd9caec049f4392faeca932c7c5"
-        ],
+        "templateIds": ["0x7a1fe8d1553b53b288a04bc0ce82834810dbdcd9caec049f4392faeca932c7c5"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xec68b09d6337bfdde99e166955ba2ba6bb2f26727dbb55404633f9b3729abac0"
-        ],
+        "templateIds": ["0xec68b09d6337bfdde99e166955ba2ba6bb2f26727dbb55404633f9b3729abac0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfc080e7cf636a56a8f54f7928a5bfe30d093ffe54728a59d38baa1a5814533ce"
-        ],
+        "templateIds": ["0xfc080e7cf636a56a8f54f7928a5bfe30d093ffe54728a59d38baa1a5814533ce"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb0961e0de59bf5f36ccdb0449eab69d6961c0789c79fddec78e9af18358c7222"
-        ],
+        "templateIds": ["0xb0961e0de59bf5f36ccdb0449eab69d6961c0789c79fddec78e9af18358c7222"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x90d8eee6f832b132fab766a18c44220824b58b767f03f9dabbb37e01c0316d0e"
-        ],
+        "templateIds": ["0x90d8eee6f832b132fab766a18c44220824b58b767f03f9dabbb37e01c0316d0e"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5caed3511efcff5f989de450d088ea3cb994cc7379b35238822d1d37670ba2fa"
-        ],
+        "templateIds": ["0x5caed3511efcff5f989de450d088ea3cb994cc7379b35238822d1d37670ba2fa"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x37fa737a126c6e48930d8e7785f45075c3d22f00e2bc002aae4738227fa79959"
-        ],
+        "templateIds": ["0x37fa737a126c6e48930d8e7785f45075c3d22f00e2bc002aae4738227fa79959"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5b32d269458211f01f9a8592e4df12b0bab91464e52ee9d562ac2b73d3f01db2"
-        ],
+        "templateIds": ["0x5b32d269458211f01f9a8592e4df12b0bab91464e52ee9d562ac2b73d3f01db2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0f26d2bd78e56d20405c6728b6495ea69f7d8ca7e1b2cd5f1f3ef753c76aadc7"
-        ],
+        "templateIds": ["0x0f26d2bd78e56d20405c6728b6495ea69f7d8ca7e1b2cd5f1f3ef753c76aadc7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x34099c464dea63d6a15c693e45ac0820ebe69e6d5f0573844c470860c4ce3474"
-        ],
+        "templateIds": ["0x34099c464dea63d6a15c693e45ac0820ebe69e6d5f0573844c470860c4ce3474"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xdf83b87234174e06b88b064cfb97218094a1d3fcb2faa9343d6df65392eb3b23"
-        ],
+        "templateIds": ["0xdf83b87234174e06b88b064cfb97218094a1d3fcb2faa9343d6df65392eb3b23"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xcab47a2a32f4f7679a4d4673b04db1a35b16067ebd277808639aaa02ff4fe590"
-        ],
+        "templateIds": ["0xcab47a2a32f4f7679a4d4673b04db1a35b16067ebd277808639aaa02ff4fe590"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1487ab4cce2702ff1d20ae43c0bcac7b931ede537207d043d73698caf58db002"
-        ],
+        "templateIds": ["0x1487ab4cce2702ff1d20ae43c0bcac7b931ede537207d043d73698caf58db002"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5070d0997260198a0391b413383c28b91f4de1ace60b11d14696370b0075bfef"
-        ],
+        "templateIds": ["0x5070d0997260198a0391b413383c28b91f4de1ace60b11d14696370b0075bfef"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7d1d6c872690093a0dfe829e2096a04b422f7724ba8e01e44474af54afa8c223"
-        ],
+        "templateIds": ["0x7d1d6c872690093a0dfe829e2096a04b422f7724ba8e01e44474af54afa8c223"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2ae5013af9055a59be5adfc65a2762c98d4ee3115fb6c228ab67e526b6ab0c8f"
-        ],
+        "templateIds": ["0x2ae5013af9055a59be5adfc65a2762c98d4ee3115fb6c228ab67e526b6ab0c8f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7c22554fe90a2252cde2fccf7a82472f2bd40e79bc0f99180f30367327dc89fc"
-        ],
+        "templateIds": ["0x7c22554fe90a2252cde2fccf7a82472f2bd40e79bc0f99180f30367327dc89fc"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6ce9eddef1aa4f35bc3887844d5b2a4b722c9be7381f2c5a5686c5b86b348be9"
-        ],
+        "templateIds": ["0x6ce9eddef1aa4f35bc3887844d5b2a4b722c9be7381f2c5a5686c5b86b348be9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfcaff8ab4355d01d4bd1fc340905527c628547d7d939317c70321af5217efd14"
-        ],
+        "templateIds": ["0xfcaff8ab4355d01d4bd1fc340905527c628547d7d939317c70321af5217efd14"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x53dd9559093f8533df0bbd6423390adff4fc57b0b522c1b13ca84d968e1299ca"
-        ],
+        "templateIds": ["0x53dd9559093f8533df0bbd6423390adff4fc57b0b522c1b13ca84d968e1299ca"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf5f0e736a6a8f5b9bc7fb3a821c4bdbf73b7bb707aa6f7a4cb998efe377a78e2"
-        ],
+        "templateIds": ["0xf5f0e736a6a8f5b9bc7fb3a821c4bdbf73b7bb707aa6f7a4cb998efe377a78e2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb96db90264bc360ae224fbcf0c63cb49c7f343f15a392a0c2b9b84dca5ef31c7"
-        ],
+        "templateIds": ["0xb96db90264bc360ae224fbcf0c63cb49c7f343f15a392a0c2b9b84dca5ef31c7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe17da21712d0d2aceb25ac37f2067555277a33cc02e7eb7d586fd5f5b8a0caa3"
-        ],
+        "templateIds": ["0xe17da21712d0d2aceb25ac37f2067555277a33cc02e7eb7d586fd5f5b8a0caa3"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc6a98d48d3542483aa0ff42568b88491ffbdc4969ce6ca5fc0cab3f677da412d"
-        ],
+        "templateIds": ["0xc6a98d48d3542483aa0ff42568b88491ffbdc4969ce6ca5fc0cab3f677da412d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x16b5ca42eed0937f3617aaaed8e785c3ec4c43fd8565ebe55df8de0653055bcf"
-        ],
+        "templateIds": ["0x16b5ca42eed0937f3617aaaed8e785c3ec4c43fd8565ebe55df8de0653055bcf"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5251139389a47d43ad1a45d857d9f6544755d598eb63189cc962cbdd9844e731"
-        ],
+        "templateIds": ["0x5251139389a47d43ad1a45d857d9f6544755d598eb63189cc962cbdd9844e731"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd71afa4134f3a95088c27c08ce01e037ab0f2832437b1c42a96c94b8e40571f6"
-        ],
+        "templateIds": ["0xd71afa4134f3a95088c27c08ce01e037ab0f2832437b1c42a96c94b8e40571f6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x314580fb4b455f01b89856655e3e570327349f10cb4edcfb22468e7518b616eb"
-        ],
+        "templateIds": ["0x314580fb4b455f01b89856655e3e570327349f10cb4edcfb22468e7518b616eb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8ed23ffdf2e1be000d24987158e5f476ef2711350aa0598b7475ed854868facf"
-        ],
+        "templateIds": ["0x8ed23ffdf2e1be000d24987158e5f476ef2711350aa0598b7475ed854868facf"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x72a7ed019e9971cf8a91e6b7b0c37b98d72617d7da8d9d0b5411c6d0ffbe5894"
-        ],
+        "templateIds": ["0x72a7ed019e9971cf8a91e6b7b0c37b98d72617d7da8d9d0b5411c6d0ffbe5894"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfed98abedf1e32afd790e9893c463eb618722463799e08d2c0da7d71045f7113"
-        ],
+        "templateIds": ["0xfed98abedf1e32afd790e9893c463eb618722463799e08d2c0da7d71045f7113"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x07fc4dc96b51581dfb54f0c49746a6366c333bf6729f919538f721ba1790c9fa"
-        ],
+        "templateIds": ["0x07fc4dc96b51581dfb54f0c49746a6366c333bf6729f919538f721ba1790c9fa"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc133ee85edfc0d9d56f39425eba3db14bbc98fe4a3965e31f04ef9a656cd5b18"
-        ],
+        "templateIds": ["0xc133ee85edfc0d9d56f39425eba3db14bbc98fe4a3965e31f04ef9a656cd5b18"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xef308cb8bd45f9d10cdd08a981eed3ccbde35f23fbe52204e6382897ab155e58"
-        ],
+        "templateIds": ["0xef308cb8bd45f9d10cdd08a981eed3ccbde35f23fbe52204e6382897ab155e58"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfdd87faed420696017e6024b144a863c8edcd401389326651497d9ba5dbccd07"
-        ],
+        "templateIds": ["0xfdd87faed420696017e6024b144a863c8edcd401389326651497d9ba5dbccd07"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x9176a2a44d970402de382f6083d49dff17ac2323a741b43c76196c6b39602e63"
-        ],
+        "templateIds": ["0x9176a2a44d970402de382f6083d49dff17ac2323a741b43c76196c6b39602e63"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0c05846e29cf6d42df2b59fb62503b8330db03c568239c4090a622cbc205e86d"
-        ],
+        "templateIds": ["0x0c05846e29cf6d42df2b59fb62503b8330db03c568239c4090a622cbc205e86d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa2db31ff6b03c269e2a3e7cf3e9a1cdac5660ce3599e0eeba582209cf62fe5dd"
-        ],
+        "templateIds": ["0xa2db31ff6b03c269e2a3e7cf3e9a1cdac5660ce3599e0eeba582209cf62fe5dd"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x994e40e854a8eb0006786fb3eb6ffe551d4ac144873c48ad7de903d0983cbb60"
-        ],
+        "templateIds": ["0x994e40e854a8eb0006786fb3eb6ffe551d4ac144873c48ad7de903d0983cbb60"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2d6f2fb2cd5d8665175841dc57d58b6023536cd7ad2685317db50992f54130b9"
-        ],
+        "templateIds": ["0x2d6f2fb2cd5d8665175841dc57d58b6023536cd7ad2685317db50992f54130b9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x8ffe2b69dee441d3ec58603d0491b555e0f91be06ecee9c3e61c779f1ba64948"
-        ],
+        "templateIds": ["0x8ffe2b69dee441d3ec58603d0491b555e0f91be06ecee9c3e61c779f1ba64948"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x592c7a45916cf0ff1bcb988fc9d7a4f2b0f1f8a5676f54d8bcc9ac92748a0e33"
-        ],
+        "templateIds": ["0x592c7a45916cf0ff1bcb988fc9d7a4f2b0f1f8a5676f54d8bcc9ac92748a0e33"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xbe7d04751df3beb3764866a4540c58f8dfdbede56281edf7d7e9a23d2137bc36"
-        ],
+        "templateIds": ["0xbe7d04751df3beb3764866a4540c58f8dfdbede56281edf7d7e9a23d2137bc36"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x67d9d59a4769dd19d68bfb2c14a86603edd2b7a6c09d23e91daca855682b2f33"
-        ],
+        "templateIds": ["0x67d9d59a4769dd19d68bfb2c14a86603edd2b7a6c09d23e91daca855682b2f33"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5655102abd1e380ee915fc0b90857e1bf0a652db2008f308a990bc9ad23181d5"
-        ],
+        "templateIds": ["0x5655102abd1e380ee915fc0b90857e1bf0a652db2008f308a990bc9ad23181d5"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x15159a0ec28262f39516301ab76352f14e058348b0e0f594f2e1312b10b31d9a"
-        ],
+        "templateIds": ["0x15159a0ec28262f39516301ab76352f14e058348b0e0f594f2e1312b10b31d9a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x87ef92d3f1f9ad3be6d211e0d6864d6f277cf41699d2a1cdc388e60d4b6c7828"
-        ],
+        "templateIds": ["0x87ef92d3f1f9ad3be6d211e0d6864d6f277cf41699d2a1cdc388e60d4b6c7828"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7c2d552b6581592f874e4cb8d12ebf89b2f1c0c2cc8f68dca64c280c4a598809"
-        ],
+        "templateIds": ["0x7c2d552b6581592f874e4cb8d12ebf89b2f1c0c2cc8f68dca64c280c4a598809"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x16073d31c9e0c4bf60c175a77fe6c64fd1dddf410828a7a2dfa0f0bfed385627"
-        ],
+        "templateIds": ["0x16073d31c9e0c4bf60c175a77fe6c64fd1dddf410828a7a2dfa0f0bfed385627"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc97a8f21ac18f38b6b5fbb40b27cd495086a30e4e23ac4a529e769ab10a944ba"
-        ],
+        "templateIds": ["0xc97a8f21ac18f38b6b5fbb40b27cd495086a30e4e23ac4a529e769ab10a944ba"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa735c6d367f85685d2297f797d436396a7e11774f708a203e342b66d11c68fa7"
-        ],
+        "templateIds": ["0xa735c6d367f85685d2297f797d436396a7e11774f708a203e342b66d11c68fa7"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1f727cb6798f9fc0cb4ff90a7b6e06529d7b8e5d49a220c1007fbf893d8bf5ec"
-        ],
+        "templateIds": ["0x1f727cb6798f9fc0cb4ff90a7b6e06529d7b8e5d49a220c1007fbf893d8bf5ec"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xae8240735bea7f5fa02a510c1bb97c4636979b12c47cf3e51d42981dc1b67e8e"
-        ],
+        "templateIds": ["0xae8240735bea7f5fa02a510c1bb97c4636979b12c47cf3e51d42981dc1b67e8e"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x4addbc1bf015a93576c080635fb8ea96947eb59e156b1ab481c9d2ffc3ae9f64"
-        ],
+        "templateIds": ["0x4addbc1bf015a93576c080635fb8ea96947eb59e156b1ab481c9d2ffc3ae9f64"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x647e3d25f424b9e9f01fc165475ce59658651b8ab08b7156d0e7e902284210e8"
-        ],
+        "templateIds": ["0x647e3d25f424b9e9f01fc165475ce59658651b8ab08b7156d0e7e902284210e8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x34b2500c05374dd5c08dbb6b7232ecdae5bf66e679e30d8e97861f9c243d2d54"
-        ],
+        "templateIds": ["0x34b2500c05374dd5c08dbb6b7232ecdae5bf66e679e30d8e97861f9c243d2d54"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1bfffe689e99ef06966f222cb40f6ff9e6c6383327601b5a9db5b25133b21d1d"
-        ],
+        "templateIds": ["0x1bfffe689e99ef06966f222cb40f6ff9e6c6383327601b5a9db5b25133b21d1d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x26f013138eaa4132eddd2ebf257aa6a217d90ea24b3e7de8e39d3b66450a1d0c"
-        ],
+        "templateIds": ["0x26f013138eaa4132eddd2ebf257aa6a217d90ea24b3e7de8e39d3b66450a1d0c"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7d7e48378e78e6caac2681aa74b2d982cf7e76f01ea24841fc838e834598d28d"
-        ],
+        "templateIds": ["0x7d7e48378e78e6caac2681aa74b2d982cf7e76f01ea24841fc838e834598d28d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3efc988bcbf56e3fca7fe0a32500e78776a83a65ce9d69392b5bcc07410c9556"
-        ],
+        "templateIds": ["0x3efc988bcbf56e3fca7fe0a32500e78776a83a65ce9d69392b5bcc07410c9556"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x71da4b58d7335317d42cc02d849982ef490ca27c102ab53ee916b48489731af1"
-        ],
+        "templateIds": ["0x71da4b58d7335317d42cc02d849982ef490ca27c102ab53ee916b48489731af1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa4251ab7100f7bc07ab33eb612b7fcdd2acefa833329315ceb1e99baa8c263fd"
-        ],
+        "templateIds": ["0xa4251ab7100f7bc07ab33eb612b7fcdd2acefa833329315ceb1e99baa8c263fd"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x87291bb633ea95e1451432e38920fbbee00b779c4a8c979664673fb081cd04f5"
-        ],
+        "templateIds": ["0x87291bb633ea95e1451432e38920fbbee00b779c4a8c979664673fb081cd04f5"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1dca1932f34f5c867635fb7f7dd5db5a872eaee558be9cde943dd6886fa7b1d5"
-        ],
+        "templateIds": ["0x1dca1932f34f5c867635fb7f7dd5db5a872eaee558be9cde943dd6886fa7b1d5"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd7fda647f0d30ec1c07cde4332248ee7c5f5a63ffb3d72474105791908f7dd33"
-        ],
+        "templateIds": ["0xd7fda647f0d30ec1c07cde4332248ee7c5f5a63ffb3d72474105791908f7dd33"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x37843660b492d1d5e0cda6554b0e86d71bc3e2566c4f1af8871603cc21c036eb"
-        ],
+        "templateIds": ["0x37843660b492d1d5e0cda6554b0e86d71bc3e2566c4f1af8871603cc21c036eb"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb8aee00e02013f1afba15bf84ed1b9cb4aa805235b5c5062ad8558ec999a72f6"
-        ],
+        "templateIds": ["0xb8aee00e02013f1afba15bf84ed1b9cb4aa805235b5c5062ad8558ec999a72f6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2dca9bc3f9ddbfddd6bf403dd9a360598914e5c766405ce8bd54caf6d19caf90"
-        ],
+        "templateIds": ["0x2dca9bc3f9ddbfddd6bf403dd9a360598914e5c766405ce8bd54caf6d19caf90"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xa5d9a2488814c0e8705c697561d75cc95e87a82555ec642f163a2353b5835c5a"
-        ],
+        "templateIds": ["0xa5d9a2488814c0e8705c697561d75cc95e87a82555ec642f163a2353b5835c5a"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xbaadafae6a65b124e88e3264a46f5c68e2ae8dd284766fda86a298e62f123586"
-        ],
+        "templateIds": ["0xbaadafae6a65b124e88e3264a46f5c68e2ae8dd284766fda86a298e62f123586"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x899ed42615c814d90ccbbc15989221551a91367c8aa31e41fef277758c2def28"
-        ],
+        "templateIds": ["0x899ed42615c814d90ccbbc15989221551a91367c8aa31e41fef277758c2def28"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5aed74849510ba983f9a761e22e859a20fd94fe999d8c2486a0fcd417f982b47"
-        ],
+        "templateIds": ["0x5aed74849510ba983f9a761e22e859a20fd94fe999d8c2486a0fcd417f982b47"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xbf3ad814bbf21d93e109cff9109aede37a92b6af39e75fb1a1520d15d15d9b64"
-        ],
+        "templateIds": ["0xbf3ad814bbf21d93e109cff9109aede37a92b6af39e75fb1a1520d15d15d9b64"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x636a8c850e455012ee1e3f944ca122a3e101bd3d740c34a81acf5ca10de322b9"
-        ],
+        "templateIds": ["0x636a8c850e455012ee1e3f944ca122a3e101bd3d740c34a81acf5ca10de322b9"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5caf7420500b58893321a150ea8698a0444111297e3967541c414429f2037f1f"
-        ],
+        "templateIds": ["0x5caf7420500b58893321a150ea8698a0444111297e3967541c414429f2037f1f"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb4bb25ff747d17ed04fb436b2c6b7cf8b94e549274ef78fcdc6f18ac031f6324"
-        ],
+        "templateIds": ["0xb4bb25ff747d17ed04fb436b2c6b7cf8b94e549274ef78fcdc6f18ac031f6324"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6fd88b8343ebeea3c16dfe295d7eca107c0eb459d4c1dd85e4918cdc899c6e09"
-        ],
+        "templateIds": ["0x6fd88b8343ebeea3c16dfe295d7eca107c0eb459d4c1dd85e4918cdc899c6e09"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb0dd4bef002987d37be3aaa50314566b784dc0810d1967331a734a4dc02cc9fe"
-        ],
+        "templateIds": ["0xb0dd4bef002987d37be3aaa50314566b784dc0810d1967331a734a4dc02cc9fe"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xeff705201e158458102886d72fed36c49978c6f493d3db8eb295953008e617d6"
-        ],
+        "templateIds": ["0xeff705201e158458102886d72fed36c49978c6f493d3db8eb295953008e617d6"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd05086416192d445aef3f97cb7d63fad54091d64f0673a2fcd7fa6553be830f1"
-        ],
+        "templateIds": ["0xd05086416192d445aef3f97cb7d63fad54091d64f0673a2fcd7fa6553be830f1"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x030ace1e713107f72e45ed9432acf71161010aed678294fa8d06c2ddce56a0f2"
-        ],
+        "templateIds": ["0x030ace1e713107f72e45ed9432acf71161010aed678294fa8d06c2ddce56a0f2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x0ae8d91910847287744487f5333ade787326e145a81da889e0093300c68a3d68"
-        ],
+        "templateIds": ["0x0ae8d91910847287744487f5333ade787326e145a81da889e0093300c68a3d68"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x768ab06505ddb0c79f9cfdb5b7cc755a9faae03bab6239f63162fc5fae5470c8"
-        ],
+        "templateIds": ["0x768ab06505ddb0c79f9cfdb5b7cc755a9faae03bab6239f63162fc5fae5470c8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x22669c5fb04776542e1a738837433fe383f5a0a77de24cea5fa78e0bf9725a76"
-        ],
+        "templateIds": ["0x22669c5fb04776542e1a738837433fe383f5a0a77de24cea5fa78e0bf9725a76"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6dd3334d8beafca0467f74d77bc814f0367084ecbbb78ad788bfa6400dcca524"
-        ],
+        "templateIds": ["0x6dd3334d8beafca0467f74d77bc814f0367084ecbbb78ad788bfa6400dcca524"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd2839c2954706e1068666df5a0a62777c24df1c1d5291a5c9900dc1356972c31"
-        ],
+        "templateIds": ["0xd2839c2954706e1068666df5a0a62777c24df1c1d5291a5c9900dc1356972c31"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x5b3583ef06663102368e516bc4273594265a02b84850e22049aca3da62defd49"
-        ],
+        "templateIds": ["0x5b3583ef06663102368e516bc4273594265a02b84850e22049aca3da62defd49"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x27a6296324a714c31145a395f7df93597cc307fb9b67e25dcae5467256f93196"
-        ],
+        "templateIds": ["0x27a6296324a714c31145a395f7df93597cc307fb9b67e25dcae5467256f93196"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1801f501e1e7eb87fc34f9936bf3b7ffa222e5eb8f48f5f0614c191a213271d8"
-        ],
+        "templateIds": ["0x1801f501e1e7eb87fc34f9936bf3b7ffa222e5eb8f48f5f0614c191a213271d8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7eb3fcdfa2130c04c8617d12d1682bd4ee41a0b56f77e2517d0482776ba6bb0b"
-        ],
+        "templateIds": ["0x7eb3fcdfa2130c04c8617d12d1682bd4ee41a0b56f77e2517d0482776ba6bb0b"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xe6e2ebf70886d79f03da2584753a11c78112e7f190797d63b2fe288a100e7f1d"
-        ],
+        "templateIds": ["0xe6e2ebf70886d79f03da2584753a11c78112e7f190797d63b2fe288a100e7f1d"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd2d0e6f9b6b332f098d386866aa223204f001e32db2863174b3725c55b44f569"
-        ],
+        "templateIds": ["0xd2d0e6f9b6b332f098d386866aa223204f001e32db2863174b3725c55b44f569"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x7201a638a22aa41c36427a0b167a0394fd6f0b50540b9b4e60ea8775c4d114db"
-        ],
+        "templateIds": ["0x7201a638a22aa41c36427a0b167a0394fd6f0b50540b9b4e60ea8775c4d114db"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xc29cbfc2eb98080120be3e63504f5db85e41c203579f0fdb68ee1634132e0bc3"
-        ],
+        "templateIds": ["0xc29cbfc2eb98080120be3e63504f5db85e41c203579f0fdb68ee1634132e0bc3"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2692dff363b0195ad348c7ad8cc8ab4b25d97e4a702f88fd56a73a09a29939cd"
-        ],
+        "templateIds": ["0x2692dff363b0195ad348c7ad8cc8ab4b25d97e4a702f88fd56a73a09a29939cd"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xfba69626d00f1f5a7920984f3ac4f5f48da6c76753aeba0bbac38cfd0ff66ed2"
-        ],
+        "templateIds": ["0xfba69626d00f1f5a7920984f3ac4f5f48da6c76753aeba0bbac38cfd0ff66ed2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x235fb5d88597df68939d46a93ba0e741edcdd9797555b649124256cc146bec17"
-        ],
+        "templateIds": ["0x235fb5d88597df68939d46a93ba0e741edcdd9797555b649124256cc146bec17"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x2f95443ef8c176ede1492166608977f34526064fd45797c10a5035c9b63b8646"
-        ],
+        "templateIds": ["0x2f95443ef8c176ede1492166608977f34526064fd45797c10a5035c9b63b8646"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x6a8934169972f2893ab5c0d9fe3cd1544c179d6f3a958160083822ea0d2188d8"
-        ],
+        "templateIds": ["0x6a8934169972f2893ab5c0d9fe3cd1544c179d6f3a958160083822ea0d2188d8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x4758331e431f355fc5ab0c04c3638abb65f86b23a8eab81d8411739278999706"
-        ],
+        "templateIds": ["0x4758331e431f355fc5ab0c04c3638abb65f86b23a8eab81d8411739278999706"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x81c498baabfa3c043fc59ffa33248f206cb640f91ee178a9ec3452a2120de7d4"
-        ],
+        "templateIds": ["0x81c498baabfa3c043fc59ffa33248f206cb640f91ee178a9ec3452a2120de7d4"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xd20aa814af5b8134045cf732d38742163d181791fb376bf982dd62ea314326c0"
-        ],
+        "templateIds": ["0xd20aa814af5b8134045cf732d38742163d181791fb376bf982dd62ea314326c0"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xf48c99d7ba43317468883605cd776a95694d5b2b517b45f917351a839210f8a8"
-        ],
+        "templateIds": ["0xf48c99d7ba43317468883605cd776a95694d5b2b517b45f917351a839210f8a8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x1e5b4f7201630dbc21851923dbd8da915f40061dbb3885d03ad782c4db2e6cc2"
-        ],
+        "templateIds": ["0x1e5b4f7201630dbc21851923dbd8da915f40061dbb3885d03ad782c4db2e6cc2"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x3056f96070c7d4c4c6ab05c634aaceefff6b929099b7805947ad853817f8ee61"
-        ],
+        "templateIds": ["0x3056f96070c7d4c4c6ab05c634aaceefff6b929099b7805947ad853817f8ee61"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xb0e6b41f0d452a78712781e107fd115f9f62697ab079e3166bba1c6739ef6888"
-        ],
+        "templateIds": ["0xb0e6b41f0d452a78712781e107fd115f9f62697ab079e3166bba1c6739ef6888"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x20cc0519b09e9f4a28585cf723b3c1fd451f097dc5c0a38a31d0a5a0cf28e6d8"
-        ],
+        "templateIds": ["0x20cc0519b09e9f4a28585cf723b3c1fd451f097dc5c0a38a31d0a5a0cf28e6d8"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0xdfdf358a8dfddde08b28e71831f02393323136dbb769fd097ba79513cf668606"
-        ],
+        "templateIds": ["0xdfdf358a8dfddde08b28e71831f02393323136dbb769fd097ba79513cf668606"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x56f5c1de0f1e132f08d589c268e5665e329c1a83a1c1a406370b3dd7c349be00"
-        ],
+        "templateIds": ["0x56f5c1de0f1e132f08d589c268e5665e329c1a83a1c1a406370b3dd7c349be00"],
         "fetchInterval": 1,
         "updateDelay": 0
       },
       {
         "signedApiName": "perf-test-signed-api",
-        "templateIds": [
-          "0x38c5dbe79d151efedaaca62e0d9532b6297b01e7f8febc3456b15762247d0ba2"
-        ],
+        "templateIds": ["0x38c5dbe79d151efedaaca62e0d9532b6297b01e7f8febc3456b15762247d0ba2"],
         "fetchInterval": 1,
         "updateDelay": 0
       }
@@ -15638,7 +15038,7 @@
   "apiCredentials": [],
   "nodeSettings": {
     "nodeVersion": "0.1.0",
-    "airnodeWalletMnemonic": "destroy manual orange pole pioneer enemy detail lady cake bus shed visa",
+    "airnodeWalletMnemonic": "shield level grow quit walnut actor attitude relax sweet song mango peanut",
     "stage": "performance-test"
   }
 }
