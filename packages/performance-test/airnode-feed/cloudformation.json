@@ -6,7 +6,7 @@
     "CloudWatchLogsGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "AirnodeFeedLogGroup-perf-test-cli5",
+        "LogGroupName": "AirnodeFeedLogGroup-perf-test-cli7",
         "RetentionInDays": 7
       }
     },
@@ -48,7 +48,7 @@
                 "awslogs-region": {
                   "Ref": "AWS::Region"
                 },
-                "awslogs-stream-prefix": "airnode-feed-perf-test-cli5"
+                "awslogs-stream-prefix": "airnode-feed-perf-test-cli7"
               }
             }
           }
@@ -58,7 +58,7 @@
     "AppCluster": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
-        "ClusterName": "AirnodeFeedCluster-perf-test-cli5"
+        "ClusterName": "AirnodeFeedCluster-perf-test-cli7"
       }
     },
     "AppService": {
@@ -67,7 +67,7 @@
         "Cluster": {
           "Ref": "AppCluster"
         },
-        "ServiceName": "AirnodeFeedService-perf-test-cli5",
+        "ServiceName": "AirnodeFeedService-perf-test-cli7",
         "DesiredCount": 1,
         "LaunchType": "FARGATE",
         "TaskDefinition": {
