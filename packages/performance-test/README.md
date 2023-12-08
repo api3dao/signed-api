@@ -64,12 +64,25 @@ You can use a script to create an Airnode feed configuration. You need to:
    the signed data only once. Set `AIRNODE_FEED_CONFIG_PATH` to
    `./airnode-feed/initialize-source-api/config/airnode-feed.json`.
 
-For example, to initialize the Signed API from the Nodary pool you could use the following:
+For example, to prepare Airnode feed config with the Nodary pool you could use the following:
 
 ```sh
 SOURCE_SIGNED_API_URL=https://pool.nodary.io \
 SOURCE_SIGNED_API_ENDPOINT_PATH=/ \
 SIGNED_DATAS_PER_API_RESPONSE=1 \
+TARGET_SIGNED_API_URL=http://signed-api-elb-source-45327119.eu-west-1.elb.amazonaws.com/ \
+TRIGGERS_COUNT=1 \
+FETCH_INTERVAL=86400 \
+AIRNODE_FEED_CONFIG_PATH=./airnode-feed/initialize-source-api/config/airnode-feed.json \
+pnpm run run-script ./airnode-feed/create-config.ts
+```
+
+To set up batching of 100:
+
+```sh
+SOURCE_SIGNED_API_URL=https://pool.nodary.io \
+SOURCE_SIGNED_API_ENDPOINT_PATH=/ \
+SIGNED_DATAS_PER_API_RESPONSE=100 \
 TARGET_SIGNED_API_URL=http://signed-api-elb-source-45327119.eu-west-1.elb.amazonaws.com/ \
 TRIGGERS_COUNT=1 \
 FETCH_INTERVAL=86400 \
@@ -110,7 +123,7 @@ You can use a script to create an Airnode feed configuration, similarly to the "
 `SIGNED_DATAS_PER_API_RESPONSE` should remain the same, `TRIGGERS_COUNT` should equal to `TOTAL_AIRNODE_FEEDS`, and
 `FETCH_INTERVAL` can be set arbitrarily.
 
-For example, to create an Airnode feed configuration for for no batching case:
+For example, to create an Airnode feed configuration for no batching case:
 
 ```sh
 SOURCE_SIGNED_API_URL=http://signed-api-elb-source-45327119.eu-west-1.elb.amazonaws.com/ \

@@ -45,8 +45,9 @@ const main = async () => {
   process.chdir(__dirname);
 
   // Change the Airnode feed mnemonic.
-  const mnemonic = ethers.Wallet.createRandom().mnemonic.phrase;
-  console.info(`Worker ${process.env.SERVICE_DIR} is using mnemonic: ${mnemonic}`);
+  const wallet = ethers.Wallet.createRandom();
+  const mnemonic = wallet.mnemonic.phrase;
+  console.info(`Worker ${process.env.SERVICE_DIR} is using mnemonic: ${mnemonic}, address: ${wallet.address}`);
   const configPath = join(__dirname, 'config/airnode-feed.json');
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   config.nodeSettings.airnodeWalletMnemonic = mnemonic;
