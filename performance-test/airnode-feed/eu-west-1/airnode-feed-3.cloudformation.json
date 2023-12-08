@@ -1,0 +1,188 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "A CloudFormation template for deploying the Airnode Feed on AWS.",
+  "Parameters": {},
+  "Resources": {
+    "CloudWatchLogsGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "AirnodeFeedLogGroup-perf-test3",
+        "RetentionInDays": 7
+      }
+    },
+    "AppDefinition": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "NetworkMode": "awsvpc",
+        "Cpu": "2048",
+        "Memory": "4096",
+        "ExecutionRoleArn": {
+          "Ref": "ECSTaskRole"
+        },
+        "RequiresCompatibilities": ["FARGATE"],
+        "ContainerDefinitions": [
+          {
+            "Name": "AirnodeFeed",
+            "Image": "siegrift/api3-airnode-feed:4476f99f9c385c24151edd21305559af26af93a0",
+            "Environment": [
+              {
+                "Name": "SECRETS_ENV",
+                "Value": ""
+              },
+              {
+                "Name": "LOG_LEVEL",
+                "Value": "debug"
+              }
+            ],
+            "EntryPoint": [
+              "/bin/sh",
+              "-c",
+              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/api3dao/signed-api/performance-test/performance-test/airnode-feed/airnode-feed.json >> ./config/airnode-feed.json && node dist/src/index.js"
+            ],
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "CloudWatchLogsGroup"
+                },
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                },
+                "awslogs-stream-prefix": "airnode-feed-perf-test3"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "AppCluster": {
+      "Type": "AWS::ECS::Cluster",
+      "Properties": {
+        "ClusterName": "AirnodeFeedCluster-perf-test3"
+      }
+    },
+    "AppService": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "Cluster": {
+          "Ref": "AppCluster"
+        },
+        "ServiceName": "AirnodeFeedService-perf-test3",
+        "DesiredCount": 1,
+        "LaunchType": "FARGATE",
+        "TaskDefinition": {
+          "Ref": "AppDefinition"
+        },
+        "NetworkConfiguration": {
+          "AwsvpcConfiguration": {
+            "AssignPublicIp": "ENABLED",
+            "Subnets": [
+              {
+                "Ref": "InstanceSubnet"
+              }
+            ]
+          }
+        },
+        "DeploymentConfiguration": {
+          "MinimumHealthyPercent": 100,
+          "MaximumPercent": 200
+        }
+      }
+    },
+    "InstanceVPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsSupport": true,
+        "EnableDnsHostnames": true
+      }
+    },
+    "InstanceInternetGateway": {
+      "Type": "AWS::EC2::InternetGateway"
+    },
+    "InstanceVPCGatewayAttachment": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "InstanceVPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "InstanceInternetGateway"
+        }
+      }
+    },
+    "InstancePublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "InstanceVPC"
+        }
+      }
+    },
+    "InstancePublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "DependsOn": "InstanceVPCGatewayAttachment",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InstancePublicRouteTable"
+        },
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InstanceInternetGateway"
+        }
+      }
+    },
+    "InstanceSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "10.0.0.0/24",
+        "VpcId": {
+          "Ref": "InstanceVPC"
+        },
+        "MapPublicIpOnLaunch": true
+      }
+    },
+    "InstancePublicSubnet1RouteTableAssociation": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InstancePublicRouteTable"
+        },
+        "SubnetId": {
+          "Ref": "InstanceSubnet"
+        }
+      }
+    },
+    "ECSTaskRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": {
+            "Effect": "Allow",
+            "Principal": {
+              "Service": ["ecs-tasks.amazonaws.com"]
+            },
+            "Action": ["sts:AssumeRole"]
+          }
+        },
+        "Policies": [
+          {
+            "PolicyName": "ECSTaskExecutionRolePolicy",
+            "PolicyDocument": {
+              "Statement": {
+                "Effect": "Allow",
+                "Action": [
+                  "logs:CreateLogGroup",
+                  "logs:CreateLogStream",
+                  "logs:DescribeLogStreams",
+                  "logs:PutLogEvents"
+                ],
+                "Resource": "*"
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
