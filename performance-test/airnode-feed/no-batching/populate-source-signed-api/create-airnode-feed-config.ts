@@ -21,7 +21,7 @@ const configTemplate = {
   signedApis: [
     {
       name: 'perf-test-signed-api',
-      url: 'http://signed-api-elb-target-id-1962349495.eu-central-1.elb.amazonaws.com/',
+      url: '', // NOTE: The "url" will be populated by the script.
     },
   ],
   ois: [
@@ -36,7 +36,7 @@ const configTemplate = {
         paths: {
           // NOTE: Will be populated by the script.
         } as any,
-        servers: [{ url: 'http://signed-api-elb-1946820200.eu-central-1.elb.amazonaws.com' }],
+        servers: [{ url: '' }], // NOTE: Will be populated by the script.
         security: {},
       },
       endpoints: [
@@ -71,20 +71,26 @@ const endpointTemplate = {
 };
 
 async function main() {
-  if (!process.env.SIGNED_API_URL) throw new Error('SIGNED_API_URL is not set');
-  const signedApiUrl = process.env.SIGNED_API_URL.replace(/\/+$/, '');
-  if (!process.env.SIGNED_API_ENDPOINT_PATH) throw new Error('SIGNED_API_ENDPOINT_PATH is not set');
-  const signedApiEndpointPath = process.env.SIGNED_API_ENDPOINT_PATH.replaceAll('/', '');
+  if (!process.env.SOURCE_SIGNED_API_URL) throw new Error('SOURCE_SIGNED_API_URL is not set');
+  const sourceSignedApiUrl = process.env.SOURCE_SIGNED_API_URL.replace(/\/+$/, '');
+  if (!process.env.SOURCE_SIGNED_API_ENDPOINT_PATH) throw new Error('SOURCE_SIGNED_API_ENDPOINT_PATH is not set');
+  const sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replaceAll('/', '');
   if (!process.env.BEACONS_COUNT) throw new Error('BEACONS_COUNT is not set');
   const beaconsCount = Number(process.env.BEACONS_COUNT!);
+  if (!process.env.TARGET_SIGNED_API_URL) throw new Error('TARGET_SIGNED_API_URL is not set');
+  const targetSignedApiUrl = process.env.TARGET_SIGNED_API_URL;
 
-  const availableAirnodesResponse = await fetch(signedApiUrl).then((res) => res.json() as any);
+  // Populate the source and target Signed API URLs.
+  configTemplate.signedApis[0]!.url = targetSignedApiUrl;
+  configTemplate.ois[0]!.apiSpecifications.servers[0]!.url = sourceSignedApiUrl;
+
+  const availableAirnodesResponse = await fetch(sourceSignedApiUrl).then((res) => res.json() as any);
   const availableAirnodes: string[] = availableAirnodesResponse['available-airnodes'];
   console.info(`There are ${availableAirnodesResponse.count} available Airnode(s).`);
 
   for (const [airnodeIndex, availableAirnode] of availableAirnodes.entries()) {
     const airnode = availableAirnode;
-    const signedDatasResponse = await fetch(`${signedApiUrl}/${signedApiEndpointPath}/${airnode}`).then(
+    const signedDatasResponse = await fetch(`${sourceSignedApiUrl}/${sourceSignedApiEndpointPath}/${airnode}`).then(
       (res) => res.json() as any
     );
     const signedDatas = signedDatasResponse.data;
@@ -99,7 +105,7 @@ async function main() {
     console.info(`Using Airnode ${airnode} to create the configuration.`);
 
     // Create OIS endpoint and API specification path.
-    const path = `/${signedApiEndpointPath}/${airnode}`;
+    const path = `/${sourceSignedApiEndpointPath}/${airnode}`;
     const endpoint = {
       ...endpointTemplate,
       name: airnode,
