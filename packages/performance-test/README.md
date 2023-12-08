@@ -1,10 +1,10 @@
 # performance-test
 
-> Basic instructions and rationale behind the performance test on AWS.
+> Basic configurations, scripts and instructions to run a performance test on AWS.
 
 Similar performance tests can be run on the host machine, but you may be bottlenecked by the host machine performance or
-network bandwidth. Also the AWS side is not tested this way. For this reason the instructions here are AWS specific. If
-you want to run the services in a Docker locally modify the commands accordingly.
+network bandwidth. Also the AWS side is not tested this way. For these reasons the instructions here are tailored to
+AWS. If you want to run the services in a Docker locally, modify the commands accordingly.
 
 ## Overview
 
@@ -24,8 +24,8 @@ You can either do so manually via AWS UI or use the CLI. The CLI is more conveni
 use the CLI:
 
 1. Install the AWS CLI.
-2. LogID into AWS CLI (or just paste the short-term credential ENV variables to the console).
-3. Use the CLI functions `aws cloudformation create-stack` and `aws cloudformation delete-stack`.
+2. Log into AWS CLI (or just paste the short-term credential ENV variables to the console).
+3. Use the CLI functions `aws cloudformation create-stack ...` and `aws cloudformation delete-stack ...`.
 
 The rest of the instructions assume you are using the CLI and are logged in.
 
@@ -37,8 +37,8 @@ To deploy the Signed API, use the `cloudformation.json` file in the `signed-api`
    remote URL of the `signed-api.json` file. When developing you use the file from a different branch and each time you
    edit the file push the changes upstream.
 2. Make sure the template is correct.
-3. Consider changing `-default-id` ID into something more meaningful. This step is necessary if deploying multiple
-   Signed APIs in the same region.
+3. Consider changing `-perf-test` ID into something more meaningful. This step is necessary if deploying multiple Signed
+   APIs in the same region.
 4. Optionally change the `CPU` and `Memory`.
 5. Run
    `aws cloudformation create-stack --stack-name signed-api-<NAME> --template-body file://signed-api/cloudformation.json --capabilities CAPABILITY_NAMED_IAM --region <REGION>`.
@@ -48,10 +48,11 @@ To deploy the Signed API, use the `cloudformation.json` file in the `signed-api`
 
 ## Populating the Signed API
 
-To initialize the Signed API, we run Airnode feed(s) on the host machine. There are multiple ways to do this, one of the
-least confusing is to use some existing signed API as a data source and run multiple Airnode feeds (with different
-mnemonic) with a single trigger. The number of Airnode feeds (X) and the number of templates (Y) in the trigger can be
-configured as necessary. The end result is a Signed API with X endpoints each serving Y signed data.
+To initialize the Signed API, we run Airnode feed(s) on the host machine. There are multiple ways to do this, one of
+them is to use some existing signed API as a data source and run multiple Airnode feeds (with different mnemonic) with a
+single trigger and push the signed data to the Signed API. The number of Airnode feeds (X) and the number of templates
+(Y) in the trigger can be configured as necessary. The end result is a Signed API with X endpoints, each serving Y
+signed data.
 
 ### Create Airnode feed configuration
 
@@ -94,6 +95,15 @@ pnpm run run-script ./airnode-feed/create-config.ts
 
 To run the Airnode feed(s) you can use the `start-airnode-feeds.ts`. You can specify `TOTAL_AIRNODE_FEEDS` for how many
 Airnode feeds should be run. Each Airnode feed will use a different mnemonic. For example:
+
+To run 300 Airnode feeds (simulating API that does not support batching):
+
+```sh
+TOTAL_AIRNODE_FEEDS=300 \
+pnpm run run-script ./airnode-feed/initialize-source-api/start-airnode-feeds.ts
+```
+
+To run 3 Airnode feeds (and probably using larget value for `SIGNED_DATAS_PER_API_RESPONSE` in the previous step):
 
 ```sh
 TOTAL_AIRNODE_FEEDS=1 \
