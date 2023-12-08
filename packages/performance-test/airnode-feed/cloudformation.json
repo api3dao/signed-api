@@ -37,7 +37,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/api3dao/signed-api/performance-test/performance-test/airnode-feed/airnode-feed.json >> ./config/airnode-feed.json && node dist/src/index.js"
+              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/api3dao/signed-api/performance-test/packages/performance-test/airnode-feed/airnode-feed.json >> ./config/airnode-feed.json && node dist/src/index.js"
             ],
             "LogConfiguration": {
               "LogDriver": "awslogs",
