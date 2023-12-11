@@ -23,7 +23,7 @@
         "ContainerDefinitions": [
           {
             "Name": "AirnodeFeed",
-            "Image": "siegrift/api3-airnode-feed:4476f99f9c385c24151edd21305559af26af93a0",
+            "Image": "<DOCKER_IMAGE>",
             "Environment": [
               {
                 "Name": "SECRETS_ENV",

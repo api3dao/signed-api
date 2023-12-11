@@ -36,14 +36,15 @@ To deploy the Signed API, use the `cloudformation.json` file in the `signed-api`
 1. Replace `<SIGNED_API_CONFIG_URL>` with the URL of the configuration file in the CF template. You can use the GitHub
    remote URL of the `signed-api.json` file. When developing you use the file from a different branch and each time you
    edit the file push the changes upstream.
-2. Make sure the template is correct.
-3. Consider changing `-perf-test` ID into something more meaningful. This step is necessary if deploying multiple Signed
+2. Replace the `<DOCKER_IMAGE>` with the actual docker image to be used in the CF template.
+3. Make sure the template is correct.
+4. Consider changing `-perf-test` ID into something more meaningful. This step is necessary if deploying multiple Signed
    APIs in the same region.
-4. Optionally change the `CPU` and `Memory`.
-5. Run
+5. Optionally change the `CPU` and `Memory`.
+6. Run
    `aws cloudformation create-stack --stack-name signed-api-<NAME> --template-body file://signed-api/cloudformation.json --capabilities CAPABILITY_NAMED_IAM --region <REGION>`.
    Be sure to replace `<NAME>` (e.g. "source") and `<REGION>` (e.g. "eu-west-1") with the appropriate values.
-6. Run `aws cloudformation delete-stack --stack-name signed-api-<NAME> --region <REGION>` to remove the Signed API.
+7. Run `aws cloudformation delete-stack --stack-name signed-api-<NAME> --region <REGION>` to remove the Signed API.
    Replace `<NAME>` and `<REGION>` with the same values used in the deployment.
 
 ## Populating the Signed API
@@ -117,14 +118,15 @@ To deploy the Airnode feed, use the `cloudformation.json` file in the `airnode-f
 1. Make sure you have some "source" API and "target" API deployed.
 2. Create the Airnode feed configuration and upload is somewhere (e.g. commit and push upstream on GitHub).
 3. Replace `<AIRNODE_FEED_CONFIG_URL>` with the configuration URL in the `cloudformation.json` file in the CF template.
-4. Make sure the template is correct.
-5. Consider changing `-perf-test` ID into something more meaningful. This step is necessary if deploying multiple
+4. Replace the `<DOCKER_IMAGE>` with the actual docker image to be used in the CF template.
+5. Make sure the template is correct.
+6. Consider changing `-perf-test` ID into something more meaningful. This step is necessary if deploying multiple
    Airnode feeds in the same region.
-6. Optionally change the `CPU` and `Memory`.
-7. Run
+7. Optionally change the `CPU` and `Memory`.
+8. Run
    `aws cloudformation create-stack --stack-name airnode-feed-<NAME> --template-body file://airnode-feed/cloudformation.json --capabilities CAPABILITY_NAMED_IAM --region <REGION>`.
    Be sure to replace `<NAME>` (e.g. "perf-test") and `<REGION>` (e.g. "eu-west-1") with the appropriate values.
-8. Run `aws cloudformation delete-stack --stack-name airnode-feed-<NAME> --region <REGION>` to remove the Signed API.
+9. Run `aws cloudformation delete-stack --stack-name airnode-feed-<NAME> --region <REGION>` to remove the Signed API.
    Replace `<NAME>` and `<REGION>` with the same values used in the deployment.
 
 ### Create Airnode feed configuration

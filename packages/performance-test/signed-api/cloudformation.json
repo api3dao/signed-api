@@ -30,7 +30,7 @@
         "ContainerDefinitions": [
           {
             "Name": "signed-api-container",
-            "Image": "siegrift/api3-signed-api:4476f99f9c385c24151edd21305559af26af93a0",
+            "Image": "<DOCKER_IMAGE>",
             "Environment": [
               {
                 "Name": "CONFIG_SOURCE",
