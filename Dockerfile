@@ -62,6 +62,10 @@ FROM node:18-alpine as api
 WORKDIR /app
 ENV NODE_ENV=production
 
+# Make sure the non-root user can bind to port 80.
+RUN apk add --no-cache libcap
+RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
+
 RUN addgroup -S deployed-api && \
     adduser -h /app -s /bin/false -S -D -H -G deployed-api deployed-api && \
     chown -R deployed-api /app
