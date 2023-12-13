@@ -100,7 +100,7 @@ describe(batchInsertData.name, () => {
       statusCode: 201,
     });
     expect(logger.debug).toHaveBeenCalledWith(
-      'Not storing signed data because signed data with the same timestamp already exists.',
+      'Not storing signed data because the signed data is not newer than the db sample.',
       expect.any(Object)
     );
     expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(1);
