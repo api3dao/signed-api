@@ -106,6 +106,78 @@ describe(batchInsertData.name, () => {
     expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(1);
   });
 
+  it('skips signed data if newer data is available from the store', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const storedSignedData = await createSignedData({ airnodeWallet });
+    cacheModule.setCache({
+      [storedSignedData.airnode]: {
+        [storedSignedData.templateId]: [storedSignedData],
+      },
+    });
+    const batchData = [
+      await createSignedData({
+        airnodeWallet,
+        templateId: storedSignedData.templateId,
+        timestamp: (Number.parseInt(storedSignedData.timestamp, 10) - 10).toString(),
+      }),
+      await createSignedData(),
+    ];
+    jest.spyOn(logger, 'debug');
+
+    const result = await batchInsertData(batchData);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({ count: 1, skipped: 1 }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 201,
+    });
+    expect(logger.debug).toHaveBeenCalledWith(
+      'Not storing signed data because the signed data is not newer than what we already have.',
+      expect.any(Object)
+    );
+    expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(1);
+  });
+
+  it('skips signed data if the data is older than an hour', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const storedSignedData = await createSignedData({ airnodeWallet });
+    cacheModule.setCache({
+      [storedSignedData.airnode]: {
+        [storedSignedData.templateId]: [],
+      },
+    });
+    const batchData = [
+      await createSignedData({
+        airnodeWallet,
+        templateId: storedSignedData.templateId,
+        timestamp: (Number.parseInt(storedSignedData.timestamp, 10) - 60 * 61).toString(),
+      }),
+      await createSignedData(),
+    ];
+    jest.spyOn(logger, 'debug');
+
+    const result = await batchInsertData(batchData);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({ count: 1, skipped: 1 }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 201,
+    });
+    expect(logger.debug).toHaveBeenCalledWith(
+      'Not storing signed data because the timestamp is older than one hour.',
+      expect.any(Object)
+    );
+    expect(cacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]!).toHaveLength(0);
+  });
+
   it('rejects a batch if there is a beacon with timestamp too far in the future', async () => {
     const batchData = [await createSignedData({ timestamp: (Math.floor(Date.now() / 1000) + 60 * 60 * 2).toString() })];
 

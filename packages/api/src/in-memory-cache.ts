@@ -9,8 +9,12 @@ export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimesta
   signedDatas.filter((data) => !isIgnored(data, ignoreAfterTimestamp));
 
 // The API is deliberately asynchronous to mimic a database call.
-// eslint-disable-next-line @typescript-eslint/require-await
-export const get = async (airnodeAddress: string, templateId: string, ignoreAfterTimestamp: number) => {
+export const get = async (
+  airnodeAddress: string,
+  templateId: string,
+  ignoreAfterTimestamp = Number.MAX_SAFE_INTEGER
+  // eslint-disable-next-line @typescript-eslint/require-await
+) => {
   logger.debug('Getting signed data.', { airnodeAddress, templateId, ignoreAfterTimestamp });
 
   const signedDataCache = getCache();

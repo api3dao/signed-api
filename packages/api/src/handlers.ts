@@ -84,7 +84,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
   // is acceptable, but we only want to store one data for each timestamp.
   for (const signedData of batchSignedData) {
     const requestTimestamp = Number.parseInt(signedData.timestamp, 10);
-    const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId, requestTimestamp));
+    const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId));
 
     if (goReadDb.data && requestTimestamp <= Number.parseInt(goReadDb.data.timestamp, 10)) {
       logger.debug('Not storing signed data because the signed data is not newer than what we already have.', {
