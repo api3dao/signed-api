@@ -87,7 +87,7 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId, requestTimestamp));
 
     if (goReadDb.data && requestTimestamp <= Number.parseInt(goReadDb.data.timestamp, 10)) {
-      logger.debug('Not storing signed data because the signed data is not newer than the db sample.', {
+      logger.debug('Not storing signed data because the signed data is not newer than what we already have.', {
         signedData,
       });
       continue;
