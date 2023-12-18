@@ -29,3 +29,27 @@ pnpm run build
 
 Note, that everytime you make a change to a workspace that is used as a dependency of another, you need to rebuild the
 changed package (otherwise you might get weird JS/TS errors).
+
+## Versioning and release
+
+Signed API and Airnode feed use [semantic versioning](https://semver.org/). Packages are published to NPM for sharing
+the interfaces (e.g. configuration file schema) and the services are dockerized and published to Docker Hub. We publish
+the packages together with the same version.
+
+<!-- TODO: Test with verdaccio -->
+<!-- TODO: Update the instructions -->
+
+To release a new version:
+
+1. `git checkout main` - Always version from `main` branch. Also, ensure that the working directory is clean (has no
+   uncommitted changes).
+2. `cd packages/api` - Change directory to the API package.
+3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
+   commit it.
+4. Build the docker image with tag `api3/signed-api:latest`. If running on Linux, use `pnpm run docker:build` otherwise
+   use `pnpm run docker:build:amd64`.
+5. `docker tag api3/signed-api:latest api3/signed-api:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace the
+   `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
+6. `docker push api3/signed-api:latest && docker push api3/signed-api:<MAJOR.MINOR.PATCH>` - Push the image upstream.
+   Both the latest and the versioned tag should be published.
+7. `git push --follow-tags` - Push the tagged commit upstream.

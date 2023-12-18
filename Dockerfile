@@ -34,11 +34,11 @@ RUN pnpm run --recursive build
 
 # Create a separate stage for Airnode feed package. We create a temporary stage for deployment and then copy the result
 # into the final stage. Only the production dependencies and package implementation is part of this last stage.
-LABEL application="deployed-airnode-feed" description="Deployed Airnode feed container"
+LABEL application="airnode-feed" description="Airnode feed container"
 
 FROM build AS deployed-airnode-feed
 
-RUN pnpm --filter=airnode-feed --prod deploy deployed-airnode-feed
+RUN pnpm --filter=@api3/airnode-feed --prod deploy deployed-airnode-feed
 FROM node:18-alpine as airnode-feed
 WORKDIR /app
 ENV NODE_ENV=production
@@ -51,14 +51,14 @@ USER deployed-airnode-feed
 COPY --chown=deployed-airnode-feed:deployed-airnode-feed --from=deployed-airnode-feed /app/deployed-airnode-feed .
 ENTRYPOINT ["node", "dist/src/index.js"]
 
-# Create a separate stage for api package. We create a temporary stage for deployment and then copy the result into
-# the final stage. Only the production dependencies and package implementation is part of this last stage.
-LABEL application="deployed-api" description="Deployed API container"
+# Create a separate stage for signed-api package. We create a temporary stage for deployment and then copy the result
+# into the final stage. Only the production dependencies and package implementation is part of this last stage.
+LABEL application="signed-api" description="Signed API container"
 
-FROM build AS deployed-api
+FROM build AS deployed-signed-api
 
-RUN pnpm --filter=api --prod deploy deployed-api
-FROM node:18-alpine as api
+RUN pnpm --filter=@api3/signed-api --prod deploy deployed-signed-api
+FROM node:18-alpine as signed-api
 WORKDIR /app
 ENV NODE_ENV=production
 
@@ -66,10 +66,10 @@ ENV NODE_ENV=production
 RUN apk add --no-cache libcap
 RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-RUN addgroup -S deployed-api && \
-    adduser -h /app -s /bin/false -S -D -H -G deployed-api deployed-api && \
-    chown -R deployed-api /app
-USER deployed-api
+RUN addgroup -S deployed-signed-api && \
+    adduser -h /app -s /bin/false -S -D -H -G deployed-signed-api deployed-signed-api && \
+    chown -R deployed-signed-api /app
+USER deployed-signed-api
 
-COPY --chown=deployed-api:deployed-api --from=deployed-api /app/deployed-api .
+COPY --chown=deployed-signed-api:deployed-signed-api --from=deployed-signed-api /app/deployed-signed-api .
 ENTRYPOINT ["node", "dist/src/index.js"]

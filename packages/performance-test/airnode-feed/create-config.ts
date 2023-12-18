@@ -3,7 +3,7 @@ import { writeFileSync } from 'node:fs';
 import { encode } from '@api3/airnode-abi';
 
 import { deriveEndpointId } from '../../airnode-feed/src/utils';
-import { deriveTemplateId } from '../../api/test/utils';
+import { deriveTemplateId } from '../../signed-api/test/utils';
 
 const configTemplate = {
   templates: {
@@ -45,7 +45,7 @@ const configTemplate = {
   ],
   apiCredentials: [],
   nodeSettings: {
-    nodeVersion: '0.1.0',
+    nodeVersion: '2.1.0',
     airnodeWalletMnemonic: 'destroy manual orange pole pioneer enemy detail lady cake bus shed visa',
     stage: 'performance-test',
   },

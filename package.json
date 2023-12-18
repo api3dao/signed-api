@@ -1,14 +1,16 @@
 {
   "name": "signed-api",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "engines": {
-    "node": "^18.19.0",
+    "node": ">=18.19.0",
     "pnpm": "^8.13.0"
   },
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
+    "create-new-version": "ts-node scripts/create-new-version.ts",
     "docker:build": "pnpm recursive run docker:build",
+    "docker:build:amd64": "pnpm recursive run docker:build:amd64",
     "eslint:check": "pnpm recursive run eslint:check",
     "eslint:fix": "pnpm recursive run eslint:fix",
     "prepare": "husky install",

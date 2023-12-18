@@ -276,7 +276,8 @@ To release a new version:
 2. `cd packages/api` - Change directory to the API package.
 3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
    commit it.
-4. `pnpm run docker:build` - Build the docker image with tag `api3/signed-api:latest`.
+4. Build the docker image with tag `api3/signed-api:latest`. If running on Linux, use `pnpm run docker:build` otherwise
+   use `pnpm run docker:build:amd64`.
 5. `docker tag api3/signed-api:latest api3/signed-api:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace the
    `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
 6. `docker push api3/signed-api:latest && docker push api3/signed-api:<MAJOR.MINOR.PATCH>` - Push the image upstream.
@@ -316,7 +317,7 @@ docker run --publish 8090:80 -it --init --volume $(pwd)/config:/app/config --env
 As of now, the docker image is not published anywhere. You need to build it locally. To build the image run:
 
 ```sh
-docker build --target api --tag api3/signed-api:latest ../../
+docker build --target signed-api --tag api3/signed-api:latest ../../
 ```
 
 ### Examples

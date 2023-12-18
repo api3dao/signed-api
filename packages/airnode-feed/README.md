@@ -364,7 +364,8 @@ To release a new version:
 2. `cd packages/airnode-feed` - Navigate to the Airnode feed package.
 3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
    commit it.
-4. `pnpm run docker:build` - Build the docker image with tag `api3/airnode-feed:latest`.
+4. Build the docker image with tag `api3/airnode-feed:latest`. If running on Linux, use `pnpm run docker:build`
+   otherwise use `pnpm run docker:build:amd64`.
 5. `docker tag api3/airnode-feed:latest api3/airnode-feed:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace
    the `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
 6. `docker push api3/airnode-feed:latest && docker push api3/airnode-feed:<MAJOR.MINOR.PATCH>` - Push the image
