@@ -43,7 +43,7 @@ export const callApi = async (
   );
 };
 
-export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponse[]> => {
+export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Promise<TemplateResponse[] | null> => {
   const {
     config: { endpoints, templates, ois: oises, apiCredentials },
   } = getState();
@@ -72,7 +72,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       operationTemplateId,
       errorMessage: goCallApi.error.message,
     });
-    return [];
+    return null;
   }
   const apiCallResponse = goCallApi.data;
 

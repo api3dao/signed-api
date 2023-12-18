@@ -5,10 +5,9 @@ import { isEmpty, isNil, pick } from 'lodash';
 
 import { logger } from '../logger';
 import { getState } from '../state';
-import type { SignedApiNameUpdateDelayGroup } from '../update-signed-api';
-import { type SignedApiPayload, signedApiResponseSchema } from '../validation/schema';
+import { type SignedApiPayload, signedApiResponseSchema, type SignedApiUpdate } from '../validation/schema';
 
-export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) => {
+export const pushSignedData = async (group: SignedApiUpdate) => {
   const {
     config: { signedApis },
     templateValues,
@@ -17,6 +16,8 @@ export const postSignedApiData = async (group: SignedApiNameUpdateDelayGroup) =>
   const { signedApiName, templateIds, updateDelay } = group;
 
   return logger.runWithContext({ signedApiName, updateDelay }, async () => {
+    logger.debug('Pushing signed data to the signed API.');
+
     const airnode = airnodeWallet.address;
     const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
       // Calculate the reference timestamp based on the current time and update delay.

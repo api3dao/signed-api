@@ -9,7 +9,7 @@ import * as configModule from '../validation/config';
 
 import { heartbeatLogger } from './logger';
 
-import { initiateHeartbeat, logHeartbeat, type HeartbeatPayload, stringifyUnsignedHeartbeatPayload } from '.';
+import { initiateHeartbeatLoop, logHeartbeat, type HeartbeatPayload, stringifyUnsignedHeartbeatPayload } from '.';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
@@ -96,7 +96,7 @@ test('sends heartbeat payload every minute', async () => {
   // Instead we spyOn the "go" which is a third party module that wraps the logHeartbeat call.
   jest.spyOn(promiseUtilsModule, 'go');
 
-  initiateHeartbeat();
+  initiateHeartbeatLoop();
 
   await jest.advanceTimersByTimeAsync(1000 * 60 * 8);
   expect(promiseUtilsModule.go).toHaveBeenCalledTimes(8);

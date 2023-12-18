@@ -4,37 +4,51 @@ import { makeTemplateRequests } from './api-requests/data-provider';
 import { logger } from './logger';
 import { signTemplateResponses } from './sign-template-data';
 import { getState } from './state';
+import { schedulePushingSignedData } from './update-signed-api';
 import { sleep } from './utils';
 import type { SignedApiUpdate } from './validation/schema';
 
-export const initiateFetchingBeaconData = () => {
-  logger.debug('Initiating fetching all beacon data.');
+export const initiateSignedApiUpdateLoops = () => {
+  logger.debug('Initiating feed loop.');
   const { config } = getState();
 
-  return config.triggers.signedApiUpdates.map(async (element) => fetchBeaconDataInLoop(element));
+  return config.triggers.signedApiUpdates.map(async (signedApiUpdate) => initiateSignedApiUpdateLoop(signedApiUpdate));
 };
 
-const fetchBeaconDataInLoop = async (signedApiUpdate: SignedApiUpdate) => {
+const initiateSignedApiUpdateLoop = async (signedApiUpdate: SignedApiUpdate) => {
   const { templateValues } = getState();
 
   while (true) {
     const startTimestamp = Date.now();
+    logger.debug('Making template requests.');
     const templateResponses = await makeTemplateRequests(signedApiUpdate);
-    const signedResponses = await signTemplateResponses(templateResponses);
-    // eslint-disable-next-line unicorn/no-array-for-each
-    signedResponses.forEach(async ([templateId, signedResponse]) => {
-      const goPut = await go(() => templateValues[templateId]!.put(signedResponse));
-      if (!goPut.success) {
-        // Because there can be multiple triggers for the same template ID it is possible that a race condition occurs,
-        // where the (newer) response from a different trigger is put first. This throws, because the signed data must
-        // be inserted increasingly by timestamp.
-        logger.warn(`Could not put signed response.`, {
-          templateId,
-          signedResponse,
-          errorMessage: goPut.error.message,
-        });
-      }
-    });
+
+    if (templateResponses) {
+      logger.debug('Signing template responses.');
+      const signedResponses = await signTemplateResponses(templateResponses);
+
+      logger.debug('Putting signed responses to storage.');
+      await Promise.all(
+        signedResponses.map(async ([templateId, signedResponse]) => {
+          const goPut = await go(() => templateValues[templateId]!.put(signedResponse));
+          if (!goPut.success) {
+            // Because there can be multiple triggers for the same template ID it is possible that a race condition
+            // occurs, where the (newer) response from a different trigger is put first. This throws, because the signed
+            // data must be inserted increasingly by timestamp.
+            logger.debug(`Could not put signed response.`, {
+              templateId,
+              signedResponse,
+              errorMessage: goPut.error.message,
+            });
+          }
+        })
+      );
+
+      // We want to send the data to the Signed API "in background" without waiting for the response to avoid blocking the
+      // fetch interval loop.
+      logger.debug('Scheduling pushing signed data to the API.');
+      schedulePushingSignedData(signedApiUpdate);
+    }
 
     const duration = Date.now() - startTimestamp;
     // Take at most 10% of the fetch interval as extra time to avoid all API requests be done at the same time. This

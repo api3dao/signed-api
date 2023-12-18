@@ -11,7 +11,7 @@ import { heartbeatLogger } from './logger';
 // other teams, such as monitoring) will listen for this exact message to parse the heartbeat.
 const HEARTBEAT_LOG_MESSAGE = 'Sending heartbeat log.';
 
-export const initiateHeartbeat = () => {
+export const initiateHeartbeatLoop = () => {
   logger.debug('Initiating heartbeat loop.');
   setInterval(async () => {
     const goLogHeartbeat = await go(logHeartbeat);

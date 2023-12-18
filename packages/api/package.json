@@ -5,7 +5,6 @@
     "node": "^18.19.0",
     "pnpm": "^8.12.0"
   },
-  "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf coverage dist",
@@ -16,7 +15,7 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
-    "start-prod": "node dist/dev-server.js",
+    "start-prod": "node dist/src/dev-server.js",
     "test": "jest",
     "tsc": "tsc --project ."
   },

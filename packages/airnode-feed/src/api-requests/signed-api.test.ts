@@ -5,9 +5,9 @@ import { config, signedApiResponse, nodarySignedTemplateResponses } from '../../
 import { logger } from '../logger';
 import * as stateModule from '../state';
 
-import { postSignedApiData } from './signed-api';
+import { pushSignedData } from './signed-api';
 
-describe(postSignedApiData.name, () => {
+describe(pushSignedData.name, () => {
   it('posts data to central api', async () => {
     const state = stateModule.getInitialState(config);
     // Assumes the template responses are for unique template IDs (which is true in the test fixtures).
@@ -21,7 +21,7 @@ describe(postSignedApiData.name, () => {
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(axios, 'post').mockResolvedValue(signedApiResponse);
 
-    const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
+    const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
 
     expect(response).toStrictEqual({ count: 3, success: true });
   });
@@ -40,7 +40,7 @@ describe(postSignedApiData.name, () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(axios, 'post').mockResolvedValue({ youHaveNotThoughAboutThisDidYou: 'yes-I-did' });
 
-    const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
+    const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
 
     expect(response).toStrictEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to parse response from the signed API.', {
@@ -70,7 +70,7 @@ describe(postSignedApiData.name, () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(axios, 'post').mockRejectedValue(new Error('simulated-network-error'));
 
-    const response = await postSignedApiData(config.triggers.signedApiUpdates[0]!);
+    const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
 
     expect(response).toStrictEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
