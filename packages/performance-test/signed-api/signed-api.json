@@ -1,0 +1,23 @@
+{
+  "endpoints": [
+    {
+      "urlPath": "/0s-delay",
+      "delaySeconds": 0
+    },
+    {
+      "urlPath": "/10s-delay",
+      "delaySeconds": 10
+    },
+    {
+      "urlPath": "/20s-delay",
+      "delaySeconds": 20
+    },
+    {
+      "urlPath": "/30s-delay",
+      "delaySeconds": 20
+    }
+  ],
+  "allowedAirnodes": "*",
+  "version": "0.1.0",
+  "stage": "perf-test"
+}
