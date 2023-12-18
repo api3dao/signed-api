@@ -16,7 +16,8 @@ export const startServer = (config: Config, port: number) => {
   app.use(express.json({ limit: '10mb' }));
 
   app.post('/', async (req, res) => {
-    logger.debug('Received request "POST /".', req.body);
+    logger.info('Received request "POST /".');
+    logger.debug('Request details.', { body: req.body });
 
     const result = await batchInsertData(req.body);
     res.status(result.statusCode).header(result.headers).send(result.body);
@@ -25,7 +26,7 @@ export const startServer = (config: Config, port: number) => {
   });
 
   app.get('/', async (_req, res) => {
-    logger.debug('Received request "GET /".');
+    logger.info('Received request "GET /".');
 
     const result = await listAirnodeAddresses();
     res.status(result.statusCode).header(result.headers).send(result.body);
@@ -38,7 +39,8 @@ export const startServer = (config: Config, port: number) => {
     const { urlPath, delaySeconds } = endpoint;
 
     app.get(`${urlPath}/:airnodeAddress`, async (req, res) => {
-      logger.debug('Received request "GET /:airnode".', { body: req.body, params: req.params });
+      logger.info('Received request "GET /:airnode".');
+      logger.debug('Request details.', { body: req.body, params: req.params });
 
       const result = await getData(req.params.airnodeAddress, delaySeconds);
       res.status(result.statusCode).header(result.headers).send(result.body);
