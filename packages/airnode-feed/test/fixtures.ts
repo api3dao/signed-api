@@ -3,7 +3,11 @@ import { ethers } from 'ethers';
 import { omit } from 'lodash';
 
 import packageJson from '../package.json';
-import { type HeartbeatPayload, createHash, stringifyUnsignedHeartbeatPayload } from '../src/heartbeat';
+import {
+  type HeartbeatPayload,
+  createConfigHash,
+  stringifyUnsignedHeartbeatPayload,
+} from '../src/heartbeat/heartbeat-utils';
 import type { SignedResponse, TemplateResponse } from '../src/sign-template-data';
 import type { Config } from '../src/validation/schema';
 
@@ -191,11 +195,13 @@ export const signedApiResponse: Partial<AxiosResponse> = {
 export const verifyHeartbeatLog = (heartbeatPayload: HeartbeatPayload, rawConfig: string) => {
   // Verify that the signature is valid.
   const unsignedHeartbeatPayload = omit(heartbeatPayload, 'signature');
-  const messageToSign = ethers.utils.arrayify(createHash(stringifyUnsignedHeartbeatPayload(unsignedHeartbeatPayload)));
+  const messageToSign = ethers.utils.arrayify(
+    createConfigHash(stringifyUnsignedHeartbeatPayload(unsignedHeartbeatPayload))
+  );
   const expectedAirnodeAddress = ethers.utils.verifyMessage(messageToSign, heartbeatPayload.signature);
   if (expectedAirnodeAddress !== heartbeatPayload.airnode) throw new Error('Invalid signature');
 
   // Verify that the config hash is valid.
-  const expectedConfigHash = createHash(rawConfig);
+  const expectedConfigHash = createConfigHash(rawConfig);
   if (expectedConfigHash !== heartbeatPayload.configHash) throw new Error('Invalid config hash');
 };

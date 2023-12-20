@@ -32,24 +32,20 @@ changed package (otherwise you might get weird JS/TS errors).
 
 ## Versioning and release
 
-Signed API and Airnode feed use [semantic versioning](https://semver.org/). Packages are published to NPM for sharing
-the interfaces (e.g. configuration file schema) and the services are dockerized and published to Docker Hub. We publish
-the packages together with the same version.
+Signed API and Airnode feed use [semantic versioning](https://semver.org/). Packages are published to NPM to export the
+configuration schemas and various utilities. The services are dockerized and published to Docker Hub.
 
-<!-- TODO: Test with verdaccio -->
-<!-- TODO: Update the instructions -->
+There is a script that automates the process of creating new NPM packages and Docker images. Full release procedure:
 
-To release a new version:
-
-1. `git checkout main` - Always version from `main` branch. Also, ensure that the working directory is clean (has no
-   uncommitted changes).
-2. `cd packages/api` - Change directory to the API package.
-3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
-   commit it.
-4. Build the docker image with tag `api3/signed-api:latest`. If running on Linux, use `pnpm run docker:build` otherwise
-   use `pnpm run docker:build:amd64`.
-5. `docker tag api3/signed-api:latest api3/signed-api:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace the
-   `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
-6. `docker push api3/signed-api:latest && docker push api3/signed-api:<MAJOR.MINOR.PATCH>` - Push the image upstream.
-   Both the latest and the versioned tag should be published.
-7. `git push --follow-tags` - Push the tagged commit upstream.
+1. `pnpm run create-npm-release [major|minor|patch]` - The script ensures publishing happens from up-to-date `main`
+   branch. It updates the package versions for `airnode-feed` and `signed-api`, updates fixtures and example files, does
+   basic checks to ensure the changes are valid and creates a version commit with a git tag. The command intentionally
+   does not do the publishing so that the changes can be reviewed before publishing.
+2. `git show` - To inspect the changes of the version commit.
+3. Run the e2e tests locally. This is not automated due to implementation complexity.
+4. `pnpm run publish:airnode-feed && pnpm run publish:signed-api` - To publish Airnode feed and Signed API package to
+   NPM.
+5. `git push --follow-tags` - Push the tagged version commit upstream.
+6. `pnpm run create-docker-release` - To build the Docker images and tag them correctly. The script uses the current
+   package.json version so it expects the NPM release is done first.
+7. The command outputs the publish instructions to push the images.

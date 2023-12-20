@@ -15,5 +15,5 @@
     { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["some-secret-token-for-airnode-feed"] }
   ],
   "stage": "local",
-  "version": "2.1.0"
+  "version": "0.1.0"
 }

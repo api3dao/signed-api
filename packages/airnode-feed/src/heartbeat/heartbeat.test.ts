@@ -10,7 +10,7 @@ import * as configModule from '../validation/config';
 
 import { heartbeatLogger } from './logger';
 
-import { initiateHeartbeatLoop, logHeartbeat, stringifyUnsignedHeartbeatPayload } from '.';
+import { initiateHeartbeatLoop, logHeartbeat } from '.';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
@@ -69,23 +69,6 @@ describe(verifyHeartbeatLog.name, () => {
     const stringifiedConfig = JSON.stringify(rawConfig);
 
     expect(() => verifyHeartbeatLog(jsonLog.context, stringifiedConfig)).not.toThrow();
-  });
-});
-
-describe(stringifyUnsignedHeartbeatPayload.name, () => {
-  it('sorts the keys alphabetically', () => {
-    expect(
-      stringifyUnsignedHeartbeatPayload({
-        airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-        stage: 'test',
-        nodeVersion: '0.1.0',
-        currentTimestamp: '1674172803',
-        deploymentTimestamp: '1674172800',
-        configHash: '0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a',
-      })
-    ).toBe(
-      '{"airnode":"0xbF3137b0a7574563a23a8fC8badC6537F98197CC","configHash":"0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a","currentTimestamp":"1674172803","deploymentTimestamp":"1674172800","nodeVersion":"0.1.0","stage":"test"}'
-    );
   });
 });
 

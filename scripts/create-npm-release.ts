@@ -1,3 +1,4 @@
+// NOTE: This script is not included in TS lint process, so it should be typechecked at runtime.
 import { execSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -18,23 +19,29 @@ const execSyncWithErrorHandling = (command: string) => {
   }
 };
 
-// NOTE: This script is not included in TS lint process, so it should be typechecked at runtime.
 const main = () => {
   const versionBump = process.argv[2];
   if (versionBump !== 'major' && versionBump !== 'minor' && versionBump !== 'patch') throw new Error('Invalid version');
 
-  console.info('Ensuring working directory is clean...');
-  const gitStatus = execSyncWithErrorHandling('git status --porcelain');
-  if (gitStatus !== '') throw new Error('Working directory is not clean');
+  const noGitChecks = process.argv[3];
+  if (noGitChecks && noGitChecks !== '--no-git-checks') throw new Error('Expected --no-git-checks flag');
 
-  console.info('Ensuring we are on the main branch...');
-  const branch = execSyncWithErrorHandling('git branch --show-current');
-  if (branch !== 'main\n') throw new Error('Not on the main branch');
+  if (noGitChecks) {
+    console.info('Skipping git checks...');
+  } else {
+    console.info('Ensuring working directory is clean...');
+    const gitStatus = execSyncWithErrorHandling('git status --porcelain');
+    if (gitStatus !== '') throw new Error('Working directory is not clean');
 
-  console.info('Ensuring we are up to date with the remote...');
-  execSyncWithErrorHandling('git fetch');
-  const gitDiff = execSyncWithErrorHandling('git diff origin/main');
-  if (gitDiff !== '') throw new Error('Not up to date with the remote');
+    console.info('Ensuring we are on the main branch...');
+    const branch = execSyncWithErrorHandling('git branch --show-current');
+    if (branch !== 'main\n') throw new Error('Not on the main branch');
+
+    console.info('Ensuring we are up to date with the remote...');
+    execSyncWithErrorHandling('git fetch');
+    const gitDiff = execSyncWithErrorHandling('git diff origin/main');
+    if (gitDiff !== '') throw new Error('Not up to date with the remote');
+  }
 
   console.info('Making sure we have the latest version of the dependencies...');
   execSyncWithErrorHandling('pnpm install');
@@ -52,18 +59,39 @@ const main = () => {
   execSyncWithErrorHandling(`cd packages/signed-api && pnpm version ${newVersion}`);
 
   console.info('Updating versions in example files and fixtures...');
-  const exampleFiles = [
-    'packages/airnode-feed/config/airnode-feed.example.json',
-    'packages/e2e/src/airnode-feed/airnode-feed.json',
-    'packages/performance-test/airnode-feed/create-config.ts',
-    'packages/e2e/src/signed-api/signed-api.json',
-    'packages/performance-test/signed-api/signed-api.json',
-    'packages/signed-api/config/signed-api.example.json',
-  ];
-  for (const exampleFile of exampleFiles) {
-    const filePath = join(__dirname, `../${exampleFile}`);
+  const replacements = [
+    [
+      'packages/airnode-feed/config/airnode-feed.example.json',
+      `"nodeVersion": "${currentVersion}"`,
+      `"nodeVersion": "${newVersion}"`,
+    ],
+    [
+      'packages/e2e/src/airnode-feed/airnode-feed.json',
+      `"nodeVersion": "${currentVersion}"`,
+      `"nodeVersion": "${newVersion}"`,
+    ],
+    [
+      'packages/performance-test/airnode-feed/create-config.ts',
+      `nodeVersion: '${currentVersion}'`,
+      `nodeVersion: '${newVersion}'`,
+    ],
+    ['packages/e2e/src/signed-api/signed-api.json', `"version": "${currentVersion}"`, `"version": "${newVersion}"`],
+    [
+      'packages/performance-test/signed-api/signed-api.json',
+      `"version": "${currentVersion}"`,
+      `"version": "${newVersion}"`,
+    ],
+    [
+      'packages/signed-api/config/signed-api.example.json',
+      `"version": "${currentVersion}"`,
+      `"version": "${newVersion}"`,
+    ],
+  ] as const;
+  for (const replacement of replacements) {
+    const [relativeFilePath, valueToReplace, newValue] = replacement;
+    const filePath = join(__dirname, `../${relativeFilePath}`);
     const fileContent = readFileSync(filePath, 'utf8');
-    writeFileSync(filePath, fileContent.replaceAll(currentVersion, newVersion));
+    writeFileSync(filePath, fileContent.replaceAll(valueToReplace, newValue));
   }
 
   console.info('Running ESLint...');
