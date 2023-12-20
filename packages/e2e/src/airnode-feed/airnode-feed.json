@@ -59,7 +59,8 @@
   "signedApis": [
     {
       "name": "localhost",
-      "url": "${SIGNED_API_URL}"
+      "url": "${SIGNED_API_URL}",
+      "authToken": "some-secret-token-for-airnode-feed"
     }
   ],
   "ois": [

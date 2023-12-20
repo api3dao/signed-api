@@ -4,16 +4,20 @@ import { isEmpty, isNil, omit } from 'lodash';
 import { getConfig } from './config';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
-import { type SignedData, batchSignedDataSchema, evmAddressSchema } from './schema';
+import { logger } from './logger';
+import { type SignedData, batchSignedDataSchema, evmAddressSchema, type Endpoint } from './schema';
 import type { ApiResponse } from './types';
-import { generateErrorResponse, isBatchUnique } from './utils';
+import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.
 //
 // Otherwise, each data is inserted to the storage even though they might already be more fresh data. This might be
 // important for the delayed endpoint which may not be allowed to return the fresh data yet.
-export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse> => {
+export const batchInsertData = async (
+  authorizationHeader: string | undefined,
+  requestBody: unknown
+): Promise<ApiResponse> => {
   const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
   if (!goValidateSchema.success) {
     return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
@@ -21,21 +25,36 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
     });
   }
 
-  // Ensure that the batch of signed that comes from a whitelisted Airnode.
-  const { endpoints, allowedAirnodes } = getConfig();
-  if (
-    allowedAirnodes !== '*' &&
-    !goValidateSchema.data.every((signedData) => allowedAirnodes.includes(signedData.airnode))
-  ) {
-    const disallowedAirnodeAddress = goValidateSchema.data.find(
-      (signedData) => !allowedAirnodes.includes(signedData.airnode)
-    )!.airnode;
-    return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress: disallowedAirnodeAddress });
-  }
-
-  // Ensure there is at least one signed data to push
+  // Ensure there is at least one signed data to push.
   const batchSignedData = goValidateSchema.data;
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
+
+  // Check if all signed data is from the same airnode
+  const signedDataAirnodes = new Set(batchSignedData.map((signedData) => signedData.airnode));
+  if (signedDataAirnodes.size > 1) {
+    return generateErrorResponse(400, 'All signed data must be from the same Airnode address', {
+      airnodeAddresses: [...signedDataAirnodes],
+    });
+  }
+  const airnodeAddress = batchSignedData[0]!.airnode;
+
+  // Ensure that the batch of signed that comes from a whitelisted Airnode.
+  const { endpoints, allowedAirnodes } = getConfig();
+  if (allowedAirnodes !== '*') {
+    // Find the allowed airnode and extract the request token.
+    const allowedAirnode = allowedAirnodes.find((allowedAirnode) => allowedAirnode.address === airnodeAddress);
+    const authToken = extractBearerToken(authorizationHeader);
+
+    // Check if the airnode is allowed and if the auth token is valid.
+    const isAirnodeAllowed = Boolean(allowedAirnode);
+    const isAuthTokenValid = allowedAirnode?.authTokens === null || allowedAirnode?.authTokens.includes(authToken!);
+    if (!isAirnodeAllowed || !isAuthTokenValid) {
+      if (isAirnodeAllowed) {
+        logger.debug(`Invalid auth token`, { allowedAirnode, authToken });
+      }
+      return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
+    }
+  }
 
   // Check whether any duplications exist
   if (!isBatchUnique(batchSignedData)) return generateErrorResponse(400, 'No duplications are allowed');
@@ -93,7 +112,11 @@ export const batchInsertData = async (requestBody: unknown): Promise<ApiResponse
 // Returns the most fresh signed data for each templateId for the given airnode address. The API can be delayed, which
 // filter out all signed data that happend in the specified "delaySeconds" parameter (essentially, such signed data is
 // treated as non-existant).
-export const getData = async (airnodeAddress: string, delaySeconds: number): Promise<ApiResponse> => {
+export const getData = async (
+  endpoint: Endpoint,
+  authorizationHeader: string | undefined,
+  airnodeAddress: string
+): Promise<ApiResponse> => {
   if (isNil(airnodeAddress)) return generateErrorResponse(400, 'Invalid request, airnode address is missing');
 
   const goValidateSchema = await go(async () => evmAddressSchema.parseAsync(airnodeAddress));
@@ -101,8 +124,14 @@ export const getData = async (airnodeAddress: string, delaySeconds: number): Pro
     return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address');
   }
 
+  const { delaySeconds, authTokens } = endpoint;
+  const authToken = extractBearerToken(authorizationHeader);
+  if (authTokens !== null && !authTokens.includes(authToken!)) {
+    return generateErrorResponse(403, 'Invalid auth token', { authToken });
+  }
+
   const { allowedAirnodes } = getConfig();
-  if (allowedAirnodes !== '*' && !allowedAirnodes.includes(airnodeAddress)) {
+  if (allowedAirnodes !== '*' && !allowedAirnodes.some((allowedAirnode) => allowedAirnode.address === airnodeAddress)) {
     return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
   }
 

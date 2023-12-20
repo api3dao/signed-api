@@ -28,9 +28,9 @@ describe(logHeartbeat.name, () => {
       nodeVersion: '0.1.0',
       currentTimestamp: '1674172803',
       deploymentTimestamp: '1674172800',
-      configHash: '0x1a2a00f22eeab37eb95f8cf1ec10ec89521516db42f41b7ffc6da541d948a54a',
+      configHash: '0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a',
       signature:
-        '0xd0f84a62705585e03c14ebfda2688a4e4c733aa42a3d13f98d4fe390d482fd1c3e698e91939df28b9565a9de82f3495b053824ffe61239fdd4fa0e4a970523a81b',
+        '0x15fb32178d3c6e30385e448b21a4b9086c715a11e8044513bf3b6a578643f7a327498b59cc3d9442fbd2f3b3b4991f94398727e54558ac24871e2df44d1664e11c',
     };
     const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
     jest.spyOn(configModule, 'loadRawConfig').mockReturnValue(rawConfig);
@@ -50,12 +50,12 @@ describe(verifyHeartbeatLog.name, () => {
     const jsonLog = {
       context: {
         airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-        configHash: '0x1a2a00f22eeab37eb95f8cf1ec10ec89521516db42f41b7ffc6da541d948a54a',
+        configHash: '0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a',
         currentTimestamp: '1674172803',
         deploymentTimestamp: '1674172800',
         nodeVersion: '0.1.0',
         signature:
-          '0xd0f84a62705585e03c14ebfda2688a4e4c733aa42a3d13f98d4fe390d482fd1c3e698e91939df28b9565a9de82f3495b053824ffe61239fdd4fa0e4a970523a81b',
+          '0x15fb32178d3c6e30385e448b21a4b9086c715a11e8044513bf3b6a578643f7a327498b59cc3d9442fbd2f3b3b4991f94398727e54558ac24871e2df44d1664e11c',
         stage: 'test',
       },
       level: 'info',
@@ -81,10 +81,10 @@ describe(stringifyUnsignedHeartbeatPayload.name, () => {
         nodeVersion: '0.1.0',
         currentTimestamp: '1674172803',
         deploymentTimestamp: '1674172800',
-        configHash: '0x1a2a00f22eeab37eb95f8cf1ec10ec89521516db42f41b7ffc6da541d948a54a',
+        configHash: '0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a',
       })
     ).toBe(
-      '{"airnode":"0xbF3137b0a7574563a23a8fC8badC6537F98197CC","configHash":"0x1a2a00f22eeab37eb95f8cf1ec10ec89521516db42f41b7ffc6da541d948a54a","currentTimestamp":"1674172803","deploymentTimestamp":"1674172800","nodeVersion":"0.1.0","stage":"test"}'
+      '{"airnode":"0xbF3137b0a7574563a23a8fC8badC6537F98197CC","configHash":"0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a","currentTimestamp":"1674172803","deploymentTimestamp":"1674172800","nodeVersion":"0.1.0","stage":"test"}'
     );
   });
 });

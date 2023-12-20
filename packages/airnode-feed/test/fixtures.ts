@@ -46,6 +46,7 @@ export const config: Config = {
     {
       name: 'localhost',
       url: 'http://localhost:8090',
+      authToken: null,
     },
   ],
   ois: [

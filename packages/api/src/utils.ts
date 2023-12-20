@@ -23,3 +23,12 @@ export const generateErrorResponse = (
     body: JSON.stringify(context ? { message, context } : { message }),
   };
 };
+
+export const extractBearerToken = (authorizationHeader: string | undefined) => {
+  if (!authorizationHeader) return null;
+
+  const [type, token] = authorizationHeader.split(' ');
+  if (type !== 'Bearer' || !token) return null;
+
+  return token;
+};
