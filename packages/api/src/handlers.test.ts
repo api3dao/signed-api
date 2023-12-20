@@ -2,12 +2,13 @@ import { ethers } from 'ethers';
 import { omit } from 'lodash';
 
 import { getMockedConfig } from '../test/fixtures';
-import { createSignedData, deriveBeaconId, generateRandomBytes, generateRandomWallet } from '../test/utils';
+import { createSignedData, generateRandomBytes, generateRandomWallet } from '../test/utils';
 
 import * as cacheModule from './cache';
 import * as configModule from './config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 import { logger } from './logger';
+import { deriveBeaconId } from './utils';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
@@ -19,38 +20,48 @@ afterEach(() => {
 });
 
 describe(batchInsertData.name, () => {
-  it('does not validate signature (for performance reasons)', async () => {
-    const airnodeWallet = generateRandomWallet();
-    const invalidData = await createSignedData({ airnodeWallet, signature: '0xInvalid' });
-    const batchData = [await createSignedData({ airnodeWallet }), invalidData];
+  it('validates signature', async () => {
+    const invalidData = await createSignedData({ signature: '0xInvalid' });
 
-    const result = await batchInsertData(undefined, batchData);
+    const result = await batchInsertData(undefined, [invalidData]);
 
     expect(result).toStrictEqual({
-      body: JSON.stringify({ count: 2, skipped: 0 }),
+      body: JSON.stringify({
+        message: 'Unable to recover signer address',
+        context: {
+          detail:
+            'signature missing v and recoveryParam (argument="signature", value="0xInvalid", code=INVALID_ARGUMENT, version=bytes/5.7.0)',
+          signedData: invalidData,
+        },
+      }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
         'content-type': 'application/json',
       },
-      statusCode: 201,
+      statusCode: 400,
     });
   });
 
-  it('does not validate beacon ID (for performance reasons)', async () => {
+  it('validates beacon ID', async () => {
     const data = await createSignedData();
     const invalidData = { ...data, beaconId: deriveBeaconId(data.airnode, generateRandomBytes(32)) };
 
     const result = await batchInsertData(undefined, [invalidData]);
 
     expect(result).toStrictEqual({
-      body: JSON.stringify({ count: 1, skipped: 0 }),
+      body: JSON.stringify({
+        message: 'beaconId is invalid',
+        context: {
+          signedData: invalidData,
+        },
+      }),
       headers: {
         'access-control-allow-methods': '*',
         'access-control-allow-origin': '*',
         'content-type': 'application/json',
       },
-      statusCode: 201,
+      statusCode: 400,
     });
   });
 
