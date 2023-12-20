@@ -1,3 +1,4 @@
+import { go } from '@api3/promise-utils';
 import express from 'express';
 
 import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
@@ -15,41 +16,54 @@ export const startServer = (config: Config, port: number) => {
   // The default limit is 100kb, which is not enough for the signed API because some payloads can be quite large.
   app.use(express.json({ limit: '10mb' }));
 
-  app.post('/', async (req, res) => {
-    logger.info('Received request "POST /".');
-    logger.debug('Request details.', { body: req.body });
+  app.post('/', async (req, res, next) => {
+    const goRequest = await go(async () => {
+      logger.info('Received request "POST /".');
+      logger.debug('Request details.', { body: req.body });
 
-    const result = await batchInsertData(req.headers.authorization, req.body);
-    res.status(result.statusCode).header(result.headers).send(result.body);
+      const result = await batchInsertData(req.headers.authorization, req.body);
+      res.status(result.statusCode).header(result.headers).send(result.body);
 
-    logger.debug('Responded to request "POST /".', result);
+      logger.debug('Responded to request "POST /".', result);
+    });
+
+    if (!goRequest.success) next(goRequest.error);
   });
 
-  app.get('/', async (_req, res) => {
-    logger.info('Received request "GET /".');
+  app.get('/', async (_req, res, next) => {
+    const goRequest = await go(async () => {
+      logger.info('Received request "GET /".');
 
-    const result = await listAirnodeAddresses();
-    res.status(result.statusCode).header(result.headers).send(result.body);
+      const result = await listAirnodeAddresses();
+      res.status(result.statusCode).header(result.headers).send(result.body);
 
-    logger.debug('Responded to request "GET /".', result);
+      logger.debug('Responded to request "GET /".', result);
+    });
+
+    if (!goRequest.success) next(goRequest.error);
   });
 
   for (const endpoint of config.endpoints) {
     logger.info('Registering endpoint.', endpoint);
     const { urlPath } = endpoint;
 
-    app.get(`${urlPath}/:airnodeAddress`, async (req, res) => {
-      logger.info(`Received request "GET ${urlPath}/:airnode".`);
-      logger.debug('Request details.', { body: req.body, params: req.params });
+    app.get(`${urlPath}/:airnodeAddress`, async (req, res, next) => {
+      const goRequest = await go(async () => {
+        logger.info(`Received request "GET ${urlPath}/:airnodeAddress".`);
+        logger.debug('Request details.', { body: req.body, params: req.params });
 
-      const result = await getData(endpoint, req.headers.authorization, req.params.airnodeAddress);
-      res.status(result.statusCode).header(result.headers).send(result.body);
+        const result = await getData(endpoint, req.headers.authorization, req.params.airnodeAddress);
+        res.status(result.statusCode).header(result.headers).send(result.body);
 
-      logger.debug('Responded to request "GET /:airnode".', result);
+        logger.debug('Responded to request "GET /:airnodeAddress".', result);
+      });
+
+      if (!goRequest.success) next(goRequest.error);
     });
   }
 
-  // Inline error handling middleware
+  // NOTE: The error handling middleware only catches synchronous errors. Request handlers logic should be wrapped in
+  // try-catch and manually passed to next() in case of errors.
   app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
     logger.error('An unexpected error occurred.', { err });
 
