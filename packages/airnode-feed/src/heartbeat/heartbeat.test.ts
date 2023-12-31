@@ -3,13 +3,14 @@ import { join } from 'node:path';
 
 import * as promiseUtilsModule from '@api3/promise-utils';
 
+import packageJson from '../../package.json';
 import { config, verifyHeartbeatLog } from '../../test/fixtures';
 import * as stateModule from '../state';
 import * as configModule from '../validation/config';
 
 import { heartbeatLogger } from './logger';
 
-import { initiateHeartbeatLoop, logHeartbeat, type HeartbeatPayload, stringifyUnsignedHeartbeatPayload } from '.';
+import { initiateHeartbeatLoop, logHeartbeat } from '.';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
@@ -22,16 +23,6 @@ afterEach(() => {
 
 describe(logHeartbeat.name, () => {
   it('sends the correct heartbeat log', async () => {
-    const expectedLogMessage: HeartbeatPayload = {
-      airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-      stage: 'test',
-      nodeVersion: '0.1.0',
-      currentTimestamp: '1674172803',
-      deploymentTimestamp: '1674172800',
-      configHash: '0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a',
-      signature:
-        '0x15fb32178d3c6e30385e448b21a4b9086c715a11e8044513bf3b6a578643f7a327498b59cc3d9442fbd2f3b3b4991f94398727e54558ac24871e2df44d1664e11c',
-    };
     const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
     jest.spyOn(configModule, 'loadRawConfig').mockReturnValue(rawConfig);
     const state = stateModule.getInitialState(config);
@@ -41,7 +32,16 @@ describe(logHeartbeat.name, () => {
 
     await logHeartbeat();
 
-    expect(heartbeatLogger.info).toHaveBeenCalledWith('Sending heartbeat log.', expectedLogMessage);
+    expect(heartbeatLogger.info).toHaveBeenCalledWith(
+      'Sending heartbeat log.',
+      expect.objectContaining({
+        airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
+        stage: 'test',
+        nodeVersion: packageJson.version,
+        currentTimestamp: '1674172803',
+        deploymentTimestamp: '1674172800',
+      })
+    );
   });
 });
 
@@ -63,29 +63,12 @@ describe(verifyHeartbeatLog.name, () => {
       ms: '+0ms',
       timestamp: '2023-01-20T00:00:03.000Z',
     };
-    // The config hash is taken from config with all spaces removed.
-    const rawConfig = JSON.stringify(
-      JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'))
-    );
+    // The config hash was taken from the example config at a certain version with all spaces removed.
+    const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
+    rawConfig.nodeSettings.nodeVersion = '0.1.0';
+    const stringifiedConfig = JSON.stringify(rawConfig);
 
-    expect(() => verifyHeartbeatLog(jsonLog.context, rawConfig)).not.toThrow();
-  });
-});
-
-describe(stringifyUnsignedHeartbeatPayload.name, () => {
-  it('sorts the keys alphabetically', () => {
-    expect(
-      stringifyUnsignedHeartbeatPayload({
-        airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-        stage: 'test',
-        nodeVersion: '0.1.0',
-        currentTimestamp: '1674172803',
-        deploymentTimestamp: '1674172800',
-        configHash: '0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a',
-      })
-    ).toBe(
-      '{"airnode":"0xbF3137b0a7574563a23a8fC8badC6537F98197CC","configHash":"0x0a36630da26fa987561ff8b692f2015a6fe632bdabcf3dcdd010ccc8262f4a3a","currentTimestamp":"1674172803","deploymentTimestamp":"1674172800","nodeVersion":"0.1.0","stage":"test"}'
-    );
+    expect(() => verifyHeartbeatLog(jsonLog.context, stringifiedConfig)).not.toThrow();
   });
 });
 

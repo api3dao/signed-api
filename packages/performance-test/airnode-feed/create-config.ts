@@ -3,7 +3,7 @@ import { writeFileSync } from 'node:fs';
 import { encode } from '@api3/airnode-abi';
 
 import { deriveEndpointId } from '../../airnode-feed/src/utils';
-import { deriveTemplateId } from '../../api/test/utils';
+import { deriveTemplateId } from '../../signed-api/test/utils';
 
 const configTemplate = {
   templates: {

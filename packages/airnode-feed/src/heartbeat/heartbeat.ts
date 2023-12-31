@@ -1,15 +1,11 @@
 import { go } from '@api3/promise-utils';
-import { ethers } from 'ethers';
 
 import { logger } from '../logger';
 import { getState } from '../state';
 import { loadRawConfig } from '../validation/config';
 
+import { HEARTBEAT_LOG_MESSAGE, type HeartbeatPayload, createConfigHash, signHeartbeat } from './heartbeat-utils';
 import { heartbeatLogger } from './logger';
-
-// Intentionally making the message as constant so that it is not accidentally changed. API integrations team (and maybe
-// other teams, such as monitoring) will listen for this exact message to parse the heartbeat.
-const HEARTBEAT_LOG_MESSAGE = 'Sending heartbeat log.';
 
 export const initiateHeartbeatLoop = () => {
   logger.debug('Initiating heartbeat loop.');
@@ -18,36 +14,12 @@ export const initiateHeartbeatLoop = () => {
     if (!goLogHeartbeat.success) logger.error('Failed to log heartbeat.', goLogHeartbeat.error);
   }, 1000 * 60); // Frequency is hardcoded to 1 minute.
 };
-export interface HeartbeatPayload {
-  airnode: string;
-  stage: string;
-  nodeVersion: string;
-  currentTimestamp: string;
-  deploymentTimestamp: string;
-  configHash: string;
-  signature: string;
-}
-
-// We need to make sure the object is stringified in the same way every time, so we sort the keys alphabetically.
-export const stringifyUnsignedHeartbeatPayload = (unsignedHeartbeatPayload: Omit<HeartbeatPayload, 'signature'>) =>
-  JSON.stringify(unsignedHeartbeatPayload, Object.keys(unsignedHeartbeatPayload).sort());
-
-export const signHeartbeat = async (
-  airnodeWallet: ethers.Wallet,
-  unsignedHeartbeatPayload: Omit<HeartbeatPayload, 'signature'>
-) => {
-  logger.debug('Signing heartbeat payload.');
-  const messageToSign = ethers.utils.arrayify(createHash(stringifyUnsignedHeartbeatPayload(unsignedHeartbeatPayload)));
-  return airnodeWallet.signMessage(messageToSign);
-};
-
-export const createHash = (value: string) => ethers.utils.keccak256(ethers.utils.toUtf8Bytes(value));
 
 export const logHeartbeat = async () => {
   logger.debug('Creating heartbeat log.');
 
   const rawConfig = loadRawConfig(); // We want to log the raw config, not the one with interpolated secrets.
-  const configHash = createHash(JSON.stringify(rawConfig));
+  const configHash = createConfigHash(JSON.stringify(rawConfig));
   const {
     airnodeWallet,
     deploymentTimestamp,

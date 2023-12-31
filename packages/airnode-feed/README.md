@@ -352,25 +352,6 @@ An identifier of the deployment stage. This is used to distinguish between diffe
 example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
 lowercase alphanumeric characters and hyphens.
 
-## Versioning and release
-
-Airnode feed uses [semantic versioning](https://semver.org/). The version is specified in the `package.json` file. The
-package is not published to NPM, but instead dockerized and published to Docker Hub.
-
-To release a new version:
-
-1. `git checkout main` - Always version from `main` branch. Also, ensure that the working directory is clean (has no
-   uncommitted changes).
-2. `cd packages/airnode-feed` - Navigate to the Airnode feed package.
-3. `pnpm version [major|minor|patch]` - Choose the right version bump. This will bump the version, create a git tag and
-   commit it.
-4. `pnpm run docker:build` - Build the docker image with tag `api3/airnode-feed:latest`.
-5. `docker tag api3/airnode-feed:latest api3/airnode-feed:<MAJOR.MINOR.PATCH>` - Tag the image with the version. Replace
-   the `<MAJOR.MINOR.PATCH>` with the version you just bumped (copy it from `package.json`).
-6. `docker push api3/airnode-feed:latest && docker push api3/airnode-feed:<MAJOR.MINOR.PATCH>` - Push the image
-   upstream. Both the latest and the versioned tag should be published.
-7. `git push --follow-tags` - Push the tagged commit upstream.
-
 ## Deployment
 
 <!-- markdown-link-check-disable -->
