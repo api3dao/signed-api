@@ -111,10 +111,10 @@ const main = () => {
 
   console.info('Creating new commit...');
   execSyncWithErrorHandling('git add .');
-  execSyncWithErrorHandling(`git commit -m "${newVersion}"`);
+  execSyncWithErrorHandling(`git commit -m "v${newVersion}"`);
 
   console.info('Creating new annotated git tag...');
-  execSyncWithErrorHandling(`git tag -a ${newVersion} -m "${newVersion}"`);
+  execSyncWithErrorHandling(`git tag -a v${newVersion} -m "v${newVersion}"`);
 
   console.info('');
   console.info('The airnode-feed and signed-api packages have been bumped to the new version.');
