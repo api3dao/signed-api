@@ -8,8 +8,8 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
-    "create-docker-release": "ts-node scripts/create-docker-release.ts",
-    "create-npm-release": "ts-node scripts/create-npm-release.ts",
+    "create-release:docker": "ts-node scripts/create-docker-release.ts",
+    "create-release:npm": "ts-node scripts/create-npm-release.ts",
     "docker:build": "pnpm recursive run --sequential docker:build",
     "docker:build:amd64": "pnpm recursive run --sequential docker:build:amd64",
     "eslint:check": "pnpm recursive run eslint:check",

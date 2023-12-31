@@ -37,7 +37,7 @@ configuration schemas and various utilities. The services are dockerized and pub
 
 There is a script that automates the process of creating new NPM packages and Docker images. Full release procedure:
 
-1. `pnpm run create-npm-release [major|minor|patch]` - The script ensures publishing happens from up-to-date `main`
+1. `pnpm run create-release:npm [major|minor|patch]` - The script ensures publishing happens from up-to-date `main`
    branch. It updates the package versions for `airnode-feed` and `signed-api`, updates fixtures and example files, does
    basic checks to ensure the changes are valid and creates a version commit with a git tag. The command intentionally
    does not do the publishing so that the changes can be reviewed before publishing.
@@ -46,6 +46,6 @@ There is a script that automates the process of creating new NPM packages and Do
 4. `pnpm run publish:airnode-feed && pnpm run publish:signed-api` - To publish Airnode feed and Signed API package to
    NPM.
 5. `git push --follow-tags` - Push the tagged version commit upstream.
-6. `pnpm run create-docker-release` - To build the Docker images and tag them correctly. The script uses the current
+6. `pnpm run create-release:docker` - To build the Docker images and tag them correctly. The script uses the current
    package.json version so it expects the NPM release is done first.
 7. The command outputs the publish instructions to push the images.
