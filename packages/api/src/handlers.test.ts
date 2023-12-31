@@ -20,10 +20,11 @@ afterEach(() => {
 
 describe(batchInsertData.name, () => {
   it('does not validate signature (for performance reasons)', async () => {
-    const invalidData = await createSignedData({ signature: '0xInvalid' });
-    const batchData = [await createSignedData(), invalidData];
+    const airnodeWallet = generateRandomWallet();
+    const invalidData = await createSignedData({ airnodeWallet, signature: '0xInvalid' });
+    const batchData = [await createSignedData({ airnodeWallet }), invalidData];
 
-    const result = await batchInsertData(batchData);
+    const result = await batchInsertData(undefined, batchData);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ count: 2, skipped: 0 }),
@@ -40,7 +41,7 @@ describe(batchInsertData.name, () => {
     const data = await createSignedData();
     const invalidData = { ...data, beaconId: deriveBeaconId(data.airnode, generateRandomBytes(32)) };
 
-    const result = await batchInsertData([invalidData]);
+    const result = await batchInsertData(undefined, [invalidData]);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ count: 1, skipped: 0 }),
@@ -62,7 +63,7 @@ describe(batchInsertData.name, () => {
     );
     const batchData = [await createSignedData({ airnodeWallet })];
 
-    const result = await batchInsertData(batchData);
+    const result = await batchInsertData(undefined, batchData);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
@@ -93,11 +94,11 @@ describe(batchInsertData.name, () => {
         templateId: storedSignedData.templateId,
         timestamp: storedSignedData.timestamp,
       }),
-      await createSignedData(),
+      await createSignedData({ airnodeWallet }),
     ];
     jest.spyOn(logger, 'debug');
 
-    const result = await batchInsertData(batchData);
+    const result = await batchInsertData(undefined, batchData);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ count: 1, skipped: 1 }),
@@ -114,7 +115,7 @@ describe(batchInsertData.name, () => {
   it('rejects a batch if there is a beacon with timestamp too far in the future', async () => {
     const batchData = [await createSignedData({ timestamp: (Math.floor(Date.now() / 1000) + 60 * 60 * 2).toString() })];
 
-    const result = await batchInsertData(batchData);
+    const result = await batchInsertData(undefined, batchData);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
@@ -130,10 +131,44 @@ describe(batchInsertData.name, () => {
     });
   });
 
-  it('inserts the batch if data is valid', async () => {
-    const batchData = [await createSignedData(), await createSignedData()];
+  it('rejects a batch if there it contains data for multiple Airnode addresses', async () => {
+    const airnodeWallet1 = ethers.Wallet.fromMnemonic(
+      'echo dose empower ensure purchase enjoy once hotel slender loop repair desk'
+    );
+    const airnodeWallet2 = ethers.Wallet.fromMnemonic(
+      'clay drift protect wise love frost tourist eyebrow glide cost comfort punch'
+    );
+    const batchData = [
+      await createSignedData({ airnodeWallet: airnodeWallet1 }),
+      await createSignedData({ airnodeWallet: airnodeWallet2 }),
+    ];
 
-    const result = await batchInsertData(batchData);
+    const result = await batchInsertData(undefined, batchData);
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({
+        message: 'All signed data must be from the same Airnode address',
+        context: {
+          airnodeAddresses: [
+            '0x27f093777962Bb743E6cAC44cd724B84B725408a',
+            '0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb',
+          ],
+        },
+      }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 400,
+    });
+  });
+
+  it('inserts the batch if data is valid', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+
+    const result = await batchInsertData(undefined, batchData);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ count: 2, skipped: 0 }),
@@ -147,8 +182,6 @@ describe(batchInsertData.name, () => {
     expect(cacheModule.getCache()).toStrictEqual({
       [batchData[0]!.airnode]: {
         [batchData[0]!.templateId]: [batchData[0]],
-      },
-      [batchData[1]!.airnode]: {
         [batchData[1]!.templateId]: [batchData[1]],
       },
     });
@@ -158,9 +191,9 @@ describe(batchInsertData.name, () => {
 describe(getData.name, () => {
   it('drops the request if the airnode address is invalid', async () => {
     const batchData = [await createSignedData(), await createSignedData()];
-    await batchInsertData(batchData);
+    await batchInsertData(undefined, batchData);
 
-    const result = await getData('0xInvalid', 0);
+    const result = await getData({ authTokens: null, delaySeconds: 0, urlPath: 'path' }, undefined, '0xInvalid');
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ message: 'Invalid request, airnode address must be an EVM address' }),
@@ -176,9 +209,13 @@ describe(getData.name, () => {
   it('returns the live data', async () => {
     const airnodeWallet = generateRandomWallet();
     const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
-    await batchInsertData(batchData);
+    await batchInsertData(undefined, batchData);
 
-    const result = await getData(airnodeWallet.address, 0);
+    const result = await getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path' },
+      undefined,
+      airnodeWallet.address
+    );
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
@@ -204,9 +241,13 @@ describe(getData.name, () => {
       await createSignedData({ airnodeWallet, timestamp: delayTimestamp }),
       await createSignedData({ airnodeWallet }),
     ];
-    await batchInsertData(batchData);
+    await batchInsertData(undefined, batchData);
 
-    const result = await getData(airnodeWallet.address, 30);
+    const result = await getData(
+      { authTokens: null, delaySeconds: 30, urlPath: 'path' },
+      undefined,
+      airnodeWallet.address
+    );
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
@@ -229,7 +270,7 @@ describe(listAirnodeAddresses.name, () => {
   it('returns the list of airnode addresses', async () => {
     const airnodeWallet = generateRandomWallet();
     const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
-    await batchInsertData(batchData);
+    await batchInsertData(undefined, batchData);
 
     const result = await listAirnodeAddresses();
 

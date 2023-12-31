@@ -23,12 +23,16 @@ describe('endpointSchema', () => {
         path: ['urlPath'],
       },
     ]);
-    expect(() => endpointSchema.parse({ urlPath: '', delaySeconds: 0 })).toThrow(expectedError);
-    expect(() => endpointSchema.parse({ urlPath: '/', delaySeconds: 0 })).toThrow(expectedError);
-    expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0 })).toThrow(expectedError);
-    expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0 })).toThrow(expectedError);
+    expect(() => endpointSchema.parse({ urlPath: '', delaySeconds: 0, authTokens: null })).toThrow(expectedError);
+    expect(() => endpointSchema.parse({ urlPath: '/', delaySeconds: 0, authTokens: null })).toThrow(expectedError);
+    expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null })).toThrow(
+      expectedError
+    );
+    expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null })).toThrow(
+      expectedError
+    );
 
-    expect(() => endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0 })).not.toThrow();
+    expect(() => endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0, authTokens: null })).not.toThrow();
   });
 });
 
@@ -36,8 +40,8 @@ describe('endpointsSchema', () => {
   it('ensures each urlPath is unique', () => {
     expect(() =>
       endpointsSchema.parse([
-        { urlPath: '/url-path', delaySeconds: 0 },
-        { urlPath: '/url-path', delaySeconds: 0 },
+        { urlPath: '/url-path', delaySeconds: 0, authTokens: null },
+        { urlPath: '/url-path', delaySeconds: 0, authTokens: null },
       ])
     ).toThrow(
       new ZodError([
@@ -127,12 +131,12 @@ describe('allowed Airnodes schema', () => {
     const allValid = allowedAirnodesSchema.parse('*');
     expect(allValid).toBe('*');
 
-    expect(
+    expect(() =>
       allowedAirnodesSchema.parse([
-        '0xB47E3D8734780430ee6EfeF3c5407090601Dcd15',
-        '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11',
+        { address: '0xB47E3D8734780430ee6EfeF3c5407090601Dcd15', authTokens: ['token1'] },
+        { address: '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11', authTokens: null },
       ])
-    ).toStrictEqual(['0xB47E3D8734780430ee6EfeF3c5407090601Dcd15', '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11']);
+    ).not.toThrow();
   });
 
   it('disallows empty list', () => {

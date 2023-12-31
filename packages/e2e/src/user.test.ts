@@ -8,7 +8,9 @@ test('respects the delay', async () => {
   let [realCount, delayedCount] = [0, 0];
 
   while (Date.now() - start < 15_000) {
-    const realTimeResponse = await axios.get(`http://localhost:8090/real-time/${airnode}`);
+    const realTimeResponse = await axios.get(`http://localhost:8090/real-time/${airnode}`, {
+      headers: { Authorization: `Bearer some-secret-token` },
+    });
     const realTimeData = formatData(realTimeResponse.data);
     const delayedResponse = await axios.get(`http://localhost:8090/delayed/${airnode}`);
     const delayedData = formatData(delayedResponse.data);

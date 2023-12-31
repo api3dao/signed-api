@@ -42,12 +42,13 @@ export const pushSignedData = async (group: SignedApiUpdate) => {
     }
 
     logger.debug('Posting signed API data.', { group });
-    const provider = signedApis.find((a) => a.name === signedApiName)!;
+    const signedApi = signedApis.find((a) => a.name === signedApiName)!;
     const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
       logger.debug('Posting batch payload.', { batchPayload });
-      const axiosResponse = await axios.post(provider.url, batchPayload, {
+      const axiosResponse = await axios.post(signedApi.url, batchPayload, {
         headers: {
           'Content-Type': 'application/json',
+          ...(signedApi.authToken ? { Authorization: `Bearer ${signedApi.authToken}` } : {}),
         },
       });
 

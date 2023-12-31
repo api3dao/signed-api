@@ -2,14 +2,18 @@
   "endpoints": [
     {
       "urlPath": "/real-time",
+      "authTokens": ["some-secret-token"],
       "delaySeconds": 0
     },
     {
       "urlPath": "/delayed",
-      "delaySeconds": 10
+      "authTokens": null,
+      "delaySeconds": 15
     }
   ],
-  "allowedAirnodes": ["0xbF3137b0a7574563a23a8fC8badC6537F98197CC"],
+  "allowedAirnodes": [
+    { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["some-secret-token-for-airnode-feed"] }
+  ],
   "stage": "e2e-test",
   "version": "0.1.0"
 }

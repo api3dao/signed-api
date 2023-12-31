@@ -223,6 +223,7 @@ const validateTriggerReferences: SuperRefinement<{
 export const signedApiSchema = z.strictObject({
   name: z.string(),
   url: z.string().url(),
+  authToken: z.string().nullable(),
 });
 
 export type SignedApi = z.infer<typeof signedApiSchema>;

@@ -12,6 +12,7 @@ export const endpointSchema = z.strictObject({
   urlPath: z
     .string()
     .regex(/^\/[\dA-Za-z-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
+  authTokens: z.array(z.string()).nonempty().nullable(),
   delaySeconds: z.number().nonnegative().int(),
 });
 
@@ -24,7 +25,16 @@ export const endpointsSchema = z
     'Each "urlPath" of an endpoint must be unique'
   );
 
-export const allowedAirnodesSchema = z.union([z.literal('*'), z.array(evmAddressSchema).nonempty()]);
+const allowedAirnodeSchema = z.strictObject({
+  address: evmAddressSchema,
+  authTokens: z.array(z.string()).nonempty().nullable(),
+});
+
+export type AllowedAirnode = z.infer<typeof allowedAirnodeSchema>;
+
+export const allowedAirnodesSchema = z.union([z.literal('*'), z.array(allowedAirnodeSchema).nonempty()]);
+
+export type AllowedAirnodes = z.infer<typeof allowedAirnodesSchema>;
 
 export const cacheSchema = z.strictObject({
   type: z.union([z.literal('browser'), z.literal('cdn')]),

@@ -52,8 +52,8 @@ test('ensures nodeVersion matches Airnode feed version', async () => {
 test('ensures signed API names are unique', () => {
   expect(() =>
     signedApisSchema.parse([
-      { name: 'foo', url: 'https://example.com' },
-      { name: 'foo', url: 'https://example.com' },
+      { name: 'foo', url: 'https://example.com', authToken: null },
+      { name: 'foo', url: 'https://example.com', authToken: null },
     ])
   ).toThrow(
     new ZodError([
@@ -65,10 +65,11 @@ test('ensures signed API names are unique', () => {
     ])
   );
 
-  expect(signedApisSchema.parse([{ name: 'foo', url: 'https://example.com' }])).toStrictEqual([
+  expect(signedApisSchema.parse([{ name: 'foo', url: 'https://example.com', authToken: null }])).toStrictEqual([
     {
       name: 'foo',
       url: 'https://example.com',
+      authToken: null,
     },
   ]);
 });

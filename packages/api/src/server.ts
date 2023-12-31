@@ -19,7 +19,7 @@ export const startServer = (config: Config, port: number) => {
     logger.info('Received request "POST /".');
     logger.debug('Request details.', { body: req.body });
 
-    const result = await batchInsertData(req.body);
+    const result = await batchInsertData(req.headers.authorization, req.body);
     res.status(result.statusCode).header(result.headers).send(result.body);
 
     logger.debug('Responded to request "POST /".', result);
@@ -36,13 +36,13 @@ export const startServer = (config: Config, port: number) => {
 
   for (const endpoint of config.endpoints) {
     logger.info('Registering endpoint.', endpoint);
-    const { urlPath, delaySeconds } = endpoint;
+    const { urlPath } = endpoint;
 
     app.get(`${urlPath}/:airnodeAddress`, async (req, res) => {
-      logger.info('Received request "GET /:airnode".');
+      logger.info(`Received request "GET ${urlPath}/:airnode".`);
       logger.debug('Request details.', { body: req.body, params: req.params });
 
-      const result = await getData(req.params.airnodeAddress, delaySeconds);
+      const result = await getData(endpoint, req.headers.authorization, req.params.airnodeAddress);
       res.status(result.statusCode).header(result.headers).send(result.body);
 
       logger.debug('Responded to request "GET /:airnode".', result);

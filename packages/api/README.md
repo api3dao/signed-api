@@ -145,15 +145,17 @@ The API needs to be configured with endpoints to be served. This is done via the
 ```jsonc
 // Defines two endpoints.
 "endpoints": [
-  // Serves the non-delayed data on URL path "/real-time".
+  // Serves the non-delayed data on URL path "/real-time". Requesters need to provide the "some-secret-token" as Bearer token.
   {
     "urlPath": "/real-time",
-    "delaySeconds": 0
+    "delaySeconds": 0,
+    "authTokens": ["some-secret-token"],
   },
-  // Serves the data delayed by 15 seconds on URL path "/delayed".
+  // Serves the data delayed by 15 seconds on URL path "/delayed". No authentication is required.
   {
     "urlPath": "/delayed",
-    "delaySeconds": 15
+    "delaySeconds": 15,
+    "authTokens": null,
   }
 ]
 ```
@@ -170,6 +172,14 @@ dashes.
 ###### `delaySeconds`
 
 The delay in seconds for the endpoint. The endpoint will only serve data that is older than the delay.
+
+###### `authTokens`
+
+The nonempty list of
+[Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer) allowed to query
+the data.
+
+In case the endpoint should be publicly available, set the value to `null`.
 
 #### `cache` _(optional)_
 
@@ -190,8 +200,8 @@ The maximum age of the cache in seconds. The cache is cleared after this time.
 
 #### `allowedAirnodes`
 
-The list of allowed Airnode addresses. If the list is empty, no Airnode is allowed. To whitelist all Airnodes, set the
-value to `"*"` instead of an array.
+The list of allowed Airnodes with authorization details. If the list is empty, no Airnode is allowed. To whitelist all
+Airnodes, set the value to `"*"` instead of an array.
 
 Example:
 
@@ -203,9 +213,32 @@ Example:
 or
 
 ```jsonc
-// Allows pushing signed data only from the specific Airnode.
-"allowedAirnodes": ["0xB47E3D8734780430ee6EfeF3c5407090601Dcd15"]
+// Allows pushing signed data only for the specific Airnode. No authorization is required to push the data.
+"allowedAirnodes": [ { "address": "0xB47E3D8734780430ee6EfeF3c5407090601Dcd15", "authTokens": null } ]
 ```
+
+or
+
+```jsonc
+// Allows pushing signed data only for the specific Airnode. The pusher needs to authorize with one of the specific tokens.
+"allowedAirnodes": { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["some-secret-token-for-airnode-feed"] }
+```
+
+##### `allowedAirnodes[n]`
+
+One of the allowed Airnodes.
+
+###### `address`
+
+The address of the Airnode. The address must be a valid Ethereum address.
+
+###### `authTokens`
+
+The nonempty list of
+[Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer).
+
+To allow pushing data without any authorization, set the value to `null`. The API validates the data, but this is not
+recommended.
 
 ##### `stage`
 

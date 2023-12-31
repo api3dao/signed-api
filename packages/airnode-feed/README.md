@@ -283,11 +283,12 @@ Configuration for the signed APIs. Each signed API is defined by a `signedApiNam
 example:
 
 ```jsonc
-// Defines a single signed API.
+// Defines a single signed API that uses AUTH_TOKEN secret as Bearer token when pushing signed data to signed API.
 "signedApis": [
   {
     "name": "localhost",
-    "url": "http://localhost:8090"
+    "url": "http://localhost:8090",
+    "authToken": "${AUTH_TOKEN}"
   }
 ]
 ```
@@ -303,6 +304,13 @@ The name of the signed API.
 ###### `url`
 
 The URL of the signed API.
+
+#### `authToken`
+
+The authentication token used to authenticate with the signed API. It is recommended to interpolate this value from
+secrets.
+
+If the signed API does not require authentication, set this value to `null`.
 
 #### `ois`
 
