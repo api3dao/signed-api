@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/express": "^4.17.21",
     "@types/lodash": "^4.14.202",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.0.2"
   },
   "dependencies": {
     "@api3/commons": "^0.5.0",
