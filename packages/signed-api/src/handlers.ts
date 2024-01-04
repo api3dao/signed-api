@@ -25,6 +25,24 @@ export const batchInsertData = async (
   requestBody: unknown,
   airnodeAddress: string
 ): Promise<ApiResponse> => {
+  // Ensure that the batch of signed that comes from a whitelisted Airnode.
+  const { endpoints, allowedAirnodes } = getConfig();
+  if (allowedAirnodes !== '*') {
+    // Find the allowed airnode and extract the request token.
+    const allowedAirnode = allowedAirnodes.find((allowedAirnode) => allowedAirnode.address === airnodeAddress);
+    const authToken = extractBearerToken(authorizationHeader);
+
+    // Check if the airnode is allowed and if the auth token is valid.
+    const isAirnodeAllowed = Boolean(allowedAirnode);
+    const isAuthTokenValid = allowedAirnode?.authTokens === null || allowedAirnode?.authTokens.includes(authToken!);
+    if (!isAirnodeAllowed || !isAuthTokenValid) {
+      if (isAirnodeAllowed) {
+        logger.debug(`Invalid auth token`, { allowedAirnode, authToken });
+      }
+      return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
+    }
+  }
+
   const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
   if (!goValidateSchema.success) {
     return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
@@ -50,24 +68,6 @@ export const batchInsertData = async (
       airnodeAddress,
       signedData: batchSignedData[0],
     });
-  }
-
-  // Ensure that the batch of signed that comes from a whitelisted Airnode.
-  const { endpoints, allowedAirnodes } = getConfig();
-  if (allowedAirnodes !== '*') {
-    // Find the allowed airnode and extract the request token.
-    const allowedAirnode = allowedAirnodes.find((allowedAirnode) => allowedAirnode.address === airnodeAddress);
-    const authToken = extractBearerToken(authorizationHeader);
-
-    // Check if the airnode is allowed and if the auth token is valid.
-    const isAirnodeAllowed = Boolean(allowedAirnode);
-    const isAuthTokenValid = allowedAirnode?.authTokens === null || allowedAirnode?.authTokens.includes(authToken!);
-    if (!isAirnodeAllowed || !isAuthTokenValid) {
-      if (isAirnodeAllowed) {
-        logger.debug(`Invalid auth token`, { allowedAirnode, authToken });
-      }
-      return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
-    }
   }
 
   // Check whether any duplications exist
