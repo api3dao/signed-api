@@ -1,4 +1,4 @@
-# api
+# signed-api
 
 > A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
 
