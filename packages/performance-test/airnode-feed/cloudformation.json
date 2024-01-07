@@ -37,7 +37,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - <AIRNODE_FEED_CONFIG_URL> >> ./config/airnode-feed.json && node dist/src/index.js"
+              "mkdir config && echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - <AIRNODE_FEED_CONFIG_URL> >> ./config/airnode-feed.json && node dist/src/index.js"
             ],
             "LogConfiguration": {
               "LogDriver": "awslogs",

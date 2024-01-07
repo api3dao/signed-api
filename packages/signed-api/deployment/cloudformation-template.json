@@ -44,7 +44,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "wget -O - <SIGNED_API_CONFIGURATION_URL> >> ./config/signed-api.json && node dist/src/index.js"
+              "mkdir config && wget -O - <SIGNED_API_CONFIGURATION_URL> >> ./config/signed-api.json && node dist/src/index.js"
             ],
             "PortMappings": [
               {
