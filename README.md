@@ -46,6 +46,7 @@ There is a script that automates the process of creating new NPM packages and Do
 4. `pnpm run publish:airnode-feed && pnpm run publish:signed-api` - To publish Airnode feed and Signed API package to
    NPM.
 5. `git push --follow-tags` - Push the tagged version commit upstream.
-6. `pnpm run create-release:docker` - To build the Docker images and tag them correctly. The script uses the current
+6. Do a GitHub release for the specific tag.
+7. `pnpm run create-release:docker` - To build the Docker images and tag them correctly. The script uses the current
    package.json version so it expects the NPM release is done first.
-7. The command outputs the publish instructions to push the images.
+8. The command outputs the publish instructions to push the images.
