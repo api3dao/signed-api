@@ -33,9 +33,9 @@
     "nodemon": "^3.0.2"
   },
   "dependencies": {
-    "@api3/commons": "^0.5.0",
+    "@api3/commons": "^0.6.0",
     "@api3/promise-utils": "^0.4.0",
-    "@aws-sdk/client-s3": "^3.456.0",
+    "@aws-sdk/client-s3": "^3.484.0",
     "dotenv": "^16.3.1",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
