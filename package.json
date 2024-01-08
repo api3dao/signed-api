@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "engines": {
     "node": ">=18.19.0",
-    "pnpm": "^8.13.0"
+    "pnpm": "^8.13.1"
   },
   "scripts": {
     "build": "pnpm recursive run build",
@@ -27,9 +27,9 @@
   "devDependencies": {
     "@api3/commons": "^0.6.0",
     "@types/jest": "^29.5.11",
-    "@types/node": "^20.10.5",
-    "@typescript-eslint/eslint-plugin": "^6.15.0",
-    "@typescript-eslint/parser": "^6.15.0",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^27.6.0",
