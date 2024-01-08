@@ -38,7 +38,7 @@ describe(pushSignedData.name, () => {
     );
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(logger, 'warn');
-    jest.spyOn(axios, 'post').mockResolvedValue({ youHaveNotThoughAboutThisDidYou: 'yes-I-did' });
+    jest.spyOn(axios, 'post').mockResolvedValue({ youHaveNotThoughtAboutThisDidYou: 'yes-I-did' });
 
     const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
 

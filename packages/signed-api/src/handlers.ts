@@ -22,28 +22,9 @@ import {
 // important for the delayed endpoint which may not be allowed to return the fresh data yet.
 export const batchInsertData = async (
   authorizationHeader: string | undefined,
-  requestBody: unknown
+  requestBody: unknown,
+  airnodeAddress: string
 ): Promise<ApiResponse> => {
-  const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
-  if (!goValidateSchema.success) {
-    return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
-      detail: goValidateSchema.error.message,
-    });
-  }
-
-  // Ensure there is at least one signed data to push.
-  const batchSignedData = goValidateSchema.data;
-  if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
-
-  // Check if all signed data is from the same airnode
-  const signedDataAirnodes = new Set(batchSignedData.map((signedData) => signedData.airnode));
-  if (signedDataAirnodes.size > 1) {
-    return generateErrorResponse(400, 'All signed data must be from the same Airnode address', {
-      airnodeAddresses: [...signedDataAirnodes],
-    });
-  }
-  const airnodeAddress = batchSignedData[0]!.airnode;
-
   // Ensure that the batch of signed that comes from a whitelisted Airnode.
   const { endpoints, allowedAirnodes } = getConfig();
   if (allowedAirnodes !== '*') {
@@ -60,6 +41,33 @@ export const batchInsertData = async (
       }
       return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
     }
+  }
+
+  const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
+  if (!goValidateSchema.success) {
+    return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
+      detail: goValidateSchema.error.message,
+    });
+  }
+
+  // Ensure there is at least one signed data to push.
+  const batchSignedData = goValidateSchema.data;
+  if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
+
+  // Check if all signed data is from the same airnode.
+  const signedDataAirnodes = new Set(batchSignedData.map((signedData) => signedData.airnode));
+  if (signedDataAirnodes.size > 1) {
+    return generateErrorResponse(400, 'All signed data must be from the same Airnode address', {
+      airnodeAddresses: [...signedDataAirnodes],
+    });
+  }
+
+  // Check if the path parameter matches the airnode address in the signed data.
+  if (airnodeAddress !== batchSignedData[0]!.airnode) {
+    return generateErrorResponse(400, 'Airnode address in the path parameter does not match one in the signed data', {
+      airnodeAddress,
+      signedData: batchSignedData[0],
+    });
   }
 
   // Check whether any duplications exist
@@ -111,7 +119,7 @@ export const batchInsertData = async (
     newSignedData.push(signedData);
   }
 
-  // Write batch of validated data to the database
+  // Write batch of validated data to the database.
   const goBatchWriteDb = await go(async () => putAll(newSignedData));
   if (!goBatchWriteDb.success) {
     return generateErrorResponse(500, 'Unable to send batch of signed data to database', {
@@ -119,7 +127,7 @@ export const batchInsertData = async (
     });
   }
 
-  // Prune the cache with the data that is too old (no endpoint will ever return it)
+  // Prune the cache with the data that is too old (no endpoint will ever return it).
   const maxDelay = endpoints.reduce((acc, endpoint) => Math.max(acc, endpoint.delaySeconds), 0);
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
   const goPruneCache = await go(async () => prune(newSignedData, maxIgnoreAfterTimestamp));

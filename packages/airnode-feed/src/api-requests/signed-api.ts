@@ -45,7 +45,7 @@ export const pushSignedData = async (group: SignedApiUpdate) => {
     const signedApi = signedApis.find((a) => a.name === signedApiName)!;
     const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
       logger.debug('Posting batch payload.', { batchPayload });
-      const axiosResponse = await axios.post(signedApi.url, batchPayload, {
+      const axiosResponse = await axios.post(new URL(airnode, signedApi.url).href, batchPayload, {
         headers: {
           'Content-Type': 'application/json',
           ...(signedApi.authToken ? { Authorization: `Bearer ${signedApi.authToken}` } : {}),

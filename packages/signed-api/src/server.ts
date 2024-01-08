@@ -16,12 +16,12 @@ export const startServer = (config: Config, port: number) => {
   // The default limit is 100kb, which is not enough for the signed API because some payloads can be quite large.
   app.use(express.json({ limit: '10mb' }));
 
-  app.post('/', async (req, res, next) => {
+  app.post('/:airnodeAddress', async (req, res, next) => {
     const goRequest = await go(async () => {
-      logger.info('Received request "POST /".');
-      logger.debug('Request details.', { body: req.body });
+      logger.info('Received request "POST /:airnodeAddress".');
+      logger.debug('Request details.', { body: req.body, params: req.params });
 
-      const result = await batchInsertData(req.headers.authorization, req.body);
+      const result = await batchInsertData(req.headers.authorization, req.body, req.params.airnodeAddress);
       res.status(result.statusCode).header(result.headers).send(result.body);
 
       logger.debug('Responded to request "POST /".', result);
