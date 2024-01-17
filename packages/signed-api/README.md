@@ -185,16 +185,17 @@ In case the endpoint should be publicly available, set the value to `null`.
 
 #### `cache` _(optional)_
 
-Configures the cache for the API endpoints.
+Configures the cache (specifically caching headers) for the API endpoints using the GET HTTP method.
 
-Defaults to no cache.
+Defaults to no cache (no headers).
 
 ##### `type`
 
 The type of the cache. Options:
 
-- `browser` - Uses the browser cache.
-- `cdn` - Uses the CDN cache. The CDN network needs to support `cdn-cache-control` header.
+- `browser` - Sets the standard `cache-control: max-age=XYZ` header.
+- `cdn` - Similar to `browser` cache, but also sets the `cdn-cache-control` to the same value as `cache-control`.
+  Setting both headers is necessary to support CDNs which do not support `cdn-cache-control` header.
 
 ##### `maxAgeSeconds`
 
