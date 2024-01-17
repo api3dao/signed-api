@@ -20,7 +20,7 @@ export const createResponseHeaders = (cache?: Cache | undefined) => {
     case 'cdn': {
       return {
         ...COMMON_HEADERS,
-        'cache-control': 'no-store', // Disable browser-caching
+        'cache-control': `max-age=${maxAgeSeconds}`, // It does not hurt to set the browser cache as well.
         'cdn-cache-control': `max-age=${maxAgeSeconds}`,
       };
     }

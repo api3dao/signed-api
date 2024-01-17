@@ -137,7 +137,7 @@ export const batchInsertData = async (
 
   return {
     statusCode: 201,
-    headers: createResponseHeaders(getConfig().cache),
+    headers: createResponseHeaders(), // Inserting data is done through POST request, so we do not cache it.
     body: JSON.stringify({
       count: newSignedData.length,
       skipped: batchSignedData.length - newSignedData.length,
