@@ -38,7 +38,7 @@ LOGGER_ENABLED=true pnpm run test
 ## Configuration
 
 The API is configured via combination of [environment variables](#environment-variables) and
-[configuration file](#configuration-file).
+[configuration files](#configuration-files).
 
 ### Environment variables
 
@@ -134,9 +134,11 @@ The name of the AWS S3 bucket. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
 The path to the configuration file in the AWS S3 bucket. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
-### Configuration file
+### Configuration files
 
-The API is configured via `signed-api.json` configuration file.
+The API is configured via combination of `signed-api.json` and `secrets.env` configuration files. All expressions of a
+form `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `signed-api.json` at runtime.
+You are advised to put sensitive information inside secrets file.
 
 #### `endpoints`
 
