@@ -1,7 +1,7 @@
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, isNil, omit } from 'lodash';
 
-import { getConfig } from './config';
+import { getConfig } from './config/config';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';

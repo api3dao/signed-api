@@ -2,12 +2,15 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
 
-import { go } from '@api3/promise-utils';
+import { go, goSync } from '@api3/promise-utils';
 import { S3 } from '@aws-sdk/client-s3';
+import dotenv from 'dotenv';
 
-import { loadEnv } from './env';
-import { logger } from './logger';
-import { type Config, configSchema } from './schema';
+import { loadEnv } from '../env';
+import { logger } from '../logger';
+import { type Config, configSchema } from '../schema';
+
+import { interpolateSecrets, parseSecrets } from './secrets';
 
 let config: Config | undefined;
 
@@ -29,8 +32,21 @@ export const fetchAndCacheConfig = async (): Promise<Config> => {
 // this is hidden from the user.
 const getConfigPath = () => join(cwd(), './config');
 
-export const loadConfigFromFilesystem = () =>
-  JSON.parse(readFileSync(join(getConfigPath(), 'signed-api.json'), 'utf8'));
+export const loadRawConfig = () => JSON.parse(readFileSync(join(getConfigPath(), 'signed-api.json'), 'utf8'));
+
+export const loadRawSecrets = () => dotenv.parse(readFileSync(join(getConfigPath(), 'secrets.env'), 'utf8'));
+
+export const loadConfigFromFilesystem = () => {
+  const goLoadConfig = goSync(() => {
+    const rawSecrets = loadRawSecrets();
+    const rawConfig = loadRawConfig();
+    const secrets = parseSecrets(rawSecrets);
+    return configSchema.parse(interpolateSecrets(rawConfig, secrets));
+  });
+
+  if (!goLoadConfig.success) throw new Error(`Unable to load configuration.`, { cause: goLoadConfig.error });
+  return goLoadConfig.data;
+};
 
 const fetchConfig = async (): Promise<any> => {
   const env = loadEnv();

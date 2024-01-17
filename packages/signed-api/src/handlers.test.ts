@@ -5,7 +5,7 @@ import { getMockedConfig } from '../test/fixtures';
 import { createSignedData, generateRandomBytes, generateRandomWallet } from '../test/utils';
 
 import * as cacheModule from './cache';
-import * as configModule from './config';
+import * as configModule from './config/config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 import { logger } from './logger';
 import { deriveBeaconId } from './utils';

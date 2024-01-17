@@ -1,4 +1,4 @@
-import { fetchAndCacheConfig } from './config';
+import { fetchAndCacheConfig } from './config/config';
 import { logger } from './logger';
 import { DEFAULT_PORT, startServer } from './server';
 
