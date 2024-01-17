@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "engines": {
     "node": ">=18.19.0",
-    "pnpm": "^8.14.0"
+    "pnpm": "^8.14.1"
   },
   "files": [
     "dist",
