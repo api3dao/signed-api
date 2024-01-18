@@ -257,12 +257,12 @@ The version specified in the config must match the version of the Signed API at 
 
 The API provides the following endpoints:
 
-- `POST /`: Insert a batch of signed data.
+- `POST /{airnode}`: Insert a batch of signed data.
   - The batch is validated for consistency and data integrity errors. If there is any issue during this step, the whole
     batch is rejected. Otherwise the batch is accepted. Also, all data that is no longer needed is removed during this
     step.
 - `GET /{endpoint-name}/{airnode}`: Retrieve signed data for the Airnode respecting the endpoint configuration.
-  - Only returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
+  - Returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
 - `GET /`: Retrieve list of all available Airnode address.
   - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
     delayed endpoints (in case the data is too fresh and there is not an older alternative).
@@ -309,7 +309,7 @@ Here are some examples of how to use the API with `curl`. Note, the port may dif
 
 ```sh
 # Upsert batch of signed data (HTTP POST)
-curl --location 'http://localhost:8090' \
+curl --location 'http://localhost:8090/0xc52EeA00154B4fF1EbbF8Ba39FDe37F1AC3B9Fd4' \
 --header 'Content-Type: application/json' \
 --data '[{
     "beaconId": "0x1896e5d90edcd73e8abc3f5685cb8def4dfc1c7fef8032c4d02095a8ac5d1dba",
