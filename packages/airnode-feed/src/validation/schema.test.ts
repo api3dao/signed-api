@@ -99,7 +99,7 @@ test('trigger must point to a valid Signed API definition', async () => {
   // As a note, having unused Signed API definitions is not an error.
   const invalidConfig: Config = {
     ...config,
-    signedApis: [{ ...config.signedApis[0]!, name: 'different-name' }],
+    signedApis: [{ ...config.signedApis[0], name: 'different-name' }],
   };
 
   await expect(async () => configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
