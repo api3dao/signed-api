@@ -15,5 +15,5 @@
     { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["${AIRNODE_FEED_AUTH_TOKEN}"] }
   ],
   "stage": "e2e-test",
-  "version": "0.3.0"
+  "version": "0.4.0"
 }
