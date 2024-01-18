@@ -30,7 +30,7 @@ describe(createResponseHeaders.name, () => {
       'content-type': 'application/json',
       'access-control-allow-origin': '*',
       'access-control-allow-methods': '*',
-      'cache-control': 'no-store',
+      'cache-control': 'max-age=3600',
       'cdn-cache-control': 'max-age=3600',
     };
     expect(
