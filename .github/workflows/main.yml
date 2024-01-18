@@ -65,6 +65,8 @@ jobs:
         run: pnpm run docker:build
       - name: Copy Airnode feed secrets
         run: cd packages/e2e/src && cp airnode-feed/secrets.example.env airnode-feed/secrets.env
+      - name: Copy Signed API secrets
+        run: cd packages/e2e/src && cp signed-api/secrets.example.env signed-api/secrets.env
       - name: Start services
         # Start the e2e services in the background and wait a small amount of time for them to start.
         run: |
