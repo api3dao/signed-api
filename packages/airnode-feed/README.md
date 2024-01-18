@@ -133,7 +133,7 @@ Default: `info`.
 
 Airnode feed needs two configuration files, `airnode-feed.json` and `secrets.env`. All expressions of a form
 `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `airnode-feed.json` at runtime.
-You are advised to put sensitive information inside secrets.
+You are advised to put sensitive information inside secrets file.
 
 You can also refer to the [example configuration](./config).
 
