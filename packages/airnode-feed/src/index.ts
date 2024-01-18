@@ -7,7 +7,7 @@ const main = async () => {
   const config = await loadConfig();
   initializeState(config);
 
-  initiateSignedApiUpdateLoops();
+  void initiateSignedApiUpdateLoops();
   initiateHeartbeatLoop();
 };
 

@@ -21,7 +21,7 @@ describe(pushSignedData.name, () => {
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(axios, 'post').mockResolvedValue(signedApiResponse);
 
-    const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
+    const response = await pushSignedData(config.triggers.signedApiUpdates[0]);
 
     expect(response).toStrictEqual({ count: 3, success: true });
   });
@@ -40,7 +40,7 @@ describe(pushSignedData.name, () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(axios, 'post').mockResolvedValue({ youHaveNotThoughtAboutThisDidYou: 'yes-I-did' });
 
-    const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
+    const response = await pushSignedData(config.triggers.signedApiUpdates[0]);
 
     expect(response).toStrictEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to parse response from the signed API.', {
@@ -70,7 +70,7 @@ describe(pushSignedData.name, () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(axios, 'post').mockRejectedValue(new Error('simulated-network-error'));
 
-    const response = await pushSignedData(config.triggers.signedApiUpdates[0]!);
+    const response = await pushSignedData(config.triggers.signedApiUpdates[0]);
 
     expect(response).toStrictEqual({ success: false });
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
