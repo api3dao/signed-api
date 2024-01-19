@@ -149,7 +149,7 @@
                     ]
                   ]
                 },
-                "Labels": "{app=\"signed-api\",airnodeAddress=\"<AIRNODE_ADDRESS>\"}",
+                "Labels": "{app=\"signed-api\",airnode=\"<AIRNODE_ADDRESS>\"}",
                 "RemoveKeys": "container_id,container_name,ecs_task_definition,source,ecs_cluster",
                 "LabelKeys": "ecs_task_arn",
                 "LineFormat": "json"
