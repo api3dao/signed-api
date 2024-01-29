@@ -2,8 +2,7 @@
   "name": "@api3/airnode-feed",
   "version": "0.4.0",
   "engines": {
-    "node": ">=18.19.0",
-    "pnpm": "^8.14.1"
+    "node": ">=18.19.0"
   },
   "files": [
     "dist",
