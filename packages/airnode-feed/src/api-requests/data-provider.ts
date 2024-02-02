@@ -1,4 +1,4 @@
-import { type BuildRequestOptions, buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-adapter';
+import { buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-adapter';
 import type * as node from '@api3/airnode-node';
 import { getReservedParameters } from '@api3/airnode-node/dist/src/adapters/http/parameters';
 import { preProcessEndpointParameters, type EndpointParameters, postProcessResponse } from '@api3/commons';
@@ -30,7 +30,7 @@ export const callApi = async (
       const response = await buildAndExecuteRequest(
         {
           endpointName: endpoint.name,
-          ois: ois as BuildRequestOptions['ois'], // TS doesn't realize the types are the same because of https://github.com/microsoft/TypeScript/issues/26627#issuecomment-416046113.
+          ois,
           parameters: processedEndpointParameters,
           metadata: null,
           apiCredentials,
