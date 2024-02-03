@@ -65,7 +65,7 @@ export const batchInsertData = async (
     });
   }
 
-  // Check whether any duplications exist
+  // Check whether any duplications exist (based on the beacon ID).
   if (!isBatchUnique(batchSignedData)) return generateErrorResponse(400, 'No duplications are allowed');
 
   const goVerificationResult = await go(async () => {

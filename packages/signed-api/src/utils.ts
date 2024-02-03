@@ -5,9 +5,7 @@ import type { BatchSignedData, SignedData } from './schema';
 import type { ApiResponse } from './types';
 
 export const isBatchUnique = (batchSignedData: BatchSignedData) => {
-  return (
-    batchSignedData.length === new Set(batchSignedData.map(({ airnode, templateId }) => [...airnode, templateId])).size
-  );
+  return batchSignedData.length === new Set(batchSignedData.map(({ beaconId }) => beaconId)).size;
 };
 
 export const isIgnored = (signedData: SignedData, ignoreAfterTimestamp: number) => {
