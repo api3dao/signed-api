@@ -11,21 +11,6 @@
       "Type": "String",
       "MinLength": 5,
       "Description": "Auth token for Airnode feed."
-    },
-    "grafanaLokiUser": {
-      "Type": "String",
-      "MinLength": 2,
-      "Description": "Username for authenticating Loki API"
-    },
-    "grafanaLokiToken": {
-      "Type": "String",
-      "MinLength": 10,
-      "Description": "Token for authenticating Loki API"
-    },
-    "grafanaLokiEndpoint": {
-      "Type": "String",
-      "MinLength": 10,
-      "Description": "Loki endpoint"
     }
   },
   "Outputs": {
@@ -55,31 +40,6 @@
         "RequiresCompatibilities": ["FARGATE"],
         "ExecutionRoleArn": { "Ref": "ECSTaskRole" },
         "ContainerDefinitions": [
-          {
-            "Essential": true,
-            "Image": "grafana/fluent-bit-plugin-loki:2.9.1-amd64",
-            "Name": "SignedApiLogForwarder",
-            "FirelensConfiguration": {
-              "Type": "fluentbit",
-              "Options": {
-                "enable-ecs-log-metadata": "true"
-              }
-            },
-            "LogConfiguration": {
-              "LogDriver": "awslogs",
-              "Options": {
-                "awslogs-group": {
-                  "Ref": "SignedApiLogsGroup"
-                },
-                "awslogs-region": {
-                  "Ref": "AWS::Region"
-                },
-                "awslogs-create-group": "true",
-                "awslogs-stream-prefix": "firelens"
-              }
-            },
-            "MemoryReservation": 50
-          },
           {
             "Name": "signed-api-container",
             "Image": "<DOCKER_IMAGE>",
@@ -111,7 +71,7 @@
               },
               {
                 "Name": "LOG_LEVEL",
-                "Value": "info"
+                "Value": "debug"
               }
             ],
             "EntryPoint": [
@@ -126,33 +86,11 @@
               }
             ],
             "LogConfiguration": {
-              "LogDriver": "awsfirelens",
+              "LogDriver": "awslogs",
               "Options": {
-                "Name": "grafana-loki",
-                "Url": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "https://",
-                      {
-                        "Ref": "grafanaLokiUser"
-                      },
-                      ":",
-                      {
-                        "Ref": "grafanaLokiToken"
-                      },
-                      "@",
-                      {
-                        "Ref": "grafanaLokiEndpoint"
-                      },
-                      "/loki/api/v1/push"
-                    ]
-                  ]
-                },
-                "Labels": "{app=\"signed-api\",airnode=\"<AIRNODE_ADDRESS>\"}",
-                "RemoveKeys": "container_id,container_name,ecs_task_definition,source,ecs_cluster",
-                "LabelKeys": "ecs_task_arn",
-                "LineFormat": "json"
+                "awslogs-group": { "Ref": "SignedApiLogsGroup" },
+                "awslogs-region": { "Ref": "AWS::Region" },
+                "awslogs-stream-prefix": "ecs"
               }
             }
           }
