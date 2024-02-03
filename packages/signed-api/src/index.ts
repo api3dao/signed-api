@@ -1,18 +1,31 @@
+import { go } from '@api3/promise-utils';
 import z from 'zod';
 
-import { fetchAndCacheConfig } from './config/config';
+import { loadAndCacheConfig } from './config/config';
 import { logger } from './logger';
 import { DEFAULT_PORT, startServer } from './server';
 import { initializeVerifierPool } from './signed-data-verifier-pool';
 
 const portSchema = z.coerce.number().int().positive();
 
-const main = async () => {
-  const config = await fetchAndCacheConfig();
+// Start the Signed API. All application errors should be handled by this function (or its callees) and any error from
+// this function is considered unexpected.
+const startSignedApi = async () => {
+  const goConfig = await go(async () => loadAndCacheConfig());
+  if (!goConfig.success) {
+    logger.error('Failed to load the configuration.', goConfig.error);
+    return;
+  }
+  const config = goConfig.data;
   logger.info('Using configuration.', config);
 
-  const pool = initializeVerifierPool();
-  logger.info('Initialized verifier pool.', { maxWorkers: pool.maxWorkers, workerType: pool.workerType });
+  const goPool = await go(() => initializeVerifierPool());
+  if (!goPool.success) {
+    logger.error('Failed to initialize verifier pool.', goPool.error);
+    return;
+  }
+  const { maxWorkers, workerType } = goPool.data;
+  logger.info('Initialized verifier pool.', { maxWorkers, workerType });
 
   const parsedPort = portSchema.safeParse(process.env.SERVER_PORT);
   let port: number;
@@ -29,6 +42,13 @@ const main = async () => {
   }
 
   startServer(config, port);
+};
+
+const main = async () => {
+  const goStartSignedApi = await go(startSignedApi);
+  if (!goStartSignedApi.success) {
+    logger.error('Could not start Signed API. Unexpected error occurred.', goStartSignedApi.error);
+  }
 };
 
 void main();

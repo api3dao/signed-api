@@ -20,7 +20,7 @@ export const getConfig = (): Config => {
   return config;
 };
 
-export const fetchAndCacheConfig = async (): Promise<Config> => {
+export const loadAndCacheConfig = async (): Promise<Config> => {
   const jsonConfig = await fetchConfig();
   config = configSchema.parse(jsonConfig);
   return config;
