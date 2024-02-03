@@ -1,28 +1,14 @@
 import { go } from '@api3/promise-utils';
 import { isEmpty, isNil, omit } from 'lodash';
-import workerpool from 'workerpool';
 
 import { getConfig } from './config/config';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
 import { type SignedData, batchSignedDataSchema, evmAddressSchema, type Endpoint } from './schema';
+import { getVerifier } from './signed-data-verifier-pool';
 import type { ApiResponse } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
-
-// TODO: Should live elsewhere
-// Create a worker pool using an external worker script.
-const pool = workerpool.pool(`${__dirname}/signed-data-verifier.ts`, {
-  // Allow using the worker as a TypeScript module. See:
-  // https://github.com/josdejong/workerpool/issues/379#issuecomment-1580093502.
-  //
-  // Note, that the pool default settings are well set, so we are leaving that as is.
-  workerType: 'thread',
-  workerThreadOpts: {
-    // TODO: Will need to bundle ts-node
-    execArgv: ['--require', 'ts-node/register'],
-  },
-});
 
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.
@@ -83,7 +69,7 @@ export const batchInsertData = async (
   if (!isBatchUnique(batchSignedData)) return generateErrorResponse(400, 'No duplications are allowed');
 
   const goVerificationResult = await go(async () => {
-    const verifier = await pool.proxy<typeof import('./signed-data-verifier')>();
+    const verifier = await getVerifier();
     return verifier.verifySignedData(batchSignedData);
   });
   if (!goVerificationResult.success) {
