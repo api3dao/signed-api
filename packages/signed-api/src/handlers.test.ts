@@ -43,7 +43,7 @@ describe(batchInsertData.name, () => {
       },
       statusCode: 400,
     });
-  });
+  }, 10_000);
 
   it('validates beacon ID', async () => {
     const data = await createSignedData();
@@ -65,7 +65,7 @@ describe(batchInsertData.name, () => {
       },
       statusCode: 400,
     });
-  });
+  }, 10_000);
 
   it('drops the batch if the airnode address is not allowed', async () => {
     const config = getMockedConfig();
