@@ -11,7 +11,6 @@ export const initializeVerifierPool = () => {
     // Note, that the pool default settings are well set, so we are leaving that as is.
     workerType: 'thread',
     workerThreadOpts: {
-      // TODO: Will need to bundle ts-node
       execArgv: ['--require', 'ts-node/register'],
     },
   });

@@ -10,7 +10,6 @@ interface VerificationError {
   signedData: SignedData;
 }
 
-// TODO: Might need to serialize
 export const verifySignedData = (batchSignedData: SignedData[]): VerificationError | null => {
   // Ensure the signed data is valid and timestamp does not drift too far into the future.
   for (const signedData of batchSignedData) {
