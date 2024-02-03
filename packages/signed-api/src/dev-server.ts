@@ -14,16 +14,16 @@ const startDevServer = async () => {
   const pool = initializeVerifierPool();
   logger.info('Initialized verifier pool.', { maxWorkers: pool.maxWorkers, workerType: pool.workerType });
 
-  const parsedPort = portSchema.safeParse(process.env.DEV_SERVER_PORT);
+  const parsedPort = portSchema.safeParse(process.env.SERVER_PORT);
   let port: number;
   if (parsedPort.success) {
     port = parsedPort.data;
-    logger.debug('Using DEV_SERVER_PORT environment variable as port number.', {
+    logger.debug('Using SERVER_PORT environment variable as port number.', {
       port,
     });
   } else {
     port = DEFAULT_PORT;
-    logger.debug('DEV_SERVER_PORT environment variable not set or invalid. Using default port.', {
+    logger.debug('SERVER_PORT environment variable not set or invalid. Using default port.', {
       port,
     });
   }
