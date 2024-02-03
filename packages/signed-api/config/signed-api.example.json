@@ -1,19 +1,12 @@
 {
   "endpoints": [
     {
-      "urlPath": "/real-time",
-      "authTokens": ["${REAL_TIME_ENDPOINT_AUTH_TOKEN}"],
-      "delaySeconds": 0
-    },
-    {
-      "urlPath": "/delayed",
+      "urlPath": "/real",
       "authTokens": null,
-      "delaySeconds": 15
+      "delaySeconds": 0
     }
   ],
-  "allowedAirnodes": [
-    { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["${AIRNODE_FEED_AUTH_TOKEN}"] }
-  ],
+  "allowedAirnodes": "*",
   "stage": "local",
   "version": "0.4.0"
 }
