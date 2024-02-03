@@ -9,8 +9,9 @@ import { loadConfig } from './validation/config';
 // Start the Airnode feed. All application errors should be handled by this function (or its callees) and any error from
 // this function is considered unexpected.
 const startAirnodeFeed = async () => {
-  const goConfig = await go(async () => loadConfig());
+  const goConfig = await go(loadConfig);
   if (!goConfig.success) {
+    // Note, that the error should not expose any sensitive information.
     logger.error('Failed to load the configuration.', goConfig.error);
     return;
   }

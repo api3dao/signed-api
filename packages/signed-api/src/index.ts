@@ -11,7 +11,7 @@ const portSchema = z.coerce.number().int().positive();
 // Start the Signed API. All application errors should be handled by this function (or its callees) and any error from
 // this function is considered unexpected.
 const startSignedApi = async () => {
-  const goConfig = await go(async () => loadAndCacheConfig());
+  const goConfig = await go(loadAndCacheConfig);
   if (!goConfig.success) {
     logger.error('Failed to load the configuration.', goConfig.error);
     return;

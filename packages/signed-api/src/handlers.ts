@@ -166,7 +166,7 @@ export const getData = async (
 // We do not return the allowed Airnode addresses in the configuration, because the value can be set to "*" and we
 // would have to scan the database anyway.
 export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
-  const goAirnodeAddresses = await go(async () => getAllAirnodeAddresses());
+  const goAirnodeAddresses = await go(getAllAirnodeAddresses);
   if (!goAirnodeAddresses.success) {
     return generateErrorResponse(500, 'Unable to scan database', { detail: goAirnodeAddresses.error.message });
   }
