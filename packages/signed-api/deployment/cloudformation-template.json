@@ -7,7 +7,7 @@
     "SignedApiLogsGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/ecs/signedApi-<ID>",
+        "LogGroupName": "/ecs/signedApi-id1",
         "RetentionInDays": 7
       }
     },
@@ -23,7 +23,7 @@
         "ContainerDefinitions": [
           {
             "Name": "signed-api-container",
-            "Image": "<DOCKER_IMAGE>",
+            "Image": "api3/signed-api:0.4.0",
             "Environment": [
               {
                 "Name": "SECRETS_ENV",
@@ -41,7 +41,7 @@
             "EntryPoint": [
               "/bin/sh",
               "-c",
-              "mkdir config && echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - <SIGNED_API_URL_CONFIGURATION> >> ./config/signed-api.json && node dist/src/index.js"
+              "mkdir config && echo -e $SECRETS_ENV >> ./config/secrets.env && wget -O - https://raw.githubusercontent.com/api3dao/signed-api/cf-without-elb/packages/signed-api/config/signed-api.example.json >> ./config/signed-api.json && node dist/src/index.js"
             ],
             "PortMappings": [
               {
@@ -80,7 +80,7 @@
     "ECSCluster": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
-        "ClusterName": "signed-api-cluster-<ID>"
+        "ClusterName": "signed-api-cluster-id1"
       }
     },
     "VPC": {
