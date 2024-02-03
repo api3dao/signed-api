@@ -5,8 +5,12 @@
     "node": ">=18.19.0"
   },
   "scripts": {
-    "tsc": "tsc --project .",
-    "run-script": "ts-node --transpileOnly"
+    "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
+    "eslint:fix": "eslint . --ext .js,.ts --fix",
+    "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
+    "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
+    "run-script": "ts-node --transpileOnly",
+    "tsc": "tsc --project ."
   },
   "license": "MIT",
   "dependencies": {

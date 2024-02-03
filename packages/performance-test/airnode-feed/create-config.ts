@@ -76,15 +76,15 @@ async function main() {
   let sourceSignedApiEndpointPath = process.env.SOURCE_SIGNED_API_ENDPOINT_PATH.replace(/\/+$/, '');
   if (!sourceSignedApiEndpointPath.startsWith('/')) sourceSignedApiEndpointPath = `/${sourceSignedApiEndpointPath}`;
   if (!process.env.SIGNED_DATAS_PER_API_RESPONSE) throw new Error('SIGNED_DATAS_PER_API_RESPONSE is not set');
-  const beaconsCount = Number(process.env.SIGNED_DATAS_PER_API_RESPONSE!);
+  const beaconsCount = Number(process.env.SIGNED_DATAS_PER_API_RESPONSE);
   if (!process.env.TARGET_SIGNED_API_URL) throw new Error('TARGET_SIGNED_API_URL is not set');
   const targetSignedApiUrl = process.env.TARGET_SIGNED_API_URL;
   if (!process.env.FETCH_INTERVAL) throw new Error('FETCH_INTERVAL is not set');
-  const fetchInterval = Number(process.env.FETCH_INTERVAL!);
+  const fetchInterval = Number(process.env.FETCH_INTERVAL);
   if (!process.env.AIRNODE_FEED_CONFIG_PATH) throw new Error('AIRNODE_FEED_CONFIG_PATH is not set');
   const airnodeFeedConfigPath = process.env.AIRNODE_FEED_CONFIG_PATH;
   if (!process.env.TRIGGERS_COUNT) throw new Error('TRIGGERS_COUNT is not set');
-  const triggersCount = Number(process.env.TRIGGERS_COUNT!);
+  const triggersCount = Number(process.env.TRIGGERS_COUNT);
 
   // Initialize the source and target Signed API URLs.
   configTemplate.signedApis[0]!.url = targetSignedApiUrl;
