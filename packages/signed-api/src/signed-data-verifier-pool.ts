@@ -4,6 +4,9 @@ import workerpool, { type Pool } from 'workerpool';
 let pool: Pool | undefined;
 
 export const initializeVerifierPool = () => {
+  // If the pool is already initialized, no need to re-initialize it.
+  if (pool) return pool;
+
   // Allow using the worker from TS (run in development mode) or JS files (when compiled). Note, that transpiling the
   // file in development mode is done by ts-node and so it must be available.
   const extension = __filename.endsWith('.ts') ? 'ts' : 'js';

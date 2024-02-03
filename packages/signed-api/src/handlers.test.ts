@@ -8,11 +8,13 @@ import * as cacheModule from './cache';
 import * as configModule from './config/config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 import { logger } from './logger';
+import { initializeVerifierPool } from './signed-data-verifier-pool';
 import { deriveBeaconId } from './utils';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
   jest.spyOn(configModule, 'getConfig').mockImplementation(getMockedConfig);
+  initializeVerifierPool();
 });
 
 afterEach(() => {
