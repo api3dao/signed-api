@@ -13,7 +13,7 @@ const main = async () => {
     console.info(`Primary ${process.pid} is running`);
 
     if (!process.env.TOTAL_AIRNODE_FEEDS) throw new Error('TOTAL_AIRNODE_FEEDS is not set');
-    const totalAirnodeFeeds = Number(process.env.TOTAL_AIRNODE_FEEDS!);
+    const totalAirnodeFeeds = Number(process.env.TOTAL_AIRNODE_FEEDS);
 
     // Fork workers for each Airnode feed.
     for (let i = 1; i <= totalAirnodeFeeds; i++) {

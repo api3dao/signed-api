@@ -111,7 +111,7 @@
               },
               {
                 "Name": "LOG_LEVEL",
-                "Value": "debug"
+                "Value": "info"
               }
             ],
             "EntryPoint": [

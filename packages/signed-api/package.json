@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf coverage dist",
-    "dev": "nodemon --ext ts,js,json,env --exec \"DEV_SERVER_PORT=${DEV_SERVER_PORT:-8090} pnpm ts-node src/dev-server.ts\"",
+    "dev": "nodemon --ext ts,js,json,env --exec \"SERVER_PORT=${SERVER_PORT:-8090} pnpm ts-node src/index.ts\"",
     "docker:build": "docker build --target signed-api --tag api3/signed-api:latest ../../",
     "docker:build:amd64": "docker buildx build --target signed-api --platform linux/amd64 --tag api3/signed-api:latest ../../",
     "docker:run": "docker run --publish 8090:80 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest",
@@ -21,7 +21,7 @@
     "eslint:fix": "eslint . --ext .js,.ts --fix",
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
-    "start-prod": "node dist/src/dev-server.js",
+    "start-prod": "node dist/src/index.js",
     "test": "jest",
     "tsc": "tsc --project ."
   },
