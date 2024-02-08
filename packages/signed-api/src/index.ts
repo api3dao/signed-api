@@ -14,6 +14,10 @@ const setupUncaughtErrorHandler = () => {
   process.on('uncaughtExceptionMonitor', (error, origin) => {
     logger.error('Uncaught exception.', error, { origin });
   });
+
+  // We want to exit the process immediately to avoid Node.js to log the uncaught error to stderr.
+  process.on('uncaughtException', () => process.exit(1));
+  process.on('unhandledRejection', () => process.exit(1));
 };
 
 const portSchema = z.coerce.number().int().positive();
