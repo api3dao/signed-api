@@ -6,6 +6,16 @@ import { logger } from './logger';
 import { DEFAULT_PORT, startServer } from './server';
 import { initializeVerifierPool } from './signed-data-verifier-pool';
 
+const setupUncaughtErrorHandler = () => {
+  // NOTE: From the Node.js docs:
+  //
+  // Installing an 'uncaughtExceptionMonitor' listener does not change the behavior once an 'uncaughtException' event is
+  // emitted. The process will still crash if no 'uncaughtException' listener is installed.
+  process.on('uncaughtExceptionMonitor', (error, origin) => {
+    logger.error('Uncaught exception.', error, { origin });
+  });
+};
+
 const portSchema = z.coerce.number().int().positive();
 
 // Start the Signed API. All application errors should be handled by this function (or its callees) and any error from
@@ -45,6 +55,8 @@ const startSignedApi = async () => {
 };
 
 const main = async () => {
+  setupUncaughtErrorHandler();
+
   const goStartSignedApi = await go(startSignedApi);
   if (!goStartSignedApi.success) {
     logger.error('Could not start Signed API. Unexpected error occurred.', goStartSignedApi.error);

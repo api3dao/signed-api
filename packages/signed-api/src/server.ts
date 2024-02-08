@@ -65,11 +65,14 @@ export const startServer = (config: Config, port: number) => {
   // NOTE: The error handling middleware only catches synchronous errors. Request handlers logic should be wrapped in
   // try-catch and manually passed to next() in case of errors.
   app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    logger.error('An unexpected error occurred.', { err });
+    // For unhandled errors it's very beneficial to have the stack trace. It is possible that the value is not an error.
+    // It would be nice to know the stack trace in such cases as well.
+    const stack = err.stack ?? new Error('Unexpected non-error value encountered').stack;
+    logger.error('An unexpected handler error occurred.', { err, stack });
 
     res.status(err.status || 500).json({
       error: {
-        message: err.message || 'An unexpected error occurred.',
+        message: err.message || 'An unexpected handler error occurred.',
       },
     });
   });
