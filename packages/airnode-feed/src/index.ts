@@ -1,5 +1,3 @@
-import { go } from '@api3/promise-utils';
-
 import { initiateSignedApiUpdateLoops } from './fetch-beacon-data';
 import { initiateHeartbeatLoop } from './heartbeat';
 import { logger } from './logger';
@@ -23,13 +21,9 @@ const setupUncaughtErrorHandler = () => {
 // Start the Airnode feed. All application errors should be handled by this function (or its callees) and any error from
 // this function is considered unexpected.
 const startAirnodeFeed = async () => {
-  const goConfig = await go(loadConfig);
-  if (!goConfig.success) {
-    // Note, that the error should not expose any sensitive information.
-    logger.error('Failed to load the configuration.', goConfig.error);
-    return;
-  }
-  initializeState(goConfig.data);
+  const config = await loadConfig();
+  if (!config) return;
+  initializeState(config);
 
   void initiateSignedApiUpdateLoops();
   initiateHeartbeatLoop();
@@ -38,10 +32,7 @@ const startAirnodeFeed = async () => {
 const main = async () => {
   setupUncaughtErrorHandler();
 
-  const goStartAirnodeFeed = await go(startAirnodeFeed);
-  if (!goStartAirnodeFeed.success) {
-    logger.error('Could not start Airnode feed. Unexpected error occurred.', goStartAirnodeFeed.error);
-  }
+  await startAirnodeFeed();
 };
 
 void main();

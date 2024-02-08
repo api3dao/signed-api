@@ -5,6 +5,8 @@ import { cwd } from 'node:process';
 import { go } from '@api3/promise-utils';
 import dotenv from 'dotenv';
 
+import { logger } from '../logger';
+
 import { configSchema } from './schema';
 import { interpolateSecrets, parseSecrets } from './utils';
 
@@ -24,6 +26,9 @@ export const loadConfig = async () => {
     return configSchema.parseAsync(interpolateSecrets(rawConfig, secrets));
   });
 
-  if (!goLoadConfig.success) throw new Error(`Unable to load configuration.`, { cause: goLoadConfig.error });
+  if (!goLoadConfig.success) {
+    logger.error(`Unable to load configuration.`, goLoadConfig.error);
+    return null;
+  }
   return goLoadConfig.data;
 };
