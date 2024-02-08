@@ -16,7 +16,7 @@
 
 # We use the alpine image because of its small size. The alternative considered was the "slim" image, but it is larger
 # and we already use alpine (without issues) in other projects, so the size reduction seems worth it.
-FROM node:18-alpine AS build
+FROM node:18-slim AS build
 WORKDIR /app
 RUN npm install -g pnpm
 # Copy just the "pnpm-lock.yaml" file and use "pnpm fetch" to download all dependencies just from the lockfile. This
@@ -39,13 +39,13 @@ LABEL application="airnode-feed" description="Airnode feed container"
 FROM build AS deployed-airnode-feed
 
 RUN pnpm --filter=@api3/airnode-feed --prod deploy deployed-airnode-feed
-FROM node:18-alpine as airnode-feed
+FROM node:18-slim as airnode-feed
 WORKDIR /app
 ENV NODE_ENV=production
 
-RUN addgroup -S deployed-airnode-feed && \
-    adduser -h /app -s /bin/false -S -D -H -G deployed-airnode-feed deployed-airnode-feed && \
-    chown -R deployed-airnode-feed /app
+RUN addgroup --system deployed-airnode-feed && \
+    adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-airnode-feed deployed-airnode-feed && \
+    chown --recursive deployed-airnode-feed:deployed-airnode-feed /app
 USER deployed-airnode-feed
 
 COPY --chown=deployed-airnode-feed:deployed-airnode-feed --from=deployed-airnode-feed /app/deployed-airnode-feed .
@@ -58,17 +58,21 @@ LABEL application="signed-api" description="Signed API container"
 FROM build AS deployed-signed-api
 
 RUN pnpm --filter=@api3/signed-api --prod deploy deployed-signed-api
-FROM node:18-alpine as signed-api
+FROM node:18-slim as signed-api
 WORKDIR /app
 ENV NODE_ENV=production
 
-# Make sure the non-root user can bind to port 80.
-RUN apk add --no-cache libcap
+# Update package lists and install libcap
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y libcap2-bin && \
+    rm -rf /var/lib/apt/lists/*
+# Set capabilities to allow Node.js to bind to well-known ports (<1024) as a non-root user
 RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-RUN addgroup -S deployed-signed-api && \
-    adduser -h /app -s /bin/false -S -D -H -G deployed-signed-api deployed-signed-api && \
-    chown -R deployed-signed-api /app
+
+RUN addgroup --system deployed-signed-api && \
+    adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-signed-api deployed-signed-api && \
+    chown --recursive deployed-signed-api:deployed-signed-api /app
 USER deployed-signed-api
 
 COPY --chown=deployed-signed-api:deployed-signed-api --from=deployed-signed-api /app/deployed-signed-api .
