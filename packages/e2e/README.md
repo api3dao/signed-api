@@ -4,9 +4,9 @@
 
 ## Getting started
 
-1. Copy the Airnode feed secrets. Run `cp airnode-feed/secrets.example.env airnode-feed/secrets.env`. If you are using
-   Docker Desktop, you need to change the URL in `airnode-feed/secrets.env` from `localhost` to `host.docker.internal`,
-   because Airnode feed is running inside a Docker container.
+1. Copy the Airnode feed secrets. Whilst inside `src` run `cp airnode-feed/secrets.example.env airnode-feed/secrets.env`.
+   If you are using Docker Desktop, you need to change the URL in `airnode-feed/secrets.env` from `localhost` to
+   `host.docker.internal`, because Airnode feed is running inside a Docker container.
 2. Copy the Signed API secrets. Run `cp signed-api/secrets.example.env signed-api/secrets.env`
 3. Build the latest Docker images. Run `pnpm run docker:build` from the monorepo root. The e2e flow uses the docker
    images.
