@@ -11,7 +11,7 @@ describe(signTemplateResponses.name, () => {
   it('signs template responses', async () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
+    jest.useFakeTimers().setSystemTime(new Date('2023-01-20')); // 1674172800
 
     const signedTemplateResponses = await signTemplateResponses(nodaryTemplateResponses);
 

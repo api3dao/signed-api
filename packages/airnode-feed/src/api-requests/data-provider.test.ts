@@ -21,7 +21,7 @@ describe(makeTemplateRequests.name, () => {
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(adapterModule, 'buildAndExecuteRequest').mockResolvedValue(nodaryTemplateRequestResponseData);
 
-    jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
+    jest.useFakeTimers().setSystemTime(new Date('2023-01-20')); // 1674172800
 
     const response = await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
 

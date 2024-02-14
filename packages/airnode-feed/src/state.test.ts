@@ -46,7 +46,7 @@ describe(DelayedSignedDataQueue.name, () => {
   });
 
   it('can prune unused data', () => {
-    jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
+    jest.useFakeTimers().setSystemTime(new Date('2023-01-20')); // 1674172800
 
     const queue = new DelayedSignedDataQueue(30);
     const data3 = nodarySignedTemplateResponses[0]![1];
@@ -63,7 +63,7 @@ describe(DelayedSignedDataQueue.name, () => {
   });
 
   it('keeps data in the queue if none of the items exceed maxUpdateDelay', () => {
-    jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
+    jest.useFakeTimers().setSystemTime(new Date('2023-01-20')); // 1674172800
     const queue = new DelayedSignedDataQueue(30);
     const data = nodarySignedTemplateResponses[0]![1];
     const timestamp = Number.parseInt(data.timestamp, 10);
