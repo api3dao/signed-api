@@ -104,12 +104,16 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
       endpointParameters
     );
     const goEncodedResponse = goSync(() => {
-      return extractAndEncodeResponse(goPostProcess.data.response, {
-        _type,
-        _path,
-        _times,
-      });
+      return {
+        timestamp: (goPostProcess.data.timestamp ?? Math.floor(Date.now() / 1000)).toString(),
+        encodedResponse: extractAndEncodeResponse(goPostProcess.data.response, {
+          _type,
+          _path,
+          _times,
+        }),
+      };
     });
+
     if (!goEncodedResponse.success) {
       logger.error(`Failed to encode response.`, {
         templateId,

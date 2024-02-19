@@ -14,7 +14,7 @@ import { initiateHeartbeatLoop, logHeartbeat } from '.';
 
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
-  jest.useFakeTimers().setSystemTime(new Date('2023-01-20'));
+  jest.useFakeTimers().setSystemTime(new Date('2023-01-20')); // 1674172800
 });
 
 afterEach(() => {

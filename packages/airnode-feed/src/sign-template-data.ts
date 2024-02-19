@@ -9,14 +9,16 @@ import type { SignedData, TemplateId } from './validation/schema';
 
 export type SignedResponse = [TemplateId, SignedData];
 
-export type TemplateResponse = [TemplateId, ExtractedAndEncodedResponse];
+export type TemplateResponse = [TemplateId, { timestamp: string; encodedResponse: ExtractedAndEncodedResponse }];
 
 export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
   logger.debug('Signing template responses.', { templateResponses });
 
   const signPromises = templateResponses.map(async ([templateId, response]) => {
-    const { encodedValue } = response;
-    const timestamp = Math.floor(Date.now() / 1000).toString();
+    const {
+      timestamp,
+      encodedResponse: { encodedValue },
+    } = response;
 
     const goSignWithTemplateId = await go(async () =>
       signWithTemplateId(getState().airnodeWallet, templateId, timestamp, encodedValue)
@@ -39,7 +41,5 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
     ];
   });
   const signedResponsesOrNull = await Promise.all(signPromises);
-  const signedResponses = signedResponsesOrNull.filter((response): response is SignedResponse => !isNil(response));
-
-  return signedResponses;
+  return signedResponsesOrNull.filter((response): response is SignedResponse => !isNil(response));
 };
