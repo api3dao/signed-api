@@ -43,6 +43,11 @@ FROM node:18-slim as airnode-feed
 WORKDIR /app
 ENV NODE_ENV=production
 
+# Update package lists and install wget
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y wget && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN addgroup --system deployed-airnode-feed && \
     adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-airnode-feed deployed-airnode-feed && \
     chown --recursive deployed-airnode-feed:deployed-airnode-feed /app
