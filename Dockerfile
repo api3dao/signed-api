@@ -45,7 +45,7 @@ ENV NODE_ENV=production
 
 # Update package lists and install wget
 RUN apt-get update && \
-    apt-get install --no-install-recommends -y wget && \
+    apt-get install --no-install-recommends -y wget ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
 RUN addgroup --system deployed-airnode-feed && \
