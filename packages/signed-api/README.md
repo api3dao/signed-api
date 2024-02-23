@@ -49,6 +49,7 @@ Example:
 ```sh
 # Defines a logger suitable for production.
 LOGGER_ENABLED=true
+LOG_APIDATA=false
 LOG_COLORIZE=false
 LOG_FORMAT=json
 LOG_LEVEL=info
@@ -82,6 +83,17 @@ The format of the log output. Options:
   development.
 
 Default: `json`.
+
+#### `LOG_APIDATA` _(optional)_
+
+Enables or disables logging of the API data at the `info` level. When set to `true`, received signed data will be logged
+with the fields `airnode`, `encodedValue`, `templateId`, and `timestamp`. The `signature` field is intentionally
+excluded for security reasons. Options:
+
+- `true` - Enables logging of the API data.
+- `false` - Disables logging of the API data.
+
+Default: `false`.
 
 #### `LOG_COLORIZE` _(optional)_
 

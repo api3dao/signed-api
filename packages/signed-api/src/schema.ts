@@ -77,6 +77,7 @@ export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')])
 export const envConfigSchema = z
   // Intentionally not using strictObject here because we want to allow other environment variables to be present.
   .object({
+    LOG_APIDATA: envBooleanSchema.default('false'),
     LOG_COLORIZE: envBooleanSchema.default('false'),
     LOG_FORMAT: z
       .string()

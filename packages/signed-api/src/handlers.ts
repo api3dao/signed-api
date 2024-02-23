@@ -1,7 +1,8 @@
 import { go } from '@api3/promise-utils';
-import { isEmpty, isNil, omit } from 'lodash';
+import { isEmpty, isNil, omit, pick } from 'lodash';
 
 import { getConfig } from './config/config';
+import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
@@ -10,6 +11,7 @@ import { getVerifier } from './signed-data-verifier-pool';
 import type { ApiResponse } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
+const env = loadEnv();
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.
 //
@@ -78,6 +80,14 @@ export const batchInsertData = async (
   if (goVerificationResult.data !== null) {
     const { message, signedData, detail } = goVerificationResult.data;
     return generateErrorResponse(400, message, detail ? { detail, signedData } : { signedData });
+  }
+
+  if (env.LOG_APIDATA) {
+    // Log only the required fields to use less space, do not log the signature for security reasons.
+    const sanitizedData = batchSignedData.map((data) =>
+      pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp'])
+    );
+    logger.info('Received signed data.', { data: sanitizedData });
   }
 
   const newSignedData: SignedData[] = [];
