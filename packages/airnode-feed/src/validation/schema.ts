@@ -351,6 +351,7 @@ export const envConfigSchema = z
         return value as LogFormat;
       })
       .default('json'),
+    LOG_HEARTBEAT: envBooleanSchema.default('true'),
     LOG_LEVEL: z
       .string()
       .transform((value, ctx) => {

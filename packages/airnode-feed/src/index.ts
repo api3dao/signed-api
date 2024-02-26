@@ -3,6 +3,9 @@ import { initiateHeartbeatLoop } from './heartbeat';
 import { logger } from './logger';
 import { initializeState } from './state';
 import { loadConfig } from './validation/config';
+import { loadEnv } from './validation/env';
+
+const env = loadEnv();
 
 const setupUncaughtErrorHandler = () => {
   // NOTE: From the Node.js docs:
@@ -26,7 +29,7 @@ const startAirnodeFeed = async () => {
   initializeState(config);
 
   void initiateSignedApiUpdateLoops();
-  initiateHeartbeatLoop();
+  if (env.LOG_HEARTBEAT) initiateHeartbeatLoop();
 };
 
 const main = async () => {
