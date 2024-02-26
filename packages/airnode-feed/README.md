@@ -74,6 +74,7 @@ Example:
 LOGGER_ENABLED=true
 LOG_COLORIZE=false
 LOG_FORMAT=json
+LOG_HEARTBEAT=true
 LOG_LEVEL=info
 ```
 
@@ -84,7 +85,8 @@ or
 LOGGER_ENABLED=true
 LOG_COLORIZE=false
 LOG_FORMAT=json
-LOG_LEVEL=info
+LOG_HEARTBEAT=true
+LOG_LEVEL=debug
 ```
 
 <!-- NOTE: Keep the logger configuration in-sync with API. -->
@@ -107,6 +109,17 @@ The format of the log output. Options:
   development.
 
 Default: `json`.
+
+#### `LOG_HEARTBEAT` _(optional)_
+
+Enables or disables the heartbeat log. The heartbeat log is a cryptographically secure log that is emitted every 60
+seconds to indicate that the service is running. The log includes useful information such as the deployment timestamp
+and configuration hash. Options:
+
+- `true` - Enables the heartbeat log.
+- `false` - Disables the heartbeat log.
+
+Default: `true`.
 
 #### `LOG_COLORIZE` _(optional)_
 
