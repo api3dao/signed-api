@@ -82,12 +82,12 @@ export const batchInsertData = async (
     return generateErrorResponse(400, message, detail ? { detail, signedData } : { signedData });
   }
 
-  if (env.LOG_APIDATA) {
+  if (env.LOG_API_DATA) {
     // Log only the required fields to use less space, do not log the signature for security reasons.
     const sanitizedData = batchSignedData.map((data) =>
       pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp'])
     );
-    logger.info('Received signed data.', { data: sanitizedData });
+    logger.info('Received valid signed data.', { data: sanitizedData });
   }
 
   const newSignedData: SignedData[] = [];
