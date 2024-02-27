@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import * as commonsModule from '@api3/commons';
 import dotenv from 'dotenv';
 
 import type { AllowedAirnode } from '../schema';
@@ -9,10 +10,10 @@ import * as configModule from './config';
 
 test('interpolates example config and secrets', async () => {
   jest
-    .spyOn(configModule, 'loadRawConfigFromFilesystem')
+    .spyOn(commonsModule, 'loadConfig')
     .mockReturnValue(JSON.parse(readFileSync(join(__dirname, '../../config/signed-api.example.json'), 'utf8')));
   jest
-    .spyOn(configModule, 'loadRawSecretsFromFilesystem')
+    .spyOn(commonsModule, 'loadSecrets')
     .mockReturnValue(dotenv.parse(readFileSync(join(__dirname, '../../config/secrets.example.env'), 'utf8')));
 
   const config = await configModule.loadConfig();

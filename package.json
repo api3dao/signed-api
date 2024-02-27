@@ -24,7 +24,7 @@
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
-    "@api3/commons": "^0.6.2",
+    "@api3/commons": "file:../commons",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.19",
     "@typescript-eslint/eslint-plugin": "^7.0.1",
