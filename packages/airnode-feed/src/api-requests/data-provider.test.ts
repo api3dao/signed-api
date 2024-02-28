@@ -106,6 +106,8 @@ describe(makeTemplateRequests.name, () => {
   });
 
   it('can skip an API call', async () => {
+    jest.clearAllMocks();
+
     const configWithoutAPI: Config = {
       ...config,
       apiCredentials: [],
@@ -122,6 +124,7 @@ describe(makeTemplateRequests.name, () => {
             {
               ...config.ois[0]!.endpoints[0]!,
               operation: undefined,
+              fixedOperationParameters: [],
               postProcessingSpecifications: [
                 {
                   environment: 'Node',
@@ -136,13 +139,12 @@ describe(makeTemplateRequests.name, () => {
     };
     const state = stateModule.getInitialState(configWithoutAPI);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    (axios as jest.MockedFunction<typeof axios>).mockRejectedValue(new Error('network error'));
 
     const buildAndExecuteRequestSpy = jest.spyOn(adapterModule, 'buildAndExecuteRequest');
 
     const makeTemplateRequestsResult = await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
 
-    expect(axios).not.toHaveBeenCalled();
+    expect(axios).toHaveBeenCalledTimes(0);
     expect(buildAndExecuteRequestSpy).not.toHaveBeenCalled();
     expect(makeTemplateRequestsResult).toStrictEqual([
       [
