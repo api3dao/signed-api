@@ -2,7 +2,7 @@
   "name": "@api3/airnode-feed",
   "version": "0.5.1",
   "engines": {
-    "node": ">=18.19.1"
+    "node": ">=20.11.1"
   },
   "files": [
     "dist",
