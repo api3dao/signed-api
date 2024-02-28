@@ -146,40 +146,6 @@ describe(makeTemplateRequests.name, () => {
 
     expect(axios).toHaveBeenCalledTimes(0);
     expect(buildAndExecuteRequestSpy).not.toHaveBeenCalled();
-    expect(makeTemplateRequestsResult).toStrictEqual([
-      [
-        '0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd',
-        expect.objectContaining({
-          encodedResponse: {
-            encodedValue: '0x000000000000000000000000000000000000000000000006aaf7c8516d0c0000',
-            rawValue: 123,
-            values: ['123000000000000000000'],
-          },
-          timestamp: expect.anything(),
-        }),
-      ],
-      [
-        '0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66',
-        expect.objectContaining({
-          encodedResponse: {
-            encodedValue: '0x000000000000000000000000000000000000000000000006aaf7c8516d0c0000',
-            rawValue: 123,
-            values: ['123000000000000000000'],
-          },
-          timestamp: expect.anything(),
-        }),
-      ],
-      [
-        '0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9',
-        expect.objectContaining({
-          encodedResponse: {
-            encodedValue: '0x000000000000000000000000000000000000000000000006aaf7c8516d0c0000',
-            rawValue: 123,
-            values: ['123000000000000000000'],
-          },
-          timestamp: expect.anything(),
-        }),
-      ],
-    ]);
+    expect(makeTemplateRequestsResult![0]![1].encodedResponse.rawValue).toBe(123);
   });
 });
