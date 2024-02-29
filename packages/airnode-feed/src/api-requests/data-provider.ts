@@ -28,7 +28,7 @@ export const callApi = async (
       logger.debug('Performing API call.', { processedEndpointParameters });
 
       if (!endpoint.operation && isEmpty(endpoint.fixedOperationParameters)) {
-        return;
+        return { data: processedEndpointParameters };
       }
 
       const response = await buildAndExecuteRequest(
