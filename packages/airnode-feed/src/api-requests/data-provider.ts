@@ -4,7 +4,7 @@ import { getReservedParameters } from '@api3/airnode-node/dist/src/adapters/http
 import { preProcessEndpointParameters, type EndpointParameters, postProcessResponse } from '@api3/commons';
 import type { OIS, Endpoint as OisEndpoint } from '@api3/ois';
 import { go, goSync } from '@api3/promise-utils';
-import { isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 import { API_CALL_TIMEOUT } from '../constants';
 import { logger } from '../logger';
@@ -25,8 +25,14 @@ export const callApi = async (
         endpoint,
         endpointParameters
       );
-      logger.debug('Performing API call.', { processedEndpointParameters });
 
+      if (!endpoint.operation && isEmpty(endpoint.fixedOperationParameters)) {
+        logger.debug('Skipping API call.', { processedEndpointParameters });
+
+        return { data: processedEndpointParameters };
+      }
+
+      logger.debug('Performing API call.', { processedEndpointParameters });
       const response = await buildAndExecuteRequest(
         {
           endpointName: endpoint.name,
