@@ -106,8 +106,6 @@ describe(makeTemplateRequests.name, () => {
   });
 
   it('can skip an API call', async () => {
-    jest.clearAllMocks();
-
     const configWithoutAPI: Config = {
       ...config,
       apiCredentials: [],

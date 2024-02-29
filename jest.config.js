@@ -11,6 +11,7 @@ module.exports = {
   modulePathIgnorePatterns: ['<rootDir>/.build', '<rootDir>/dist/', '<rootDir>/build/'],
   preset: 'ts-jest',
   restoreMocks: true,
+  resetMocks: true,
   setupFiles: [join(__dirname, './jest.setup.js')],
   testEnvironment: 'jest-environment-node',
 };
