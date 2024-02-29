@@ -1,13 +1,13 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
+import { interpolateSecretsIntoConfig } from '@api3/commons';
 import dotenv from 'dotenv';
 import { ZodError } from 'zod';
 
 import { config } from '../../test/fixtures';
 
 import { type Config, configSchema, signedApisSchema } from './schema';
-import { interpolateSecrets } from './utils';
 
 test('validates example config', async () => {
   const exampleConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
@@ -24,9 +24,9 @@ test('validates example config', async () => {
   );
 
   const exampleSecrets = dotenv.parse(readFileSync(join(__dirname, '../../config/secrets.example.env'), 'utf8'));
-  await expect(configSchema.parseAsync(interpolateSecrets(exampleConfig, exampleSecrets))).resolves.toStrictEqual(
-    expect.any(Object)
-  );
+  await expect(
+    configSchema.parseAsync(interpolateSecretsIntoConfig(exampleConfig, exampleSecrets))
+  ).resolves.toStrictEqual(expect.any(Object));
 });
 
 test('ensures nodeVersion matches Airnode feed version', async () => {

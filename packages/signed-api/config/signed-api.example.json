@@ -15,5 +15,5 @@
     { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["${AIRNODE_FEED_AUTH_TOKEN}"] }
   ],
   "stage": "local",
-  "version": "0.5.1"
+  "version": "0.6.0"
 }

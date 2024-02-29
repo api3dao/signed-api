@@ -1,16 +1,17 @@
-import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
 
+import {
+  interpolateSecretsIntoConfig,
+  loadConfig as loadRawConfigFromFilesystem,
+  loadSecrets as loadRawSecretsFromFilesystem,
+} from '@api3/commons';
 import { go, goSync } from '@api3/promise-utils';
 import { S3 } from '@aws-sdk/client-s3';
-import dotenv from 'dotenv';
 
 import { loadEnv } from '../env';
 import { logger } from '../logger';
 import { type Config, configSchema } from '../schema';
-
-import { interpolateSecrets, parseSecrets } from './secrets';
 
 let config: Config | undefined;
 
@@ -26,18 +27,11 @@ export const getConfig = (): Config => {
 // this is hidden from the user.
 const getConfigPath = () => join(cwd(), './config');
 
-export const loadRawConfigFromFilesystem = () =>
-  JSON.parse(readFileSync(join(getConfigPath(), 'signed-api.json'), 'utf8'));
-
-export const loadRawSecretsFromFilesystem = () =>
-  dotenv.parse(readFileSync(join(getConfigPath(), 'secrets.env'), 'utf8'));
-
 export const loadConfigFromFilesystem = () => {
   const goLoadConfig = goSync(() => {
-    const rawSecrets = loadRawSecretsFromFilesystem();
-    const rawConfig = loadRawConfigFromFilesystem();
-    const secrets = parseSecrets(rawSecrets);
-    return interpolateSecrets(rawConfig, secrets);
+    const rawConfig = loadRawConfigFromFilesystem(join(getConfigPath(), 'signed-api.json'));
+    const rawSecrets = loadRawSecretsFromFilesystem(join(getConfigPath(), 'secrets.env'));
+    return interpolateSecretsIntoConfig(rawConfig, rawSecrets);
   });
 
   if (!goLoadConfig.success) {
