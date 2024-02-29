@@ -25,7 +25,6 @@ export const callApi = async (
         endpoint,
         endpointParameters
       );
-      logger.debug('Performing API call.', { processedEndpointParameters });
 
       if (!endpoint.operation && isEmpty(endpoint.fixedOperationParameters)) {
         logger.debug('Skipping API call.', { processedEndpointParameters });
