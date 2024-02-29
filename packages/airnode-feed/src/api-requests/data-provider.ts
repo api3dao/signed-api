@@ -28,9 +28,12 @@ export const callApi = async (
       logger.debug('Performing API call.', { processedEndpointParameters });
 
       if (!endpoint.operation && isEmpty(endpoint.fixedOperationParameters)) {
+        logger.debug('Skipping API call.', { processedEndpointParameters });
+
         return { data: processedEndpointParameters };
       }
 
+      logger.debug('Performing API call.', { processedEndpointParameters });
       const response = await buildAndExecuteRequest(
         {
           endpointName: endpoint.name,
