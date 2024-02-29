@@ -1,3 +1,4 @@
+import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import { ethers } from 'ethers';
 
 import { logger } from '../logger';
@@ -16,19 +17,11 @@ export interface HeartbeatPayload {
   signature: string;
 }
 
-// We need to make sure the object is stringified in the same way every time, so we sort the keys alphabetically.
-export const stringifyUnsignedHeartbeatPayload = (unsignedHeartbeatPayload: Omit<HeartbeatPayload, 'signature'>) =>
-  JSON.stringify(unsignedHeartbeatPayload, Object.keys(unsignedHeartbeatPayload).sort());
-
 export const signHeartbeat = async (
   airnodeWallet: ethers.Wallet,
   unsignedHeartbeatPayload: Omit<HeartbeatPayload, 'signature'>
 ) => {
   logger.debug('Signing heartbeat payload.');
-  const messageToSign = ethers.utils.arrayify(
-    createConfigHash(stringifyUnsignedHeartbeatPayload(unsignedHeartbeatPayload))
-  );
+  const messageToSign = ethers.utils.arrayify(createSha256Hash(serializePlainObject(unsignedHeartbeatPayload)));
   return airnodeWallet.signMessage(messageToSign);
 };
-
-export const createConfigHash = (value: string) => ethers.utils.keccak256(ethers.utils.toUtf8Bytes(value));

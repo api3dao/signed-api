@@ -1,10 +1,11 @@
+import { createSha256Hash } from '@api3/commons';
 import { go } from '@api3/promise-utils';
 
 import { logger } from '../logger';
 import { getState } from '../state';
 import { loadRawConfig } from '../validation/config';
 
-import { HEARTBEAT_LOG_MESSAGE, type HeartbeatPayload, createConfigHash, signHeartbeat } from './heartbeat-utils';
+import { HEARTBEAT_LOG_MESSAGE, type HeartbeatPayload, signHeartbeat } from './heartbeat-utils';
 import { heartbeatLogger } from './logger';
 
 export const initiateHeartbeatLoop = () => {
@@ -19,7 +20,7 @@ export const logHeartbeat = async () => {
   logger.debug('Creating heartbeat log.');
 
   const rawConfig = loadRawConfig(); // We want to log the raw config, not the one with interpolated secrets.
-  const configHash = createConfigHash(JSON.stringify(rawConfig));
+  const configHash = createSha256Hash(JSON.stringify(rawConfig));
   const {
     airnodeWallet,
     deploymentTimestamp,
