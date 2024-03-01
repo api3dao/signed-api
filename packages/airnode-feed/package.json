@@ -17,10 +17,6 @@
     "docker:build": "docker build --target airnode-feed --tag api3/airnode-feed:latest ../../",
     "docker:build:amd64": "docker buildx build --target airnode-feed --platform linux/amd64 --tag api3/airnode-feed:latest ../../",
     "docker:run": "docker run -it --init --volume $(pwd)/config:/app/config --network host --env-file .env --rm api3/airnode-feed:latest",
-    "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
-    "eslint:fix": "eslint . --ext .js,.ts --fix",
-    "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
-    "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
     "start-prod": "node dist/src/index.js",
     "test": "jest",
     "tsc": "tsc --project ."

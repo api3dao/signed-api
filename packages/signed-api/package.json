@@ -17,10 +17,6 @@
     "docker:build": "docker build --target signed-api --tag api3/signed-api:latest ../../",
     "docker:build:amd64": "docker buildx build --target signed-api --platform linux/amd64 --tag api3/signed-api:latest ../../",
     "docker:run": "docker run --publish 8090:80 -it --init --volume $(pwd)/config:/app/config --env-file .env --rm api3/signed-api:latest",
-    "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
-    "eslint:fix": "eslint . --ext .js,.ts --fix",
-    "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
-    "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
     "start-prod": "node dist/src/index.js",
     "test": "jest",
     "tsc": "tsc --project ."

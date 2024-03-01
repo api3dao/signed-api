@@ -7,10 +7,6 @@
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf coverage dist",
-    "eslint:check": "eslint . --ext .js,.ts --max-warnings 0",
-    "eslint:fix": "eslint . --ext .js,.ts --fix",
-    "prettier:check": "prettier --check \"./**/*.{js,ts,md,yml,json}\"",
-    "prettier:fix": "prettier --write \"./**/*.{js,ts,md,yml,json}\"",
     "start:data-provider-api": "ts-node src/data-provider-api.ts",
     "start:airnode-feed": "docker run -it --init --volume $(pwd)/src/airnode-feed:/app/config --network host --env-file ./src/airnode-feed/.env --rm --memory=256m api3/airnode-feed:latest",
     "start:signed-api": "docker run --publish 8090:80 -it --init --volume $(pwd)/src/signed-api:/app/config --env-file ./src/signed-api/.env --rm --memory=256m api3/signed-api:latest",
