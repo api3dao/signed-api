@@ -2,7 +2,7 @@ import { go } from '@api3/promise-utils';
 import axios from 'axios';
 import { ethers } from 'ethers';
 
-import { airnode, createSignedData, formatData } from './utils';
+import { airnode, createSignedData, formatData } from '../src/utils';
 
 test('respects the delay', async () => {
   const start = Date.now();
