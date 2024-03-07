@@ -12,7 +12,8 @@
     }
   ],
   "allowedAirnodes": [
-    { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["${AIRNODE_FEED_AUTH_TOKEN}"] }
+    { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["${AIRNODE_FEED_AUTH_TOKEN}"] },
+    { "address": "0xA840740650b832B9480EE56d4e3641f5E57DDE3E", "authTokens": null }
   ],
   "stage": "e2e-test",
   "version": "0.6.0"

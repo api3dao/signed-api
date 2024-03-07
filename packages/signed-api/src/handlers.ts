@@ -1,5 +1,5 @@
-import { go } from '@api3/promise-utils';
-import { isEmpty, isNil, omit, pick } from 'lodash';
+import { go, goSync } from '@api3/promise-utils';
+import { isEmpty, omit, pick } from 'lodash';
 
 import { getConfig } from './config/config';
 import { loadEnv } from './env';
@@ -19,9 +19,16 @@ const env = loadEnv();
 // important for the delayed endpoint which may not be allowed to return the fresh data yet.
 export const batchInsertData = async (
   authorizationHeader: string | undefined,
-  requestBody: unknown,
-  airnodeAddress: string
+  rawRequestBody: unknown,
+  rawAirnodeAddress: string
 ): Promise<ApiResponse> => {
+  // Make sure the Airnode address is valid.
+  const goAirnodeAddresses = goSync(() => evmAddressSchema.parse(rawAirnodeAddress));
+  if (!goAirnodeAddresses.success) {
+    return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address');
+  }
+  const airnodeAddress = goAirnodeAddresses.data;
+
   // Ensure that the batch of signed that comes from a whitelisted Airnode.
   const { endpoints, allowedAirnodes } = getConfig();
   if (allowedAirnodes !== '*') {
@@ -40,7 +47,7 @@ export const batchInsertData = async (
     }
   }
 
-  const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(requestBody));
+  const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(rawRequestBody));
   if (!goValidateSchema.success) {
     return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
       detail: goValidateSchema.error.message,
@@ -135,14 +142,14 @@ export const batchInsertData = async (
 export const getData = async (
   endpoint: Endpoint,
   authorizationHeader: string | undefined,
-  airnodeAddress: string
+  rawAirnodeAddress: string
 ): Promise<ApiResponse> => {
-  if (isNil(airnodeAddress)) return generateErrorResponse(400, 'Invalid request, airnode address is missing');
-
-  const goValidateSchema = await go(async () => evmAddressSchema.parseAsync(airnodeAddress));
-  if (!goValidateSchema.success) {
+  // Make sure the Airnode address is valid.
+  const goAirnodeAddresses = goSync(() => evmAddressSchema.parse(rawAirnodeAddress));
+  if (!goAirnodeAddresses.success) {
     return generateErrorResponse(400, 'Invalid request, airnode address must be an EVM address');
   }
+  const airnodeAddress = goAirnodeAddresses.data;
 
   const { delaySeconds, authTokens } = endpoint;
   const authToken = extractBearerToken(authorizationHeader);
