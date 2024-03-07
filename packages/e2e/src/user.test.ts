@@ -1,7 +1,8 @@
 import { go } from '@api3/promise-utils';
 import axios from 'axios';
+import { ethers } from 'ethers';
 
-import { airnode, formatData } from './utils';
+import { airnode, createSignedData, formatData } from './utils';
 
 test('respects the delay', async () => {
   const start = Date.now();
@@ -52,4 +53,18 @@ test('ensures Signed API handles requests with huge payloads', async () => {
   expect(error.response.data).toStrictEqual({
     error: { message: 'request entity too large' },
   });
+});
+
+test('handles both EIP-55 and lowercased addresses', async () => {
+  const airnodeWallet = new ethers.Wallet('28975fdc5c339153fca3c4cb734b1b00bf4176a770d6f60fdc202d03d1ca61bb');
+  const airnode = airnodeWallet.address;
+  const lowercaseAirnode = airnode.toLowerCase();
+  const timestamp = (Math.floor(Date.now() / 1000) - 60).toString(); // 1 min ago
+  const signedData = await createSignedData(airnodeWallet, timestamp);
+  await axios.post(`http://localhost:8090/${airnode}`, [signedData]);
+
+  const eip55AirnodeResponse = await axios.get(`http://localhost:8090/delayed/${airnode}`);
+  const lowercasedAirnodeResponse = await axios.get(`http://localhost:8090/delayed/${lowercaseAirnode}`);
+
+  expect(eip55AirnodeResponse.data).toStrictEqual(lowercasedAirnodeResponse.data);
 });
