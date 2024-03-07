@@ -8,7 +8,7 @@ import {
   preProcessEndpointParameters,
 } from '@api3/commons';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
-import { goSync } from '@api3/promise-utils';
+import { go, goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 import { isNil, uniqWith, isEqual } from 'lodash';
 import { z, type SuperRefinement } from 'zod';
@@ -203,7 +203,16 @@ const validateTriggerReferences: SuperRefinement<{
           };
         }, {});
 
-        return preProcessEndpointParameters(oisEndpoint, endpointParameters);
+        const goPreProcess = await go(async () => preProcessEndpointParameters(oisEndpoint, endpointParameters));
+        if (!goPreProcess.success) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Unable to pre-process endpoint parameters: ${goPreProcess.error.message}`,
+            path: ['templates', templateId, 'parameters'],
+          });
+          return;
+        }
+        return goPreProcess.data;
       });
 
       const operationsPayloads = await Promise.all(operationPayloadPromises);
