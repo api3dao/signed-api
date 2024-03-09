@@ -16,5 +16,5 @@
     { "address": "0xA840740650b832B9480EE56d4e3641f5E57DDE3E", "authTokens": null }
   ],
   "stage": "e2e-test",
-  "version": "0.6.0"
+  "version": "0.7.0"
 }
