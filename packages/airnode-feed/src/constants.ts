@@ -1,3 +1,0 @@
-export const SIGNED_DATA_PUSH_POLLING_INTERVAL = 2500;
-
-export const API_CALL_TIMEOUT = 10_000;

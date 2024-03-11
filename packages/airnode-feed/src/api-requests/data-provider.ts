@@ -6,7 +6,6 @@ import type { OIS, Endpoint as OisEndpoint } from '@api3/ois';
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, isNil } from 'lodash';
 
-import { API_CALL_TIMEOUT } from '../constants';
 import { logger } from '../logger';
 import type { TemplateResponse } from '../sign-template-data';
 import { getState } from '../state';
@@ -41,7 +40,7 @@ export const callApi = async (
           metadata: null,
           apiCredentials,
         },
-        { timeout: API_CALL_TIMEOUT }
+        { timeout: 10_000 }
       );
 
       return response.data;
