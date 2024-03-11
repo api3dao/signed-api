@@ -204,8 +204,8 @@ For example:
 
 #### `triggers.signedApiUpdates[n]`
 
-Configuration for one of the signed API update triggers. Airnode feed periodically pushes the data to the signed API.
-The period is `2.5` seconds.
+Configuration for one of the signed API update triggers. Airnode feed periodically fetches data from data provider and
+pushes it to all Signed APIs defined in the configuration file.
 
 Airnode feed only makes a single template request independently of the number of template IDs specified. This is to
 reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same
