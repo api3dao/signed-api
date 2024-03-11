@@ -270,10 +270,7 @@ export type NodeSettings = z.infer<typeof nodeSettingsSchema>;
 export const configSchema = z
   .strictObject({
     apiCredentials: apisCredentialsSchema,
-    beaconSets: z.any(),
-    chains: z.any(),
     endpoints: endpointsSchema,
-    gateways: z.any(),
     nodeSettings: nodeSettingsSchema,
     ois: oisesSchema,
     signedApis: signedApisSchema,
