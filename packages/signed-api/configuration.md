@@ -1,9 +1,9 @@
-## Configuration
+# Configuration
 
 The API is configured via combination of [environment variables](#environment-variables) and
 [configuration files](#configuration-files).
 
-### Environment variables
+## Environment variables
 
 Parts of the API needs to be initialized prior the configuration files are loaded. This is done via environment
 variables. All of the environment variables are optional and or set with default values for convenience.
@@ -29,7 +29,7 @@ AWS_S3_BUCKET_PATH=configs/my-app/signed-api.json
 
 <!-- NOTE: Keep the logger configuration in-sync with Airnode feed package. -->
 
-#### `LOGGER_ENABLED` _(optional)_
+### `LOGGER_ENABLED` _(optional)_
 
 Enables or disables logging. Options:
 
@@ -38,7 +38,7 @@ Enables or disables logging. Options:
 
 Default: `true`.
 
-#### `LOG_FORMAT` _(optional)_
+### `LOG_FORMAT` _(optional)_
 
 The format of the log output. Options:
 
@@ -48,7 +48,7 @@ The format of the log output. Options:
 
 Default: `json`.
 
-#### `LOG_API_DATA` _(optional)_
+### `LOG_API_DATA` _(optional)_
 
 Enables or disables logging of the API data at the `info` level. When set to `true`, received valid signed data will be
 logged with the fields `airnode`, `encodedValue`, `templateId`, and `timestamp`. The `signature` field is intentionally
@@ -59,7 +59,7 @@ excluded for security reasons. Options:
 
 Default: `false`.
 
-#### `LOG_COLORIZE` _(optional)_
+### `LOG_COLORIZE` _(optional)_
 
 Enables or disables colors in the log output. Options:
 
@@ -69,7 +69,7 @@ Enables or disables colors in the log output. Options:
 
 Default: `false`.
 
-#### `LOG_LEVEL` _(optional)_
+### `LOG_LEVEL` _(optional)_
 
 Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
 
@@ -80,7 +80,7 @@ Defines the minimum level of logs. Logs with smaller level (severity) will be si
 
 Default: `info`.
 
-#### `CONFIG_SOURCE` _(optional)_
+### `CONFIG_SOURCE` _(optional)_
 
 Defines the source of the configuration file. Options:
 
@@ -89,33 +89,33 @@ Defines the source of the configuration file. Options:
 
 Default: `local`.
 
-#### `AWS_ACCESS_KEY_ID` _(optional)_
+### `AWS_ACCESS_KEY_ID` _(optional)_
 
 The AWS access key ID. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
-#### `AWS_SECRET_ACCESS_KEY` _(optional)_
+### `AWS_SECRET_ACCESS_KEY` _(optional)_
 
 The AWS secret access key. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
-#### `AWS_REGION` _(optional)_
+### `AWS_REGION` _(optional)_
 
 The AWS region. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
-#### `AWS_S3_BUCKET_NAME` _(optional)_
+### `AWS_S3_BUCKET_NAME` _(optional)_
 
 The name of the AWS S3 bucket. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
-#### `AWS_S3_BUCKET_PATH` _(optional)_
+### `AWS_S3_BUCKET_PATH` _(optional)_
 
 The path to the configuration file in the AWS S3 bucket. Required when `CONFIG_SOURCE` is set to `aws-s3`.
 
-### Configuration files
+## Configuration files
 
 The API is configured via combination of `signed-api.json` and `secrets.env` configuration files. All expressions of a
 form `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `signed-api.json` at runtime.
 You are advised to put sensitive information inside secrets file.
 
-#### `endpoints`
+### `endpoints`
 
 The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
 
@@ -137,20 +137,20 @@ The API needs to be configured with endpoints to be served. This is done via the
 ]
 ```
 
-##### `endpoints[n]`
+#### `endpoints[n]`
 
 Configuration for one of the endpoints.
 
-###### `urlPath`
+##### `urlPath`
 
 The URL path on which the endpoint is served. Must start with a slash and contain only alphanumeric characters and
 dashes.
 
-###### `delaySeconds`
+##### `delaySeconds`
 
 The delay in seconds for the endpoint. The endpoint will only serve data that is older than the delay.
 
-###### `authTokens`
+##### `authTokens`
 
 The nonempty list of
 [Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer) allowed to query
@@ -158,13 +158,13 @@ the data.
 
 In case the endpoint should be publicly available, set the value to `null`.
 
-#### `cache` _(optional)_
+### `cache` _(optional)_
 
 Configures the cache (specifically caching headers) for the API endpoints using the GET HTTP method.
 
 Defaults to no cache (no headers).
 
-##### `type`
+#### `type`
 
 The type of the cache. Options:
 
@@ -172,11 +172,11 @@ The type of the cache. Options:
 - `cdn` - Similar to `browser` cache, but also sets the `cdn-cache-control` to the same value as `cache-control`.
   Setting both headers is necessary to support CDNs which do not support `cdn-cache-control` header.
 
-##### `maxAgeSeconds`
+#### `maxAgeSeconds`
 
 The maximum age of the cache in seconds. The cache is cleared after this time.
 
-#### `allowedAirnodes`
+### `allowedAirnodes`
 
 The list of allowed Airnodes with authorization details. If the list is empty, no Airnode is allowed. To whitelist all
 Airnodes, set the value to `"*"` instead of an array.
@@ -202,15 +202,15 @@ or
 "allowedAirnodes": { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["some-secret-token-for-airnode-feed"] }
 ```
 
-##### `allowedAirnodes[n]`
+#### `allowedAirnodes[n]`
 
 One of the allowed Airnodes.
 
-###### `address`
+##### `address`
 
 The address of the Airnode. The address must be a valid Ethereum address.
 
-###### `authTokens`
+##### `authTokens`
 
 The nonempty list of
 [Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer).
@@ -218,12 +218,12 @@ The nonempty list of
 To allow pushing data without any authorization, set the value to `null`. The API validates the data, but this is not
 recommended.
 
-##### `stage`
+#### `stage`
 
 An identifier of the deployment stage. This is used to distinguish between different deployments of Signed API, for
 example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
 lowercase alphanumeric characters and hyphens.
 
-##### `version`
+#### `version`
 
 The version specified in the config must match the version of the Signed API at deployment time.

@@ -1,9 +1,9 @@
-## Configuration
+# Configuration
 
 Airnode feed can be configured via a combination of [environment variables](#environment-variables) and
 [configuration files](#configuration-files).
 
-### Environment variables
+## Environment variables
 
 Logging needs to be initialized prior the configuration files are loaded. This is done via environment variables. All of
 the environment variables are optional and or set with default values for convenience.
@@ -32,7 +32,7 @@ LOG_LEVEL=debug
 
 <!-- NOTE: Keep the logger configuration in-sync with API. -->
 
-#### `LOGGER_ENABLED` _(optional)_
+### `LOGGER_ENABLED` _(optional)_
 
 Enables or disables logging. Options:
 
@@ -41,7 +41,7 @@ Enables or disables logging. Options:
 
 Default: `true`.
 
-#### `LOG_FORMAT` _(optional)_
+### `LOG_FORMAT` _(optional)_
 
 The format of the log output. Options:
 
@@ -51,7 +51,7 @@ The format of the log output. Options:
 
 Default: `json`.
 
-#### `LOG_HEARTBEAT` _(optional)_
+### `LOG_HEARTBEAT` _(optional)_
 
 Enables or disables the heartbeat log. The heartbeat log is a cryptographically secure log that is emitted every 60
 seconds to indicate that the service is running. The log includes useful information such as the deployment timestamp
@@ -62,7 +62,7 @@ and configuration hash. Options:
 
 Default: `true`.
 
-#### `LOG_COLORIZE` _(optional)_
+### `LOG_COLORIZE` _(optional)_
 
 Enables or disables colors in the log output. Options:
 
@@ -72,7 +72,7 @@ Enables or disables colors in the log output. Options:
 
 Default: `false`.
 
-#### `LOG_LEVEL` _(optional)_
+### `LOG_LEVEL` _(optional)_
 
 Defines the minimum level of logs. Logs with smaller level (severity) will be silenced. Options:
 
@@ -83,7 +83,7 @@ Defines the minimum level of logs. Logs with smaller level (severity) will be si
 
 Default: `info`.
 
-### Configuration files
+## Configuration files
 
 Airnode feed needs two configuration files, `airnode-feed.json` and `secrets.env`. All expressions of a form
 `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `airnode-feed.json` at runtime.
@@ -91,7 +91,7 @@ You are advised to put sensitive information inside secrets file.
 
 You can also refer to the [example configuration](./config).
 
-#### `templates`
+### `templates`
 
 Configuration for the template requests. Each template request is defined by a `templateId` and a `template` object. For
 example:
@@ -112,21 +112,21 @@ The template ID hash is derived from the template object. You can derive the ID 
 ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 ```
 
-##### `templates[<TEMPLATE_ID>]`
+#### `templates[<TEMPLATE_ID>]`
 
 Configuration for the template object with ID `<TEMPLATE_ID>`.
 
-###### `endpointId`
+##### `endpointId`
 
 The ID of the endpoint to which the template request is made.
 
-###### `parameters`
+##### `parameters`
 
 The parameters of the template request. Refer to
 [Airnode ABI](https://dapi-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html) specification for
 details.
 
-###### `parameters[n]`
+##### `parameters[n]`
 
 Defines one of the parameters of the template request.
 
@@ -143,7 +143,7 @@ The name of the parameter.
 
 The value of the parameter.
 
-#### `endpoints`
+### `endpoints`
 
 Configuration for the endpoints. Each endpoint is defined by an `endpointId` and an `endpoint` object. For example:
 
@@ -163,19 +163,19 @@ The endpoint ID hash is derived from the endpoint object. You can derive the ID 
 ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['string', 'string'], [oisTitle, endpointName]));
 ```
 
-##### `endpoints[<ENDPOINT_ID>]`
+#### `endpoints[<ENDPOINT_ID>]`
 
 Configuration for the endpoint object with ID `<ENDPOINT_ID>`.
 
-###### `endpointName`
+##### `endpointName`
 
 The name of the endpoint.
 
-###### `oisTitle`
+##### `oisTitle`
 
 The title of the OIS to which the endpoint belongs.
 
-#### `triggers.signedApiUpdates`
+### `triggers.signedApiUpdates`
 
 Configuration for the signed API update triggers. There can be multiple triggers, each specifying a different update
 configuration.
@@ -204,7 +204,7 @@ For example:
 }
 ```
 
-##### `triggers.signedApiUpdates[n]`
+#### `triggers.signedApiUpdates[n]`
 
 Configuration for one of the signed API update triggers. Airnode feed periodically pushes the data to the signed API.
 The period is `2.5` seconds.
@@ -215,23 +215,23 @@ endpoint and parameters. You can use [OIS processing](https://dapi-docs.api3.org
 to remove the parameters before making the request (using pre-processing) and later get the corresponding template value
 based on the endpoint parameters (using-processing). Refer to the [example configuration](./config) for details.
 
-###### `signedApiName`
+##### `signedApiName`
 
 The name of the signed API to which the data is pushed.
 
-###### `templateIds`
+##### `templateIds`
 
 The IDs of the templates for which the data is fetched, signed and pushed.
 
-###### `fetchInterval`
+##### `fetchInterval`
 
 The interval in seconds between two consecutive fetches of the template data.
 
-###### `updateDelay`
+##### `updateDelay`
 
 The minimum delay in seconds before the data can be pushed to signed API.
 
-#### `signedApis`
+### `signedApis`
 
 Configuration for the signed APIs. Each signed API is defined by a `signedApiName` and a `signedApi` object. For
 example:
@@ -247,50 +247,50 @@ example:
 ]
 ```
 
-##### `signedApis[n]`
+#### `signedApis[n]`
 
 Configuration for one of the signed APIs.
 
-###### `name`
+##### `name`
 
 The name of the signed API.
 
-###### `url`
+##### `url`
 
 The URL of the signed API.
 
-#### `authToken`
+### `authToken`
 
 The authentication token used to authenticate with the signed API. It is recommended to interpolate this value from
 secrets.
 
 If the signed API does not require authentication, set this value to `null`.
 
-#### `ois`
+### `ois`
 
 Configuration for the OISes.
 
 <!-- There is no example, because OISes are too large. -->
 
-##### `ois[n]`
+#### `ois[n]`
 
 Refer to the [OIS documentation](https://dapi-docs.api3.org/reference/ois/latest/).
 
-#### `apiCredentials`
+### `apiCredentials`
 
 Refer to Airnode's
 [API credentials](https://dapi-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
 
-#### `nodeSettings`
+### `nodeSettings`
 
 Contains general deployment parameters of the Airnode feed.
 
-##### `nodeVersion`
+#### `nodeVersion`
 
 The version of the Airnode feed. The version specified in the config must match the version of the Airnode feed at
 deployment time.
 
-##### `airnodeWalletMnemonic`
+#### `airnodeWalletMnemonic`
 
 Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from
 secrets. For example:
@@ -300,7 +300,7 @@ secrets. For example:
 "airnodeWalletMnemonic": "${WALLET_MNEMONIC}"
 ```
 
-##### `stage`
+#### `stage`
 
 An identifier of the deployment stage. This is used to distinguish between different deployments of Airnode feed, for
 example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
