@@ -102,29 +102,21 @@ export const batchInsertData = async (
   // is acceptable, but we only want to store one data for each timestamp.
   for (const signedData of batchSignedData) {
     const requestTimestamp = Number.parseInt(signedData.timestamp, 10);
-    const goReadDb = await go(async () => get(signedData.airnode, signedData.templateId, requestTimestamp));
-    if (goReadDb.data && requestTimestamp === Number.parseInt(goReadDb.data.timestamp, 10)) {
+    const cachedValue = get(signedData.airnode, signedData.templateId, requestTimestamp);
+    if (cachedValue && requestTimestamp === Number.parseInt(cachedValue.timestamp, 10)) {
       continue; // Intentionally not logging a message here, because this is a common case and it would be too noisy.
     }
 
     newSignedData.push(signedData);
   }
 
-  // Write batch of validated data to the database.
-  const goBatchWriteDb = await go(async () => putAll(newSignedData));
-  if (!goBatchWriteDb.success) {
-    return generateErrorResponse(500, 'Unable to send batch of signed data to database', {
-      detail: goBatchWriteDb.error.message,
-    });
-  }
+  // Write batch of validated data to the cache.
+  putAll(newSignedData);
 
   // Prune the cache with the data that is too old (no endpoint will ever return it).
   const maxDelay = endpoints.reduce((acc, endpoint) => Math.max(acc, endpoint.delaySeconds), 0);
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
-  const goPruneCache = await go(async () => prune(newSignedData, maxIgnoreAfterTimestamp));
-  if (!goPruneCache.success) {
-    return generateErrorResponse(500, 'Unable to remove outdated cache data', { detail: goPruneCache.error.message });
-  }
+  prune(newSignedData, maxIgnoreAfterTimestamp);
 
   return {
     statusCode: 201,
@@ -139,11 +131,11 @@ export const batchInsertData = async (
 // Returns the most fresh signed data for each templateId for the given airnode address. The API can be delayed, which
 // filter out all signed data that happend in the specified "delaySeconds" parameter (essentially, such signed data is
 // treated as non-existant).
-export const getData = async (
+export const getData = (
   endpoint: Endpoint,
   authorizationHeader: string | undefined,
   rawAirnodeAddress: string
-): Promise<ApiResponse> => {
+): ApiResponse => {
   // Make sure the Airnode address is valid.
   const goAirnodeAddresses = goSync(() => evmAddressSchema.parse(rawAirnodeAddress));
   if (!goAirnodeAddresses.success) {
@@ -163,19 +155,15 @@ export const getData = async (
   }
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
-  const goReadDb = await go(async () => getAll(airnodeAddress, ignoreAfterTimestamp));
-  if (!goReadDb.success) {
-    return generateErrorResponse(500, 'Unable to get signed data from database', { detail: goReadDb.error.message });
-  }
-
-  const data = goReadDb.data.reduce((acc, signedData) => {
+  const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp);
+  const data = cachedValues.reduce((acc, signedData) => {
     return { ...acc, [signedData.beaconId]: omit(signedData, 'beaconId') };
   }, {});
 
   return {
     statusCode: 200,
     headers: createResponseHeaders(getConfig().cache),
-    body: JSON.stringify({ count: goReadDb.data.length, data }),
+    body: JSON.stringify({ count: cachedValues.length, data }),
   };
 };
 

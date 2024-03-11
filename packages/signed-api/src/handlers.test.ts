@@ -238,7 +238,7 @@ describe(getData.name, () => {
     const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
-    const result = await getData({ authTokens: null, delaySeconds: 0, urlPath: 'path' }, undefined, '0xInvalid');
+    const result = getData({ authTokens: null, delaySeconds: 0, urlPath: 'path' }, undefined, '0xInvalid');
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ message: 'Invalid request, airnode address must be an EVM address' }),
@@ -256,11 +256,7 @@ describe(getData.name, () => {
     const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
-    const result = await getData(
-      { authTokens: null, delaySeconds: 0, urlPath: 'path' },
-      undefined,
-      airnodeWallet.address
-    );
+    const result = getData({ authTokens: null, delaySeconds: 0, urlPath: 'path' }, undefined, airnodeWallet.address);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
@@ -288,11 +284,7 @@ describe(getData.name, () => {
     ];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
-    const result = await getData(
-      { authTokens: null, delaySeconds: 30, urlPath: 'path' },
-      undefined,
-      airnodeWallet.address
-    );
+    const result = getData({ authTokens: null, delaySeconds: 30, urlPath: 'path' }, undefined, airnodeWallet.address);
 
     expect(result).toStrictEqual({
       body: JSON.stringify({

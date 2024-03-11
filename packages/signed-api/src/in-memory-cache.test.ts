@@ -51,8 +51,8 @@ describe(get.name, () => {
     return allData;
   };
 
-  it('returns null if there is no data', async () => {
-    const result = await get('non-existent-airnode', 'non-existent-template', 0);
+  it('returns null if there is no data', () => {
+    const result = get('non-existent-airnode', 'non-existent-template', 0);
 
     expect(result).toBeNull();
   });
@@ -60,7 +60,7 @@ describe(get.name, () => {
   it('returns null if data is too fresh', async () => {
     const [data] = await mockCacheData();
 
-    const result = await get(data!.airnode, data!.templateId, 50);
+    const result = get(data!.airnode, data!.templateId, 50);
 
     expect(result).toBeNull();
   });
@@ -69,7 +69,7 @@ describe(get.name, () => {
     const allData = await mockCacheData();
     const data = allData[0]!;
 
-    const result = await get(data.airnode, data.templateId, 101);
+    const result = get(data.airnode, data.templateId, 101);
 
     expect(result).toStrictEqual(allData[1]);
     expect(allData[1]!.timestamp).toBe('101');
@@ -79,7 +79,7 @@ describe(get.name, () => {
     const allData = await mockCacheData();
     const data = allData[0]!;
 
-    const result = await get(data.airnode, data.templateId, Number.POSITIVE_INFINITY);
+    const result = get(data.airnode, data.templateId, Number.POSITIVE_INFINITY);
 
     expect(result).toStrictEqual(allData[2]);
     expect(allData[2]!.timestamp).toBe('103');
@@ -109,7 +109,7 @@ describe(getAll.name, () => {
   it('returns freshest data for the given airnode', async () => {
     const allData = await mockCacheData();
 
-    const result = await getAll(allData[0]!.airnode, Number.POSITIVE_INFINITY);
+    const result = getAll(allData[0]!.airnode, Number.POSITIVE_INFINITY);
 
     // The first data is overridden by the fresher (second) data.
     expect(result).toStrictEqual([allData[1], allData[2], allData[3]]);
@@ -118,7 +118,7 @@ describe(getAll.name, () => {
   it('returns freshest data for the given airnode respecting delay', async () => {
     const allData = await mockCacheData();
 
-    const result = await getAll(allData[0]!.airnode, 100);
+    const result = getAll(allData[0]!.airnode, 100);
 
     expect(result).toStrictEqual([allData[0]]);
   });
@@ -150,7 +150,7 @@ describe(getAllAirnodeAddresses.name, () => {
   it('returns all airnode addresses', async () => {
     const cache = await mockCacheData();
 
-    const result = await getAllAirnodeAddresses();
+    const result = getAllAirnodeAddresses();
 
     expect(result).toStrictEqual(Object.keys(cache));
   });
@@ -175,7 +175,7 @@ describe(put.name, () => {
       timestamp: '103',
     });
 
-    await put(newData);
+    put(newData);
 
     const cache = cacheModule.getCache();
     expect(cache[data.airnode]![data.templateId]).toStrictEqual([allData[0], newData, allData[1], allData[2]]);
@@ -204,7 +204,7 @@ describe(putAll.name, () => {
       await createSignedData(),
     ];
 
-    await putAll(newDataBatch);
+    putAll(newDataBatch);
 
     const cache = cacheModule.getCache();
     expect(cache[data.airnode]![data.templateId]).toStrictEqual([allData[0], newDataBatch[0], allData[1], allData[2]]);
@@ -238,7 +238,7 @@ describe(prune.name, () => {
       [otherAirnodeData.airnode]: groupBy(otherAirnodeInsertData, 'templateId'),
     });
 
-    await prune(batchInsertData, 105);
+    prune(batchInsertData, 105);
 
     const cache = cacheModule.getCache();
     expect(cache[data.airnode]![data.templateId]).toStrictEqual([insertData[1], insertData[2]]);

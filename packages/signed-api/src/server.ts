@@ -48,11 +48,11 @@ export const startServer = (config: Config, port: number) => {
     const { urlPath } = endpoint;
 
     app.get(`${urlPath}/:airnodeAddress`, async (req, res, next) => {
-      const goRequest = await go(async () => {
+      const goRequest = await go(() => {
         logger.info(`Received request "GET ${urlPath}/:airnodeAddress".`);
         logger.debug('Request details.', { body: req.body, params: req.params });
 
-        const result = await getData(endpoint, req.headers.authorization, req.params.airnodeAddress);
+        const result = getData(endpoint, req.headers.authorization, req.params.airnodeAddress);
         res.status(result.statusCode).header(result.headers).send(result.body);
 
         logger.debug('Responded to request "GET /:airnodeAddress".', result);
