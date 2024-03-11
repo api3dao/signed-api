@@ -48,12 +48,9 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y wget ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN addgroup --system deployed-airnode-feed && \
-    adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-airnode-feed deployed-airnode-feed && \
-    chown --recursive deployed-airnode-feed:deployed-airnode-feed /app
-USER deployed-airnode-feed
-
-COPY --chown=deployed-airnode-feed:deployed-airnode-feed --from=deployed-airnode-feed /app/deployed-airnode-feed .
+USER node
+COPY --chown=node:node --from=deployed-airnode-feed /app/deployed-airnode-feed .
+ENV NODE_ENV=production
 ENTRYPOINT ["node", "dist/src/index.js"]
 
 # Create a separate stage for signed-api package. We create a temporary stage for deployment and then copy the result
@@ -75,10 +72,7 @@ RUN apt-get update && \
 RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
 
-RUN addgroup --system deployed-signed-api && \
-    adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-signed-api deployed-signed-api && \
-    chown --recursive deployed-signed-api:deployed-signed-api /app
-USER deployed-signed-api
-
-COPY --chown=deployed-signed-api:deployed-signed-api --from=deployed-signed-api /app/deployed-signed-api .
+USER node
+COPY --chown=node:node --from=deployed-signed-api /app/deployed-signed-api .
+ENV NODE_ENV=production
 ENTRYPOINT ["node", "dist/src/index.js"]
