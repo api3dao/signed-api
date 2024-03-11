@@ -187,8 +187,6 @@ For example:
   // Defines a single trigger.
   "signedApiUpdates": [
     {
-      // The data is pushed to the signed API named "localhost".
-      "signedApiName": "localhost",
       // The data is fetched for the templates with the template IDs specified below.
       "templateIds": [
         "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd",
@@ -215,10 +213,6 @@ endpoint and parameters. You can use [OIS processing](https://dapi-docs.api3.org
 to remove the parameters before making the request (using pre-processing) and later get the corresponding template value
 based on the endpoint parameters (using-processing).
 
-##### `signedApiName`
-
-The name of the signed API to which the data is pushed.
-
 ##### `templateIds`
 
 The IDs of the templates for which the data is fetched, signed and pushed.
@@ -233,8 +227,7 @@ The minimum delay in seconds before the data can be pushed to signed API.
 
 ### `signedApis`
 
-Configuration for the signed APIs. Each signed API is defined by a `signedApiName` and a `signedApi` object. For
-example:
+Configuration for the signed APIs. For example:
 
 ```jsonc
 // Defines a single signed API that uses AUTH_TOKEN secret as Bearer token when pushing signed data to signed API.

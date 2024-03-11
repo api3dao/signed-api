@@ -26,32 +26,13 @@
   "triggers": {
     "signedApiUpdates": [
       {
-        "signedApiName": "localhost",
         "templateIds": [
           "0xd1c9c79ccb6e24f77c14456b9b037ded9bfd0709468297e4e1e1bedbfe1bbf1a",
-          "0x4edc7440a34c8420ff592e4b2455785a9218c388a3112a2a92beedcb3e8feeba"
-        ],
-        "fetchInterval": 5,
-        "updateDelay": 0
-      },
-      {
-        "signedApiName": "localhost",
-        "templateIds": [
           "0x4edc7440a34c8420ff592e4b2455785a9218c388a3112a2a92beedcb3e8feeba",
           "0xcc72aa1d058c5db90c4595a6fcfb320dce997b978dcb6d1f176a121c05d47eeb",
           "0xcd2516b29a7634861a010155a3666b1be9af9cdb2d442e8f1ac1607c42862f9e"
         ],
-        "fetchInterval": 3,
-        "updateDelay": 5
-      },
-      {
-        "signedApiName": "localhost",
-        "templateIds": [
-          "0xd1c9c79ccb6e24f77c14456b9b037ded9bfd0709468297e4e1e1bedbfe1bbf1a",
-          "0xcc72aa1d058c5db90c4595a6fcfb320dce997b978dcb6d1f176a121c05d47eeb",
-          "0xcd2516b29a7634861a010155a3666b1be9af9cdb2d442e8f1ac1607c42862f9e"
-        ],
-        "fetchInterval": 1,
+        "fetchInterval": 5,
         "updateDelay": 0
       }
     ]

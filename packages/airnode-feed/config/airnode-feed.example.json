@@ -22,7 +22,6 @@
   "triggers": {
     "signedApiUpdates": [
       {
-        "signedApiName": "localhost",
         "templateIds": [
           "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd",
           "0x086130c54864b2129f8ac6d8d7ab819fa8181bbe676e35047b1bca4c31d51c66",
