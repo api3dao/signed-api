@@ -11,6 +11,10 @@ continuously running two core loops:
 2. `Push signed beacon data to signed API` - For each `triggers.signedApiUpdates`, periodically checks the in-memory
    storage and pushes the signed data to the configured API.
 
+## Configuration
+
+See [configuration](./configuration.md) for details.
+
 ## Local development
 
 The Airnode feed needs a configuration in order to run. The `config` folder contains example configuration which uses:

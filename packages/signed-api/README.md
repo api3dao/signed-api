@@ -5,6 +5,10 @@
 Signed API is a Node.js API server, dockerized and deployable on any cloud provider or hostable on premise. It stores
 the data in memory and provides endpoints to push and retrieve beacon data.
 
+## Configuration
+
+See [configuration](./configuration.md) for details.
+
 ## Local development
 
 1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally
