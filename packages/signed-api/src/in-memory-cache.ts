@@ -1,9 +1,25 @@
 import { last, uniqBy } from 'lodash';
 
-import { getCache } from './cache';
 import { logger } from './logger';
 import type { SignedData } from './schema';
 import { isIgnored } from './utils';
+
+type SignedDataCache = Record<
+  string, // Airnode address.
+  Record<
+    string, // Template ID.
+    SignedData[] // Signed data is ordered by timestamp (oldest first).
+  >
+>;
+
+let signedDataCache: SignedDataCache = {};
+
+// Making this a getter function makes it easier to mock the cache in storage.
+export const getCache = () => signedDataCache;
+
+export const setCache = (cache: SignedDataCache) => {
+  signedDataCache = cache;
+};
 
 export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimestamp: number) =>
   signedDatas.filter((data) => !isIgnored(data, ignoreAfterTimestamp));
