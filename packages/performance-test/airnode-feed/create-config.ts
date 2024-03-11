@@ -156,7 +156,6 @@ async function main() {
     configTemplate.triggers.signedApiUpdates.push({
       templateIds,
       fetchInterval,
-      updateDelay: 0,
     });
     currentTriggersCount++;
   }

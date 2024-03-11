@@ -4,41 +4,28 @@ import axios, { type AxiosError } from 'axios';
 import { isEmpty, isNil, pick } from 'lodash';
 
 import { logger } from '../logger';
+import type { SignedResponse } from '../sign-template-data';
 import { getState } from '../state';
-import { type SignedApiPayload, signedApiResponseSchema, type SignedApiUpdate } from '../validation/schema';
+import { type SignedApiPayload, signedApiResponseSchema } from '../validation/schema';
 
-export const pushSignedData = async (group: SignedApiUpdate) => {
+export const pushSignedData = async (signedResponses: SignedResponse[]) => {
   const {
     config: { signedApis },
-    templateValues,
     airnodeWallet,
   } = getState();
-  const { templateIds, updateDelay } = group;
 
   const airnode = airnodeWallet.address;
-  const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
-    // Calculate the reference timestamp based on the current time and update delay.
-    const referenceTimestamp = Date.now() / 1000 - updateDelay;
-    const delayedSignedData = templateValues[templateId]!.get(referenceTimestamp);
-    logger.debug('Getting delayed signed data.', {
-      templateId,
-      referenceTimestamp,
-      delayedSignedData,
-    });
-    templateValues[templateId]!.prune();
-    if (isNil(delayedSignedData)) return null;
-
-    return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...delayedSignedData };
+  const batchPayloadOrNull = signedResponses.map(([templateId, signedData]): SignedApiPayload | null => {
+    return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...signedData };
   });
-
   const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
   if (isEmpty(batchPayload)) {
     logger.debug('No batch payload found to post. Skipping.');
-    return null;
+    return { success: true, count: 0 };
   }
 
   const promises = signedApis.map(async (signedApi) => {
-    return logger.runWithContext({ signedApiName: signedApi.name, updateDelay }, async () => {
+    return logger.runWithContext({ signedApiName: signedApi.name }, async () => {
       logger.debug('Pushing signed data to the signed API.');
       const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
         logger.debug('Posting batch payload.', { batchPayload });

@@ -195,8 +195,6 @@ For example:
       ],
       // The template data is fetched every 5 seconds.
       "fetchInterval": 5,
-      // The data remains in in-memory storage for at least 30 seconds before it can be pushed to the signed API.
-      "updateDelay": 30
     }
   ]
 }
@@ -220,10 +218,6 @@ The IDs of the templates for which the data is fetched, signed and pushed.
 ##### `fetchInterval`
 
 The interval in seconds between two consecutive fetches of the template data.
-
-##### `updateDelay`
-
-The minimum delay in seconds before the data can be pushed to signed API.
 
 ### `signedApis`
 
