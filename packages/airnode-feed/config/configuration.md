@@ -246,7 +246,7 @@ The name of the signed API.
 
 The URL of the signed API.
 
-### `authToken`
+#### `authToken`
 
 The authentication token used to authenticate with the signed API. It is recommended to interpolate this value from
 secrets.
