@@ -1,6 +1,6 @@
 import { pushSignedData } from './api-requests/signed-api';
-import type { SignedApiUpdate } from './validation/schema';
+import type { SignedResponse } from './sign-template-data';
 
-export const schedulePushingSignedData = (signedApiUpdate: SignedApiUpdate) => {
-  setTimeout(async () => pushSignedData(signedApiUpdate), signedApiUpdate.updateDelay);
+export const schedulePushingSignedData = async (signedResponses: SignedResponse[]) => {
+  await pushSignedData(signedResponses);
 };

@@ -109,7 +109,6 @@ export type BeaconUpdate = z.infer<typeof beaconUpdateSchema>;
 export const signedApiUpdateSchema = z.strictObject({
   templateIds: z.array(config.evmIdSchema),
   fetchInterval: z.number(),
-  updateDelay: z.number(),
 });
 
 export type SignedApiUpdate = z.infer<typeof signedApiUpdateSchema>;

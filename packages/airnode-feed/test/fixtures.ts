@@ -38,7 +38,6 @@ export const config: Config = {
           '0x1d65c1f1e127a41cebd2339f823d0290322c63f3044380cbac105db8e522ebb9',
         ],
         fetchInterval: 5,
-        updateDelay: 5,
       },
     ],
   },

@@ -32,8 +32,7 @@
           "0xcc72aa1d058c5db90c4595a6fcfb320dce997b978dcb6d1f176a121c05d47eeb",
           "0xcd2516b29a7634861a010155a3666b1be9af9cdb2d442e8f1ac1607c42862f9e"
         ],
-        "fetchInterval": 5,
-        "updateDelay": 0
+        "fetchInterval": 5
       }
     ]
   },
