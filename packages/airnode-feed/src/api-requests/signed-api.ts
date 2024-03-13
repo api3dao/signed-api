@@ -21,7 +21,7 @@ export const pushSignedData = async (signedResponses: SignedResponse[]) => {
   const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
   if (isEmpty(batchPayload)) {
     logger.debug('No batch payload found to post. Skipping.');
-    return { success: true, count: 0 };
+    return null;
   }
 
   const promises = signedApis.map(async (signedApi) => {
