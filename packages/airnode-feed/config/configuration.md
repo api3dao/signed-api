@@ -89,7 +89,7 @@ Airnode feed needs two configuration files, `airnode-feed.json` and `secrets.env
 `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `airnode-feed.json` at runtime.
 You are advised to put sensitive information inside secrets file.
 
-You can also refer to the [example configuration](./config).
+You can also refer to the example configuration files.
 
 ### `templates`
 
@@ -213,7 +213,7 @@ Airnode feed only makes a single template request independently of the number of
 reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same
 endpoint and parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html)
 to remove the parameters before making the request (using pre-processing) and later get the corresponding template value
-based on the endpoint parameters (using-processing). Refer to the [example configuration](./config) for details.
+based on the endpoint parameters (using-processing).
 
 ##### `signedApiName`
 

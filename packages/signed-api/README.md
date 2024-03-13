@@ -7,7 +7,7 @@ the data in memory and provides endpoints to push and retrieve beacon data.
 
 ## Configuration
 
-See [configuration](./configuration.md) for details.
+See [configuration](./config/configuration.md) for details.
 
 ## Local development
 

@@ -13,7 +13,7 @@ continuously running two core loops:
 
 ## Configuration
 
-See [configuration](./configuration.md) for details.
+See [configuration](./config/configuration.md) for details.
 
 ## Local development
 
