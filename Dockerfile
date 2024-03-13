@@ -41,19 +41,16 @@ FROM build AS deployed-airnode-feed
 RUN pnpm --filter=@api3/airnode-feed --prod deploy deployed-airnode-feed
 FROM node:20-slim as airnode-feed
 WORKDIR /app
-ENV NODE_ENV=production
 
 # Update package lists and install wget
 RUN apt-get update && \
     apt-get install --no-install-recommends -y wget ca-certificates && \
     rm -rf /var/lib/apt/lists/*
 
-RUN addgroup --system deployed-airnode-feed && \
-    adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-airnode-feed deployed-airnode-feed && \
-    chown --recursive deployed-airnode-feed:deployed-airnode-feed /app
-USER deployed-airnode-feed
-
-COPY --chown=deployed-airnode-feed:deployed-airnode-feed --from=deployed-airnode-feed /app/deployed-airnode-feed .
+RUN chown --recursive node:node /app
+COPY --chown=node:node --from=deployed-airnode-feed /app/deployed-airnode-feed .
+USER node
+ENV NODE_ENV=production
 ENTRYPOINT ["node", "dist/src/index.js"]
 
 # Create a separate stage for signed-api package. We create a temporary stage for deployment and then copy the result
@@ -65,7 +62,11 @@ FROM build AS deployed-signed-api
 RUN pnpm --filter=@api3/signed-api --prod deploy deployed-signed-api
 FROM node:20-slim as signed-api
 WORKDIR /app
-ENV NODE_ENV=production
+
+# Update package lists and install wget
+RUN apt-get update && \
+    apt-get install --no-install-recommends -y wget ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
 # Update package lists and install libcap
 RUN apt-get update && \
@@ -74,11 +75,8 @@ RUN apt-get update && \
 # Set capabilities to allow Node.js to bind to well-known ports (<1024) as a non-root user
 RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-
-RUN addgroup --system deployed-signed-api && \
-    adduser --home /app --shell /bin/false --system --disabled-password --ingroup deployed-signed-api deployed-signed-api && \
-    chown --recursive deployed-signed-api:deployed-signed-api /app
-USER deployed-signed-api
-
-COPY --chown=deployed-signed-api:deployed-signed-api --from=deployed-signed-api /app/deployed-signed-api .
+RUN chown --recursive node:node /app
+COPY --chown=node:node --from=deployed-signed-api /app/deployed-signed-api .
+USER node
+ENV NODE_ENV=production
 ENTRYPOINT ["node", "dist/src/index.js"]
