@@ -15,34 +15,31 @@ export const pushSignedData = async (group: SignedApiUpdate) => {
   } = getState();
   const { templateIds, updateDelay } = group;
 
+  const airnode = airnodeWallet.address;
+  const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
+    // Calculate the reference timestamp based on the current time and update delay.
+    const referenceTimestamp = Date.now() / 1000 - updateDelay;
+    const delayedSignedData = templateValues[templateId]!.get(referenceTimestamp);
+    logger.debug('Getting delayed signed data.', {
+      templateId,
+      referenceTimestamp,
+      delayedSignedData,
+    });
+    templateValues[templateId]!.prune();
+    if (isNil(delayedSignedData)) return null;
+
+    return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...delayedSignedData };
+  });
+
+  const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
+  if (isEmpty(batchPayload)) {
+    logger.debug('No batch payload found to post. Skipping.');
+    return null;
+  }
+
   const promises = signedApis.map(async (signedApi) => {
     return logger.runWithContext({ signedApiName: signedApi.name, updateDelay }, async () => {
       logger.debug('Pushing signed data to the signed API.');
-
-      const airnode = airnodeWallet.address;
-      const batchPayloadOrNull = templateIds.map((templateId): SignedApiPayload | null => {
-        // Calculate the reference timestamp based on the current time and update delay.
-        const referenceTimestamp = Date.now() / 1000 - updateDelay;
-        const delayedSignedData = templateValues[templateId]!.get(referenceTimestamp);
-        logger.debug('Getting delayed signed data.', {
-          templateId,
-          referenceTimestamp,
-          delayedSignedData,
-        });
-        templateValues[templateId]!.prune();
-        if (isNil(delayedSignedData)) return null;
-
-        return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...delayedSignedData };
-      });
-
-      const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
-
-      if (isEmpty(batchPayload)) {
-        logger.debug('No batch payload found to post. Skipping.');
-        return { success: true, count: 0 };
-      }
-
-      logger.debug('Posting signed API data.', { group });
       const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
         logger.debug('Posting batch payload.', { batchPayload });
         const axiosResponse = await axios.post(new URL(airnode, signedApi.url).href, batchPayload, {
