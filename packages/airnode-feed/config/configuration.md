@@ -187,8 +187,6 @@ For example:
   // Defines a single trigger.
   "signedApiUpdates": [
     {
-      // The data is pushed to the signed API named "localhost".
-      "signedApiName": "localhost",
       // The data is fetched for the templates with the template IDs specified below.
       "templateIds": [
         "0xcc35bd1800c06c12856a87311dd95bfcbb3add875844021d59a929d79f3c99bd",
@@ -206,18 +204,14 @@ For example:
 
 #### `triggers.signedApiUpdates[n]`
 
-Configuration for one of the signed API update triggers. Airnode feed periodically pushes the data to the signed API.
-The period is `2.5` seconds.
+Configuration for one of the signed API update triggers. Airnode feed periodically fetches data from data provider and
+pushes it to all Signed APIs defined in the configuration file.
 
 Airnode feed only makes a single template request independently of the number of template IDs specified. This is to
 reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same
 endpoint and parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html)
 to remove the parameters before making the request (using pre-processing) and later get the corresponding template value
 based on the endpoint parameters (using-processing).
-
-##### `signedApiName`
-
-The name of the signed API to which the data is pushed.
 
 ##### `templateIds`
 
@@ -233,8 +227,7 @@ The minimum delay in seconds before the data can be pushed to signed API.
 
 ### `signedApis`
 
-Configuration for the signed APIs. Each signed API is defined by a `signedApiName` and a `signedApi` object. For
-example:
+Configuration for the signed APIs. For example:
 
 ```jsonc
 // Defines a single signed API that uses AUTH_TOKEN secret as Bearer token when pushing signed data to signed API.

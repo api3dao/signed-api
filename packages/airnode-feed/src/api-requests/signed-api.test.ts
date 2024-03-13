@@ -23,7 +23,7 @@ describe(pushSignedData.name, () => {
 
     const response = await pushSignedData(config.triggers.signedApiUpdates[0]);
 
-    expect(response).toStrictEqual({ count: 3, success: true });
+    expect(response).toStrictEqual([{ count: 3, success: true }]);
   });
 
   it('handles invalid response from signed API', async () => {
@@ -42,7 +42,7 @@ describe(pushSignedData.name, () => {
 
     const response = await pushSignedData(config.triggers.signedApiUpdates[0]);
 
-    expect(response).toStrictEqual({ success: false });
+    expect(response).toStrictEqual([{ success: false }]);
     expect(logger.warn).toHaveBeenCalledWith('Failed to parse response from the signed API.', {
       errors: new ZodError([
         {
@@ -72,7 +72,7 @@ describe(pushSignedData.name, () => {
 
     const response = await pushSignedData(config.triggers.signedApiUpdates[0]);
 
-    expect(response).toStrictEqual({ success: false });
+    expect(response).toStrictEqual([{ success: false }]);
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
       errorMessage: 'simulated-network-error',
       axiosResponse: {},

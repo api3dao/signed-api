@@ -154,7 +154,6 @@ async function main() {
 
     // Create trigger.
     configTemplate.triggers.signedApiUpdates.push({
-      signedApiName: 'perf-test-signed-api',
       templateIds,
       fetchInterval,
       updateDelay: 0,

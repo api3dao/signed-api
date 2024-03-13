@@ -107,7 +107,6 @@ export const beaconUpdateSchema = z
 export type BeaconUpdate = z.infer<typeof beaconUpdateSchema>;
 
 export const signedApiUpdateSchema = z.strictObject({
-  signedApiName: z.string(),
   templateIds: z.array(config.evmIdSchema),
   fetchInterval: z.number(),
   updateDelay: z.number(),
@@ -253,22 +252,6 @@ export const signedApisSchema = z
     }
   });
 
-const validateSignedApiReferences: SuperRefinement<{
-  triggers: Triggers;
-  signedApis: SignedApi[];
-}> = (config, ctx) => {
-  for (const [index, trigger] of config.triggers.signedApiUpdates.entries()) {
-    const api = config.signedApis.find((api) => api.name === trigger.signedApiName);
-    if (!api) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: `Unable to find signed API with name: ${trigger.signedApiName}`,
-        path: ['triggers', 'signedApiUpdates', index, 'signedApiName'],
-      });
-    }
-  }
-};
-
 export const oisesSchema = z.array(oisSchema);
 
 export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
@@ -300,8 +283,7 @@ export const configSchema = z
   })
   .superRefine(validateTemplatesReferences)
   .superRefine(validateOisReferences)
-  .superRefine(validateTriggerReferences)
-  .superRefine(validateSignedApiReferences);
+  .superRefine(validateTriggerReferences);
 
 export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
 

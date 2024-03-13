@@ -94,21 +94,3 @@ test('validates trigger references', async () => {
     ])
   );
 });
-
-test('trigger must point to a valid Signed API definition', async () => {
-  // As a note, having unused Signed API definitions is not an error.
-  const invalidConfig: Config = {
-    ...config,
-    signedApis: [{ ...config.signedApis[0], name: 'different-name' }],
-  };
-
-  await expect(async () => configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
-    new ZodError([
-      {
-        code: 'custom',
-        message: 'Unable to find signed API with name: localhost',
-        path: ['triggers', 'signedApiUpdates', 0, 'signedApiName'],
-      },
-    ])
-  );
-});
