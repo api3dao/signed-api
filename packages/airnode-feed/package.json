@@ -10,6 +10,12 @@
   ],
   "main": "./dist/src/npm-exports.js",
   "exports": "./dist/src/npm-exports.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/api3dao/signed-api.git",
+    "directory": "packages/airnode-feed"
+  },
+  "sideEffects": false,
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "clean": "rm -rf coverage dist",
