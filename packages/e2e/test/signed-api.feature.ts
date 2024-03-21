@@ -1,5 +1,4 @@
 import { executeRequest } from '@api3/commons';
-import { go } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 
 import { airnode, createSignedData, formatData } from '../src/utils';
@@ -44,19 +43,17 @@ test('ensures Signed API handles requests with huge payloads', async () => {
     airnode: '0x198539e151Fc2CF7642BFfe95B2b7a3Dc08bE0b7',
   };
 
-  const goPostData = await go(async () =>
-    executeRequest({
-      method: 'post',
-      url: `http://localhost:8090`,
-      body: Array.from({ length: 100_000 }).fill(signedData),
-    })
-  );
+  const requestResult = await executeRequest({
+    method: 'post',
+    url: `http://localhost:8090`,
+    body: Array.from({ length: 100_000 }).fill(signedData),
+  });
 
-  expect(goPostData.success).toBe(false);
-  const error = goPostData.error as any;
+  expect(requestResult.success).toBe(false);
+  const error = requestResult.errorData!;
   expect(error.message).toBe('Request failed with status code 413');
-  expect(error.response.status).toBe(413);
-  expect(error.response.data).toStrictEqual({
+  expect(error.code).toBe('ERR_BAD_REQUEST');
+  expect(error.axiosResponse!.data).toStrictEqual({
     error: { message: 'request entity too large' },
   });
 });
