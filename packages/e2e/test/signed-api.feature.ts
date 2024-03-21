@@ -1,5 +1,5 @@
+import { executeRequest } from '@api3/commons';
 import { go } from '@api3/promise-utils';
-import axios from 'axios';
 import { ethers } from 'ethers';
 
 import { airnode, createSignedData, formatData } from '../src/utils';
@@ -9,11 +9,13 @@ test('respects the delay', async () => {
   let [realCount, delayedCount] = [0, 0];
 
   while (Date.now() - start < 15_000) {
-    const realTimeResponse = await axios.get(`http://localhost:8090/real-time/${airnode}`, {
+    const realTimeResponse = await executeRequest({
+      method: 'get',
+      url: `http://localhost:8090/real-time/${airnode}`,
       headers: { Authorization: `Bearer some-secret-token` },
     });
     const realTimeData = formatData(realTimeResponse.data);
-    const delayedResponse = await axios.get(`http://localhost:8090/delayed/${airnode}`);
+    const delayedResponse = await executeRequest({ method: 'get', url: `http://localhost:8090/delayed/${airnode}` });
     const delayedData = formatData(delayedResponse.data);
 
     for (const data of realTimeData) {
@@ -43,7 +45,11 @@ test('ensures Signed API handles requests with huge payloads', async () => {
   };
 
   const goPostData = await go(async () =>
-    axios.post(`http://localhost:8090`, Array.from({ length: 100_000 }).fill(signedData))
+    executeRequest({
+      method: 'post',
+      url: `http://localhost:8090`,
+      body: Array.from({ length: 100_000 }).fill(signedData),
+    })
   );
 
   expect(goPostData.success).toBe(false);
@@ -61,10 +67,13 @@ test('handles both EIP-55 and lowercased addresses', async () => {
   const lowercaseAirnode = airnode.toLowerCase();
   const timestamp = (Math.floor(Date.now() / 1000) - 60).toString(); // 1 min ago
   const signedData = await createSignedData(airnodeWallet, timestamp);
-  await axios.post(`http://localhost:8090/${airnode}`, [signedData]);
+  await executeRequest({ method: 'post', url: `http://localhost:8090/${airnode}`, body: [signedData] });
 
-  const eip55AirnodeResponse = await axios.get(`http://localhost:8090/delayed/${airnode}`);
-  const lowercasedAirnodeResponse = await axios.get(`http://localhost:8090/delayed/${lowercaseAirnode}`);
+  const eip55AirnodeResponse = await executeRequest({ method: 'get', url: `http://localhost:8090/delayed/${airnode}` });
+  const lowercasedAirnodeResponse = await executeRequest({
+    method: 'get',
+    url: `http://localhost:8090/delayed/${lowercaseAirnode}`,
+  });
 
   expect(eip55AirnodeResponse.data).toStrictEqual(lowercasedAirnodeResponse.data);
 });

@@ -1,7 +1,6 @@
 import { deriveBeaconId } from '@api3/airnode-node';
-import { go } from '@api3/promise-utils';
-import axios, { type AxiosError } from 'axios';
-import { isEmpty, isNil, pick } from 'lodash';
+import { executeRequest } from '@api3/commons';
+import { isEmpty, isNil } from 'lodash';
 
 import { logger } from '../logger';
 import type { SignedResponse } from '../sign-template-data';
@@ -27,31 +26,22 @@ export const pushSignedData = async (signedResponses: SignedResponse[]) => {
   const promises = signedApis.map(async (signedApi) => {
     return logger.runWithContext({ signedApiName: signedApi.name }, async () => {
       logger.debug('Pushing signed data to the signed API.');
-      const goAxiosRequest = await go<Promise<unknown>, AxiosError>(async () => {
-        logger.debug('Posting batch payload.', { batchPayload });
-        const axiosResponse = await axios.post(new URL(airnode, signedApi.url).href, batchPayload, {
-          headers: {
-            'Content-Type': 'application/json',
-            ...(signedApi.authToken ? { Authorization: `Bearer ${signedApi.authToken}` } : {}),
-          },
-        });
-
-        return axiosResponse.data;
+      const requestResult = await executeRequest({
+        method: 'post',
+        url: new URL(airnode, signedApi.url).href,
+        body: batchPayload,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(signedApi.authToken ? { Authorization: `Bearer ${signedApi.authToken}` } : {}),
+        },
       });
-      if (!goAxiosRequest.success) {
-        logger.warn(
-          `Failed to make update signed API request.`,
-          // See: https://axios-http.com/docs/handling_errors
-          {
-            axiosResponse: pick(goAxiosRequest.error.response, ['data', 'status', 'headers']),
-            errorMessage: goAxiosRequest.error.message,
-          }
-        );
+      if (!requestResult.success) {
+        logger.warn(`Failed to make update signed API request.`, requestResult.errorData);
         return { success: false };
       }
 
-      logger.debug('Parsing response from the signed API.', { axiosResponse: goAxiosRequest.data });
-      const parsedResponse = signedApiResponseSchema.safeParse(goAxiosRequest.data);
+      logger.debug('Parsing response from the signed API.', { response: requestResult.data });
+      const parsedResponse = signedApiResponseSchema.safeParse(requestResult.data);
       if (!parsedResponse.success) {
         logger.warn('Failed to parse response from the signed API.', {
           errors: parsedResponse.error,
