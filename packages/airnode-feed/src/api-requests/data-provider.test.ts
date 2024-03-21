@@ -13,6 +13,7 @@ import type { Config } from '../validation/schema';
 
 import { makeTemplateRequests } from './data-provider';
 
+// We need to mock the internals of "buildAndExecuteRequest" function from Airnode.
 jest.mock('axios');
 
 describe(makeTemplateRequests.name, () => {
@@ -46,7 +47,7 @@ describe(makeTemplateRequests.name, () => {
     });
   });
 
-  it('can uses fixed operational parameters', async () => {
+  it('can use fixed operational parameters', async () => {
     const configWithFixedOperationalParameters: Config = {
       ...config,
       ois: [

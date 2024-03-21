@@ -9,7 +9,6 @@ const env = loadEnv();
 export const heartbeatLogger = createLogger({
   colorize: env.LOG_COLORIZE,
   format: env.LOG_FORMAT,
-  // We make sure the heartbeat logger is always enabled and logs all levels.
-  enabled: true,
+  enabled: env.LOG_HEARTBEAT,
   minLevel: 'debug',
 });
