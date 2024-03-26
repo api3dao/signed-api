@@ -4,8 +4,8 @@ import { join } from 'node:path';
 import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import * as promiseUtilsModule from '@api3/promise-utils';
 import { ethers } from 'ethers';
+import { cloneDeep } from 'lodash';
 
-import packageJson from '../../package.json';
 import { config, verifyHeartbeatLog } from '../../test/fixtures';
 import * as stateModule from '../state';
 import * as configModule from '../validation/config';
@@ -26,10 +26,10 @@ afterEach(() => {
 
 describe(logHeartbeat.name, () => {
   it('sends the correct heartbeat log', async () => {
-    const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
+    const rawConfig = cloneDeep(config);
     rawConfig.nodeSettings.nodeVersion = '0.7.0';
     jest.spyOn(configModule, 'loadRawConfig').mockReturnValue(rawConfig);
-    const state = stateModule.getInitialState(config);
+    const state = stateModule.getInitialState(rawConfig);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(heartbeatLogger, 'info').mockImplementation();
     jest.advanceTimersByTime(1000 * 3); // Advance time by 3 seconds to ensure the timestamp of the log is different from deployment timestamp.
@@ -39,12 +39,12 @@ describe(logHeartbeat.name, () => {
     // NOTE: This tests will fail each time the example config changes (except for the nodeVersion). This should be
     // quite rare and the test verifies that the heartbeat sends correct data.
     const expectedHeartbeat = {
-      configHash: '0xf206df4379462eab46c4666758863a0df26aba7af8368e3ce2871a6311179e7d',
+      configHash: '0x48dac2b757e01f91d58a4cd687b40baee22ae52c8ebc3b68d3cbc68a34f6890c',
       airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
       signature:
-        '0x2a75b6d0f4446b9270451969d75b0eecf640f78c27852a056b013e6189b581b11952143d6f8f9a69e0984a3912fb37eb2fb8d547cab0a1a973fa844daa562c901b',
+        '0x071b894c6d04a304aea01d3710b9d4b70241d554556966c576e0c478e17b17022a9d1c2730c1f3afc657609e5ab4be52e305b5128664c8588fe556c357aae1f71b',
       stage: 'test',
-      nodeVersion: packageJson.version,
+      nodeVersion: '0.7.0',
       currentTimestamp: '1674172803',
       deploymentTimestamp: '1674172800',
     };
