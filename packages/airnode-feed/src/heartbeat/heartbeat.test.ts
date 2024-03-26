@@ -27,6 +27,7 @@ afterEach(() => {
 describe(logHeartbeat.name, () => {
   it('sends the correct heartbeat log', async () => {
     const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
+    rawConfig.nodeSettings.nodeVersion = '0.7.0';
     jest.spyOn(configModule, 'loadRawConfig').mockReturnValue(rawConfig);
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
@@ -35,16 +36,20 @@ describe(logHeartbeat.name, () => {
 
     await logHeartbeat();
 
-    expect(heartbeatLogger.info).toHaveBeenCalledWith(
-      'Sending heartbeat log.',
-      expect.objectContaining({
-        airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
-        stage: 'test',
-        nodeVersion: packageJson.version,
-        currentTimestamp: '1674172803',
-        deploymentTimestamp: '1674172800',
-      })
-    );
+    // NOTE: This tests will fail each time the example config changes (except for the nodeVersion). This should be
+    // quite rare and the test verifies that the heartbeat sends correct data.
+    const expectedHeartbeat = {
+      configHash: '0xf206df4379462eab46c4666758863a0df26aba7af8368e3ce2871a6311179e7d',
+      airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
+      signature:
+        '0x2a75b6d0f4446b9270451969d75b0eecf640f78c27852a056b013e6189b581b11952143d6f8f9a69e0984a3912fb37eb2fb8d547cab0a1a973fa844daa562c901b',
+      stage: 'test',
+      nodeVersion: packageJson.version,
+      currentTimestamp: '1674172803',
+      deploymentTimestamp: '1674172800',
+    };
+    expect(heartbeatLogger.info).toHaveBeenCalledWith('Sending heartbeat log.', expectedHeartbeat);
+    expect(() => verifyHeartbeatLog(expectedHeartbeat, serializePlainObject(rawConfig))).not.toThrow();
   });
 });
 

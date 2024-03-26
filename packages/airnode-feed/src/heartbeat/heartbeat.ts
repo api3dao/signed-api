@@ -1,4 +1,4 @@
-import { createSha256Hash } from '@api3/commons';
+import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import { go } from '@api3/promise-utils';
 
 import { logger } from '../logger';
@@ -20,7 +20,7 @@ export const logHeartbeat = async () => {
   logger.debug('Creating heartbeat log.');
 
   const rawConfig = loadRawConfig(); // We want to log the raw config, not the one with interpolated secrets.
-  const configHash = createSha256Hash(JSON.stringify(rawConfig));
+  const configHash = createSha256Hash(serializePlainObject(rawConfig));
   const {
     airnodeWallet,
     deploymentTimestamp,
