@@ -20,7 +20,7 @@
   "dependencies": {
     "@api3/commons": "^0.7.1",
     "@api3/promise-utils": "^0.4.0",
-    "axios": "^1.6.7",
+    "axios": "^1.6.8",
     "ethers": "^5.7.2",
     "express": "^4.18.3",
     "lodash": "^4.17.21",
