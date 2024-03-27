@@ -146,4 +146,45 @@ describe(makeTemplateRequests.name, () => {
     expect(buildAndExecuteRequestSpy).not.toHaveBeenCalled();
     expect(makeTemplateRequestsResult![0]![1].encodedResponse.rawValue).toBe(123);
   });
+
+  it('can skip an API call using post processing v2', async () => {
+    const configWithoutAPI: Config = {
+      ...config,
+      apiCredentials: [],
+      ois: [
+        {
+          ...config.ois[0]!,
+          apiSpecifications: {
+            ...config.ois[0]!.apiSpecifications,
+            paths: {},
+            servers: [],
+            security: {},
+          },
+          endpoints: [
+            {
+              ...config.ois[0]!.endpoints[0]!,
+              operation: undefined,
+              fixedOperationParameters: [],
+              postProcessingSpecificationV2: {
+                environment: 'Node',
+                value: '({ response }) => { return { response: Math.round(Math.random() * 1000) } }',
+                timeoutMs: 5000,
+              },
+            },
+          ],
+        },
+      ],
+    };
+    const state = stateModule.getInitialState(configWithoutAPI);
+    jest.spyOn(stateModule, 'getState').mockReturnValue(state);
+
+    const buildAndExecuteRequestSpy = jest.spyOn(adapterModule, 'buildAndExecuteRequest');
+
+    const makeTemplateRequestsResult = await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
+
+    expect(axios).toHaveBeenCalledTimes(0);
+    expect(buildAndExecuteRequestSpy).not.toHaveBeenCalled();
+    expect(makeTemplateRequestsResult![0]![1].encodedResponse.rawValue).toBeGreaterThanOrEqual(0);
+    expect(makeTemplateRequestsResult![0]![1].encodedResponse.rawValue).toBeLessThanOrEqual(1000);
+  });
 });
