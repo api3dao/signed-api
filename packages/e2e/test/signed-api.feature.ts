@@ -53,7 +53,7 @@ test('ensures Signed API handles requests with huge payloads', async () => {
   const error = requestResult.errorData!;
   expect(error.message).toBe('Request failed with status code 413');
   expect(error.code).toBe('ERR_BAD_REQUEST');
-  expect(error.axiosResponse!.data).toStrictEqual({
+  expect(error.response).toStrictEqual({
     error: { message: 'request entity too large' },
   });
 });

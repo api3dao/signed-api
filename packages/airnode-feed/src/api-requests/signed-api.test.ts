@@ -13,7 +13,7 @@ describe(pushSignedData.name, () => {
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest
       .spyOn(commonsModule, 'executeRequest')
-      .mockResolvedValue({ success: true, data: { count: 3, skipped: 1 }, errorData: undefined });
+      .mockResolvedValue({ success: true, data: { count: 3, skipped: 1 }, errorData: undefined, statusCode: 200 });
 
     const response = await pushSignedData(nodarySignedTemplateResponses);
 
@@ -24,9 +24,12 @@ describe(pushSignedData.name, () => {
     const state = stateModule.getInitialState(config);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(logger, 'warn');
-    jest
-      .spyOn(commonsModule, 'executeRequest')
-      .mockResolvedValue({ success: true, data: { strange: 'some-invalid-response' }, errorData: undefined });
+    jest.spyOn(commonsModule, 'executeRequest').mockResolvedValue({
+      success: true,
+      data: { strange: 'some-invalid-response' },
+      errorData: undefined,
+      statusCode: 500,
+    });
 
     const response = await pushSignedData(nodarySignedTemplateResponses);
 
@@ -63,15 +66,16 @@ describe(pushSignedData.name, () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(commonsModule, 'executeRequest').mockResolvedValue({
       success: false,
-      errorData: { axiosResponse: {} as any, code: '500', message: 'simulated-network-error' },
+      errorData: { response: {} as any, code: '500', message: 'simulated-network-error' },
       data: undefined,
+      statusCode: 500,
     });
 
     const response = await pushSignedData(nodarySignedTemplateResponses);
 
     expect(response).toStrictEqual([{ success: false }]);
     expect(logger.warn).toHaveBeenCalledWith('Failed to make update signed API request.', {
-      axiosResponse: {},
+      response: {},
       code: '500',
       message: 'simulated-network-error',
     });
