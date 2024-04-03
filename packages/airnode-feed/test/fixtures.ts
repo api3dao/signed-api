@@ -184,18 +184,6 @@ export const nodarySignedTemplateResponses: SignedResponse[] = [
   ],
 ];
 
-// Axios parses the response body to JSON and automatically fills other request properties which are not needed for
-// testing.
-export const signedApiResponse: Partial<AxiosResponse> = {
-  status: 201,
-  headers: {
-    'content-type': 'application/json',
-    'access-control-allow-origin': '*',
-    'access-control-allow-methods': '*',
-  },
-  data: { count: 3, skipped: 1 },
-};
-
 export const verifyHeartbeatLog = (heartbeatPayload: HeartbeatPayload, rawConfig: string) => {
   // Verify that the signature is valid.
   const unsignedHeartbeatPayload = omit(heartbeatPayload, 'signature');
