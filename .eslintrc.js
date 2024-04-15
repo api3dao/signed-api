@@ -9,5 +9,7 @@ module.exports = {
 
     '@typescript-eslint/prefer-nullish-coalescing': 'off', // This rule throws an error with ESLint plugin and parser @6.19.0.
     '@typescript-eslint/consistent-return': 'off', // Triggers multiple false positives, e.g. in exhaustive switch cases or zod transformations.
+
+    'jest/prefer-importing-jest-globals': 'off',
   },
 };
