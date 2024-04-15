@@ -2,7 +2,7 @@
   "name": "e2e",
   "version": "1.1.0",
   "engines": {
-    "node": ">=18.20.0"
+    "node": ">=18.20.1"
   },
   "scripts": {
     "run-script": "ts-node --transpileOnly",
