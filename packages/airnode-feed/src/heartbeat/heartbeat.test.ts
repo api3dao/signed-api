@@ -5,7 +5,6 @@ import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import * as promiseUtilsModule from '@api3/promise-utils';
 import { ethers } from 'ethers';
 
-import packageJson from '../../package.json';
 import { config, verifyHeartbeatLog } from '../../test/fixtures';
 import * as stateModule from '../state';
 import * as configModule from '../validation/config';
@@ -29,7 +28,10 @@ describe(logHeartbeat.name, () => {
     const rawConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
     rawConfig.nodeSettings.nodeVersion = '0.7.0';
     jest.spyOn(configModule, 'loadRawConfig').mockReturnValue(rawConfig);
-    const state = stateModule.getInitialState(config);
+    const state = stateModule.getInitialState({
+      ...config,
+      nodeSettings: { ...config.nodeSettings, nodeVersion: '0.7.0' },
+    });
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.spyOn(heartbeatLogger, 'info').mockImplementation();
     jest.advanceTimersByTime(1000 * 3); // Advance time by 3 seconds to ensure the timestamp of the log is different from deployment timestamp.
@@ -44,7 +46,7 @@ describe(logHeartbeat.name, () => {
       signature:
         '0xa65161564720a1d658fb48e3e8dba5b0ae6a8e5448c3e761f644b8a6ad6f69da08f44743f645ddc761a98265a825f054642d3adc8ce59e9aa10e4c0128921d811b',
       stage: 'test',
-      nodeVersion: packageJson.version,
+      nodeVersion: '0.7.0',
       currentTimestamp: '1674172803',
       deploymentTimestamp: '1674172800',
     };
