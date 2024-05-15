@@ -16,7 +16,7 @@
 
 # We use the alpine image because of its small size. The alternative considered was the "slim" image, but it is larger
 # and we already use alpine (without issues) in other projects, so the size reduction seems worth it.
-FROM node:20-slim AS build
+FROM node:20.13.0-slim AS build
 WORKDIR /app
 RUN npm install -g pnpm
 # Copy just the "pnpm-lock.yaml" file and use "pnpm fetch" to download all dependencies just from the lockfile. This
@@ -39,7 +39,7 @@ LABEL application="airnode-feed" description="Airnode feed container"
 FROM build AS deployed-airnode-feed
 
 RUN pnpm --filter=@api3/airnode-feed --prod deploy deployed-airnode-feed
-FROM node:20-slim as airnode-feed
+FROM node:20.13.0-slim as airnode-feed
 WORKDIR /app
 
 # Update package lists and install wget
@@ -60,7 +60,7 @@ LABEL application="signed-api" description="Signed API container"
 FROM build AS deployed-signed-api
 
 RUN pnpm --filter=@api3/signed-api --prod deploy deployed-signed-api
-FROM node:20-slim as signed-api
+FROM node:20.13.0-slim as signed-api
 WORKDIR /app
 
 # Update package lists and install wget
