@@ -158,7 +158,7 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       '@aws-sdk/client-s3':
-        specifier: ^3.572.0
+        specifier: ^3.574.0
         version: 3.577.0
       dotenv:
         specifier: ^16.4.5
