@@ -2,7 +2,7 @@
   "name": "signed-api",
   "version": "1.0.0",
   "engines": {
-    "node": ">=18.20.1"
+    "node": ">=18.20.3"
   },
   "scripts": {
     "build": "pnpm recursive run build",
