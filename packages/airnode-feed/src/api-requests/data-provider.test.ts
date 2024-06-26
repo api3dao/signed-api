@@ -87,7 +87,7 @@ describe(makeTemplateRequests.name, () => {
     };
     const state = stateModule.getInitialState(configWithFixedOperationalParameters);
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
-    (axios as jest.MockedFunction<typeof axios>).mockRejectedValue(new Error('network error'));
+    jest.mocked(axios).mockRejectedValue(new Error('network error'));
 
     await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
 
