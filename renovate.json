@@ -18,6 +18,11 @@
       "matchUpdateTypes": ["patch", "minor"],
       "schedule": ["before 4am on Monday"],
       "groupName": "non-major-dependencies"
+    },
+    {
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["node"],
+      "enabled": false
     }
   ],
   "rangeStrategy": "bump",
