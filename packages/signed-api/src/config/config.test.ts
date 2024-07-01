@@ -19,5 +19,7 @@ test('interpolates example config and secrets', async () => {
   const config = await configModule.loadConfig();
 
   expect(config!.endpoints[0]!.authTokens).toStrictEqual(['secret-endpoint-token']);
-  expect((config!.allowedAirnodes[0] as AllowedAirnode).authTokens).toStrictEqual(['secret-airnode-token']);
+  expect((config!.allowedAirnodes[0] as AllowedAirnode).authTokens).toStrictEqual([
+    'some-secret-token-for-airnode-feed',
+  ]);
 });
