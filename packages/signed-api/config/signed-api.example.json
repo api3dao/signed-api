@@ -9,6 +9,12 @@
       "urlPath": "/delayed",
       "authTokens": null,
       "delaySeconds": 15
+    },
+    {
+      "urlPath": "/unsigned-real-time",
+      "authTokens": null,
+      "delaySeconds": 0,
+      "hideSignatures": true
     }
   ],
   "allowedAirnodes": [
