@@ -143,7 +143,7 @@ export const getData = (
   }
   const airnodeAddress = goAirnodeAddresses.data;
 
-  const { delaySeconds, authTokens } = endpoint;
+  const { delaySeconds, authTokens, hideSignatures } = endpoint;
   const authToken = extractBearerToken(authorizationHeader);
   if (authTokens !== null && !authTokens.includes(authToken!)) {
     return generateErrorResponse(403, 'Invalid auth token', { authToken });
@@ -157,7 +157,8 @@ export const getData = (
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
   const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp);
   const data = cachedValues.reduce((acc, signedData) => {
-    return { ...acc, [signedData.beaconId]: omit(signedData, 'beaconId') };
+    const data = hideSignatures ? omit(signedData, 'beaconId', 'signature') : omit(signedData, 'beaconId');
+    return { ...acc, [signedData.beaconId]: data };
   }, {});
 
   return {

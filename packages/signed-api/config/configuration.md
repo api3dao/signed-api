@@ -120,7 +120,7 @@ You are advised to put sensitive information inside secrets file.
 The API needs to be configured with endpoints to be served. This is done via the `endpoints` section. For example:
 
 ```jsonc
-// Defines two endpoints.
+// Defines three endpoints.
 "endpoints": [
   // Serves the non-delayed data on URL path "/real-time". Requesters need to provide the "some-secret-token" as Bearer token.
   {
@@ -133,6 +133,13 @@ The API needs to be configured with endpoints to be served. This is done via the
     "urlPath": "/delayed",
     "delaySeconds": 15,
     "authTokens": null,
+  },
+  // Serve the unsigned data in real-time on URL path "/unsigned-real-time". No authentication is required.
+  {
+    "urlPath": "/unsigned-real-time",
+    "authTokens": null,
+    "delaySeconds": 0,
+    "hideSignatures": true
   }
 ]
 ```
@@ -157,6 +164,11 @@ The nonempty list of
 the data.
 
 In case the endpoint should be publicly available, set the value to `null`.
+
+##### `hideSignatures` _(optional)_
+
+The boolean flag to hide the signatures in the response. The flag is optional for backwards compatibility with older
+Signed API versions.
 
 ### `cache` _(optional)_
 

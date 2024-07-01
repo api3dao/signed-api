@@ -35,7 +35,7 @@
     {
       "name": "localhost",
       "url": "http://localhost:8090",
-      "authToken": "some-secret-token-for-airnode-feed"
+      "authToken": "${AIRNODE_FEED_AUTH_TOKEN}"
     }
   ],
   "ois": [

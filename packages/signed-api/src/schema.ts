@@ -27,6 +27,7 @@ export const endpointSchema = z.strictObject({
     .regex(/^\/[\dA-Za-z-]+$/, 'Must start with a slash and contain only alphanumeric characters and dashes'),
   authTokens: z.array(z.string()).nonempty().nullable(),
   delaySeconds: z.number().nonnegative().int(),
+  hideSignatures: z.boolean().default(false),
 });
 
 export type Endpoint = z.infer<typeof endpointSchema>;

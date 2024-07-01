@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
 import { omit } from 'lodash';
+import type Pool from 'workerpool/types/Pool';
 
 import { getMockedConfig } from '../test/fixtures';
 import { createSignedData, generateRandomBytes, generateRandomWallet } from '../test/utils';
@@ -11,14 +12,17 @@ import { logger } from './logger';
 import { initializeVerifierPool } from './signed-data-verifier-pool';
 import { deriveBeaconId } from './utils';
 
+let workerPool: Pool;
+
 // eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
   jest.spyOn(configModule, 'getConfig').mockImplementation(getMockedConfig);
-  initializeVerifierPool();
+  workerPool = initializeVerifierPool();
 });
 
-afterEach(() => {
+afterEach(async () => {
   inMemoryCacheModule.setCache({});
+  await workerPool.terminate();
 });
 
 describe(batchInsertData.name, () => {
@@ -238,7 +242,11 @@ describe(getData.name, () => {
     const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
-    const result = getData({ authTokens: null, delaySeconds: 0, urlPath: 'path' }, undefined, '0xInvalid');
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false },
+      undefined,
+      '0xInvalid'
+    );
 
     expect(result).toStrictEqual({
       body: JSON.stringify({ message: 'Invalid request, airnode address must be an EVM address' }),
@@ -256,7 +264,11 @@ describe(getData.name, () => {
     const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
-    const result = getData({ authTokens: null, delaySeconds: 0, urlPath: 'path' }, undefined, airnodeWallet.address);
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false },
+      undefined,
+      airnodeWallet.address
+    );
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
@@ -284,13 +296,45 @@ describe(getData.name, () => {
     ];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
-    const result = getData({ authTokens: null, delaySeconds: 30, urlPath: 'path' }, undefined, airnodeWallet.address);
+    const result = getData(
+      { authTokens: null, delaySeconds: 30, urlPath: 'path', hideSignatures: false },
+      undefined,
+      airnodeWallet.address
+    );
 
     expect(result).toStrictEqual({
       body: JSON.stringify({
         count: 1,
         data: {
           [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId'),
+        },
+      }),
+      headers: {
+        'access-control-allow-methods': '*',
+        'access-control-allow-origin': '*',
+        'content-type': 'application/json',
+      },
+      statusCode: 200,
+    });
+  });
+
+  it('returns the data without signatures when hideSignatures flag is enabled', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: true },
+      undefined,
+      airnodeWallet.address
+    );
+
+    expect(result).toStrictEqual({
+      body: JSON.stringify({
+        count: 2,
+        data: {
+          [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId', 'signature'),
+          [batchData[1]!.beaconId]: omit(batchData[1], 'beaconId', 'signature'),
         },
       }),
       headers: {
