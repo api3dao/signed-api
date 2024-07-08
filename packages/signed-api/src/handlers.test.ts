@@ -15,13 +15,21 @@ import { deriveBeaconId } from './utils';
 let workerPool: Pool;
 
 // eslint-disable-next-line jest/no-hooks
-beforeEach(() => {
-  jest.spyOn(configModule, 'getConfig').mockImplementation(getMockedConfig);
+beforeAll(() => {
+  // Done in beforeAll to avoid initializing the pool for each test for performance reasons.
   workerPool = initializeVerifierPool();
 });
 
-afterEach(async () => {
+// eslint-disable-next-line jest/no-hooks
+beforeEach(() => {
+  jest.spyOn(configModule, 'getConfig').mockImplementation(getMockedConfig);
+});
+
+afterEach(() => {
   inMemoryCacheModule.setCache({});
+});
+
+afterAll(async () => {
   await workerPool.terminate();
 });
 
