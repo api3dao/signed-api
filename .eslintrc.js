@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['./node_modules/@api3/commons/dist/eslint/universal', './node_modules/@api3/commons/dist/eslint/jest'],
+  extends: ['plugin:@api3/eslint-plugin-commons/universal', 'plugin:@api3/eslint-plugin-commons/jest'],
   parserOptions: {
     project: ['./tsconfig.json', './packages/*/tsconfig.json'],
   },
