@@ -33,7 +33,7 @@ importers:
         specifier: ^28.6.0
         version: 28.6.0(@typescript-eslint/eslint-plugin@7.17.0(@typescript-eslint/parser@7.17.0(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(typescript@5.5.3))(eslint@8.57.0)(jest@29.7.0(@types/node@20.14.12)(ts-node@10.9.2(@types/node@20.14.12)(typescript@5.5.3)))(typescript@5.5.3)
       husky:
-        specifier: ^9.1.0
+        specifier: ^9.1.1
         version: 9.1.1
       is-wsl:
         specifier: ^2.2.0
@@ -48,7 +48,7 @@ importers:
         specifier: ^6.0.1
         version: 6.0.1
       ts-jest:
-        specifier: ^29.2.2
+        specifier: ^29.2.3
         version: 29.2.3(@babel/core@7.23.2)(@jest/transform@29.7.0)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.23.2))(jest@29.7.0(@types/node@20.14.12)(ts-node@10.9.2(@types/node@20.14.12)(typescript@5.5.3)))(typescript@5.5.3)
       ts-node:
         specifier: ^10.9.2
