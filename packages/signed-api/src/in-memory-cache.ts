@@ -25,11 +25,13 @@ export type Cache = {
   >;
 };
 
-let cache: Cache = {
+export const getInitialCache = (): Cache => ({
   signedDataCache: {},
   templateIdToOevTemplateId: {},
   airnodeToTemplateIdToBeaconId: {},
-};
+});
+
+let cache: Cache = getInitialCache();
 
 // Making this a getter function makes it easier to mock the cache in storage.
 export const getCache = () => cache;
@@ -78,7 +80,7 @@ export const getAll = (airnodeAddress: string, ignoreAfterTimestamp: number, isO
 export const getAllAirnodeAddresses = () => {
   logger.debug('Getting all Airnode addresses.');
 
-  return Object.keys(getCache());
+  return Object.keys(getCache().signedDataCache);
 };
 
 export const put = (signedData: InternalSignedData) => {

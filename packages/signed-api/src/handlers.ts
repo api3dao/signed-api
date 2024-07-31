@@ -135,9 +135,10 @@ export const batchInsertData = async (
   const v1ParsingResult = v2ParsingResult.success
     ? undefined
     : await signedApiBatchPayloadV1Schema.safeParseAsync(rawRequestBody);
-  if (!v2ParsingResult.success && !v1ParsingResult?.success) {
+  if (!v2ParsingResult.success && v1ParsingResult && !v1ParsingResult.success) {
     return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
-      detail: v2ParsingResult.error.message,
+      v1ParsingIssues: v1ParsingResult.error.issues,
+      v2ParsingIssues: v2ParsingResult.error.issues,
     });
   }
 
@@ -251,7 +252,9 @@ export const getData = (
   const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp, isOev);
   const data = cachedValues.reduce(
     (acc, signedData) => {
-      const data = hideSignatures ? omit(signedData, 'beaconId', 'signature') : omit(signedData, 'beaconId');
+      const data = hideSignatures
+        ? omit(signedData, 'beaconId', 'signature', 'isOevBeacon')
+        : omit(signedData, 'beaconId', 'isOevBeacon');
       return { ...acc, [signedData.beaconId]: data };
     },
     {} as GetSignedDataResponseSchema['data'] | GetUnsignedDataResponseSchema['data']

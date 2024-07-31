@@ -8,12 +8,12 @@ export interface ApiResponse {
 
 export type GetUnsignedDataResponseSchema = {
   count: number;
-  data: Record<string /* Beacon ID */, Omit<InternalSignedData, 'signature' | 'beaconId'>>;
+  data: Record<string /* Beacon ID */, Omit<InternalSignedData, 'signature' | 'beaconId' | 'isOevBeacon'>>;
 };
 
 export type GetSignedDataResponseSchema = {
   count: number;
-  data: Record<string /* Beacon ID */, Omit<InternalSignedData, 'beaconId'>>;
+  data: Record<string /* Beacon ID */, Omit<InternalSignedData, 'beaconId' | 'isOevBeacon'>>;
 };
 
 export type PostSignedDataResponseSchema = {
