@@ -1,5 +1,6 @@
 import type { ExtractedAndEncodedResponse } from '@api3/airnode-adapter';
 import { go } from '@api3/promise-utils';
+import { ethers } from 'ethers';
 import { isNil } from 'lodash';
 
 import { logger } from './logger';
@@ -7,7 +8,9 @@ import { getState } from './state';
 import { signWithTemplateId } from './utils';
 import type { SignedData, TemplateId } from './validation/schema';
 
-export type SignedResponse = [TemplateId, SignedData];
+export type ExtendedSignedData = SignedData & { oevSignature: string };
+
+export type SignedResponse = [TemplateId, ExtendedSignedData];
 
 export type TemplateResponse = [TemplateId, { timestamp: string; encodedResponse: ExtractedAndEncodedResponse }];
 
@@ -20,9 +23,13 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
       encodedResponse: { encodedValue },
     } = response;
 
-    const goSignWithTemplateId = await go(async () =>
-      signWithTemplateId(getState().airnodeWallet, templateId, timestamp, encodedValue)
-    );
+    const goSignWithTemplateId = await go(async () => {
+      const oevTemplateId = ethers.utils.solidityKeccak256(['bytes32'], [templateId]); // TODO: Cache this
+      return {
+        baseSignature: await signWithTemplateId(getState().airnodeWallet, templateId, timestamp, encodedValue),
+        oevSignature: await signWithTemplateId(getState().airnodeWallet, oevTemplateId, timestamp, encodedValue),
+      };
+    });
     if (!goSignWithTemplateId.success) {
       logger.warn(`Failed to sign response.`, {
         templateId,
@@ -36,7 +43,8 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
       {
         timestamp,
         encodedValue,
-        signature: goSignWithTemplateId.data,
+        signature: goSignWithTemplateId.data.baseSignature,
+        oevSignature: goSignWithTemplateId.data.oevSignature,
       },
     ];
   });

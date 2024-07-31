@@ -293,17 +293,31 @@ export const signedDataSchema = z.strictObject({
 
 export type SignedData = z.infer<typeof signedDataSchema>;
 
-export const signedApiPayloadSchema = signedDataSchema.extend({
+export const signedApiPayloadSchemaV1 = signedDataSchema.extend({
   beaconId: config.evmIdSchema,
   airnode: config.evmAddressSchema,
   templateId: config.evmIdSchema,
 });
 
-export type SignedApiPayload = z.infer<typeof signedApiPayloadSchema>;
+export type SignedApiPayloadV1 = z.infer<typeof signedApiPayloadSchemaV1>;
 
-export const signedApiBatchPayloadSchema = z.array(signedApiPayloadSchema);
+export const signedApiPayloadSchemaV2 = signedDataSchema.extend({
+  templateId: config.evmIdSchema,
+  oevSignature: config.evmAddressSchema,
+});
 
-export type SignedApiBatchPayload = z.infer<typeof signedApiBatchPayloadSchema>;
+export type SignedApiPayloadV2 = z.infer<typeof signedApiPayloadSchemaV2>;
+
+export const signedApiBatchPayloadSchemaV1 = z.array(signedApiPayloadSchemaV1);
+
+export type SignedApiBatchPayloadV1 = z.infer<typeof signedApiBatchPayloadSchemaV1>;
+
+export const signedApiBatchPayloadSchemaV2 = z.strictObject({
+  airnode: config.evmAddressSchema,
+  signedData: z.array(signedApiPayloadSchemaV2),
+});
+
+export type SignedApiBatchPayloadV2 = z.infer<typeof signedApiBatchPayloadSchemaV2>;
 
 export const secretsSchema = z.record(z.string());
 
