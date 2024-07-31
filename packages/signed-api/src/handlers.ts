@@ -14,7 +14,7 @@ import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, getCache, prune, putAll, setCache } from './in-memory-cache';
 import { logger } from './logger';
-import { evmAddressSchema, type SignedData, type Endpoint } from './schema';
+import { evmAddressSchema, type InternalSignedData, type Endpoint } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
 import type {
   ApiResponse,
@@ -61,7 +61,7 @@ export const getBeaconId = (airnode: string, templateId: string) => {
 // TODO: Move from handlers
 export const transformAirnodeFeedPayload = (
   payload: SignedApiBatchPayloadV1 | SignedApiBatchPayloadV2
-): SignedData[] => {
+): InternalSignedData[] => {
   if ('airnode' in payload) {
     const { airnode } = payload;
     return payload.signedData.flatMap((data) => {
@@ -75,6 +75,7 @@ export const transformAirnodeFeedPayload = (
           signature,
           templateId,
           timestamp,
+          isOevBeacon: false,
         },
         {
           airnode,
@@ -83,12 +84,14 @@ export const transformAirnodeFeedPayload = (
           signature: oevSignature,
           templateId: oevTemplateId,
           timestamp,
+          isOevBeacon: true,
         },
       ];
     });
   }
 
-  return payload;
+  // Airnode feed v1 does not send the data for OEV beacons.
+  return payload.map((data) => ({ ...data, isOevBeacon: false }));
 };
 
 const env = loadEnv();
@@ -185,7 +188,7 @@ export const batchInsertData = async (
     logger.info('Received valid signed data.', { data: sanitizedData });
   }
 
-  const newSignedData: SignedData[] = [];
+  const newSignedData: InternalSignedData[] = [];
   // Because Airnode feed does not keep track of the last timestamp they pushed, it may push the same data twice, which
   // is acceptable, but we only want to store one data for each timestamp.
   for (const signedData of batchSignedData) {
@@ -233,7 +236,7 @@ export const getData = (
   }
   const airnodeAddress = goAirnodeAddresses.data;
 
-  const { delaySeconds, authTokens, hideSignatures } = endpoint;
+  const { delaySeconds, authTokens, hideSignatures, isOev } = endpoint;
   const authToken = extractBearerToken(authorizationHeader);
   if (authTokens !== null && !authTokens.includes(authToken!)) {
     return generateErrorResponse(403, 'Invalid auth token', { authToken });
@@ -245,7 +248,7 @@ export const getData = (
   }
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
-  const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp);
+  const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp, isOev);
   const data = cachedValues.reduce(
     (acc, signedData) => {
       const data = hideSignatures ? omit(signedData, 'beaconId', 'signature') : omit(signedData, 'beaconId');

@@ -28,6 +28,7 @@ export const endpointSchema = z.strictObject({
   authTokens: z.array(z.string()).nonempty().nullable(),
   delaySeconds: z.number().nonnegative().int(),
   hideSignatures: z.boolean().default(false),
+  isOev: z.boolean(),
 });
 
 export type Endpoint = z.infer<typeof endpointSchema>;
@@ -69,16 +70,15 @@ export const configSchema = z.strictObject({
 
 export type Config = z.infer<typeof configSchema>;
 
-export const signedDataSchema = z.strictObject({
-  airnode: evmAddressSchema,
-  templateId: evmIdSchema,
-  beaconId: evmIdSchema,
-  timestamp: z.string(),
-  encodedValue: z.string(),
-  signature: z.string(),
-});
-
-export type SignedData = z.infer<typeof signedDataSchema>;
+export type InternalSignedData = {
+  airnode: string;
+  templateId: string;
+  beaconId: string;
+  timestamp: string;
+  encodedValue: string;
+  signature: string;
+  isOevBeacon: boolean;
+};
 
 export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')]).transform((val) => val === 'true');
 

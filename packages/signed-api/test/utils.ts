@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 
-import type { SignedData } from '../src/schema';
+import type { InternalSignedData } from '../src/schema';
 import { deriveBeaconId } from '../src/utils';
 
 export const deriveTemplateId = (endpointId: string, encodedParameters: string) =>
@@ -28,7 +28,7 @@ export const generateDataSignature = async (
 };
 
 export const createSignedData = async (
-  overrides?: Partial<Omit<SignedData, 'airnode'> & { airnodeWallet: ethers.Wallet }>
+  overrides?: Partial<Omit<InternalSignedData, 'airnode'> & { airnodeWallet: ethers.Wallet }>
 ) => {
   const airnodeWallet = overrides?.airnodeWallet ?? ethers.Wallet.createRandom();
 
