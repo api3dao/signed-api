@@ -1,4 +1,4 @@
-import { type SignedData } from './schema';
+import { type InternalSignedData } from './schema';
 
 export interface ApiResponse {
   statusCode: number;
@@ -8,12 +8,12 @@ export interface ApiResponse {
 
 export type GetUnsignedDataResponseSchema = {
   count: number;
-  data: Record<string /* Beacon ID */, Omit<SignedData, 'signature' | 'beaconId'>>;
+  data: Record<string /* Beacon ID */, Omit<InternalSignedData, 'signature' | 'beaconId'>>;
 };
 
 export type GetSignedDataResponseSchema = {
   count: number;
-  data: Record<string /* Beacon ID */, Omit<SignedData, 'beaconId'>>;
+  data: Record<string /* Beacon ID */, Omit<InternalSignedData, 'beaconId'>>;
 };
 
 export type PostSignedDataResponseSchema = {

@@ -1,14 +1,14 @@
 import { last, uniqBy } from 'lodash';
 
 import { logger } from './logger';
-import type { SignedData } from './schema';
+import type { InternalSignedData } from './schema';
 import { isIgnored } from './utils';
 
 type SignedDataCache = Record<
   string, // Airnode address.
   Record<
     string, // Template ID.
-    SignedData[] // Signed data is ordered by timestamp (oldest first).
+    InternalSignedData[] // Signed data is ordered by timestamp (oldest first).
   >
 >;
 
@@ -38,7 +38,7 @@ export const setCache = (newCache: Cache) => {
   cache = newCache;
 };
 
-export const ignoreTooFreshData = (signedDatas: SignedData[], ignoreAfterTimestamp: number) =>
+export const ignoreTooFreshData = (signedDatas: InternalSignedData[], ignoreAfterTimestamp: number) =>
   signedDatas.filter((data) => !isIgnored(data, ignoreAfterTimestamp));
 
 export const get = (airnodeAddress: string, templateId: string, ignoreAfterTimestamp: number) => {
@@ -51,13 +51,21 @@ export const get = (airnodeAddress: string, templateId: string, ignoreAfterTimes
 };
 
 // The API is deliberately asynchronous to mimic a database call.
-export const getAll = (airnodeAddress: string, ignoreAfterTimestamp: number) => {
-  logger.debug('Getting all signed data.', { airnodeAddress, ignoreAfterTimestamp });
+export const getAll = (airnodeAddress: string, ignoreAfterTimestamp: number, isOev: boolean) => {
+  logger.debug('Getting all signed data.', { airnodeAddress, ignoreAfterTimestamp, isOev });
 
   const cache = getCache();
   const signedDataByTemplateId = cache.signedDataCache[airnodeAddress] ?? {};
-  const freshestSignedData: SignedData[] = [];
+  const freshestSignedData: InternalSignedData[] = [];
   for (const templateId of Object.keys(signedDataByTemplateId)) {
+    if (
+      signedDataByTemplateId[templateId]!.length === 0 ||
+      // Whether the beacon is an OEV beacon depends on the template ID, so we can just check the first one.
+      signedDataByTemplateId[templateId]![0]!.isOevBeacon !== isOev
+    ) {
+      continue;
+    }
+
     const freshest = get(airnodeAddress, templateId, ignoreAfterTimestamp);
     if (freshest) freshestSignedData.push(freshest);
   }
@@ -73,7 +81,7 @@ export const getAllAirnodeAddresses = () => {
   return Object.keys(getCache());
 };
 
-export const put = (signedData: SignedData) => {
+export const put = (signedData: InternalSignedData) => {
   const cache = getCache();
   const { airnode, templateId, timestamp } = signedData;
   cache.signedDataCache[airnode] ??= {};
@@ -87,14 +95,14 @@ export const put = (signedData: SignedData) => {
   else signedDatas.splice(index, 0, signedData);
 };
 
-export const putAll = (signedDataArray: SignedData[]) => {
+export const putAll = (signedDataArray: InternalSignedData[]) => {
   for (const signedData of signedDataArray) put(signedData);
 };
 
 // Removes all signed data that is no longer needed to be kept in memory (because it is too old and there exist a newer
 // signed data for each endpoint). The function is intended to be called after each insertion of new signed data for
 // performance reasons, because it only looks to prune the data that for beacons that have been just inserted.
-export const prune = (signedDataArray: SignedData[], maxIgnoreAfterTimestamp: number) => {
+export const prune = (signedDataArray: InternalSignedData[], maxIgnoreAfterTimestamp: number) => {
   const beaconsToPrune = uniqBy(signedDataArray, 'beaconId');
   logger.debug('Pruning signed data.', { maxIgnoreAfterTimestamp });
   const cache = getCache();
