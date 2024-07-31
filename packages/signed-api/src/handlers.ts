@@ -16,7 +16,13 @@ import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-
 import { logger } from './logger';
 import { evmAddressSchema, type SignedData, type Endpoint } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
-import type { ApiResponse } from './types';
+import type {
+  ApiResponse,
+  PostSignedDataResponseSchema,
+  GetSignedDataResponseSchema,
+  GetUnsignedDataResponseSchema,
+  GetListAirnodesResponseSchema,
+} from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
 export const transformAirnodeFeedPayload = (
@@ -166,13 +172,15 @@ export const batchInsertData = async (
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
   prune(newSignedData, maxIgnoreAfterTimestamp);
 
+  const response: PostSignedDataResponseSchema = {
+    count: newSignedData.length,
+    skipped: batchSignedData.length - newSignedData.length,
+  };
+
   return {
     statusCode: 201,
     headers: createResponseHeaders(), // Inserting data is done through POST request, so we do not cache it.
-    body: JSON.stringify({
-      count: newSignedData.length,
-      skipped: batchSignedData.length - newSignedData.length,
-    }),
+    body: JSON.stringify(response),
   };
 };
 
@@ -204,15 +212,19 @@ export const getData = (
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
   const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp);
-  const data = cachedValues.reduce((acc, signedData) => {
-    const data = hideSignatures ? omit(signedData, 'beaconId', 'signature') : omit(signedData, 'beaconId');
-    return { ...acc, [signedData.beaconId]: data };
-  }, {});
+  const data = cachedValues.reduce(
+    (acc, signedData) => {
+      const data = hideSignatures ? omit(signedData, 'beaconId', 'signature') : omit(signedData, 'beaconId');
+      return { ...acc, [signedData.beaconId]: data };
+    },
+    {} as GetSignedDataResponseSchema['data'] | GetUnsignedDataResponseSchema['data']
+  );
+  const response: GetSignedDataResponseSchema | GetUnsignedDataResponseSchema = { count: cachedValues.length, data };
 
   return {
     statusCode: 200,
     headers: createResponseHeaders(getConfig().cache),
-    body: JSON.stringify({ count: cachedValues.length, data }),
+    body: JSON.stringify(response),
   };
 };
 
@@ -226,9 +238,14 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   }
   const airnodeAddresses = goAirnodeAddresses.data;
 
+  const response: GetListAirnodesResponseSchema = {
+    count: airnodeAddresses.length,
+    'available-airnodes': airnodeAddresses,
+  };
+
   return {
     statusCode: 200,
     headers: createResponseHeaders(getConfig().cache),
-    body: JSON.stringify({ count: airnodeAddresses.length, 'available-airnodes': airnodeAddresses }),
+    body: JSON.stringify(response),
   };
 };
