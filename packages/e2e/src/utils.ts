@@ -20,6 +20,7 @@ export const airnode = ethers.Wallet.fromMnemonic(
   'diamond result history offer forest diagram crop armed stumble orchard stage glance'
 ).address;
 
+// TODO: Use commons
 export const deriveBeaconId = (airnode: string, templateId: string) =>
   ethers.utils.keccak256(ethers.utils.solidityPack(['address', 'bytes32'], [airnode, templateId]));
 

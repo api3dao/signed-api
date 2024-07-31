@@ -28,6 +28,9 @@ export const verifySignedData = (batchSignedData: SignedData[]): VerificationErr
       return { message: 'Signature is invalid', signedData };
     }
 
+    // We are deriving the beacon ID, because the signed data verification runs in a separate worker, which does not
+    // have access to the in-memory cache of the main worker. When the V1 Airnode feeds are no longer used, this check
+    // can be removed, because starting from V2, the beacon ID is not sent.
     const goDeriveBeaconId = goSync(() => deriveBeaconId(signedData.airnode, signedData.templateId));
     if (!goDeriveBeaconId.success) {
       return {

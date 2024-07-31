@@ -4,13 +4,29 @@ import { ethers } from 'ethers';
 import { isNil } from 'lodash';
 
 import { logger } from './logger';
-import { getState } from './state';
-import { signWithTemplateId } from './utils';
+import { getState, setState } from './state';
+import { deriveOevTemplateId, signWithTemplateId } from './utils';
 import type { SignedApiPayloadV2, TemplateId } from './validation/schema';
 
 export type SignedResponse = [TemplateId, SignedApiPayloadV2];
 
 export type TemplateResponse = [TemplateId, { timestamp: string; encodedResponse: ExtractedAndEncodedResponse }];
+
+export const getOevTemplateId = (templateId: string) => {
+  const state = getState();
+  const { templateIdToOevTemplateId } = state;
+
+  if (templateId in templateIdToOevTemplateId) {
+    return templateIdToOevTemplateId[templateId]!;
+  }
+
+  const oevTemplateId = deriveOevTemplateId(templateId);
+  setState({
+    ...state,
+    templateIdToOevTemplateId: { ...templateIdToOevTemplateId, [templateId]: oevTemplateId },
+  });
+  return oevTemplateId;
+};
 
 export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
   logger.debug('Signing template responses.', { templateResponses });
@@ -22,7 +38,7 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
     } = response;
 
     const goSignWithTemplateId = await go(async () => {
-      const oevTemplateId = ethers.utils.solidityKeccak256(['bytes32'], [templateId]); // TODO: Cache this
+      const oevTemplateId = getOevTemplateId(templateId);
       return {
         baseSignature: await signWithTemplateId(getState().airnodeWallet, templateId, timestamp, encodedValue),
         oevSignature: await signWithTemplateId(getState().airnodeWallet, oevTemplateId, timestamp, encodedValue),
