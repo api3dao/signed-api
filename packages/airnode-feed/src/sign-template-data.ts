@@ -1,6 +1,5 @@
 import type { ExtractedAndEncodedResponse } from '@api3/airnode-adapter';
 import { go } from '@api3/promise-utils';
-import { ethers } from 'ethers';
 import { isNil } from 'lodash';
 
 import { logger } from './logger';
@@ -31,7 +30,7 @@ export const getOevTemplateId = (templateId: string) => {
 export const signTemplateResponses = async (templateResponses: TemplateResponse[]) => {
   logger.debug('Signing template responses.', { templateResponses });
 
-  const signPromises = templateResponses.map(async ([templateId, response]) => {
+  const signPromises = templateResponses.map(async ([templateId, response]): Promise<SignedResponse | null> => {
     const {
       timestamp,
       encodedResponse: { encodedValue },
@@ -59,9 +58,10 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
         encodedValue,
         signature: goSignWithTemplateId.data.baseSignature,
         oevSignature: goSignWithTemplateId.data.oevSignature,
+        templateId,
       },
-    ];
+    ] as SignedResponse;
   });
   const signedResponsesOrNull = await Promise.all(signPromises);
-  return signedResponsesOrNull.filter((response): response is SignedResponse => !isNil(response));
+  return signedResponsesOrNull.filter((response) => !isNil(response));
 };

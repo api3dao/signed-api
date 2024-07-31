@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import { omit } from 'lodash';
 
 import type { InternalSignedData } from '../src/schema';
 import { deriveBeaconId } from '../src/utils';
@@ -28,6 +29,13 @@ export const generateDataSignature = async (
 };
 
 export const createSignedData = async (
+  overrides?: Partial<Omit<InternalSignedData, 'airnode' | 'isOevBeacon'> & { airnodeWallet: ethers.Wallet }>
+) => {
+  const signedData = await createInternalSignedData(overrides);
+  return omit(signedData, 'isOevBeacon');
+};
+
+export const createInternalSignedData = async (
   overrides?: Partial<Omit<InternalSignedData, 'airnode'> & { airnodeWallet: ethers.Wallet }>
 ) => {
   const airnodeWallet = overrides?.airnodeWallet ?? ethers.Wallet.createRandom();
@@ -39,6 +47,7 @@ export const createSignedData = async (
   const encodedValue = overrides?.encodedValue ?? '0x00000000000000000000000000000000000000000000005718e3a22ce01f7a40';
   const signature =
     overrides?.signature ?? (await generateDataSignature(airnodeWallet, templateId, timestamp, encodedValue));
+  const isOevBeacon = overrides?.isOevBeacon ?? false;
 
   return {
     airnode,
@@ -47,5 +56,6 @@ export const createSignedData = async (
     timestamp,
     encodedValue,
     signature,
+    isOevBeacon,
   };
 };
