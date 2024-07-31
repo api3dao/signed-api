@@ -286,6 +286,7 @@ export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
 export const signatureSchema = z.string().regex(/^0x[\dA-Fa-f]{130}$/);
 
 export const signedDataSchema = z.strictObject({
+  templateId: config.evmIdSchema,
   timestamp: z.string(),
   encodedValue: encodedValueSchema,
   signature: signatureSchema,
@@ -293,31 +294,29 @@ export const signedDataSchema = z.strictObject({
 
 export type SignedData = z.infer<typeof signedDataSchema>;
 
-export const signedApiPayloadSchemaV1 = signedDataSchema.extend({
+export const signedApiPayloadV1Schema = signedDataSchema.extend({
   beaconId: config.evmIdSchema,
   airnode: config.evmAddressSchema,
-  templateId: config.evmIdSchema,
 });
 
-export type SignedApiPayloadV1 = z.infer<typeof signedApiPayloadSchemaV1>;
+export type SignedApiPayloadV1 = z.infer<typeof signedApiPayloadV1Schema>;
 
-export const signedApiPayloadSchemaV2 = signedDataSchema.extend({
-  templateId: config.evmIdSchema,
+export const signedApiPayloadV2Schema = signedDataSchema.extend({
   oevSignature: config.evmAddressSchema,
 });
 
-export type SignedApiPayloadV2 = z.infer<typeof signedApiPayloadSchemaV2>;
+export type SignedApiPayloadV2 = z.infer<typeof signedApiPayloadV2Schema>;
 
-export const signedApiBatchPayloadSchemaV1 = z.array(signedApiPayloadSchemaV1);
+export const signedApiBatchPayloadV1Schema = z.array(signedApiPayloadV1Schema);
 
-export type SignedApiBatchPayloadV1 = z.infer<typeof signedApiBatchPayloadSchemaV1>;
+export type SignedApiBatchPayloadV1 = z.infer<typeof signedApiBatchPayloadV1Schema>;
 
-export const signedApiBatchPayloadSchemaV2 = z.strictObject({
+export const signedApiBatchPayloadV2Schema = z.strictObject({
   airnode: config.evmAddressSchema,
-  signedData: z.array(signedApiPayloadSchemaV2),
+  signedData: z.array(signedApiPayloadV2Schema),
 });
 
-export type SignedApiBatchPayloadV2 = z.infer<typeof signedApiBatchPayloadSchemaV2>;
+export type SignedApiBatchPayloadV2 = z.infer<typeof signedApiBatchPayloadV2Schema>;
 
 export const secretsSchema = z.record(z.string());
 

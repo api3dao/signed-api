@@ -1,4 +1,12 @@
+import {
+  type SignedApiBatchPayloadV1,
+  signedApiBatchPayloadV1Schema,
+  type SignedApiBatchPayloadV2,
+  signedApiBatchPayloadV2Schema,
+} from '@api3/airnode-feed';
+import { deriveBeaconId, type Hex } from '@api3/commons';
 import { go, goSync } from '@api3/promise-utils';
+import { ethers } from 'ethers';
 import { isEmpty, omit, pick } from 'lodash';
 
 import { getConfig } from './config/config';
@@ -6,10 +14,42 @@ import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
-import { type SignedData, batchSignedDataSchema, evmAddressSchema, type Endpoint } from './schema';
+import { evmAddressSchema, type SignedData, type Endpoint } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
 import type { ApiResponse } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
+
+export const transformAirnodeFeedPayload = (
+  payload: SignedApiBatchPayloadV1 | SignedApiBatchPayloadV2
+): SignedData[] => {
+  if ('airnode' in payload) {
+    const { airnode } = payload;
+    return payload.signedData.flatMap((data) => {
+      const { templateId, encodedValue, oevSignature, signature, timestamp } = data;
+      const oevTemplateId = ethers.utils.solidityKeccak256(['bytes32'], [templateId]); // TODO: Cache this
+      return [
+        {
+          airnode,
+          beaconId: deriveBeaconId(airnode as Hex, templateId as Hex), // TODO: Cache
+          encodedValue,
+          signature,
+          templateId,
+          timestamp,
+        },
+        {
+          airnode,
+          beaconId: deriveBeaconId(airnode as Hex, oevTemplateId as Hex), // TODO: Cache
+          encodedValue,
+          signature: oevSignature,
+          templateId: oevTemplateId,
+          timestamp,
+        },
+      ];
+    });
+  }
+
+  return payload;
+};
 
 const env = loadEnv();
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
@@ -47,15 +87,23 @@ export const batchInsertData = async (
     }
   }
 
-  const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(rawRequestBody));
-  if (!goValidateSchema.success) {
+  // Parse the request body. Try parsing v2 schema first and fallback to v1 if validation fails.
+  const v2ParsingResult = await signedApiBatchPayloadV2Schema.safeParseAsync(rawRequestBody);
+  const v1ParsingResult = v2ParsingResult.success
+    ? undefined
+    : await signedApiBatchPayloadV1Schema.safeParseAsync(rawRequestBody);
+  if (!v2ParsingResult.success && !v1ParsingResult?.success) {
     return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
-      detail: goValidateSchema.error.message,
+      detail: v2ParsingResult.error.message,
     });
   }
 
+  // Create the batched signed data from the Airnode feed payload.
+  const batchSignedData = transformAirnodeFeedPayload(
+    v2ParsingResult.success ? v2ParsingResult.data : v1ParsingResult!.data!
+  );
+
   // Ensure there is at least one signed data to push.
-  const batchSignedData = goValidateSchema.data;
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
 
   // Check if all signed data is from the same airnode.

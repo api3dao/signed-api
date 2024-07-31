@@ -1,22 +1,18 @@
 import { executeRequest } from '@api3/commons';
-import { isEmpty, isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { logger } from '../logger';
 import type { SignedResponse } from '../sign-template-data';
 import { getState } from '../state';
-import { type SignedApiPayloadV2, signedApiResponseSchema } from '../validation/schema';
+import { signedApiResponseSchema } from '../validation/schema';
 
-export const pushSignedData = async (signedResponses: SignedResponse[]) => {
+export const pushSignedData = async (batchPayload: SignedResponse[]) => {
   const {
     config: { signedApis },
     airnodeWallet,
   } = getState();
 
   const airnode = airnodeWallet.address;
-  const batchPayloadOrNull = signedResponses.map(([templateId, signedData]): SignedApiPayloadV2 | null => {
-    return { templateId, ...signedData };
-  });
-  const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayloadV2 => !isNil(payload));
   if (isEmpty(batchPayload)) {
     logger.debug('No batch payload found to post. Skipping.');
     return null;

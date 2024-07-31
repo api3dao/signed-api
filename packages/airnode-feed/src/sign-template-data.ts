@@ -6,11 +6,9 @@ import { isNil } from 'lodash';
 import { logger } from './logger';
 import { getState } from './state';
 import { signWithTemplateId } from './utils';
-import type { SignedData, TemplateId } from './validation/schema';
+import type { SignedApiPayloadV2, TemplateId } from './validation/schema';
 
-export type ExtendedSignedData = SignedData & { oevSignature: string };
-
-export type SignedResponse = [TemplateId, ExtendedSignedData];
+export type SignedResponse = [TemplateId, SignedApiPayloadV2];
 
 export type TemplateResponse = [TemplateId, { timestamp: string; encodedResponse: ExtractedAndEncodedResponse }];
 

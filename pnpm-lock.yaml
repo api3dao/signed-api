@@ -151,6 +151,9 @@ importers:
 
   packages/signed-api:
     dependencies:
+      '@api3/airnode-feed':
+        specifier: workspace:*
+        version: link:../airnode-feed
       '@api3/commons':
         specifier: ^0.12.0
         version: 0.12.0

@@ -80,10 +80,6 @@ export const signedDataSchema = z.strictObject({
 
 export type SignedData = z.infer<typeof signedDataSchema>;
 
-export const batchSignedDataSchema = z.array(signedDataSchema);
-
-export type BatchSignedData = z.infer<typeof batchSignedDataSchema>;
-
 export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')]).transform((val) => val === 'true');
 
 // We apply default values to make it convenient to omit certain environment variables. The default values should be
