@@ -1,11 +1,11 @@
+import { type SignedData } from '@api3/airnode-feed';
 import { ethers } from 'ethers';
 
 import { createResponseHeaders } from './headers';
-import type { BatchSignedData, SignedData } from './schema';
 import type { ApiResponse } from './types';
 
-export const isBatchUnique = (batchSignedData: BatchSignedData) => {
-  return batchSignedData.length === new Set(batchSignedData.map(({ beaconId }) => beaconId)).size;
+export const isBatchUnique = (batchSignedData: SignedData[]) => {
+  return batchSignedData.length === new Set(batchSignedData.map(({ templateId }) => templateId)).size;
 };
 
 export const isIgnored = (signedData: SignedData, ignoreAfterTimestamp: number) => {
