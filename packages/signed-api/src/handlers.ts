@@ -1,4 +1,5 @@
 import {
+  deriveOevTemplateId,
   type SignedApiBatchPayloadV1,
   signedApiBatchPayloadV1Schema,
   type SignedApiBatchPayloadV2,
@@ -6,13 +7,12 @@ import {
 } from '@api3/airnode-feed';
 import { deriveBeaconId, type Hex } from '@api3/commons';
 import { go, goSync } from '@api3/promise-utils';
-import { ethers } from 'ethers';
 import { isEmpty, omit, pick } from 'lodash';
 
 import { getConfig } from './config/config';
 import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
-import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
+import { get, getAll, getAllAirnodeAddresses, getCache, prune, putAll, setCache } from './in-memory-cache';
 import { logger } from './logger';
 import { evmAddressSchema, type SignedData, type Endpoint } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
@@ -25,6 +25,40 @@ import type {
 } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
+// TODO: Move from handlers
+export const getOevTemplateId = (templateId: string) => {
+  const cache = getCache();
+  if (templateId in cache.templateIdToOevTemplateId) {
+    return cache.templateIdToOevTemplateId[templateId]!;
+  }
+
+  const oevTemplateId = deriveOevTemplateId(templateId);
+  setCache({
+    ...cache,
+    templateIdToOevTemplateId: { ...cache.templateIdToOevTemplateId, [templateId]: oevTemplateId },
+  });
+  return oevTemplateId;
+};
+
+// TODO: Move from handlers
+export const getBeaconId = (airnode: string, templateId: string) => {
+  const cache = getCache();
+  if (cache.airnodeToTemplateIdToBeaconId[airnode]?.[templateId]) {
+    return cache.airnodeToTemplateIdToBeaconId[airnode][templateId];
+  }
+
+  const beaconId = deriveBeaconId(airnode as Hex, templateId as Hex);
+  setCache({
+    ...cache,
+    airnodeToTemplateIdToBeaconId: {
+      ...cache.airnodeToTemplateIdToBeaconId,
+      [airnode]: { ...cache.airnodeToTemplateIdToBeaconId[airnode], [templateId]: beaconId },
+    },
+  });
+  return beaconId;
+};
+
+// TODO: Move from handlers
 export const transformAirnodeFeedPayload = (
   payload: SignedApiBatchPayloadV1 | SignedApiBatchPayloadV2
 ): SignedData[] => {
@@ -32,11 +66,11 @@ export const transformAirnodeFeedPayload = (
     const { airnode } = payload;
     return payload.signedData.flatMap((data) => {
       const { templateId, encodedValue, oevSignature, signature, timestamp } = data;
-      const oevTemplateId = ethers.utils.solidityKeccak256(['bytes32'], [templateId]); // TODO: Cache this
+      const oevTemplateId = getOevTemplateId(templateId);
       return [
         {
           airnode,
-          beaconId: deriveBeaconId(airnode as Hex, templateId as Hex), // TODO: Cache
+          beaconId: getBeaconId(airnode, templateId),
           encodedValue,
           signature,
           templateId,
@@ -44,7 +78,7 @@ export const transformAirnodeFeedPayload = (
         },
         {
           airnode,
-          beaconId: deriveBeaconId(airnode as Hex, oevTemplateId as Hex), // TODO: Cache
+          beaconId: getBeaconId(airnode, oevTemplateId),
           encodedValue,
           signature: oevSignature,
           templateId: oevTemplateId,
