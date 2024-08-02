@@ -1,9 +1,9 @@
 import { deriveOevTemplateId } from '@api3/airnode-feed';
-import { executeRequest } from '@api3/commons';
+import { deriveBeaconId, executeRequest, type Hex } from '@api3/commons';
 import { type GetSignedDataResponseSchema } from '@api3/signed-api';
 import { ethers } from 'ethers';
 
-import { airnode, createSignedData, deriveBeaconId, formatData } from '../src/utils';
+import { airnode, createSignedData, formatData } from '../src/utils';
 
 test('respects the delay', async () => {
   const start = Date.now();
@@ -96,7 +96,7 @@ test.only('returns OEV beacons from OEV endpoint', async () => {
   expect(Object.keys(realTimeOevBeacons.data).toSorted()).toStrictEqual(
     Object.values(realTimeBaseBeacons.data)
       .map((data) => deriveOevTemplateId(data.templateId))
-      .map((oevTemplateId) => deriveBeaconId(airnode, oevTemplateId))
+      .map((oevTemplateId) => deriveBeaconId(airnode as Hex, oevTemplateId as Hex))
       .toSorted()
   );
 });
