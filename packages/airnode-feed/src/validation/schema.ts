@@ -302,7 +302,7 @@ export const signedApiPayloadV1Schema = signedDataSchema.extend({
 export type SignedApiPayloadV1 = z.infer<typeof signedApiPayloadV1Schema>;
 
 export const signedApiPayloadV2Schema = signedDataSchema.extend({
-  oevSignature: config.evmAddressSchema,
+  oevSignature: signatureSchema,
 });
 
 export type SignedApiPayloadV2 = z.infer<typeof signedApiPayloadV2Schema>;
