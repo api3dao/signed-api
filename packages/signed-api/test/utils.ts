@@ -1,3 +1,4 @@
+import { deriveOevTemplateId, type SignedApiPayloadV1, type SignedApiPayloadV2 } from '@api3/airnode-feed';
 import { ethers } from 'ethers';
 import { omit } from 'lodash';
 
@@ -28,11 +29,25 @@ export const generateDataSignature = async (
   );
 };
 
-export const createSignedData = async (
-  overrides?: Partial<Omit<InternalSignedData, 'airnode' | 'isOevBeacon'> & { airnodeWallet: ethers.Wallet }>
+export const createSignedDataV1 = async (
+  overrides?: Partial<Omit<SignedApiPayloadV1, 'airnode'> & { airnodeWallet: ethers.Wallet }>
 ) => {
   const signedData = await createInternalSignedData(overrides);
   return omit(signedData, 'isOevBeacon');
+};
+
+export const createSignedDataV2 = async (
+  overrides?: Partial<Omit<SignedApiPayloadV2, 'airnode'> & { airnodeWallet: ethers.Wallet }>
+) => {
+  const signedData = await createInternalSignedData(overrides);
+  const baseSignedData = omit(signedData, 'airnode', 'beaconId', 'isOevBeacon');
+  const { templateId, timestamp, encodedValue } = signedData;
+
+  const airnodeWallet = overrides?.airnodeWallet ?? ethers.Wallet.createRandom();
+  const oevTemplateId = deriveOevTemplateId(templateId);
+  const oevSignature =
+    overrides?.oevSignature ?? (await generateDataSignature(airnodeWallet, oevTemplateId, timestamp, encodedValue));
+  return { ...baseSignedData, oevSignature };
 };
 
 export const createInternalSignedData = async (
