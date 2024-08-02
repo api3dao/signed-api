@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import { logger } from '../logger';
 import type { SignedResponse } from '../sign-template-data';
 import { getState } from '../state';
-import { signedApiResponseSchema } from '../validation/schema';
+import { type SignedApiBatchPayloadV2, signedApiResponseSchema } from '../validation/schema';
 
 export const pushSignedData = async (batchPayload: SignedResponse[]) => {
   const {
@@ -21,10 +21,14 @@ export const pushSignedData = async (batchPayload: SignedResponse[]) => {
   const promises = signedApis.map(async (signedApi) => {
     return logger.runWithContext({ signedApiName: signedApi.name }, async () => {
       logger.debug('Pushing signed data to the signed API.');
+      const body: SignedApiBatchPayloadV2 = {
+        airnode,
+        signedData: batchPayload.map(([_, data]) => data),
+      };
       const requestResult = await executeRequest({
         method: 'post',
         url: new URL(airnode, signedApi.url).href,
-        body: batchPayload,
+        body,
         headers: {
           'Content-Type': 'application/json',
           ...(signedApi.authToken ? { Authorization: `Bearer ${signedApi.authToken}` } : {}),

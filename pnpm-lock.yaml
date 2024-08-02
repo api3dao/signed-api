@@ -111,12 +111,18 @@ importers:
 
   packages/e2e:
     dependencies:
+      '@api3/airnode-feed':
+        specifier: workspace:*
+        version: link:../airnode-feed
       '@api3/commons':
         specifier: ^0.12.0
         version: 0.12.0
       '@api3/promise-utils':
         specifier: ^0.4.0
         version: 0.4.0
+      '@api3/signed-api':
+        specifier: workspace:*
+        version: link:../signed-api
       axios:
         specifier: ^1.7.4
         version: 1.7.5
