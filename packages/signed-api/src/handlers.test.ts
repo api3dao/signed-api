@@ -1,81 +1,114 @@
+import { type SignedApiBatchPayloadV2, type SignedApiBatchPayloadV1, deriveOevTemplateId } from '@api3/airnode-feed';
 import { ethers } from 'ethers';
 import { omit } from 'lodash';
 import type Pool from 'workerpool/types/Pool';
 
 import { getMockedConfig } from '../test/fixtures';
-import { createSignedData, generateRandomBytes, generateRandomWallet } from '../test/utils';
+import {
+  createInternalSignedData,
+  createSignedDataV1,
+  createSignedDataV2,
+  generateRandomBytes,
+  generateRandomWallet,
+} from '../test/utils';
 
 import * as configModule from './config/config';
 import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
 import * as inMemoryCacheModule from './in-memory-cache';
 import { logger } from './logger';
 import { initializeVerifierPool } from './signed-data-verifier-pool';
+import { type ApiResponse } from './types';
 import { deriveBeaconId } from './utils';
 
 let workerPool: Pool;
 
-// eslint-disable-next-line jest/no-hooks
 beforeAll(() => {
   // Done in beforeAll to avoid initializing the pool for each test for performance reasons.
   workerPool = initializeVerifierPool();
 });
 
-// eslint-disable-next-line jest/no-hooks
 beforeEach(() => {
   jest.spyOn(configModule, 'getConfig').mockImplementation(getMockedConfig);
 });
 
 afterEach(() => {
-  inMemoryCacheModule.setCache({});
+  inMemoryCacheModule.setCache(inMemoryCacheModule.getInitialCache());
 });
 
 afterAll(async () => {
   await workerPool.terminate();
 });
 
+const parseResponse = <T = unknown>(response: ApiResponse) => {
+  return { ...response, body: JSON.parse(response.body) } as {
+    statusCode: number;
+    headers: Record<string, string>;
+    body: T;
+  };
+};
+
 describe(batchInsertData.name, () => {
-  it('validates signature', async () => {
-    const invalidData = await createSignedData({ signature: '0xInvalid' });
+  it('verifies response shape', async () => {
+    const invalidData = await createSignedDataV1({ signature: '0xInvalid' });
 
     const result = await batchInsertData(undefined, [invalidData], invalidData.airnode);
-
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'Unable to recover signer address',
-        context: {
-          detail:
-            'signature missing v and recoveryParam (argument="signature", value="0xInvalid", code=INVALID_ARGUMENT, version=bytes/5.7.0)',
-          signedData: invalidData,
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    const { body, statusCode } = parseResponse(result);
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Invalid request, body must fit schema for batch of signed data',
+      context: {
+        v1ParsingIssues: [
+          {
+            validation: 'regex',
+            code: 'invalid_string',
+            message: 'Invalid',
+            path: [0, 'signature'],
+          },
+        ],
+        v2ParsingIssues: [
+          {
+            code: 'invalid_type',
+            expected: 'object',
+            received: 'array',
+            path: [],
+            message: 'Expected object, received array',
+          },
+        ],
       },
-      statusCode: 400,
+    });
+  }, 10_000);
+
+  it('verifies signature', async () => {
+    const invalidData = await createSignedDataV1({
+      signature:
+        '0xaa5f77b3141527b67903699c77f2fd66e1cdcdb71c7d586addc4e5f6b0a5ca25537495389753795b6c23240a45bb5a1295a9c2aa526385702c54863a0f94f45d1c',
+    });
+
+    const result = await batchInsertData(undefined, [invalidData], invalidData.airnode);
+    const { body, statusCode } = parseResponse(result);
+
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Signature is invalid',
+      context: {
+        signedData: { ...invalidData, isOevBeacon: false },
+      },
     });
   }, 10_000);
 
   it('validates beacon ID', async () => {
-    const data = await createSignedData();
+    const data = await createSignedDataV1();
     const invalidData = { ...data, beaconId: deriveBeaconId(data.airnode, generateRandomBytes(32)) };
 
     const result = await batchInsertData(undefined, [invalidData], invalidData.airnode);
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'beaconId is invalid',
-        context: {
-          signedData: invalidData,
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'beaconId is invalid',
+      context: {
+        signedData: { ...invalidData, isOevBeacon: false },
       },
-      statusCode: 400,
     });
   }, 10_000);
 
@@ -86,40 +119,37 @@ describe(batchInsertData.name, () => {
     const airnodeWallet = ethers.Wallet.fromMnemonic(
       'wear lawsuit design cry express certain knock shrug credit wealth update walk'
     );
-    const batchData = [await createSignedData({ airnodeWallet })];
+    const batchData = [await createSignedDataV1({ airnodeWallet })];
 
     const result = await batchInsertData(undefined, batchData, airnodeWallet.address);
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'Unauthorized Airnode address',
-        context: { airnodeAddress: '0x05E4B3cb2A6875bdD4CCb867B6aA833934EDDCBf' },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
-      },
-      statusCode: 403,
+    expect(statusCode).toBe(403);
+    expect(body).toStrictEqual({
+      message: 'Unauthorized Airnode address',
+      context: { airnodeAddress: airnodeWallet.address },
     });
-    expect(inMemoryCacheModule.getCache()).toStrictEqual({});
+    expect(inMemoryCacheModule.getCache()).toStrictEqual(inMemoryCacheModule.getInitialCache());
   });
 
   it('skips signed data if there exists one with the same timestamp', async () => {
     const airnodeWallet = generateRandomWallet();
-    const storedSignedData = await createSignedData({ airnodeWallet });
+    const storedSignedData = await createInternalSignedData({ airnodeWallet });
     inMemoryCacheModule.setCache({
-      [storedSignedData.airnode]: {
-        [storedSignedData.templateId]: [storedSignedData],
+      ...inMemoryCacheModule.getCache(),
+      signedDataCache: {
+        [storedSignedData.airnode]: {
+          [storedSignedData.templateId]: [storedSignedData],
+        },
       },
     });
     const batchData = [
-      await createSignedData({
+      await createSignedDataV1({
         airnodeWallet,
         templateId: storedSignedData.templateId,
         timestamp: storedSignedData.timestamp,
       }),
-      await createSignedData({ airnodeWallet }),
+      await createSignedDataV1({ airnodeWallet }),
     ];
     jest.spyOn(logger, 'debug');
 
@@ -134,25 +164,23 @@ describe(batchInsertData.name, () => {
       },
       statusCode: 201,
     });
-    expect(inMemoryCacheModule.getCache()[storedSignedData.airnode]![storedSignedData.templateId]).toHaveLength(1);
+    expect(
+      inMemoryCacheModule.getCache().signedDataCache[storedSignedData.airnode]![storedSignedData.templateId]
+    ).toHaveLength(1);
   });
 
   it('rejects a batch if there is a beacon with timestamp too far in the future', async () => {
-    const invalidData = await createSignedData({ timestamp: (Math.floor(Date.now() / 1000) + 60 * 60 * 2).toString() });
+    const invalidData = await createSignedDataV1({
+      timestamp: (Math.floor(Date.now() / 1000) + 60 * 60 * 2).toString(),
+    });
 
     const result = await batchInsertData(undefined, [invalidData], invalidData.airnode);
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'Request timestamp is too far in the future',
-        context: { signedData: invalidData },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
-      },
-      statusCode: 400,
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Request timestamp is too far in the future',
+      context: { signedData: { ...invalidData, isOevBeacon: false } },
     });
   });
 
@@ -164,28 +192,19 @@ describe(batchInsertData.name, () => {
       'clay drift protect wise love frost tourist eyebrow glide cost comfort punch'
     );
     const batchData = [
-      await createSignedData({ airnodeWallet: airnodeWallet1 }),
-      await createSignedData({ airnodeWallet: airnodeWallet2 }),
+      await createSignedDataV1({ airnodeWallet: airnodeWallet1 }),
+      await createSignedDataV1({ airnodeWallet: airnodeWallet2 }),
     ];
 
     const result = await batchInsertData(undefined, batchData, airnodeWallet1.address);
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'All signed data must be from the same Airnode address',
-        context: {
-          airnodeAddresses: [
-            '0x27f093777962Bb743E6cAC44cd724B84B725408a',
-            '0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb',
-          ],
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'All signed data must be from the same Airnode address',
+      context: {
+        airnodeAddresses: ['0x27f093777962Bb743E6cAC44cd724B84B725408a', '0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb'],
       },
-      statusCode: 400,
     });
   });
 
@@ -197,48 +216,42 @@ describe(batchInsertData.name, () => {
       'clay drift protect wise love frost tourist eyebrow glide cost comfort punch'
     );
     const batchData = [
-      await createSignedData({ airnodeWallet: airnodeWallet2 }),
-      await createSignedData({ airnodeWallet: airnodeWallet2 }),
+      await createSignedDataV1({ airnodeWallet: airnodeWallet2 }),
+      await createSignedDataV1({ airnodeWallet: airnodeWallet2 }),
     ];
 
     const result = await batchInsertData(undefined, batchData, airnodeWallet1.address);
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        message: 'Airnode address in the path parameter does not match one in the signed data',
-        context: {
-          airnodeAddress: airnodeWallet1.address,
-          signedData: batchData[0],
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Airnode address in the path parameter does not match one in the signed data',
+      context: {
+        airnodeAddress: airnodeWallet1.address,
+        signedData: { ...batchData[0], isOevBeacon: false },
       },
-      statusCode: 400,
     });
   });
 
   it('inserts the batch if data is valid', async () => {
     const airnodeWallet = generateRandomWallet();
-    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+    const batchData = [await createSignedDataV1({ airnodeWallet }), await createSignedDataV1({ airnodeWallet })];
 
     const result = await batchInsertData(undefined, batchData, airnodeWallet.address);
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({ count: 2, skipped: 0 }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
-      },
-      statusCode: 201,
+    expect(statusCode).toBe(201);
+    expect(body).toStrictEqual({
+      count: 2,
+      skipped: 0,
     });
     expect(inMemoryCacheModule.getCache()).toStrictEqual({
-      [batchData[0]!.airnode]: {
-        [batchData[0]!.templateId]: [batchData[0]],
-        [batchData[1]!.templateId]: [batchData[1]],
+      ...inMemoryCacheModule.getInitialCache(),
+      signedDataCache: {
+        [batchData[0]!.airnode]: {
+          [batchData[0]!.templateId]: [{ ...batchData[0], isOevBeacon: false }],
+          [batchData[1]!.templateId]: [{ ...batchData[1], isOevBeacon: false }],
+        },
       },
     });
   });
@@ -247,11 +260,11 @@ describe(batchInsertData.name, () => {
 describe(getData.name, () => {
   it('drops the request if the airnode address is invalid', async () => {
     const airnodeWallet = generateRandomWallet();
-    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+    const batchData = [await createSignedDataV1({ airnodeWallet }), await createSignedDataV1({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
     const result = getData(
-      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false },
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false, isOev: false },
       undefined,
       '0xInvalid'
     );
@@ -269,29 +282,23 @@ describe(getData.name, () => {
 
   it('returns the live data', async () => {
     const airnodeWallet = generateRandomWallet();
-    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+    const batchData = [await createSignedDataV1({ airnodeWallet }), await createSignedDataV1({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
     const result = getData(
-      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false },
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false, isOev: false },
       undefined,
       airnodeWallet.address
     );
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        count: 2,
-        data: {
-          [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId'),
-          [batchData[1]!.beaconId]: omit(batchData[1], 'beaconId'),
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 2,
+      data: {
+        [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId', 'isOevBeacon'),
+        [batchData[1]!.beaconId]: omit(batchData[1], 'beaconId', 'isOevBeacon'),
       },
-      statusCode: 200,
     });
   });
 
@@ -299,81 +306,215 @@ describe(getData.name, () => {
     const airnodeWallet = generateRandomWallet();
     const delayTimestamp = (Math.floor(Date.now() / 1000) - 60).toString(); // Delayed by 60 seconds
     const batchData = [
-      await createSignedData({ airnodeWallet, timestamp: delayTimestamp }),
-      await createSignedData({ airnodeWallet }),
+      await createSignedDataV1({ airnodeWallet, timestamp: delayTimestamp }),
+      await createSignedDataV1({ airnodeWallet }),
     ];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
     const result = getData(
-      { authTokens: null, delaySeconds: 30, urlPath: 'path', hideSignatures: false },
+      { authTokens: null, delaySeconds: 30, urlPath: 'path', hideSignatures: false, isOev: false },
       undefined,
       airnodeWallet.address
     );
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        count: 1,
-        data: {
-          [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId'),
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 1,
+      data: {
+        [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId', 'isOevBeacon'),
       },
-      statusCode: 200,
     });
   });
 
   it('returns the data without signatures when hideSignatures flag is enabled', async () => {
     const airnodeWallet = generateRandomWallet();
-    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+    const batchData = [await createSignedDataV1({ airnodeWallet }), await createSignedDataV1({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
     const result = getData(
-      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: true },
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: true, isOev: false },
       undefined,
       airnodeWallet.address
     );
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        count: 2,
-        data: {
-          [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId', 'signature'),
-          [batchData[1]!.beaconId]: omit(batchData[1], 'beaconId', 'signature'),
-        },
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 2,
+      data: {
+        [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId', 'signature', 'isOevBeacon'),
+        [batchData[1]!.beaconId]: omit(batchData[1], 'beaconId', 'signature', 'isOevBeacon'),
       },
-      statusCode: 200,
     });
   });
+
+  it('accepts the v1 data format', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const batchData: SignedApiBatchPayloadV1 = [
+      await createSignedDataV1({ airnodeWallet }),
+      await createSignedDataV1({ airnodeWallet }),
+    ];
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false, isOev: false },
+      undefined,
+      airnodeWallet.address
+    );
+    const { body, statusCode } = parseResponse(result);
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 2,
+      data: {
+        [batchData[0]!.beaconId]: omit(batchData[0], 'beaconId', 'isOevBeacon'),
+        [batchData[1]!.beaconId]: omit(batchData[1], 'beaconId', 'isOevBeacon'),
+      },
+    });
+  });
+
+  it('accepts the v2 data format', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const airnode = airnodeWallet.address;
+    const batchData: SignedApiBatchPayloadV2 = {
+      airnode,
+      signedData: [await createSignedDataV2({ airnodeWallet }), await createSignedDataV2({ airnodeWallet })],
+    };
+    const beaconId1 = deriveBeaconId(airnodeWallet.address, batchData.signedData[0]!.templateId);
+    const beaconId2 = deriveBeaconId(airnodeWallet.address, batchData.signedData[1]!.templateId);
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false, isOev: false },
+      undefined,
+      airnodeWallet.address
+    );
+    const { body, statusCode } = parseResponse(result);
+
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 2,
+      data: {
+        [beaconId1]: { ...omit(batchData.signedData[0], 'beaconId', 'isOevBeacon', 'oevSignature'), airnode },
+        [beaconId2]: { ...omit(batchData.signedData[1], 'beaconId', 'isOevBeacon', 'oevSignature'), airnode },
+      },
+    });
+  });
+
+  it('returns only OEV beacons for OEV endpoint', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const airnode = airnodeWallet.address;
+    const batchData: SignedApiBatchPayloadV2 = {
+      airnode,
+      signedData: [await createSignedDataV2({ airnodeWallet }), await createSignedDataV2({ airnodeWallet })],
+    };
+    const oevTemplateId1 = deriveOevTemplateId(batchData.signedData[0]!.templateId);
+    const oevTemplateId2 = deriveOevTemplateId(batchData.signedData[1]!.templateId);
+    const beaconId1 = deriveBeaconId(airnodeWallet.address, oevTemplateId1);
+    const beaconId2 = deriveBeaconId(airnodeWallet.address, oevTemplateId2);
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false, isOev: true },
+      undefined,
+      airnodeWallet.address
+    );
+    const { body, statusCode } = parseResponse(result);
+
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 2,
+      data: {
+        [beaconId1]: {
+          ...omit(batchData.signedData[0], 'beaconId', 'isOevBeacon', 'oevSignature'),
+          airnode,
+          templateId: oevTemplateId1,
+          signature: batchData.signedData[0]!.oevSignature,
+        },
+        [beaconId2]: {
+          ...omit(batchData.signedData[1], 'beaconId', 'isOevBeacon', 'oevSignature'),
+          airnode,
+          templateId: oevTemplateId2,
+          signature: batchData.signedData[1]!.oevSignature,
+        },
+      },
+    });
+  });
+
+  it('returns no OEV beacons for OEV endpoint when airnode-feed is v1', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const batchData: SignedApiBatchPayloadV1 = [
+      await createSignedDataV1({ airnodeWallet }),
+      await createSignedDataV1({ airnodeWallet }),
+    ];
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+
+    const result = getData(
+      { authTokens: null, delaySeconds: 0, urlPath: 'path', hideSignatures: false, isOev: true },
+      undefined,
+      airnodeWallet.address
+    );
+    const { body, statusCode } = parseResponse(result);
+
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 0,
+      data: {},
+    });
+  });
+
+  it('fails to insert invalid OEV data', async () => {
+    const airnodeWallet = generateRandomWallet();
+    // The signature is a random string of the correct length, mocking some Airnode feed issue.
+    const invalidData = await createSignedDataV2({
+      airnodeWallet,
+      oevSignature:
+        '0x585736a2ecc01d462dc84d88fbe8fa4687428eb9cce8c1f3f305e77747bbf3d30e9c79703af9d232ac1cafd72a6b7c5327abb21055c5c98a4832d1eaf96f53ed1b',
+    });
+    const insertPayload: SignedApiBatchPayloadV2 = {
+      airnode: airnodeWallet.address,
+      signedData: [invalidData],
+    };
+    const oevTemplateId = deriveOevTemplateId(invalidData.templateId);
+    const beaconId = deriveBeaconId(airnodeWallet.address, oevTemplateId);
+
+    const result = await batchInsertData(undefined, insertPayload, airnodeWallet.address);
+    const { body, statusCode } = parseResponse(result);
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Signature is invalid',
+      context: {
+        signedData: {
+          airnode: airnodeWallet.address,
+          beaconId,
+          encodedValue: invalidData.encodedValue,
+          isOevBeacon: true,
+          signature: invalidData.oevSignature,
+          templateId: oevTemplateId,
+          timestamp: invalidData.timestamp,
+        },
+      },
+    });
+  }, 10_000);
 });
 
 describe(listAirnodeAddresses.name, () => {
   it('returns the list of airnode addresses', async () => {
     const airnodeWallet = generateRandomWallet();
-    const batchData = [await createSignedData({ airnodeWallet }), await createSignedData({ airnodeWallet })];
+    const batchData = [await createSignedDataV1({ airnodeWallet }), await createSignedDataV1({ airnodeWallet })];
     await batchInsertData(undefined, batchData, airnodeWallet.address);
 
     const result = await listAirnodeAddresses();
+    const { body, statusCode } = parseResponse(result);
 
-    expect(result).toStrictEqual({
-      body: JSON.stringify({
-        count: 1,
-        'available-airnodes': [airnodeWallet.address],
-      }),
-      headers: {
-        'access-control-allow-methods': '*',
-        'access-control-allow-origin': '*',
-        'content-type': 'application/json',
-      },
-      statusCode: 200,
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      count: 1,
+      'available-airnodes': [airnodeWallet.address],
     });
   });
 });

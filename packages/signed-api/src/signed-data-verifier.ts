@@ -1,16 +1,16 @@
 import { goSync } from '@api3/promise-utils';
 import workerpool from 'workerpool';
 
-import type { SignedData } from './schema';
+import type { InternalSignedData } from './schema';
 import { deriveBeaconId, recoverSignerAddress } from './utils';
 
 interface VerificationError {
   message: string;
   detail?: string;
-  signedData: SignedData;
+  signedData: InternalSignedData;
 }
 
-export const verifySignedData = (batchSignedData: SignedData[]): VerificationError | null => {
+export const verifySignedData = (batchSignedData: InternalSignedData[]): VerificationError | null => {
   // Ensure the signed data is valid and timestamp does not drift too far into the future.
   for (const signedData of batchSignedData) {
     // The on-chain contract prevents time drift by making sure the timestamp is at most 1 hour in the future. System
@@ -28,6 +28,9 @@ export const verifySignedData = (batchSignedData: SignedData[]): VerificationErr
       return { message: 'Signature is invalid', signedData };
     }
 
+    // We are deriving the beacon ID, because the signed data verification runs in a separate worker, which does not
+    // have access to the in-memory cache of the main worker. When the V1 Airnode feeds are no longer used, this check
+    // can be removed, because starting from V2, the beacon ID is not sent.
     const goDeriveBeaconId = goSync(() => deriveBeaconId(signedData.airnode, signedData.templateId));
     if (!goDeriveBeaconId.success) {
       return {

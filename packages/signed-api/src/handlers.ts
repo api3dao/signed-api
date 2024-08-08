@@ -1,3 +1,4 @@
+import { signedApiBatchPayloadV1Schema, signedApiBatchPayloadV2Schema } from '@api3/airnode-feed';
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, omit, pick } from 'lodash';
 
@@ -6,9 +7,16 @@ import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
-import { type SignedData, batchSignedDataSchema, evmAddressSchema, type Endpoint } from './schema';
+import { type Endpoint, evmAddressSchema, type InternalSignedData } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
-import type { ApiResponse } from './types';
+import { transformAirnodeFeedPayload } from './transform-payload';
+import type {
+  ApiResponse,
+  GetListAirnodesResponseSchema,
+  GetSignedDataResponseSchema,
+  GetUnsignedDataResponseSchema,
+  PostSignedDataResponseSchema,
+} from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
 const env = loadEnv();
@@ -47,15 +55,24 @@ export const batchInsertData = async (
     }
   }
 
-  const goValidateSchema = await go(async () => batchSignedDataSchema.parseAsync(rawRequestBody));
-  if (!goValidateSchema.success) {
+  // Parse the request body. Try parsing v2 schema first and fallback to v1 if validation fails.
+  const v2ParsingResult = await signedApiBatchPayloadV2Schema.safeParseAsync(rawRequestBody);
+  const v1ParsingResult = v2ParsingResult.success
+    ? undefined
+    : await signedApiBatchPayloadV1Schema.safeParseAsync(rawRequestBody);
+  if (!v2ParsingResult.success && v1ParsingResult && !v1ParsingResult.success) {
     return generateErrorResponse(400, 'Invalid request, body must fit schema for batch of signed data', {
-      detail: goValidateSchema.error.message,
+      v1ParsingIssues: v1ParsingResult.error.issues,
+      v2ParsingIssues: v2ParsingResult.error.issues,
     });
   }
 
+  // Create the batched signed data from the Airnode feed payload.
+  const batchSignedData = transformAirnodeFeedPayload(
+    v2ParsingResult.success ? v2ParsingResult.data : v1ParsingResult!.data!
+  );
+
   // Ensure there is at least one signed data to push.
-  const batchSignedData = goValidateSchema.data;
   if (isEmpty(batchSignedData)) return generateErrorResponse(400, 'No signed data to push');
 
   // Check if all signed data is from the same airnode.
@@ -97,7 +114,7 @@ export const batchInsertData = async (
     logger.info('Received valid signed data.', { data: sanitizedData });
   }
 
-  const newSignedData: SignedData[] = [];
+  const newSignedData: InternalSignedData[] = [];
   // Because Airnode feed does not keep track of the last timestamp they pushed, it may push the same data twice, which
   // is acceptable, but we only want to store one data for each timestamp.
   for (const signedData of batchSignedData) {
@@ -118,13 +135,15 @@ export const batchInsertData = async (
   const maxIgnoreAfterTimestamp = Math.floor(Date.now() / 1000 - maxDelay);
   prune(newSignedData, maxIgnoreAfterTimestamp);
 
+  const response: PostSignedDataResponseSchema = {
+    count: newSignedData.length,
+    skipped: batchSignedData.length - newSignedData.length,
+  };
+
   return {
     statusCode: 201,
     headers: createResponseHeaders(), // Inserting data is done through POST request, so we do not cache it.
-    body: JSON.stringify({
-      count: newSignedData.length,
-      skipped: batchSignedData.length - newSignedData.length,
-    }),
+    body: JSON.stringify(response),
   };
 };
 
@@ -143,7 +162,7 @@ export const getData = (
   }
   const airnodeAddress = goAirnodeAddresses.data;
 
-  const { delaySeconds, authTokens, hideSignatures } = endpoint;
+  const { delaySeconds, authTokens, hideSignatures, isOev } = endpoint;
   const authToken = extractBearerToken(authorizationHeader);
   if (authTokens !== null && !authTokens.includes(authToken!)) {
     return generateErrorResponse(403, 'Invalid auth token', { authToken });
@@ -155,16 +174,22 @@ export const getData = (
   }
 
   const ignoreAfterTimestamp = Math.floor(Date.now() / 1000 - delaySeconds);
-  const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp);
-  const data = cachedValues.reduce((acc, signedData) => {
-    const data = hideSignatures ? omit(signedData, 'beaconId', 'signature') : omit(signedData, 'beaconId');
-    return { ...acc, [signedData.beaconId]: data };
-  }, {});
+  const cachedValues = getAll(airnodeAddress, ignoreAfterTimestamp, isOev);
+  const data = cachedValues.reduce(
+    (acc, signedData) => {
+      const data = hideSignatures
+        ? omit(signedData, 'beaconId', 'signature', 'isOevBeacon')
+        : omit(signedData, 'beaconId', 'isOevBeacon');
+      return { ...acc, [signedData.beaconId]: data };
+    },
+    {} as GetSignedDataResponseSchema['data'] | GetUnsignedDataResponseSchema['data']
+  );
+  const response: GetSignedDataResponseSchema | GetUnsignedDataResponseSchema = { count: cachedValues.length, data };
 
   return {
     statusCode: 200,
     headers: createResponseHeaders(getConfig().cache),
-    body: JSON.stringify({ count: cachedValues.length, data }),
+    body: JSON.stringify(response),
   };
 };
 
@@ -178,9 +203,14 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   }
   const airnodeAddresses = goAirnodeAddresses.data;
 
+  const response: GetListAirnodesResponseSchema = {
+    count: airnodeAddresses.length,
+    'available-airnodes': airnodeAddresses,
+  };
+
   return {
     statusCode: 200,
     headers: createResponseHeaders(getConfig().cache),
-    body: JSON.stringify({ count: airnodeAddresses.length, 'available-airnodes': airnodeAddresses }),
+    body: JSON.stringify(response),
   };
 };
