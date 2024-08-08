@@ -27,9 +27,10 @@
   ],
   "rangeStrategy": "bump",
   "lockFileMaintenance": {
-    "enabled": false
+    "enabled": true,
+    "automerge": true
   },
-  "reviewers": ["Siegrift"],
+  "reviewers": ["Siegrift", "aquarat", "mcoetzee", "andreogle"],
   "minimumReleaseAge": "7 days",
   "internalChecksFilter": "strict",
   "dependencyDashboard": false
