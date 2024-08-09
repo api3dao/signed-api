@@ -11,13 +11,15 @@
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["patch", "minor"],
       "schedule": ["before 4am on Monday"],
-      "groupName": "non-major-devDependencies"
+      "groupName": "non-major-devDependencies",
+      "automerge": true
     },
     {
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["patch", "minor"],
       "schedule": ["before 4am on Monday"],
-      "groupName": "non-major-dependencies"
+      "groupName": "non-major-dependencies",
+      "automerge": true
     },
     {
       "matchDatasources": ["docker"],
