@@ -31,7 +31,7 @@
   "lockFileMaintenance": {
     "enabled": true
   },
-  "reviewers": ["Siegrift", "aquarat", "mcoetzee", "andreogle"],
+  "reviewers": ["Siegrift"],
   "minimumReleaseAge": "7 days",
   "internalChecksFilter": "strict",
   "dependencyDashboard": false
