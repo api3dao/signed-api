@@ -18,9 +18,9 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@api3/commons": "^0.10.0",
+    "@api3/commons": "^0.11.0",
     "@api3/promise-utils": "^0.4.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.3",
     "ethers": "^5.7.2",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
