@@ -72,8 +72,8 @@ importers:
         specifier: ^0.14.2
         version: 0.14.2
       '@api3/commons':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.11.0
+        version: 0.11.0
       '@api3/ois':
         specifier: ^2.3.2
         version: 2.3.2
@@ -81,8 +81,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       axios:
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.7.3
+        version: 1.7.3
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -112,14 +112,14 @@ importers:
   packages/e2e:
     dependencies:
       '@api3/commons':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.11.0
+        version: 0.11.0
       '@api3/promise-utils':
         specifier: ^0.4.0
         version: 0.4.0
       axios:
-        specifier: ^1.7.2
-        version: 1.7.2
+        specifier: ^1.7.3
+        version: 1.7.3
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -152,13 +152,13 @@ importers:
   packages/signed-api:
     dependencies:
       '@api3/commons':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.11.0
+        version: 0.11.0
       '@api3/promise-utils':
         specifier: ^0.4.0
         version: 0.4.0
       '@aws-sdk/client-s3':
-        specifier: ^3.621.0
+        specifier: ^3.624.0
         version: 3.624.0
       dotenv:
         specifier: ^16.4.5
@@ -230,8 +230,8 @@ packages:
   '@api3/chains@4.5.1':
     resolution: {integrity: sha512-F0UxGqeMV/yfq/mKja2SJFvQTEHXMEhGdamITaM2psJDxJKNL/ID8YjkJ0hsm/Rj29ZkoyLT3Tr8JA/cKI0c4A==}
 
-  '@api3/commons@0.10.0':
-    resolution: {integrity: sha512-UbDW+GnLP8fr/I+CytXDsPF/dookddhU+VZ2HOPqaNnTSvJ7bcYB2rPzfH1+6HcYjxO+nUkJrAAilkGTbA2KMQ==}
+  '@api3/commons@0.11.0':
+    resolution: {integrity: sha512-cV9xVcnML9QuIh7AiSZmZ2oH0/D+DmpPSH+skAVplkaHHKGIrtVi5Rj5PHj5jX6R8h6gsjJin4VDyBV72dszDg==}
     engines: {node: '>=18.14.0'}
 
   '@api3/commons@0.5.0':
@@ -1891,8 +1891,8 @@ packages:
     resolution: {integrity: sha512-Mr2ZakwQ7XUAjp7pAwQWRhhK8mQQ6JAaNWSjmjxil0R8BPioMtQsTLOolGYkji1rcL++3dCqZA3zWqpT+9Ew6g==}
     engines: {node: '>=4'}
 
-  axios@1.7.2:
-    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
+  axios@1.7.3:
+    resolution: {integrity: sha512-Ar7ND9pU99eJ9GpoGQKhKf58GpUOgnzuaB7ueNQ5BMi0p+LZ5oaEnfF999fAArcTIBwXTCHAmGcHOZJaWPq9Nw==}
 
   axobject-query@3.1.1:
     resolution: {integrity: sha512-goKlv8DZrK9hUh975fnHzhNIO4jUnFCfv/dszV5VwUGDFjI6vQ2VwoyjYjYNEbBE8AH87TduWP5uyDR1D+Iteg==}
@@ -4545,6 +4545,10 @@ packages:
     resolution: {integrity: sha512-rwidmA1w3SE4j0E5MuIufFhyJPBDG7Nu71RkZor1p2+qHvJSZ9GYDA81AyleQcZbh/+V6HjeBdfnTZJm9rSeQQ==}
     engines: {node: '>= 12.0.0'}
 
+  winston@3.14.1:
+    resolution: {integrity: sha512-CJi4Il/msz8HkdDfXOMu+r5Au/oyEjFiOZzbX2d23hRLY0narGjqfE5lFlrT5hfYJhPtM8b85/GNFsxIML/RVA==}
+    engines: {node: '>= 12.0.0'}
+
   workerpool@9.1.3:
     resolution: {integrity: sha512-LhUrk4tbxJRDQmRrrFWA9EnboXI79fe0ZNTy3u8m+dqPN1EkVSIsQYAB8OF/fkyhG8Rtup+c/bzj/+bzbG8fqg==}
 
@@ -4636,7 +4640,7 @@ snapshots:
     dependencies:
       '@api3/ois': 2.3.2
       '@api3/promise-utils': 0.4.0
-      axios: 1.7.2
+      axios: 1.7.3
       bignumber.js: 9.1.2
       ethers: 5.7.2
       lodash: 4.17.21
@@ -4725,15 +4729,15 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@api3/commons@0.10.0':
+  '@api3/commons@0.11.0':
     dependencies:
       '@api3/ois': 2.3.2
       '@api3/promise-utils': 0.4.0
-      axios: 1.7.2
+      axios: 1.7.3
       dotenv: 16.4.5
       ethers: 5.7.2
       lodash: 4.17.21
-      winston: 3.13.0
+      winston: 3.14.1
       winston-console-format: 1.0.8
       zod: 3.23.8
     transitivePeerDependencies:
@@ -7745,7 +7749,7 @@ snapshots:
 
   axe-core@4.10.0: {}
 
-  axios@1.7.2:
+  axios@1.7.3:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -11161,6 +11165,20 @@ snapshots:
       triple-beam: 1.4.1
 
   winston@3.13.0:
+    dependencies:
+      '@colors/colors': 1.6.0
+      '@dabh/diagnostics': 2.0.3
+      async: 3.2.4
+      is-stream: 2.0.1
+      logform: 2.6.0
+      one-time: 1.0.0
+      readable-stream: 3.6.2
+      safe-stable-stringify: 2.4.3
+      stack-trace: 0.0.10
+      triple-beam: 1.4.1
+      winston-transport: 4.7.0
+
+  winston@3.14.1:
     dependencies:
       '@colors/colors': 1.6.0
       '@dabh/diagnostics': 2.0.3
