@@ -85,8 +85,8 @@ test('returns OEV beacons from OEV endpoint', async () => {
   });
   const realTimeOevBeaconsResponse = await executeRequest({
     method: 'get',
-    url: `http://localhost:8090/real-time-oev/${airnode}`,
-    headers: { Authorization: `Bearer some-secret-token` },
+    url: `http://localhost:8090/oev/${airnode}`,
+    headers: { Authorization: `Bearer different-secret-token` },
   });
   const realTimeBaseBeacons = realTimeBaseBeaconsResponse.data as GetSignedDataResponseSchema;
   const realTimeOevBeacons = realTimeOevBeaconsResponse.data as GetSignedDataResponseSchema;
