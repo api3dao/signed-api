@@ -77,7 +77,7 @@ test('handles both EIP-55 and lowercased addresses', async () => {
   expect(eip55AirnodeResponse.data).toStrictEqual(lowercasedAirnodeResponse.data);
 });
 
-test.only('returns OEV beacons from OEV endpoint', async () => {
+test('returns OEV beacons from OEV endpoint', async () => {
   const realTimeBaseBeaconsResponse = await executeRequest({
     method: 'get',
     url: `http://localhost:8090/real-time/${airnode}`,
