@@ -7,8 +7,8 @@
       "isOev": false
     },
     {
-      "urlPath": "/real-time-oev",
-      "authTokens": ["${REAL_TIME_ENDPOINT_AUTH_TOKEN}"],
+      "urlPath": "/oev",
+      "authTokens": ["${OEV_ENDPOINT_AUTH_TOKEN}"],
       "delaySeconds": 0,
       "isOev": true
     },
