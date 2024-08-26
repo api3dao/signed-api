@@ -8,6 +8,9 @@ export interface State {
   airnodeWallet: ethers.Wallet;
   // The timestamp of when the service was initialized. This can be treated as a "deployment" timestamp.
   deploymentTimestamp: string;
+  // Mapping for template ID to their OEV counterparts. The OEV template ID is hashed from the original template ID and
+  // is cached for performance reasons.
+  templateIdToOevTemplateId: Record<string, string>;
 }
 
 let state: State;
@@ -22,6 +25,7 @@ export const getInitialState = (config: Config): State => {
     config,
     airnodeWallet: ethers.Wallet.fromMnemonic(config.nodeSettings.airnodeWalletMnemonic),
     deploymentTimestamp: Math.floor(Date.now() / 1000).toString(),
+    templateIdToOevTemplateId: {},
   };
 };
 

@@ -3,18 +3,27 @@
     {
       "urlPath": "/real-time",
       "authTokens": ["${REAL_TIME_ENDPOINT_AUTH_TOKEN}"],
-      "delaySeconds": 0
+      "delaySeconds": 0,
+      "isOev": false
+    },
+    {
+      "urlPath": "/oev",
+      "authTokens": ["${OEV_ENDPOINT_AUTH_TOKEN}"],
+      "delaySeconds": 0,
+      "isOev": true
     },
     {
       "urlPath": "/delayed",
       "authTokens": null,
-      "delaySeconds": 15
+      "delaySeconds": 15,
+      "isOev": false
     },
     {
       "urlPath": "/unsigned-real-time",
       "authTokens": null,
       "delaySeconds": 0,
-      "hideSignatures": true
+      "hideSignatures": true,
+      "isOev": false
     }
   ],
   "allowedAirnodes": [

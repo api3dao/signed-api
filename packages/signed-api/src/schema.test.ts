@@ -23,16 +23,22 @@ describe('endpointSchema', () => {
         path: ['urlPath'],
       },
     ]);
-    expect(() => endpointSchema.parse({ urlPath: '', delaySeconds: 0, authTokens: null })).toThrow(expectedError);
-    expect(() => endpointSchema.parse({ urlPath: '/', delaySeconds: 0, authTokens: null })).toThrow(expectedError);
-    expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null })).toThrow(
+    expect(() => endpointSchema.parse({ urlPath: '', delaySeconds: 0, authTokens: null, isOev: false })).toThrow(
       expectedError
     );
-    expect(() => endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null })).toThrow(
+    expect(() => endpointSchema.parse({ urlPath: '/', delaySeconds: 0, authTokens: null, isOev: false })).toThrow(
       expectedError
     );
+    expect(() =>
+      endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false })
+    ).toThrow(expectedError);
+    expect(() =>
+      endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false })
+    ).toThrow(expectedError);
 
-    expect(() => endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0, authTokens: null })).not.toThrow();
+    expect(() =>
+      endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false })
+    ).not.toThrow();
   });
 });
 
@@ -40,8 +46,8 @@ describe('endpointsSchema', () => {
   it('ensures each urlPath is unique', () => {
     expect(() =>
       endpointsSchema.parse([
-        { urlPath: '/url-path', delaySeconds: 0, authTokens: null },
-        { urlPath: '/url-path', delaySeconds: 0, authTokens: null },
+        { urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false },
+        { urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false },
       ])
     ).toThrow(
       new ZodError([

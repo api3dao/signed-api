@@ -1,23 +1,18 @@
-import { deriveBeaconId } from '@api3/airnode-node';
 import { executeRequest } from '@api3/commons';
-import { isEmpty, isNil } from 'lodash';
+import { isEmpty } from 'lodash';
 
 import { logger } from '../logger';
 import type { SignedResponse } from '../sign-template-data';
 import { getState } from '../state';
-import { type SignedApiPayload, signedApiResponseSchema } from '../validation/schema';
+import { type SignedApiBatchPayloadV2, signedApiResponseSchema } from '../validation/schema';
 
-export const pushSignedData = async (signedResponses: SignedResponse[]) => {
+export const pushSignedData = async (batchPayload: SignedResponse[]) => {
   const {
     config: { signedApis },
     airnodeWallet,
   } = getState();
 
   const airnode = airnodeWallet.address;
-  const batchPayloadOrNull = signedResponses.map(([templateId, signedData]): SignedApiPayload | null => {
-    return { airnode, templateId, beaconId: deriveBeaconId(airnode, templateId), ...signedData };
-  });
-  const batchPayload = batchPayloadOrNull.filter((payload): payload is SignedApiPayload => !isNil(payload));
   if (isEmpty(batchPayload)) {
     logger.debug('No batch payload found to post. Skipping.');
     return null;
@@ -26,10 +21,14 @@ export const pushSignedData = async (signedResponses: SignedResponse[]) => {
   const promises = signedApis.map(async (signedApi) => {
     return logger.runWithContext({ signedApiName: signedApi.name }, async () => {
       logger.debug('Pushing signed data to the signed API.');
+      const body: SignedApiBatchPayloadV2 = {
+        airnode,
+        signedData: batchPayload,
+      };
       const requestResult = await executeRequest({
         method: 'post',
         url: new URL(airnode, signedApi.url).href,
-        body: batchPayload,
+        body,
         headers: {
           'Content-Type': 'application/json',
           ...(signedApi.authToken ? { Authorization: `Bearer ${signedApi.authToken}` } : {}),

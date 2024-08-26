@@ -122,24 +122,34 @@ The API needs to be configured with endpoints to be served. This is done via the
 ```jsonc
 // Defines three endpoints.
 "endpoints": [
-  // Serves the non-delayed data on URL path "/real-time". Requesters need to provide the "some-secret-token" as Bearer token.
+  // Serves the non-delayed data on URL path "/real-time". Requesters need to provide the "some-secret-token" as Bearer token. The endpoint exposes the beacon data for base feeds.
   {
     "urlPath": "/real-time",
     "delaySeconds": 0,
     "authTokens": ["some-secret-token"],
+    "isOev": false
+  },
+  // Serves the non-delayed data on URL path "/real-time-oev". Requesters need to provide the "some-secret-token" as Bearer token. This endpoint only exposes the OEV beacon data.
+  {
+    "urlPath": "/real-time-oev",
+    "delaySeconds": 0,
+    "authTokens": ["some-secret-token"],
+    "isOev": true
   },
   // Serves the data delayed by 15 seconds on URL path "/delayed". No authentication is required.
   {
     "urlPath": "/delayed",
     "delaySeconds": 15,
     "authTokens": null,
+    "isOev": false
   },
   // Serve the unsigned data in real-time on URL path "/unsigned-real-time". No authentication is required.
   {
     "urlPath": "/unsigned-real-time",
     "authTokens": null,
     "delaySeconds": 0,
-    "hideSignatures": true
+    "hideSignatures": true,
+    "isOev": false
   }
 ]
 ```
@@ -169,6 +179,11 @@ In case the endpoint should be publicly available, set the value to `null`.
 
 The boolean flag to hide the signatures in the response. The flag is optional for backwards compatibility with older
 Signed API versions.
+
+##### `isOev`
+
+The boolean flag to indicate if the endpoint serves the data for OEV beacons. This data can be used to update the API3
+proxies with the latest OEV data, but cannot be used to update the main API3 base feeds.
 
 ### `cache` _(optional)_
 

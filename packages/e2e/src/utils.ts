@@ -1,3 +1,4 @@
+import { deriveBeaconId, type Hex } from '@api3/commons';
 import { goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 
@@ -19,12 +20,6 @@ export const formatData = (networkResponse: any) => {
 export const airnode = ethers.Wallet.fromMnemonic(
   'diamond result history offer forest diagram crop armed stumble orchard stage glance'
 ).address;
-
-export const deriveBeaconId = (airnode: string, templateId: string) =>
-  ethers.utils.keccak256(ethers.utils.solidityPack(['address', 'bytes32'], [airnode, templateId]));
-
-export const deriveTemplateId = (endpointId: string, encodedParameters: string) =>
-  ethers.utils.keccak256(ethers.utils.solidityPack(['bytes32', 'bytes'], [endpointId, encodedParameters]));
 
 export const generateRandomBytes = (len: number) => ethers.utils.hexlify(ethers.utils.randomBytes(len));
 
@@ -55,7 +50,7 @@ export const createSignedData = async (
 ) => {
   const airnode = airnodeWallet.address;
   const templateId = generateRandomBytes(32);
-  const beaconId = deriveBeaconId(airnode, templateId);
+  const beaconId = deriveBeaconId(airnode as Hex, templateId as Hex);
   const encodedValue = '0x00000000000000000000000000000000000000000000005718e3a22ce01f7a40';
   const signature = await generateDataSignature(airnodeWallet, templateId, timestamp, encodedValue);
 

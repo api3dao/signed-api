@@ -19,3 +19,5 @@ export const signWithTemplateId = async (
     )
   );
 };
+
+export const deriveOevTemplateId = (templateId: string) => ethers.utils.solidityKeccak256(['bytes32'], [templateId]);

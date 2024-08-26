@@ -1,4 +1,6 @@
-import { executeRequest } from '@api3/commons';
+import { deriveOevTemplateId } from '@api3/airnode-feed';
+import { deriveBeaconId, executeRequest, type Hex } from '@api3/commons';
+import { type GetSignedDataResponseSchema } from '@api3/signed-api';
 import { ethers } from 'ethers';
 
 import { airnode, createSignedData, formatData } from '../src/utils';
@@ -73,4 +75,28 @@ test('handles both EIP-55 and lowercased addresses', async () => {
   });
 
   expect(eip55AirnodeResponse.data).toStrictEqual(lowercasedAirnodeResponse.data);
+});
+
+test('returns OEV beacons from OEV endpoint', async () => {
+  const realTimeBaseBeaconsResponse = await executeRequest({
+    method: 'get',
+    url: `http://localhost:8090/real-time/${airnode}`,
+    headers: { Authorization: `Bearer some-secret-token` },
+  });
+  const realTimeOevBeaconsResponse = await executeRequest({
+    method: 'get',
+    url: `http://localhost:8090/oev/${airnode}`,
+    headers: { Authorization: `Bearer different-secret-token` },
+  });
+  const realTimeBaseBeacons = realTimeBaseBeaconsResponse.data as GetSignedDataResponseSchema;
+  const realTimeOevBeacons = realTimeOevBeaconsResponse.data as GetSignedDataResponseSchema;
+
+  expect(realTimeBaseBeacons.count).toBe(realTimeOevBeacons.count);
+  // Verify that the OEV beacon IDs returned match the base feed beacons.
+  expect(Object.keys(realTimeOevBeacons.data).toSorted()).toStrictEqual(
+    Object.values(realTimeBaseBeacons.data)
+      .map((data) => deriveOevTemplateId(data.templateId))
+      .map((oevTemplateId) => deriveBeaconId(airnode as Hex, oevTemplateId as Hex))
+      .toSorted()
+  );
 });
