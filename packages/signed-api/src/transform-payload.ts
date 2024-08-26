@@ -38,6 +38,9 @@ export const getBeaconId = (airnode: string, templateId: string) => {
 export const transformAirnodeFeedPayload = (
   payload: SignedApiBatchPayloadV1 | SignedApiBatchPayloadV2
 ): InternalSignedData[] => {
+  // Check whether the payload is v2 and process the payload to the internal format. The v2 Airnode feed pushes beacon
+  // data and signatures for base feed updates (regular updates done by Airseeker) and OEV signatures, which are
+  // purchasable via OEV auctions.
   if ('airnode' in payload) {
     const { airnode } = payload;
     return payload.signedData.flatMap((data) => {
