@@ -7,7 +7,7 @@ import { getState, setState } from './state';
 import { deriveOevTemplateId, signWithTemplateId } from './utils';
 import type { SignedApiPayloadV2, TemplateId } from './validation/schema';
 
-export type SignedResponse = [TemplateId, SignedApiPayloadV2];
+export type SignedResponse = SignedApiPayloadV2;
 
 export type TemplateResponse = [TemplateId, { timestamp: string; encodedResponse: ExtractedAndEncodedResponse }];
 
@@ -51,16 +51,13 @@ export const signTemplateResponses = async (templateResponses: TemplateResponse[
       return null;
     }
 
-    return [
+    return {
+      timestamp,
+      encodedValue,
+      signature: goSignWithTemplateId.data.baseSignature,
+      oevSignature: goSignWithTemplateId.data.oevSignature,
       templateId,
-      {
-        timestamp,
-        encodedValue,
-        signature: goSignWithTemplateId.data.baseSignature,
-        oevSignature: goSignWithTemplateId.data.oevSignature,
-        templateId,
-      },
-    ] as SignedResponse;
+    } as SignedResponse;
   });
   const signedResponsesOrNull = await Promise.all(signPromises);
   return signedResponsesOrNull.filter((response) => !isNil(response));

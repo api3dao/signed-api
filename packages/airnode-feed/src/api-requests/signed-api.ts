@@ -23,7 +23,7 @@ export const pushSignedData = async (batchPayload: SignedResponse[]) => {
       logger.debug('Pushing signed data to the signed API.');
       const body: SignedApiBatchPayloadV2 = {
         airnode,
-        signedData: batchPayload.map(([_, data]) => data),
+        signedData: batchPayload,
       };
       const requestResult = await executeRequest({
         method: 'post',
