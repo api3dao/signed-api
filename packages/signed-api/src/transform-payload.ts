@@ -2,7 +2,7 @@ import { deriveOevTemplateId, type SignedApiBatchPayloadV1, type SignedApiBatchP
 import { deriveBeaconId, type Hex } from '@api3/commons';
 
 import { getCache, setCache } from './in-memory-cache';
-import { type InternalSignedData } from './schema';
+import { type InternalSignedData } from './types';
 
 export const getOevTemplateId = (templateId: string) => {
   const cache = getCache();

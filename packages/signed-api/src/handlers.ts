@@ -7,7 +7,7 @@ import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
-import { type Endpoint, evmAddressSchema, type InternalSignedData } from './schema';
+import { type Endpoint, evmAddressSchema } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
 import { transformAirnodeFeedPayload } from './transform-payload';
 import type {
@@ -15,6 +15,7 @@ import type {
   GetListAirnodesResponseSchema,
   GetSignedDataResponseSchema,
   GetUnsignedDataResponseSchema,
+  InternalSignedData,
   PostSignedDataResponseSchema,
 } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';

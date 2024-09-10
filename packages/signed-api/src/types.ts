@@ -1,5 +1,3 @@
-import { type InternalSignedData } from './schema';
-
 export interface ApiResponse {
   statusCode: number;
   headers: Record<string, string>;
@@ -22,3 +20,13 @@ export type PostSignedDataResponseSchema = {
 };
 
 export type GetListAirnodesResponseSchema = { count: number; 'available-airnodes': string[] };
+
+export type InternalSignedData = {
+  airnode: string;
+  templateId: string;
+  beaconId: string;
+  timestamp: string;
+  encodedValue: string;
+  signature: string;
+  isOevBeacon: boolean;
+};
