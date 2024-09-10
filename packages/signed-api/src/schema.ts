@@ -70,6 +70,7 @@ export const configSchema = z.strictObject({
 
 export type Config = z.infer<typeof configSchema>;
 
+// TODO: Move to types
 export type InternalSignedData = {
   airnode: string;
   templateId: string;
