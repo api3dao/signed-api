@@ -51,8 +51,8 @@ Default: `json`.
 ### `LOG_API_DATA` _(optional)_
 
 Enables or disables logging of the API data at the `info` level. When set to `true`, received valid signed data will be
-logged with the fields `airnode`, `encodedValue`, `templateId`, and `timestamp`. The `signature` field is intentionally
-excluded for security reasons. Options:
+logged with the fields `airnode`, `encodedValue`, `templateId`, `timestamp` and `signature`. The logging of this data is
+delayed by 5 minutes to make sure people with access to the logs won't be able to misuse the beacon data. Options:
 
 - `true` - Enables logging of the API data.
 - `false` - Disables logging of the API data.

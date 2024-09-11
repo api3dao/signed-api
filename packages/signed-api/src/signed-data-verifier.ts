@@ -1,7 +1,7 @@
 import { goSync } from '@api3/promise-utils';
 import workerpool from 'workerpool';
 
-import type { InternalSignedData } from './schema';
+import { type InternalSignedData } from './types';
 import { deriveBeaconId, recoverSignerAddress } from './utils';
 
 interface VerificationError {

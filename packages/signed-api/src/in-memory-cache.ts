@@ -1,7 +1,7 @@
 import { last, uniqBy } from 'lodash';
 
 import { logger } from './logger';
-import type { InternalSignedData } from './schema';
+import { type InternalSignedData } from './types';
 import { isIgnored } from './utils';
 
 type SignedDataCache = Record<

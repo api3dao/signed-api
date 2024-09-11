@@ -7,7 +7,7 @@ import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
 import { logger } from './logger';
-import { type Endpoint, evmAddressSchema, type InternalSignedData } from './schema';
+import { type Endpoint, evmAddressSchema } from './schema';
 import { getVerifier } from './signed-data-verifier-pool';
 import { transformAirnodeFeedPayload } from './transform-payload';
 import type {
@@ -15,11 +15,13 @@ import type {
   GetListAirnodesResponseSchema,
   GetSignedDataResponseSchema,
   GetUnsignedDataResponseSchema,
+  InternalSignedData,
   PostSignedDataResponseSchema,
 } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
-const env = loadEnv();
+const LOG_API_DATA_DELAY_MS = 5 * 60 * 1000;
+
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.
 //
@@ -106,12 +108,16 @@ export const batchInsertData = async (
     return generateErrorResponse(400, message, detail ? { detail, signedData } : { signedData });
   }
 
+  const env = loadEnv();
   if (env.LOG_API_DATA) {
-    // Log only the required fields to use less space, do not log the signature for security reasons.
-    const sanitizedData = batchSignedData.map((data) =>
-      pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp'])
-    );
-    logger.info('Received valid signed data.', { data: sanitizedData });
+    // The logging of the data is delayed for security reasons - so people with access to the logs can't misuse the
+    // signed data.
+    setTimeout(() => {
+      const sanitizedData = batchSignedData.map((data) =>
+        pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp', 'signature'])
+      );
+      logger.info('Received valid signed data.', { data: sanitizedData });
+    }, LOG_API_DATA_DELAY_MS);
   }
 
   const newSignedData: InternalSignedData[] = [];

@@ -70,16 +70,6 @@ export const configSchema = z.strictObject({
 
 export type Config = z.infer<typeof configSchema>;
 
-export type InternalSignedData = {
-  airnode: string;
-  templateId: string;
-  beaconId: string;
-  timestamp: string;
-  encodedValue: string;
-  signature: string;
-  isOevBeacon: boolean;
-};
-
 export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')]).transform((val) => val === 'true');
 
 // We apply default values to make it convenient to omit certain environment variables. The default values should be

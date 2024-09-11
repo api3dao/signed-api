@@ -2,7 +2,7 @@ import { deriveOevTemplateId, type SignedApiPayloadV1, type SignedApiPayloadV2 }
 import { ethers } from 'ethers';
 import { omit } from 'lodash';
 
-import type { InternalSignedData } from '../src/schema';
+import type { InternalSignedData } from '../src/types';
 import { deriveBeaconId } from '../src/utils';
 
 export const deriveTemplateId = (endpointId: string, encodedParameters: string) =>
