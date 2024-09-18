@@ -27,7 +27,7 @@ and to build the packages:
 pnpm run build
 ```
 
-Note, that everytime you make a change to a workspace that is used as a dependency of another, you need to rebuild the
+Note, that every time you make a change to a workspace that is used as a dependency of another, you need to rebuild the
 changed package (otherwise you might get weird JS/TS errors).
 
 ## Versioning and release
@@ -39,14 +39,10 @@ There is a script that automates the process of creating new NPM packages and Do
 
 1. `pnpm run create-release:npm [major|minor|patch]` - The script ensures publishing happens from up-to-date `main`
    branch. It updates the package versions for `airnode-feed` and `signed-api`, updates fixtures and example files, does
-   basic checks to ensure the changes are valid and creates a version commit with a git tag. The command intentionally
-   does not do the publishing so that the changes can be reviewed before publishing.
+   basic checks to ensure the changes are valid and creates a version commit. The command intentionally does not do the
+   publishing so that the changes can be reviewed before pushing.
 2. `git show` - To inspect the changes of the version commit.
 3. Run the e2e tests locally. This is not automated due to implementation complexity.
-4. `pnpm run publish:airnode-feed && pnpm run publish:signed-api` - To publish Airnode feed and Signed API package to
-   NPM.
-5. `git push --follow-tags` - Push the tagged version commit upstream.
-6. Do a GitHub release for the specific tag.
-7. `pnpm run create-release:docker` - To build the Docker images and tag them correctly. The script uses the current
-   package.json version so it expects the NPM release is done first.
-8. The command outputs the publish instructions to push the images.
+4. `git push` - Push the version commit upstream. This will trigger the `tag-and-release` GitHub Actions job and result
+   in 1) the commit being tagged with the new version, 2) the release being created on GitHub, 3) both packages being
+   released on npm, and 4) both Docker images being built and pushed to Docker Hub.

@@ -4,10 +4,13 @@
   "engines": {
     "node": ">=18.20.4"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/api3dao/signed-api"
+  },
   "scripts": {
     "build": "pnpm recursive run build",
     "clean": "pnpm recursive run clean",
-    "create-release:docker": "ts-node scripts/create-docker-release.ts",
     "create-release:npm": "ts-node scripts/create-npm-release.ts",
     "docker:build": "pnpm recursive run --sequential docker:build",
     "docker:build:amd64": "pnpm recursive run --sequential docker:build:amd64",
@@ -16,14 +19,14 @@
     "prettier:check": "prettier --check \"./**/*.{js,ts,md,json}\"",
     "prettier:fix": "prettier --write \"./**/*.{js,ts,md,json}\"",
     "prepare": "husky install",
-    "publish:airnode-feed": "cd packages/airnode-feed && pnpm publish --access public",
-    "publish:signed-api": "cd packages/signed-api && pnpm publish --access public",
+    "release:tag": "ts-node scripts/tag-and-release.ts",
     "test": "pnpm recursive run test",
     "tsc": "pnpm recursive run tsc"
   },
   "keywords": [],
   "license": "MIT",
   "devDependencies": {
+    "@api3/commons": "0.13.2",
     "@api3/eslint-plugin-commons": "^2.0.1",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.13",

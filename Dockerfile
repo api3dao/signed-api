@@ -26,7 +26,7 @@ COPY pnpm-lock.yaml /app
 RUN pnpm fetch
 # Copies all of the contents (without files listed in .dockerignore) of the monorepo into the image.
 COPY . /app
-# Ideally, we would use "--offline" option, but it seems pnpm has a bug. Fortunately, the instalation times are similar.
+# Ideally, we would use "--offline" option, but it seems pnpm has a bug. Fortunately, the installation times are similar.
 # See: https://github.com/pnpm/pnpm/issues/6058 for details.
 RUN pnpm install --recursive --prefer-offline
 # Build all packages in the monorepo.

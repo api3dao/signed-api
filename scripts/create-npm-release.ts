@@ -113,14 +113,11 @@ const main = () => {
   execSyncWithErrorHandling('git add .');
   execSyncWithErrorHandling(`git commit -m "v${newVersion}"`);
 
-  console.info('Creating new annotated git tag...');
-  execSyncWithErrorHandling(`git tag -a v${newVersion} -m "v${newVersion}"`);
-
   console.info('');
   console.info('The airnode-feed and signed-api packages have been bumped to the new version.');
   console.info('Ensure the changes are correct by inspecting the last commit.');
-  console.info('Build the docker images and run the e2e tests locally.');
-  console.info('If everything looks good, push the commit and the tag to the remote and release the packages.');
+  console.info('Run the e2e tests locally.');
+  console.info('If everything looks good, push the commit to the remote which releases the packages.');
 };
 
 main();
