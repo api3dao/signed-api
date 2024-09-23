@@ -18,13 +18,13 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@api3/commons": "^0.12.0",
+    "@api3/commons": "^0.13.2",
     "@api3/airnode-feed": "workspace:*",
     "@api3/promise-utils": "^0.4.0",
     "@api3/signed-api": "workspace:*",
     "axios": "^1.7.7",
     "ethers": "^5.7.2",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "lodash": "^4.17.21",
     "zod": "^3.23.8"
   },
