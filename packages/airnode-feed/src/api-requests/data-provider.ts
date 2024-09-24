@@ -2,7 +2,7 @@ import { buildAndExecuteRequest, extractAndEncodeResponse } from '@api3/airnode-
 import type * as node from '@api3/airnode-node';
 import { getReservedParameters } from '@api3/airnode-node/dist/src/adapters/http/parameters';
 import { preProcessEndpointParameters, type EndpointParameters, postProcessResponse } from '@api3/commons';
-import type { OIS, Endpoint as OisEndpoint } from '@api3/ois';
+import type { Endpoint, OIS, Endpoint as OisEndpoint } from '@api3/ois';
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, isNil } from 'lodash';
 
@@ -61,7 +61,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   const operationTemplate = templates[operationTemplateId]!;
   const operationEndpoint = endpoints[operationTemplate.endpointId]!;
   const ois = oises.find((o) => o.title === operationEndpoint.oisTitle)!;
-  const operationOisEndpoint = ois.endpoints.find((e) => e.name === operationEndpoint.endpointName)!;
+  const operationOisEndpoint = ois.endpoints.find((e: Endpoint) => e.name === operationEndpoint.endpointName)!;
   const endpointParameters = operationTemplate.parameters.reduce((acc, parameter) => {
     return {
       ...acc,
@@ -84,7 +84,7 @@ export const makeTemplateRequests = async (signedApiUpdate: SignedApiUpdate): Pr
   const templateResponsePromises = templateIds.map(async (templateId) => {
     const template = templates[templateId]!;
     const endpoint = endpoints[template.endpointId]!;
-    const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
+    const oisEndpoint = ois.endpoints.find((e: Endpoint) => e.name === endpoint.endpointName)!;
 
     const endpointParameters = template.parameters.reduce((acc, parameter) => {
       return {
