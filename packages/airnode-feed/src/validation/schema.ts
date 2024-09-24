@@ -251,7 +251,7 @@ export const signedApisSchema = z
     }
   });
 
-export const oisesSchema = z.array(oisSchema);
+export const oisesSchema = z.array(oisSchema as any); // Casting to "any" because TS falsely complains.
 
 export const apisCredentialsSchema = z.array(config.apiCredentialsSchema);
 
