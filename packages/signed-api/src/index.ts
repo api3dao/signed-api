@@ -20,6 +20,7 @@ const setupUncaughtErrorHandler = () => {
   process.on('unhandledRejection', () => process.exit(1));
 };
 
+// eslint-disable-next-line import/no-named-as-default-member
 const portSchema = z.coerce.number().int().positive();
 
 // Start the Signed API. All application errors should be handled by this function (or its callees) and any error from

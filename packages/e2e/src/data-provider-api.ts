@@ -3,7 +3,7 @@ import express from 'express';
 import { logger } from './logger';
 
 const app = express();
-const PORT = 9876 || process.env.PORT;
+const PORT = process.env.PORT ?? 9876;
 
 interface Asset {
   value: number;

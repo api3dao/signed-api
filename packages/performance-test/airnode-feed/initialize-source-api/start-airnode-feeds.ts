@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { ethers } from 'ethers';
-import prettier from 'prettier';
+import { resolveConfig, format } from 'prettier';
 
 // The script creates a random mnemonic and writes it into airnode-feed.json configuration and starts an Airnode feed
 // service which reads this configuration and sets the Signed API (as specified in the configuration). These Airnode
@@ -51,8 +51,8 @@ const main = async () => {
   const configPath = join(__dirname, 'config/airnode-feed.json');
   const config = JSON.parse(readFileSync(configPath, 'utf8'));
   config.nodeSettings.airnodeWalletMnemonic = mnemonic;
-  const options = await prettier.resolveConfig(configPath);
-  const formattedFile = await prettier.format(JSON.stringify(config, null, 2), { ...options, parser: 'json' });
+  const options = await resolveConfig(configPath);
+  const formattedFile = await format(JSON.stringify(config, null, 2), { ...options, parser: 'json' });
   writeFileSync(configPath, formattedFile);
 
   // Start the Airnode feed service.
@@ -64,7 +64,6 @@ const main = async () => {
   console.info(`Worker ${process.env.SERVICE_DIR} finished`);
 
   // Kill the worker.
-  // eslint-disable-next-line unicorn/no-process-exit
   process.exit(0);
 };
 
