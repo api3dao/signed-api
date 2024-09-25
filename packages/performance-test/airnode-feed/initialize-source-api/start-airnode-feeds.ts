@@ -64,7 +64,6 @@ const main = async () => {
   console.info(`Worker ${process.env.SERVICE_DIR} finished`);
 
   // Kill the worker.
-
   process.exit(0);
 };
 
