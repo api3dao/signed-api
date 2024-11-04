@@ -155,7 +155,7 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       '@aws-sdk/client-s3':
-        specifier: ^3.675.0
+        specifier: ^3.679.0
         version: 3.679.0
       dotenv:
         specifier: ^16.4.5
@@ -469,10 +469,6 @@ packages:
   '@aws-sdk/types@3.428.0':
     resolution: {integrity: sha512-4T0Ps2spjg3qbWE6ZK13Vd3FnzpfliaiotqjxUK5YhjDrKXeT36HJp46JhDupElQuHtTkpdiJOSYk2lvY2H4IA==}
     engines: {node: '>=14.0.0'}
-
-  '@aws-sdk/types@3.667.0':
-    resolution: {integrity: sha512-gYq0xCsqFfQaSL/yT1Gl1vIUjtsg7d7RhnUfsXaHt8xTxOKRTdH9GjbesBjXOzgOvB0W0vfssfreSNGFlOOMJg==}
-    engines: {node: '>=16.0.0'}
 
   '@aws-sdk/types@3.679.0':
     resolution: {integrity: sha512-NwVq8YvInxQdJ47+zz4fH3BRRLC6lL+WLkvr242PVBbUOLRyK/lkwHlfiKUoeVIMyK5NF+up6TRg71t/8Bny6Q==}
@@ -4756,7 +4752,7 @@ snapshots:
   '@aws-crypto/crc32@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.667.0
+      '@aws-sdk/types': 3.679.0
       tslib: 1.14.1
 
   '@aws-crypto/crc32@5.2.0':
@@ -4790,7 +4786,7 @@ snapshots:
       '@aws-crypto/sha256-js': 3.0.0
       '@aws-crypto/supports-web-crypto': 3.0.0
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.667.0
+      '@aws-sdk/types': 3.679.0
       '@aws-sdk/util-locate-window': 3.310.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
@@ -4808,7 +4804,7 @@ snapshots:
   '@aws-crypto/sha256-js@3.0.0':
     dependencies:
       '@aws-crypto/util': 3.0.0
-      '@aws-sdk/types': 3.667.0
+      '@aws-sdk/types': 3.679.0
       tslib: 1.14.1
 
   '@aws-crypto/sha256-js@5.2.0':
@@ -4827,7 +4823,7 @@ snapshots:
 
   '@aws-crypto/util@3.0.0':
     dependencies:
-      '@aws-sdk/types': 3.667.0
+      '@aws-sdk/types': 3.679.0
       '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
 
@@ -5545,11 +5541,6 @@ snapshots:
   '@aws-sdk/types@3.428.0':
     dependencies:
       '@smithy/types': 2.12.0
-      tslib: 2.6.2
-
-  '@aws-sdk/types@3.667.0':
-    dependencies:
-      '@smithy/types': 3.5.0
       tslib: 2.6.2
 
   '@aws-sdk/types@3.679.0':
