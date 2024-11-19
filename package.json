@@ -2,7 +2,7 @@
   "name": "signed-api",
   "version": "2.1.0",
   "engines": {
-    "node": ">=18.20.4"
+    "node": ">=18.20.5"
   },
   "repository": {
     "type": "git",

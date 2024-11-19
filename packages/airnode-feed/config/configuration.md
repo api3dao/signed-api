@@ -123,7 +123,7 @@ The ID of the endpoint to which the template request is made.
 ##### `parameters`
 
 The parameters of the template request. Refer to
-[Airnode ABI](https://dapi-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html) specification for
+[Airnode ABI](https://airnode-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html) specification for
 details.
 
 ##### `parameters[n]`
@@ -133,7 +133,7 @@ Defines one of the parameters of the template request.
 `type`
 
 Refer to
-[Airnode ABI available types](https://dapi-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html#details).
+[Airnode ABI available types](https://airnode-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html#details).
 
 `name`
 
@@ -207,9 +207,10 @@ pushes it to all Signed APIs defined in the configuration file.
 
 Airnode feed only makes a single template request independently of the number of template IDs specified. This is to
 reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same
-endpoint and parameters. You can use [OIS processing](https://dapi-docs.api3.org/reference/ois/latest/processing.html)
-to remove the parameters before making the request (using pre-processing) and later get the corresponding template value
-based on the endpoint parameters (using-processing).
+endpoint and parameters. You can use
+[OIS processing](https://airnode-docs.api3.org/reference/ois/latest/processing.html) to remove the parameters before
+making the request (using pre-processing) and later get the corresponding template value based on the endpoint
+parameters (using-processing).
 
 ##### `templateIds`
 
@@ -261,12 +262,12 @@ Configuration for the OISes.
 
 #### `ois[n]`
 
-Refer to the [OIS documentation](https://dapi-docs.api3.org/reference/ois/latest/).
+Refer to the [OIS documentation](https://airnode-docs.api3.org/reference/ois/latest/).
 
 ### `apiCredentials`
 
 Refer to Airnode's
-[API credentials](https://dapi-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
+[API credentials](https://airnode-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
 
 ### `nodeSettings`
 
