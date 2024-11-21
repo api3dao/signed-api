@@ -25,6 +25,11 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["node"],
       "enabled": false
+    },
+    {
+      "matchDepTypes": ["packageManager"],
+      "matchPackageNames": ["pnpm"],
+      "extends": ["schedule:quarterly"]
     }
   ],
   "rangeStrategy": "bump",
