@@ -69,8 +69,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       axios:
-        specifier: ^1.7.7
-        version: 1.7.7
+        specifier: ^1.7.8
+        version: 1.7.9
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -112,8 +112,8 @@ importers:
         specifier: workspace:*
         version: link:../signed-api
       axios:
-        specifier: ^1.7.7
-        version: 1.7.7
+        specifier: ^1.7.8
+        version: 1.7.9
       ethers:
         specifier: ^5.7.2
         version: 5.7.2
@@ -155,7 +155,7 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       '@aws-sdk/client-s3':
-        specifier: ^3.699.0
+        specifier: ^3.703.0
         version: 3.703.0
       dotenv:
         specifier: ^16.4.5
@@ -1897,8 +1897,8 @@ packages:
     resolution: {integrity: sha512-Mr2ZakwQ7XUAjp7pAwQWRhhK8mQQ6JAaNWSjmjxil0R8BPioMtQsTLOolGYkji1rcL++3dCqZA3zWqpT+9Ew6g==}
     engines: {node: '>=4'}
 
-  axios@1.7.7:
-    resolution: {integrity: sha512-S4kL7XrjgBmvdGut0sN3yJxqYzrDOnivkBiN0OFs6hLiUam3UPvswUo0kqGyhqUZGEOytHyumEdXsAkgCOUf3Q==}
+  axios@1.7.9:
+    resolution: {integrity: sha512-LhLcE7Hbiryz8oMDdDptSrWowmB4Bl6RCt6sIJKpRB4XtVf0iEgewX3au/pJqm+Py1kCASkb/FFKjxQaLtxJvw==}
 
   axobject-query@3.1.1:
     resolution: {integrity: sha512-goKlv8DZrK9hUh975fnHzhNIO4jUnFCfv/dszV5VwUGDFjI6vQ2VwoyjYjYNEbBE8AH87TduWP5uyDR1D+Iteg==}
@@ -4568,7 +4568,7 @@ snapshots:
     dependencies:
       '@api3/ois': 2.3.2
       '@api3/promise-utils': 0.4.0
-      axios: 1.7.7
+      axios: 1.7.9
       bignumber.js: 9.1.2
       ethers: 5.7.2
       lodash: 4.17.21
@@ -4663,7 +4663,7 @@ snapshots:
       '@api3/promise-utils': 0.4.0
       '@octokit/rest': 20.1.1
       '@octokit/types': 13.6.2
-      axios: 1.7.7
+      axios: 1.7.9
       dotenv: 16.4.5
       ethers: 5.7.2
       lodash: 4.17.21
@@ -7682,7 +7682,7 @@ snapshots:
 
   axe-core@4.10.0: {}
 
-  axios@1.7.7:
+  axios@1.7.9:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
