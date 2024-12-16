@@ -22,9 +22,9 @@
     "@api3/airnode-feed": "workspace:*",
     "@api3/promise-utils": "^0.4.0",
     "@api3/signed-api": "workspace:*",
-    "axios": "^1.7.8",
+    "axios": "^1.7.9",
     "ethers": "^5.7.2",
-    "express": "^4.21.1",
+    "express": "^4.21.2",
     "lodash": "^4.17.21",
     "zod": "^3.23.8"
   },
