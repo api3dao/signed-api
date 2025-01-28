@@ -2,7 +2,7 @@
   "name": "@api3/signed-api",
   "version": "2.1.0",
   "engines": {
-    "node": ">=18.20.5"
+    "node": ">=18.20.6"
   },
   "files": [
     "dist",
