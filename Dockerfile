@@ -14,11 +14,18 @@
 # The above commands will allow you to inspect the output of the build stage. You can change the target to debug other
 # stages and verify that the image is correct.
 
-# We use the alpine image because of its small size. The alternative considered was the "slim" image, but it is larger
-# and we already use alpine (without issues) in other projects, so the size reduction seems worth it.
+# Extract the pnpm version from the package.json file and store it in an environment variable.
+FROM node:20-slim AS version-extract
+WORKDIR /app
+COPY package.json .
+RUN apt-get update && \
+    apt-get install -y jq && \
+    echo "PNPM_VERSION=$(jq -r .packageManager package.json | sed 's/pnpm@//')" >> /tmp/env-vars
+
 FROM node:20-slim AS build
 WORKDIR /app
-RUN npm install -g pnpm
+COPY --from=version-extract /tmp/env-vars /tmp/env-vars
+RUN . /tmp/env-vars && npm install -g pnpm@${PNPM_VERSION}
 # Copy just the "pnpm-lock.yaml" file and use "pnpm fetch" to download all dependencies just from the lockfile. This
 # command is specifically designed to improve building a docker image because it only installs the dependencies if the
 # lockfile has changed (otherwise uses the cached value).
