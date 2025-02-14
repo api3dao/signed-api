@@ -29,6 +29,8 @@ COPY . /app
 # Ideally, we would use "--offline" option, but it seems pnpm has a bug. Fortunately, the installation times are similar.
 # See: https://github.com/pnpm/pnpm/issues/6058 for details.
 RUN pnpm install --recursive --prefer-offline
+# Add node_modules/.bin to PATH so we can use local typescript
+ENV PATH="/app/node_modules/.bin:${PATH}"
 # Build all packages in the monorepo.
 RUN pnpm run --recursive build
 
