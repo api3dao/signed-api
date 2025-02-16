@@ -43,6 +43,7 @@ export const endpointsSchema = z
 const allowedAirnodeSchema = z.strictObject({
   address: evmAddressSchema,
   authTokens: z.array(z.string()).nonempty().nullable(),
+  isCertified: z.boolean(),
 });
 
 export type AllowedAirnode = z.infer<typeof allowedAirnodeSchema>;
