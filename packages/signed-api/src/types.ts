@@ -21,6 +21,15 @@ export type PostSignedDataResponseSchema = {
 
 export type GetListAirnodesResponseSchema = { count: number; 'available-airnodes': string[] };
 
+export type GetStatusResponseSchema = {
+  stage: string;
+  version: string;
+  currentTimestamp: string;
+  deploymentTimestamp: string;
+  configHash: string;
+  certifiedAirnodeAddresses: string[];
+};
+
 export type InternalSignedData = {
   airnode: string;
   templateId: string;
