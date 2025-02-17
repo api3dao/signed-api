@@ -219,14 +219,14 @@ or
 
 ```jsonc
 // Allows pushing signed data only for the specific Airnode. No authorization is required to push the data.
-"allowedAirnodes": [ { "address": "0xB47E3D8734780430ee6EfeF3c5407090601Dcd15", "authTokens": null } ]
+"allowedAirnodes": [ { "address": "0xB47E3D8734780430ee6EfeF3c5407090601Dcd15", "authTokens": null, "isCertified": true } ]
 ```
 
 or
 
 ```jsonc
 // Allows pushing signed data only for the specific Airnode. The pusher needs to authorize with one of the specific tokens.
-"allowedAirnodes": { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["some-secret-token-for-airnode-feed"] }
+"allowedAirnodes": { "address": "0xbF3137b0a7574563a23a8fC8badC6537F98197CC", "authTokens": ["some-secret-token-for-airnode-feed"], "isCertified": true }
 ```
 
 #### `allowedAirnodes[n]`
@@ -244,6 +244,12 @@ The nonempty list of
 
 To allow pushing data without any authorization, set the value to `null`. The API validates the data, but this is not
 recommended.
+
+##### `isCertified`
+
+A boolean flag indicating whether the Airnode is first-party verified. When set to true, the Airnode address will be
+included in the `/status` endpoint response under `certifiedAirnodeAddresses`. This proves that the deployer of the
+Signed API instance owns/controls these Airnodes, enabling clients to verify first-party data sources.
 
 #### `stage`
 
