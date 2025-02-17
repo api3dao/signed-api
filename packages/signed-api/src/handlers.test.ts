@@ -1,4 +1,5 @@
 import { type SignedApiBatchPayloadV2, type SignedApiBatchPayloadV1, deriveOevTemplateId } from '@api3/airnode-feed';
+import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import { ethers } from 'ethers';
 import { omit } from 'lodash';
 import type Pool from 'workerpool/types/Pool';
@@ -574,6 +575,7 @@ describe(getStatus.name, () => {
     const config = getMockedConfig();
     config.allowedAirnodes = '*';
     jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'aws-s3' } as any);
 
     const result = getStatus();
     const { body, statusCode } = parseResponse<GetStatusResponseSchema>(result);
@@ -596,6 +598,7 @@ describe(getStatus.name, () => {
       { address: '0x27f093777962Bb743E6cAC44cd724B84B725408a', authTokens: null, isCertified: false },
     ];
     jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'aws-s3' } as any);
 
     const result = getStatus();
     const { body, statusCode } = parseResponse<GetStatusResponseSchema>(result);
@@ -611,9 +614,38 @@ describe(getStatus.name, () => {
     });
   });
 
+  it('uses rawConfig for hash when CONFIG_SOURCE is local', () => {
+    const config = getMockedConfig();
+    const rawConfig = { ...config, someSecret: 'secret-value' };
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    jest.spyOn(configModule, 'getRawConfig').mockReturnValue(rawConfig);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'local' } as any);
+
+    const result = getStatus();
+    const { body } = parseResponse<GetStatusResponseSchema>(result);
+
+    // Hash should be based on rawConfig which includes the secret
+    expect(body.configHash).toBe(createSha256Hash(serializePlainObject(rawConfig)));
+  });
+
+  it('uses config for hash when CONFIG_SOURCE is aws-s3', () => {
+    const config = getMockedConfig();
+    const rawConfig = { ...config, someSecret: 'secret-value' };
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    jest.spyOn(configModule, 'getRawConfig').mockReturnValue(rawConfig);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'aws-s3' } as any);
+
+    const result = getStatus();
+    const { body } = parseResponse<GetStatusResponseSchema>(result);
+
+    // Hash should be based on config which doesn't include the secret
+    expect(body.configHash).toBe(createSha256Hash(serializePlainObject(config)));
+  });
+
   it('generates consistent configHash for same config', () => {
     const config = getMockedConfig();
     jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'aws-s3' } as any);
 
     const result1 = getStatus();
     const result2 = getStatus();
@@ -629,6 +661,7 @@ describe(getStatus.name, () => {
     const config2 = { ...getMockedConfig(), stage: 'different-stage' };
 
     jest.spyOn(configModule, 'getConfig').mockReturnValueOnce(config1).mockReturnValueOnce(config2);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'aws-s3' } as any);
 
     const result1 = getStatus();
     const result2 = getStatus();
@@ -642,6 +675,7 @@ describe(getStatus.name, () => {
   it('maintains same deploymentTimestamp across multiple calls', () => {
     const config = getMockedConfig();
     jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ CONFIG_SOURCE: 'aws-s3' } as any);
 
     const result1 = getStatus();
 
