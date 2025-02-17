@@ -139,8 +139,8 @@ describe('allowed Airnodes schema', () => {
 
     expect(() =>
       allowedAirnodesSchema.parse([
-        { address: '0xB47E3D8734780430ee6EfeF3c5407090601Dcd15', authTokens: ['token1'] },
-        { address: '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11', authTokens: null },
+        { address: '0xB47E3D8734780430ee6EfeF3c5407090601Dcd15', isCertified: true, authTokens: ['token1'] },
+        { address: '0xE1d8E71195606Ff69CA33A375C31fe763Db97B11', isCertified: false, authTokens: null },
       ])
     ).not.toThrow();
   });

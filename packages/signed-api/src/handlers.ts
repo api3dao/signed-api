@@ -1,4 +1,5 @@
 import { signedApiBatchPayloadV1Schema, signedApiBatchPayloadV2Schema } from '@api3/airnode-feed';
+import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, omit, pick } from 'lodash';
 
@@ -17,10 +18,14 @@ import type {
   GetUnsignedDataResponseSchema,
   InternalSignedData,
   PostSignedDataResponseSchema,
+  GetStatusResponseSchema,
 } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
 const LOG_API_DATA_DELAY_MS = 5 * 60 * 1000;
+
+// Initialize deployment timestamp when the application starts
+const DEPLOYMENT_TIMESTAMP = Math.floor(Date.now() / 1000).toString();
 
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.
@@ -217,6 +222,33 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   return {
     statusCode: 200,
     headers: createResponseHeaders(getConfig().cache),
+    body: JSON.stringify(response),
+  };
+};
+
+export const getStatus = (): ApiResponse => {
+  const config = getConfig();
+  const configHash = createSha256Hash(serializePlainObject(config));
+  const currentTimestamp = Math.floor(Date.now() / 1000).toString();
+
+  // Get certified airnode addresses from config
+  const certifiedAirnodes =
+    config.allowedAirnodes === '*'
+      ? []
+      : config.allowedAirnodes.filter((airnode) => airnode.isCertified).map((airnode) => airnode.address);
+
+  const response: GetStatusResponseSchema = {
+    stage: config.stage,
+    version: config.version,
+    currentTimestamp,
+    deploymentTimestamp: DEPLOYMENT_TIMESTAMP,
+    configHash,
+    certifiedAirnodes,
+  };
+
+  return {
+    statusCode: 200,
+    headers: createResponseHeaders(config.cache),
     body: JSON.stringify(response),
   };
 };

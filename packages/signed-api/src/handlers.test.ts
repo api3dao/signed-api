@@ -14,12 +14,12 @@ import {
 
 import * as configModule from './config/config';
 import * as envModule from './env';
-import { batchInsertData, getData, listAirnodeAddresses } from './handlers';
+import { batchInsertData, getData, getStatus, listAirnodeAddresses } from './handlers';
 import * as inMemoryCacheModule from './in-memory-cache';
 import { logger } from './logger';
 import { type EnvConfig } from './schema';
 import { initializeVerifierPool } from './signed-data-verifier-pool';
-import { type ApiResponse } from './types';
+import type { ApiResponse, GetStatusResponseSchema } from './types';
 import { deriveBeaconId } from './utils';
 
 let workerPool: Pool;
@@ -554,5 +554,106 @@ describe(listAirnodeAddresses.name, () => {
       count: 1,
       'available-airnodes': [airnodeWallet.address],
     });
+  });
+});
+
+describe(getStatus.name, () => {
+  const mockDate = new Date('2024-01-01T00:00:00Z');
+  const mockTimestamp = Math.floor(mockDate.getTime() / 1000).toString();
+
+  beforeEach(() => {
+    jest.useFakeTimers();
+    jest.setSystemTime(mockDate);
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
+  it('returns empty certified airnode addresses when config has "*"', () => {
+    const config = getMockedConfig();
+    config.allowedAirnodes = '*';
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+
+    const result = getStatus();
+    const { body, statusCode } = parseResponse<GetStatusResponseSchema>(result);
+
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      certifiedAirnodes: [],
+      stage: config.stage,
+      version: config.version,
+      currentTimestamp: mockTimestamp,
+      deploymentTimestamp: expect.any(String),
+      configHash: expect.any(String),
+    });
+  });
+
+  it('returns certified airnode addresses when config has specific airnodes', () => {
+    const config = getMockedConfig();
+    config.allowedAirnodes = [
+      { address: '0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb', authTokens: ['token1'], isCertified: true },
+      { address: '0x27f093777962Bb743E6cAC44cd724B84B725408a', authTokens: null, isCertified: false },
+    ];
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+
+    const result = getStatus();
+    const { body, statusCode } = parseResponse<GetStatusResponseSchema>(result);
+
+    expect(statusCode).toBe(200);
+    expect(body).toStrictEqual({
+      certifiedAirnodes: ['0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb'],
+      stage: config.stage,
+      version: config.version,
+      currentTimestamp: mockTimestamp,
+      deploymentTimestamp: expect.any(String),
+      configHash: expect.any(String),
+    });
+  });
+
+  it('generates consistent configHash for same config', () => {
+    const config = getMockedConfig();
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+
+    const result1 = getStatus();
+    const result2 = getStatus();
+
+    const body1 = parseResponse<GetStatusResponseSchema>(result1).body;
+    const body2 = parseResponse<GetStatusResponseSchema>(result2).body;
+
+    expect(body1.configHash).toBe(body2.configHash);
+  });
+
+  it('generates different configHash for different configs', () => {
+    const config1 = getMockedConfig();
+    const config2 = { ...getMockedConfig(), stage: 'different-stage' };
+
+    jest.spyOn(configModule, 'getConfig').mockReturnValueOnce(config1).mockReturnValueOnce(config2);
+
+    const result1 = getStatus();
+    const result2 = getStatus();
+
+    const body1 = parseResponse<GetStatusResponseSchema>(result1).body;
+    const body2 = parseResponse<GetStatusResponseSchema>(result2).body;
+
+    expect(body1.configHash).not.toBe(body2.configHash);
+  });
+
+  it('maintains same deploymentTimestamp across multiple calls', () => {
+    const config = getMockedConfig();
+    jest.spyOn(configModule, 'getConfig').mockReturnValue(config);
+
+    const result1 = getStatus();
+
+    // Advance time by 1 hour
+    jest.advanceTimersByTime(60 * 60 * 1000);
+
+    const result2 = getStatus();
+
+    const body1 = parseResponse<GetStatusResponseSchema>(result1).body;
+    const body2 = parseResponse<GetStatusResponseSchema>(result2).body;
+
+    expect(body1.deploymentTimestamp).toBe(body2.deploymentTimestamp);
+    expect(body1.currentTimestamp).not.toBe(body2.currentTimestamp);
   });
 });

@@ -1,7 +1,7 @@
 import { go } from '@api3/promise-utils';
 import express from 'express';
 
-import { getData, listAirnodeAddresses, batchInsertData } from './handlers';
+import { getData, getStatus, listAirnodeAddresses, batchInsertData } from './handlers';
 import { logger } from './logger';
 import type { Config } from './schema';
 
@@ -38,6 +38,19 @@ export const startServer = (config: Config, port: number) => {
       res.status(result.statusCode).header(result.headers).send(result.body);
 
       logger.debug('Responded to request "GET /".', result);
+    });
+
+    if (!goRequest.success) next(goRequest.error);
+  });
+
+  app.get('/status', async (_req, res, next) => {
+    const goRequest = await go(() => {
+      logger.info('Received request "GET /status".');
+
+      const result = getStatus();
+      res.status(result.statusCode).header(result.headers).send(result.body);
+
+      logger.debug('Responded to request "GET /status".', result);
     });
 
     if (!goRequest.success) next(goRequest.error);
