@@ -12,5 +12,8 @@
   "dependencies": {
     "@api3/airnode-abi": "^0.14.2",
     "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
   }
 }
