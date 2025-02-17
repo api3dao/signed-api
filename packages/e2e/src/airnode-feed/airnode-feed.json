@@ -84,7 +84,7 @@
   ],
   "apiCredentials": [],
   "nodeSettings": {
-    "nodeVersion": "3.0.0",
+    "nodeVersion": "3.0.1",
     "airnodeWalletMnemonic": "diamond result history offer forest diagram crop armed stumble orchard stage glance",
     "stage": "local-example"
   }
