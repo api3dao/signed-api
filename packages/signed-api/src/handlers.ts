@@ -232,7 +232,7 @@ export const getStatus = (): ApiResponse => {
   const currentTimestamp = Math.floor(Date.now() / 1000).toString();
 
   // Get certified airnode addresses from config
-  const certifiedAirnodeAddresses =
+  const certifiedAirnodes =
     config.allowedAirnodes === '*'
       ? []
       : config.allowedAirnodes.filter((airnode) => airnode.isCertified).map((airnode) => airnode.address);
@@ -243,7 +243,7 @@ export const getStatus = (): ApiResponse => {
     currentTimestamp,
     deploymentTimestamp: DEPLOYMENT_TIMESTAMP,
     configHash,
-    certifiedAirnodeAddresses,
+    certifiedAirnodes,
   };
 
   return {

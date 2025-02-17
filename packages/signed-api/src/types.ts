@@ -27,7 +27,7 @@ export type GetStatusResponseSchema = {
   currentTimestamp: string;
   deploymentTimestamp: string;
   configHash: string;
-  certifiedAirnodeAddresses: string[];
+  certifiedAirnodes: string[];
 };
 
 export type InternalSignedData = {

@@ -580,7 +580,7 @@ describe(getStatus.name, () => {
 
     expect(statusCode).toBe(200);
     expect(body).toStrictEqual({
-      certifiedAirnodeAddresses: [],
+      certifiedAirnodes: [],
       stage: config.stage,
       version: config.version,
       currentTimestamp: mockTimestamp,
@@ -602,7 +602,7 @@ describe(getStatus.name, () => {
 
     expect(statusCode).toBe(200);
     expect(body).toStrictEqual({
-      certifiedAirnodeAddresses: ['0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb'],
+      certifiedAirnodes: ['0xA0342Ba0319c0bCd66E770d74489aA2997a54bFb'],
       stage: config.stage,
       version: config.version,
       currentTimestamp: mockTimestamp,
