@@ -13,7 +13,7 @@ import { getVerifier } from './signed-data-verifier-pool';
 import { transformAirnodeFeedPayload } from './transform-payload';
 import type {
   ApiResponse,
-  GetListAirnodesResponseSchema,
+  GetAirnodesResponseSchema,
   GetSignedDataResponseSchema,
   GetUnsignedDataResponseSchema,
   InternalSignedData,
@@ -214,9 +214,9 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
   }
   const airnodeAddresses = goAirnodeAddresses.data;
 
-  const response: GetListAirnodesResponseSchema = {
+  const response: GetAirnodesResponseSchema = {
     count: airnodeAddresses.length,
-    'available-airnodes': airnodeAddresses,
+    data: airnodeAddresses,
   };
 
   return {

@@ -30,27 +30,27 @@ export const startServer = (config: Config, port: number) => {
     if (!goRequest.success) next(goRequest.error);
   });
 
-  app.get('/', async (_req, res, next) => {
+  app.get('/airnodes', async (_req, res, next) => {
     const goRequest = await go(async () => {
-      logger.info('Received request "GET /".');
+      logger.info('Received request "GET /airnodes".');
 
       const result = await listAirnodeAddresses();
       res.status(result.statusCode).header(result.headers).send(result.body);
 
-      logger.debug('Responded to request "GET /".', result);
+      logger.debug('Responded to request "GET /airnodes".', result);
     });
 
     if (!goRequest.success) next(goRequest.error);
   });
 
-  app.get('/status', async (_req, res, next) => {
+  app.get('/', async (_req, res, next) => {
     const goRequest = await go(() => {
-      logger.info('Received request "GET /status".');
+      logger.info('Received request "GET /".');
 
       const result = getStatus();
       res.status(result.statusCode).header(result.headers).send(result.body);
 
-      logger.debug('Responded to request "GET /status".', result);
+      logger.debug('Responded to request "GET /".', result);
     });
 
     if (!goRequest.success) next(goRequest.error);

@@ -19,7 +19,7 @@ export type PostSignedDataResponseSchema = {
   skipped: number;
 };
 
-export type GetListAirnodesResponseSchema = { count: number; 'available-airnodes': string[] };
+export type GetAirnodesResponseSchema = { count: number; data: string[] };
 
 export type GetStatusResponseSchema = {
   stage: string;

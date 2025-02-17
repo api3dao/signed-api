@@ -248,8 +248,8 @@ recommended.
 ##### `isCertified`
 
 A boolean flag indicating whether the Airnode is first-party verified. When set to true, the Airnode address will be
-included in the `/status` endpoint response under `certifiedAirnodes`. This flag is set by the deployer of the Signed
-API instance and serves as a declaration of ownership or control over the listed Airnodes. However, as the deployer has
+included in the `/` endpoint response under `certifiedAirnodes`. This flag is set by the deployer of the Signed API
+instance and serves as a declaration of ownership or control over the listed Airnodes. However, as the deployer has
 complete control over setting this flag, it does not constitute a cryptographic proof of ownership.
 
 #### `stage`

@@ -90,8 +90,8 @@ async function main() {
   configTemplate.signedApis[0]!.url = targetSignedApiUrl;
   configTemplate.ois[0]!.apiSpecifications.servers[0]!.url = sourceSignedApiUrl;
 
-  const availableAirnodesResponse = await fetch(sourceSignedApiUrl).then((res) => res.json() as any);
-  const availableAirnodes: string[] = availableAirnodesResponse['available-airnodes'];
+  const availableAirnodesResponse = await fetch(`${sourceSignedApiUrl}/airnodes`).then((res) => res.json() as any);
+  const availableAirnodes: string[] = availableAirnodesResponse.data;
   console.info(`There are ${availableAirnodesResponse.count} available Airnode(s).`);
 
   let currentTriggersCount = 0;
