@@ -3,7 +3,7 @@ import { createSha256Hash, serializePlainObject } from '@api3/commons';
 import { go, goSync } from '@api3/promise-utils';
 import { isEmpty, omit, pick } from 'lodash';
 
-import { getConfig } from './config/config';
+import { getConfig, getRawConfig } from './config/config';
 import { loadEnv } from './env';
 import { createResponseHeaders } from './headers';
 import { get, getAll, getAllAirnodeAddresses, prune, putAll } from './in-memory-cache';
@@ -228,7 +228,13 @@ export const listAirnodeAddresses = async (): Promise<ApiResponse> => {
 
 export const getStatus = (): ApiResponse => {
   const config = getConfig();
-  const configHash = createSha256Hash(serializePlainObject(config));
+  const env = loadEnv();
+
+  // For local config source, we use rawConfig for hashing to exclude secrets
+  // For AWS S3, we use the config directly as it's already processed through S3
+  const configToHash = env.CONFIG_SOURCE === 'local' ? getRawConfig() : config;
+  const configHash = createSha256Hash(serializePlainObject(configToHash));
+
   const currentTimestamp = Math.floor(Date.now() / 1000).toString();
 
   // Get certified airnode addresses from config

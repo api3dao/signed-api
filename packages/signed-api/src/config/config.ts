@@ -14,11 +14,18 @@ import { logger } from '../logger';
 import { type Config, configSchema } from '../schema';
 
 let config: Config | undefined;
+let rawConfig: any | undefined;
 
 export const getConfig = (): Config => {
   if (!config) throw new Error(`Config has not been set yet`);
 
   return config;
+};
+
+export const getRawConfig = (): any => {
+  if (!rawConfig) throw new Error(`Raw config has not been set yet`);
+
+  return rawConfig;
 };
 
 // When Signed API is built, the "/dist" file contains "src" folder and "package.json" and the config is expected to be
@@ -29,7 +36,7 @@ const getConfigPath = () => join(cwd(), './config');
 
 export const loadConfigFromFilesystem = () => {
   const goLoadConfig = goSync(() => {
-    const rawConfig = loadRawConfigFromFilesystem(join(getConfigPath(), 'signed-api.json'));
+    rawConfig = loadRawConfigFromFilesystem(join(getConfigPath(), 'signed-api.json'));
     const rawSecrets = loadRawSecretsFromFilesystem(join(getConfigPath(), 'secrets.env'));
     return interpolateSecretsIntoConfig(rawConfig, rawSecrets);
   });
