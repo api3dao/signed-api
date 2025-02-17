@@ -43,14 +43,14 @@ export const startServer = (config: Config, port: number) => {
     if (!goRequest.success) next(goRequest.error);
   });
 
-  app.get('/status', async (_req, res, next) => {
+  app.get('/', async (_req, res, next) => {
     const goRequest = await go(() => {
-      logger.info('Received request "GET /status".');
+      logger.info('Received request "GET /".');
 
       const result = getStatus();
       res.status(result.statusCode).header(result.headers).send(result.body);
 
-      logger.debug('Responded to request "GET /status".', result);
+      logger.debug('Responded to request "GET /".', result);
     });
 
     if (!goRequest.success) next(goRequest.error);
