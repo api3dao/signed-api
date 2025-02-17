@@ -552,7 +552,7 @@ describe(listAirnodeAddresses.name, () => {
     expect(statusCode).toBe(200);
     expect(body).toStrictEqual({
       count: 1,
-      'available-airnodes': [airnodeWallet.address],
+      data: [airnodeWallet.address],
     });
   });
 });
