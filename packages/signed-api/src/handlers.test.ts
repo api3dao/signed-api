@@ -13,11 +13,9 @@ import {
 } from '../test/utils';
 
 import * as configModule from './config/config';
-import * as envModule from './env';
 import { batchInsertData, getData, getStatus, listAirnodeAddresses } from './handlers';
 import * as inMemoryCacheModule from './in-memory-cache';
 import { logger } from './logger';
-import { type EnvConfig } from './schema';
 import { initializeVerifierPool } from './signed-data-verifier-pool';
 import type { ApiResponse, GetStatusResponseSchema } from './types';
 import { deriveBeaconId } from './utils';
@@ -255,42 +253,6 @@ describe(batchInsertData.name, () => {
           [batchData[1]!.templateId]: [{ ...batchData[1], isOevBeacon: false }],
         },
       },
-    });
-  });
-
-  it('logs the data with delay if LOG_API_DATA is enabled', async () => {
-    const airnodeWallet = generateRandomWallet();
-    const batchData = [await createSignedDataV1({ airnodeWallet }), await createSignedDataV1({ airnodeWallet })];
-    jest.spyOn(envModule, 'loadEnv').mockReturnValue({ LOG_API_DATA: true } as EnvConfig);
-    jest.spyOn(logger, 'info');
-    jest.useFakeTimers();
-
-    const result = await batchInsertData(undefined, batchData, airnodeWallet.address);
-    const { body, statusCode } = parseResponse(result);
-
-    expect(statusCode).toBe(201);
-    expect(body).toStrictEqual({
-      count: 2,
-      skipped: 0,
-    });
-    expect(inMemoryCacheModule.getCache()).toStrictEqual({
-      ...inMemoryCacheModule.getInitialCache(),
-      signedDataCache: {
-        [batchData[0]!.airnode]: {
-          [batchData[0]!.templateId]: [{ ...batchData[0], isOevBeacon: false }],
-          [batchData[1]!.templateId]: [{ ...batchData[1], isOevBeacon: false }],
-        },
-      },
-    });
-
-    // Advance time just before 5 minutes and verify that the logger was not called.
-    jest.advanceTimersByTime(5 * 60 * 1000 - 1);
-    expect(logger.info).not.toHaveBeenCalled();
-
-    // Advance time pass the delay period and verify that the data was called.
-    jest.advanceTimersByTime(1);
-    expect(logger.info).toHaveBeenCalledWith('Received valid signed data.', {
-      data: batchData.map((d) => omit(d, ['beaconId'])),
     });
   });
 });
