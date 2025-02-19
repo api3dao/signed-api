@@ -22,8 +22,6 @@ import type {
 } from './types';
 import { extractBearerToken, generateErrorResponse, isBatchUnique } from './utils';
 
-const LOG_API_DATA_DELAY_MS = 5 * 60 * 1000;
-
 // Initialize deployment timestamp when the application starts
 const DEPLOYMENT_TIMESTAMP = Math.floor(Date.now() / 1000).toString();
 
@@ -115,14 +113,11 @@ export const batchInsertData = async (
 
   const env = loadEnv();
   if (env.LOG_API_DATA) {
-    // The logging of the data is delayed for security reasons - so people with access to the logs can't misuse the
-    // signed data.
-    setTimeout(() => {
-      const sanitizedData = batchSignedData.map((data) =>
-        pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp', 'signature'])
-      );
-      logger.info('Received valid signed data.', { data: sanitizedData });
-    }, LOG_API_DATA_DELAY_MS);
+    // Log only the required fields to use less space, do not log the signature for security reasons.
+    const sanitizedData = batchSignedData.map((data) =>
+      pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp'])
+    );
+    logger.info('Received valid signed data.', { data: sanitizedData });
   }
 
   const newSignedData: InternalSignedData[] = [];
