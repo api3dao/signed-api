@@ -48,9 +48,12 @@ The API provides the following endpoints:
     step.
 - `GET /{endpoint-name}/{airnode}`: Retrieve signed data for the Airnode respecting the endpoint configuration.
   - Returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
-- `GET /`: Retrieve list of all available Airnode address.
+- `GET /airnodes`: Retrieve list of all available Airnode address.
   - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
     delayed endpoints (in case the data is too fresh and there is not an older alternative).
+- `GET /`: Retrieve system status information.
+  - Returns current system configuration details including deployment stage, version, current timestamp, deployment
+    timestamp, configuration hash, and certified Airnode addresses.
 
 ## Deployment
 
@@ -117,6 +120,10 @@ curl --location 'http://localhost:8090/real-time/0xc52EeA00154B4fF1EbbF8Ba39FDe3
 --header 'Content-Type: application/json'
 
 # List available airnode addresses (HTTP GET)
-curl --location 'http://localhost:8090' \
+curl --location 'http://localhost:8090/airnodes' \
+--header 'Content-Type: application/json'
+
+# Get system status (HTTP GET)
+curl --location 'http://localhost:8090/' \
 --header 'Content-Type: application/json'
 ```
