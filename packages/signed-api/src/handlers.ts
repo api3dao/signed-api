@@ -113,10 +113,10 @@ export const batchInsertData = async (
 
   const env = loadEnv();
   if (env.LOG_API_DATA) {
-    // Log only the required fields to use less space, do not log the signature for security reasons.
-    const sanitizedData = batchSignedData.map((data) =>
-      pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp'])
-    );
+    // Log data for base feed beacons, including only the required fields to save space. For security reasons, do not log the signature.
+    const sanitizedData = batchSignedData
+      .filter(({ isOevBeacon }) => !isOevBeacon)
+      .map((data) => pick(data, ['airnode', 'encodedValue', 'templateId', 'timestamp']));
     logger.info('Received valid signed data.', { data: sanitizedData });
   }
 
