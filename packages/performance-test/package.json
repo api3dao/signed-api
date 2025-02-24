@@ -10,7 +10,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@api3/airnode-abi": "^0.14.2",
+    "@api3/airnode-abi": "^0.15.0",
     "ethers": "^5.7.2"
   }
 }
