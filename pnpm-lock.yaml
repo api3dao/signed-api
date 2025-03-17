@@ -69,7 +69,7 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       axios:
-        specifier: ^1.8.1
+        specifier: ^1.8.2
         version: 1.8.2
       dotenv:
         specifier: ^16.4.7
@@ -112,7 +112,7 @@ importers:
         specifier: workspace:*
         version: link:../signed-api
       axios:
-        specifier: ^1.8.1
+        specifier: ^1.8.2
         version: 1.8.2
       ethers:
         specifier: ^5.8.0

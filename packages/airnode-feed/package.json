@@ -36,7 +36,7 @@
     "@api3/commons": "^0.13.4",
     "@api3/ois": "^2.3.2",
     "@api3/promise-utils": "^0.4.0",
-    "axios": "^1.8.1",
+    "axios": "^1.8.2",
     "dotenv": "^16.4.7",
     "ethers": "^5.8.0",
     "express": "^4.21.2",
