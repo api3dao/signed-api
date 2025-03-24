@@ -69,8 +69,8 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       axios:
-        specifier: ^1.8.2
-        version: 1.8.2
+        specifier: ^1.8.3
+        version: 1.8.4
       dotenv:
         specifier: ^16.4.7
         version: 16.4.7
@@ -112,8 +112,8 @@ importers:
         specifier: workspace:*
         version: link:../signed-api
       axios:
-        specifier: ^1.8.2
-        version: 1.8.2
+        specifier: ^1.8.3
+        version: 1.8.4
       ethers:
         specifier: ^5.8.0
         version: 5.8.0
@@ -1745,8 +1745,8 @@ packages:
     resolution: {integrity: sha512-Mr2ZakwQ7XUAjp7pAwQWRhhK8mQQ6JAaNWSjmjxil0R8BPioMtQsTLOolGYkji1rcL++3dCqZA3zWqpT+9Ew6g==}
     engines: {node: '>=4'}
 
-  axios@1.8.2:
-    resolution: {integrity: sha512-ls4GYBm5aig9vWx8AWDSGLpnpDQRtWAfrjU+EuytuODrFBkqesN2RkOQCBzrA1RQNHw1SmRMSDDDSwzNAYQ6Rg==}
+  axios@1.8.4:
+    resolution: {integrity: sha512-eBSYY4Y68NNlHbHBMdeDmKNtDgXWhQsJcGqzO3iLUM0GraQFSS9cVgPX5I9b3lbdFKyYoAEGAZF1DwhTaljNAw==}
 
   axobject-query@3.1.1:
     resolution: {integrity: sha512-goKlv8DZrK9hUh975fnHzhNIO4jUnFCfv/dszV5VwUGDFjI6vQ2VwoyjYjYNEbBE8AH87TduWP5uyDR1D+Iteg==}
@@ -4353,7 +4353,7 @@ snapshots:
     dependencies:
       '@api3/ois': 2.3.2
       '@api3/promise-utils': 0.4.0
-      axios: 1.8.2
+      axios: 1.8.4
       bignumber.js: 9.1.2
       ethers: 5.8.0
       lodash: 4.17.21
@@ -4463,7 +4463,7 @@ snapshots:
       '@api3/promise-utils': 0.4.0
       '@octokit/rest': 20.1.1
       '@octokit/types': 13.6.2
-      axios: 1.8.2
+      axios: 1.8.4
       dotenv: 16.4.7
       ethers: 5.8.0
       lodash: 4.17.21
@@ -4481,7 +4481,7 @@ snapshots:
       '@api3/promise-utils': 0.4.0
       '@typescript-eslint/eslint-plugin': 6.20.0(@typescript-eslint/parser@6.20.0(eslint@8.57.1)(typescript@5.8.2))(eslint@8.57.1)(typescript@5.8.2)
       '@typescript-eslint/parser': 6.20.0(eslint@8.57.1)(typescript@5.8.2)
-      axios: 1.8.2
+      axios: 1.8.4
       dotenv: 16.4.7
       eslint: 8.57.1
       eslint-config-next: 14.2.13(eslint@8.57.1)(typescript@5.8.2)
@@ -7242,7 +7242,7 @@ snapshots:
 
   axe-core@4.10.0: {}
 
-  axios@1.8.2:
+  axios@1.8.4:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
