@@ -72,8 +72,8 @@ importers:
         specifier: ^1.8.4
         version: 1.8.4
       dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
+        specifier: ^16.5.0
+        version: 16.5.0
       ethers:
         specifier: ^5.8.0
         version: 5.8.0
@@ -155,11 +155,11 @@ importers:
         specifier: ^0.4.0
         version: 0.4.0
       '@aws-sdk/client-s3':
-        specifier: ^3.782.0
+        specifier: ^3.787.0
         version: 3.787.0
       dotenv:
-        specifier: ^16.4.7
-        version: 16.4.7
+        specifier: ^16.5.0
+        version: 16.5.0
       ethers:
         specifier: ^5.8.0
         version: 5.8.0
@@ -2271,8 +2271,8 @@ packages:
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
 
-  dotenv@16.4.7:
-    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -4615,7 +4615,7 @@ snapshots:
       '@api3/promise-utils': 0.4.0
       '@aws-sdk/client-lambda': 3.744.0
       date-fns: 3.6.0
-      dotenv: 16.4.7
+      dotenv: 16.5.0
       ethers: 5.8.0
       express: 4.21.2
       google-auth-library: 9.15.1
@@ -4671,7 +4671,7 @@ snapshots:
       '@api3/commons': 0.9.1(eslint@8.57.1)(jest@29.7.0(@types/node@22.14.1)(ts-node@10.9.2(@types/node@22.14.1)(typescript@5.8.3)))(typescript@5.8.3)
       '@api3/ois': 2.3.2
       '@api3/promise-utils': 0.4.0
-      dotenv: 16.4.7
+      dotenv: 16.5.0
       ethers: 5.8.0
       lodash: 4.17.21
       ora: 5.4.1
@@ -4704,7 +4704,7 @@ snapshots:
       '@octokit/rest': 20.1.1
       '@octokit/types': 13.6.2
       axios: 1.8.4
-      dotenv: 16.4.7
+      dotenv: 16.5.0
       ethers: 5.8.0
       lodash: 4.17.21
       winston: 3.17.0
@@ -4722,7 +4722,7 @@ snapshots:
       '@typescript-eslint/eslint-plugin': 6.20.0(@typescript-eslint/parser@6.20.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3)
       '@typescript-eslint/parser': 6.20.0(eslint@8.57.1)(typescript@5.8.3)
       axios: 1.8.4
-      dotenv: 16.4.7
+      dotenv: 16.5.0
       eslint: 8.57.1
       eslint-config-next: 14.2.13(eslint@8.57.1)(typescript@5.8.3)
       eslint-plugin-check-file: 2.8.0(eslint@8.57.1)
@@ -8100,7 +8100,7 @@ snapshots:
       no-case: 3.0.4
       tslib: 2.6.2
 
-  dotenv@16.4.7: {}
+  dotenv@16.5.0: {}
 
   dunder-proto@1.0.1:
     dependencies:
