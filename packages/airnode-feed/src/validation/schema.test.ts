@@ -1,14 +1,11 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
-import * as abi from '@api3/airnode-abi';
 import { interpolateSecretsIntoConfig } from '@api3/commons';
 import dotenv from 'dotenv';
-import { ethers } from 'ethers';
 import { ZodError } from 'zod';
 
 import { config } from '../../test/fixtures';
-import { deriveEndpointId } from '../utils';
 
 import { type Config, configSchema, signedApisSchema } from './schema';
 
@@ -106,11 +103,8 @@ describe('validateTriggerReferences', () => {
 
   it('validates all templates reference the same endpoint', async () => {
     const endpointName = 'testEndpoint';
-    const exampleEndpointId = deriveEndpointId('Nodary', endpointName);
-    const exampleTemplateId = ethers.utils.solidityKeccak256(
-      ['bytes32', 'bytes'],
-      [exampleEndpointId, abi.encode([{ type: 'string32', name: 'name', value: 'DIFFERENT' }])]
-    );
+    const exampleEndpointId = '0x3cd24fa917796c35f96f67fa123c786485ae72133dc2f4da3299cf99fb245317';
+    const exampleTemplateId = '0xd16373affaa5ed2ae5a1f740c48954238ba237e0899e1cf5da97025269ad84cc';
 
     const invalidConfig: Config = {
       ...config,
