@@ -205,6 +205,12 @@ const validateTriggerReferences: SuperRefinement<{
       const ois = oises.find((o) => o.title === endpoint.oisTitle)!;
       const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
 
+      // Skip operation effect validation if the endpoints utilizes `Skip API call` feature
+      // https://github.com/api3dao/signed-api/issues/238
+      if (!oisEndpoint.operation && isEmpty(oisEndpoint.fixedOperationParameters)) {
+        continue; // Continue for the next signedApiUpdate
+      }
+
       const operationPayloadPromises = templateIds.map(async (templateId) => {
         const template = templates[templateId]!;
 
