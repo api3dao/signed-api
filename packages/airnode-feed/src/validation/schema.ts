@@ -10,7 +10,7 @@ import {
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
 import { go, goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
-import { isNil, uniqWith, isEqual } from 'lodash';
+import { isNil, uniqWith, isEqual, isEmpty, uniq } from 'lodash';
 import { z, type SuperRefinement } from 'zod';
 
 import packageJson from '../../package.json';
@@ -167,33 +167,47 @@ const validateTriggerReferences: SuperRefinement<{
 }> = async (config, ctx) => {
   const { ois: oises, templates, endpoints, triggers } = config;
 
-  for (const signedApiUpdate of triggers.signedApiUpdates) {
+  for (const [signedApiUpdateIndex, signedApiUpdate] of triggers.signedApiUpdates.entries()) {
     const { templateIds } = signedApiUpdate;
 
+    // Verify all template IDs actually exist in the templates object
+    const referenceErrors = templateIds.map((templateId, templateIdIndex) => {
+      if (templates[templateId] === undefined) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `Template ID "${templateId}" is not defined in the config.templates object`,
+          path: ['triggers', 'signedApiUpdates', signedApiUpdateIndex, 'templateIds', templateIdIndex],
+        });
+        return true;
+      }
+      return false;
+    });
+    if (referenceErrors.some(Boolean)) {
+      continue; // Continue for the next signedApiUpdate
+    }
+
+    // Only perform following checks if multiple templates are specified
     if (templateIds.length > 1) {
+      // All templates must reference the same endpoint
+      const endpointIds = templateIds.map((templateId) => templates[templateId]!.endpointId);
+      const uniqueEndpointIds = uniq(endpointIds);
+      if (uniqueEndpointIds.length > 1) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `The endpoint utilized by each template must be same`,
+          path: ['triggers', 'signedApiUpdates', signedApiUpdateIndex, 'templateIds'],
+        });
+        continue; // Continue for the next signedApiUpdate
+      }
+
+      // Since all templates use the same endpoint, we can just check the first one
+      const endpoint = endpoints[endpointIds[0]!]!;
+      const ois = oises.find((o) => o.title === endpoint.oisTitle)!;
+      const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
+
       const operationPayloadPromises = templateIds.map(async (templateId) => {
-        const template = templates[templateId];
-        if (!template) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Unable to find template with ID: ${templateId}`,
-            path: ['templates'],
-          });
-          return;
-        }
+        const template = templates[templateId]!;
 
-        const endpoint = endpoints[template.endpointId];
-        if (!endpoint) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: `Unable to find endpoint with ID: ${template.endpointId}`,
-            path: ['endpoints'],
-          });
-          return;
-        }
-
-        const ois = oises.find((o) => o.title === endpoint.oisTitle)!;
-        const oisEndpoint = ois.endpoints.find((e) => e.name === endpoint.endpointName)!;
         const endpointParameters = template.parameters.reduce((acc, parameter) => {
           return {
             ...acc,
@@ -215,13 +229,14 @@ const validateTriggerReferences: SuperRefinement<{
 
       const operationsPayloads = await Promise.all(operationPayloadPromises);
 
+      // Verify all processed payloads are identical
       if (uniqWith(operationsPayloads, isEqual).length !== 1) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `If beaconIds contains more than 1 beacon, the endpoint utilized by each beacons must have same operation effect`,
-          path: ['triggers', 'signedApiUpdates', triggers.signedApiUpdates.indexOf(signedApiUpdate)],
+          message: `The endpoint utilized by each template must have the same operation effect`,
+          path: ['triggers', 'signedApiUpdates', signedApiUpdateIndex, 'templateIds'],
         });
-        return;
+        continue; // Continue for the next signedApiUpdate
       }
     }
   }
