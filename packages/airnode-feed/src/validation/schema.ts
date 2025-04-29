@@ -172,7 +172,7 @@ const validateTriggerReferences: SuperRefinement<{
 
     // Verify all template IDs actually exist in the templates object
     const referenceErrors = templateIds.map((templateId, templateIdIndex) => {
-      if (templates[templateId] === undefined) {
+      if (!templates[templateId]) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Template "${templateId}" is not defined in the config.templates object`,
