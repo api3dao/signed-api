@@ -28,5 +28,5 @@
     { "address": "0xA840740650b832B9480EE56d4e3641f5E57DDE3E", "isCertified": false, "authTokens": null }
   ],
   "stage": "e2e-test",
-  "version": "3.2.0"
+  "version": "3.3.0"
 }
