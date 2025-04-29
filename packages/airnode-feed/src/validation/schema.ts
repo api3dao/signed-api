@@ -139,7 +139,7 @@ const validateOisReferences: SuperRefinement<{ ois: OIS[]; endpoints: Endpoints 
     if (oises.length === 0) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `OIS titled "${oisTitle}" is not defined in the config.ois object`,
+        message: `OIS "${oisTitle}" is not defined in the config.ois object`,
         path: ['endpoints', endpointId, 'oisTitle'],
       });
       continue;
@@ -175,7 +175,7 @@ const validateTriggerReferences: SuperRefinement<{
       if (templates[templateId] === undefined) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: `Template ID "${templateId}" is not defined in the config.templates object`,
+          message: `Template "${templateId}" is not defined in the config.templates object`,
           path: ['triggers', 'signedApiUpdates', signedApiUpdateIndex, 'templateIds', templateIdIndex],
         });
         return true;

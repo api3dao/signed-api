@@ -94,7 +94,7 @@ describe('validateTriggerReferences', () => {
       new ZodError([
         {
           code: 'custom',
-          message: `Template ID "${notFoundTemplateId}" is not defined in the config.templates object`,
+          message: `Template "${notFoundTemplateId}" is not defined in the config.templates object`,
           path: ['triggers', 'signedApiUpdates', 0, 'templateIds', 0],
         },
       ])
