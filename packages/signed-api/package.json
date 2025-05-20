@@ -38,7 +38,7 @@
     "@api3/airnode-feed": "workspace:*",
     "@api3/commons": "^0.13.4",
     "@api3/promise-utils": "^0.4.0",
-    "@aws-sdk/client-s3": "^3.802.0",
+    "@aws-sdk/client-s3": "^3.808.0",
     "dotenv": "^16.5.0",
     "ethers": "^5.8.0",
     "express": "^5.1.0",
