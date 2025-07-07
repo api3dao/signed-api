@@ -18,7 +18,7 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@types/node':
-        specifier: ^22.15.32
+        specifier: ^22.15.34
         version: 22.15.34
       husky:
         specifier: ^9.1.7
@@ -27,10 +27,10 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       jest:
-        specifier: ^30.0.2
+        specifier: ^30.0.3
         version: 30.0.3(@types/node@22.15.34)(ts-node@10.9.2(@types/node@22.15.34)(typescript@5.8.3))
       prettier:
-        specifier: ^3.6.0
+        specifier: ^3.6.2
         version: 3.6.2
       rimraf:
         specifier: ^6.0.1
@@ -91,7 +91,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/lodash':
-        specifier: ^4.17.18
+        specifier: ^4.17.19
         version: 4.17.19
       nodemon:
         specifier: ^3.1.10
@@ -131,7 +131,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/lodash':
-        specifier: ^4.17.18
+        specifier: ^4.17.19
         version: 4.17.19
 
   packages/performance-test:
@@ -180,7 +180,7 @@ importers:
         specifier: ^5.0.3
         version: 5.0.3
       '@types/lodash':
-        specifier: ^4.17.18
+        specifier: ^4.17.19
         version: 4.17.19
       nodemon:
         specifier: ^3.1.10
