@@ -50,7 +50,7 @@ export const config: Config = {
   ],
   ois: [
     {
-      oisFormat: '2.3.0',
+      oisFormat: '3.0.0',
       title: 'Nodary',
       version: '0.2.0',
       apiSpecifications: {

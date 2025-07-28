@@ -24,7 +24,7 @@ describe(makeTemplateRequests.name, () => {
 
     jest.useFakeTimers().setSystemTime(new Date('2023-01-20')); // 1674172800
 
-    const response = await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
+    const response = await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
     expect(response).toStrictEqual(nodaryTemplateResponses);
     expect(adapterModule.buildAndExecuteRequest).toHaveBeenCalledTimes(1);
@@ -36,7 +36,7 @@ describe(makeTemplateRequests.name, () => {
     jest.spyOn(logger, 'warn');
     jest.spyOn(adapterModule, 'buildAndExecuteRequest').mockRejectedValue(nodaryTemplateRequestError);
 
-    await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
+    await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
     expect(logger.warn).toHaveBeenCalledTimes(1);
     expect(logger.warn).toHaveBeenCalledWith('Failed to make API call.', {
@@ -89,7 +89,7 @@ describe(makeTemplateRequests.name, () => {
     jest.spyOn(stateModule, 'getState').mockReturnValue(state);
     jest.mocked(axios).mockRejectedValue(new Error('network error'));
 
-    await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
+    await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
     expect(axios).toHaveBeenCalledTimes(1);
     expect(axios).toHaveBeenCalledWith({
@@ -141,7 +141,7 @@ describe(makeTemplateRequests.name, () => {
 
     const buildAndExecuteRequestSpy = jest.spyOn(adapterModule, 'buildAndExecuteRequest');
 
-    const makeTemplateRequestsResult = await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
+    const makeTemplateRequestsResult = await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
     expect(axios).toHaveBeenCalledTimes(0);
     expect(buildAndExecuteRequestSpy).not.toHaveBeenCalled();
@@ -181,7 +181,7 @@ describe(makeTemplateRequests.name, () => {
 
     const buildAndExecuteRequestSpy = jest.spyOn(adapterModule, 'buildAndExecuteRequest');
 
-    const makeTemplateRequestsResult = await makeTemplateRequests(config.triggers.signedApiUpdates[0]);
+    const makeTemplateRequestsResult = await makeTemplateRequests(config.triggers.signedApiUpdates[0]!);
 
     expect(axios).toHaveBeenCalledTimes(0);
     expect(buildAndExecuteRequestSpy).not.toHaveBeenCalled();

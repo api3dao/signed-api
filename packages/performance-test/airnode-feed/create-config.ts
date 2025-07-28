@@ -25,7 +25,7 @@ const configTemplate = {
   ],
   ois: [
     {
-      oisFormat: '2.3.0',
+      oisFormat: '3.0.0',
       title: 'API',
       version: '0.2.0',
       apiSpecifications: {
