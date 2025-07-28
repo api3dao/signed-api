@@ -2,7 +2,6 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import dotenv from 'dotenv';
-import { ZodError } from 'zod';
 
 import {
   allowedAirnodesSchema,
@@ -15,26 +14,28 @@ import {
 
 describe('endpointSchema', () => {
   it('validates urlPath', () => {
-    const expectedError = new ZodError([
+    const expectedError = [
       {
-        validation: 'regex',
-        code: 'invalid_string',
+        code: 'invalid_format',
+        format: 'regex',
+        origin: 'string',
         message: 'Must start with a slash and contain only alphanumeric characters and dashes',
         path: ['urlPath'],
+        pattern: '/^\\/[\\dA-Za-z-]+$/',
       },
-    ]);
-    expect(() => endpointSchema.parse({ urlPath: '', delaySeconds: 0, authTokens: null, isOev: false })).toThrow(
-      expectedError
-    );
-    expect(() => endpointSchema.parse({ urlPath: '/', delaySeconds: 0, authTokens: null, isOev: false })).toThrow(
-      expectedError
-    );
-    expect(() =>
-      endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false })
-    ).toThrow(expectedError);
-    expect(() =>
-      endpointSchema.parse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false })
-    ).toThrow(expectedError);
+    ];
+    expect(
+      endpointSchema.safeParse({ urlPath: '', delaySeconds: 0, authTokens: null, isOev: false }).error?.issues
+    ).toStrictEqual(expectedError);
+    expect(
+      endpointSchema.safeParse({ urlPath: '/', delaySeconds: 0, authTokens: null, isOev: false }).error?.issues
+    ).toStrictEqual(expectedError);
+    expect(
+      endpointSchema.safeParse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false }).error?.issues
+    ).toStrictEqual(expectedError);
+    expect(
+      endpointSchema.safeParse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false }).error?.issues
+    ).toStrictEqual(expectedError);
 
     expect(() =>
       endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false })
@@ -44,20 +45,18 @@ describe('endpointSchema', () => {
 
 describe('endpointsSchema', () => {
   it('ensures each urlPath is unique', () => {
-    expect(() =>
-      endpointsSchema.parse([
+    expect(
+      endpointsSchema.safeParse([
         { urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false },
         { urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false },
-      ])
-    ).toThrow(
-      new ZodError([
-        {
-          code: 'custom',
-          message: 'Each "urlPath" of an endpoint must be unique',
-          path: [],
-        },
-      ])
-    );
+      ]).error?.issues
+    ).toStrictEqual([
+      {
+        code: 'custom',
+        message: 'Each "urlPath" of an endpoint must be unique',
+        path: [],
+      },
+    ]);
   });
 });
 
@@ -74,38 +73,33 @@ describe('env config schema', () => {
     expect(envBooleanSchema.parse('true')).toBe(true);
     expect(envBooleanSchema.parse('false')).toBe(false);
 
-    // Using a function to create the expected error because the error message length is too long to be inlined. The
-    // error messages is trivially stringified if propagated to the user.
-    const createExpectedError = (received: string) =>
-      new ZodError([
-        {
-          code: 'invalid_union',
-          unionErrors: [
-            new ZodError([
-              {
-                received,
-                code: 'invalid_literal',
-                expected: 'true',
-                path: [],
-                message: 'Invalid literal value, expected "true"',
-              },
-            ]),
-            new ZodError([
-              {
-                received,
-                code: 'invalid_literal',
-                expected: 'false',
-                path: [],
-                message: 'Invalid literal value, expected "false"',
-              },
-            ]),
+    const expectedIssues = [
+      {
+        code: 'invalid_union',
+        errors: [
+          [
+            {
+              code: 'invalid_value',
+              path: [],
+              message: 'Invalid input: expected "true"',
+              values: ['true'],
+            },
           ],
-          path: [],
-          message: 'Invalid input',
-        },
-      ]);
-    expect(() => envBooleanSchema.parse('')).toThrow(createExpectedError(''));
-    expect(() => envBooleanSchema.parse('off')).toThrow(createExpectedError('off'));
+          [
+            {
+              code: 'invalid_value',
+              path: [],
+              message: 'Invalid input: expected "false"',
+              values: ['false'],
+            },
+          ],
+        ],
+        path: [],
+        message: 'Invalid input',
+      },
+    ];
+    expect(envBooleanSchema.safeParse('').error?.issues).toStrictEqual(expectedIssues);
+    expect(envBooleanSchema.safeParse('off').error?.issues).toStrictEqual(expectedIssues);
   });
 
   it('parses example env correctly', () => {
@@ -120,15 +114,13 @@ describe('env config schema', () => {
       CONFIG_SOURCE: 'aws-s3',
     };
 
-    expect(() => envConfigSchema.parse(env)).toThrow(
-      new ZodError([
-        {
-          code: 'custom',
-          message: 'The AWS_REGION must be set when CONFIG_SOURCE is "aws-s3"',
-          path: ['AWS_REGION'],
-        },
-      ])
-    );
+    expect(envConfigSchema.safeParse(env).error?.issues).toStrictEqual([
+      {
+        code: 'custom',
+        message: 'The AWS_REGION must be set when CONFIG_SOURCE is "aws-s3"',
+        path: ['AWS_REGION'],
+      },
+    ]);
   });
 });
 
@@ -146,18 +138,15 @@ describe('allowed Airnodes schema', () => {
   });
 
   it('disallows empty list', () => {
-    expect(() => allowedAirnodesSchema.parse([])).toThrow(
-      new ZodError([
-        {
-          code: 'too_small',
-          minimum: 1,
-          type: 'array',
-          inclusive: true,
-          exact: false,
-          message: 'Array must contain at least 1 element(s)',
-          path: [],
-        },
-      ])
-    );
+    expect(allowedAirnodesSchema.safeParse([]).error?.issues).toStrictEqual([
+      {
+        code: 'too_small',
+        origin: 'array',
+        minimum: 1,
+        inclusive: true,
+        message: 'Too small: expected array to have >=1 items',
+        path: [],
+      },
+    ]);
   });
 });

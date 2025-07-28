@@ -41,10 +41,10 @@ describe(logHeartbeat.name, () => {
     // NOTE: This tests will fail each time the example config changes (except for the nodeVersion). This should be
     // quite rare and the test verifies that the heartbeat sends correct data.
     const expectedHeartbeat = {
-      configHash: '0xce9f58b6927572c9cc6e3bb532e6bd54899c8b3a2c15da18ee556599f1b3249f',
+      configHash: '0x5c1e8b1f41bf76f010c36a89b73ed4ee5afbb214d7118ac3cdb11e1ad5901982',
       airnode: '0xbF3137b0a7574563a23a8fC8badC6537F98197CC',
       signature:
-        '0x29e4b58fe8ebac9a7c26de469978707b5d291eac06b76b4e8cca501011360de879d2e3dc498fd84e19d4c4a57b809e0e32f6855c2a834a38167dac5f891f159c1c',
+        '0x21f9249611d0f320f96ee057c7ba36aad4c5acaf8c10e8d50219aba3e2b714d55c1fd6b4207c5ed78cdeb925b31684cf4d00a2445e9c6665d952686b3db9c0e81c',
       stage: 'test',
       nodeVersion: '0.7.0',
       currentTimestamp: '1674172803',
