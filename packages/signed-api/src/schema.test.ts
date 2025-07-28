@@ -33,9 +33,6 @@ describe('endpointSchema', () => {
     expect(
       endpointSchema.safeParse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false }).error?.issues
     ).toStrictEqual(expectedError);
-    expect(
-      endpointSchema.safeParse({ urlPath: 'url-path', delaySeconds: 0, authTokens: null, isOev: false }).error?.issues
-    ).toStrictEqual(expectedError);
 
     expect(() =>
       endpointSchema.parse({ urlPath: '/url-path', delaySeconds: 0, authTokens: null, isOev: false })
