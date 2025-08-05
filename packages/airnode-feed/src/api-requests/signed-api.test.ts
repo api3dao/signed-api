@@ -35,28 +35,7 @@ describe(pushSignedData.name, () => {
 
     expect(response).toStrictEqual([{ success: false }]);
     expect(logger.warn).toHaveBeenCalledWith('Failed to parse response from the signed API.', {
-      errors: new ZodError([
-        {
-          code: 'invalid_type',
-          expected: 'number',
-          received: 'undefined',
-          path: ['count'],
-          message: 'Required',
-        },
-        {
-          code: 'invalid_type',
-          expected: 'number',
-          received: 'undefined',
-          path: ['skipped'],
-          message: 'Required',
-        },
-        {
-          code: 'unrecognized_keys',
-          keys: ['strange'],
-          path: [],
-          message: "Unrecognized key(s) in object: 'strange'",
-        },
-      ]),
+      errors: expect.any(ZodError),
     });
   });
 

@@ -9,10 +9,11 @@ import packageJson from '../package.json';
 export const evmAddressSchema = z.string().transform((val, ctx) => {
   const goChecksumAddress = goSync(() => ethers.utils.getAddress(val));
   if (!goChecksumAddress.success) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+    ctx.issues.push({
+      code: 'custom',
       message: 'Invalid EVM address',
       path: [],
+      input: val,
     });
     return '';
   }
@@ -78,16 +79,17 @@ export const envBooleanSchema = z.union([z.literal('true'), z.literal('false')])
 export const envConfigSchema = z
   // Intentionally not using strictObject here because we want to allow other environment variables to be present.
   .object({
-    LOG_API_DATA: envBooleanSchema.default('false'),
-    LOG_COLORIZE: envBooleanSchema.default('false'),
+    LOG_API_DATA: envBooleanSchema.default(false),
+    LOG_COLORIZE: envBooleanSchema.default(false),
     LOG_FORMAT: z
       .string()
       .transform((value, ctx) => {
         if (!logFormatOptions.includes(value as any)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
             message: 'Invalid LOG_FORMAT',
             path: ['LOG_FORMAT'],
+            input: value,
           });
           return;
         }
@@ -99,10 +101,11 @@ export const envConfigSchema = z
       .string()
       .transform((value, ctx) => {
         if (!logLevelOptions.includes(value as any)) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+          ctx.issues.push({
+            code: 'custom',
             message: 'Invalid LOG_LEVEL',
             path: ['LOG_LEVEL'],
+            input: value,
           });
           return;
         }
@@ -110,7 +113,7 @@ export const envConfigSchema = z
         return value as LogLevel;
       })
       .default('info'),
-    LOGGER_ENABLED: envBooleanSchema.default('true'),
+    LOGGER_ENABLED: envBooleanSchema.default(true),
 
     CONFIG_SOURCE: z.union([z.literal('local'), z.literal('aws-s3')]).default('local'),
 
@@ -121,12 +124,14 @@ export const envConfigSchema = z
     AWS_SECRET_ACCESS_KEY: z.string().optional(),
   })
   .strip() // We parse from ENV variables of the process which has many variables that we don't care about.
-  .superRefine((val, ctx) => {
-    if (val.CONFIG_SOURCE === 'aws-s3' && !val.AWS_REGION) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+  .check((ctx) => {
+    const env = ctx.value;
+    if (env.CONFIG_SOURCE === 'aws-s3' && !env.AWS_REGION) {
+      ctx.issues.push({
+        code: 'custom',
         message: 'The AWS_REGION must be set when CONFIG_SOURCE is "aws-s3"',
         path: ['AWS_REGION'],
+        input: env,
       });
     }
   });

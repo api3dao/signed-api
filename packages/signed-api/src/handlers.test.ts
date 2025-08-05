@@ -59,9 +59,11 @@ describe(batchInsertData.name, () => {
       context: {
         v1ParsingIssues: [
           {
-            validation: 'regex',
-            code: 'invalid_string',
-            message: 'Invalid',
+            code: 'invalid_format',
+            format: 'regex',
+            pattern: '/^0x[\\dA-Fa-f]{130}$/',
+            message: 'Invalid string: must match pattern /^0x[\\dA-Fa-f]{130}$/',
+            origin: 'string',
             path: [0, 'signature'],
           },
         ],
@@ -69,9 +71,8 @@ describe(batchInsertData.name, () => {
           {
             code: 'invalid_type',
             expected: 'object',
-            received: 'array',
             path: [],
-            message: 'Expected object, received array',
+            message: 'Invalid input: expected object, received array',
           },
         ],
       },

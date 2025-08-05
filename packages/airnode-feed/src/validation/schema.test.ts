@@ -3,25 +3,23 @@ import { join } from 'node:path';
 
 import { interpolateSecretsIntoConfig } from '@api3/commons';
 import dotenv from 'dotenv';
-import { ZodError } from 'zod';
 
 import { config } from '../../test/fixtures';
 
-import { type Config, configSchema, signedApisSchema } from './schema';
+import { type Config, configSchema, signedApiResponseSchema, signedApisSchema } from './schema';
 
 test('validates example config', async () => {
   const exampleConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
 
   // The mnemonic is not interpolated (and thus invalid).
-  await expect(configSchema.parseAsync(exampleConfig)).rejects.toStrictEqual(
-    new ZodError([
-      {
-        code: 'custom',
-        message: 'Invalid mnemonic',
-        path: ['nodeSettings', 'airnodeWalletMnemonic'],
-      },
-    ])
-  );
+  const result = await configSchema.safeParseAsync(exampleConfig);
+  expect(result.error?.issues).toStrictEqual([
+    {
+      code: 'custom',
+      message: 'Invalid mnemonic',
+      path: ['nodeSettings', 'airnodeWalletMnemonic'],
+    },
+  ]);
 
   const exampleSecrets = dotenv.parse(readFileSync(join(__dirname, '../../config/secrets.example.env'), 'utf8'));
   await expect(
@@ -38,32 +36,29 @@ test('ensures nodeVersion matches Airnode feed version', async () => {
     },
   };
 
-  await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
-    new ZodError([
-      {
-        code: 'custom',
-        message: 'Invalid node version',
-        path: ['nodeSettings', 'nodeVersion'],
-      },
-    ])
-  );
+  const result = await configSchema.safeParseAsync(invalidConfig);
+  expect(result.error?.issues).toStrictEqual([
+    {
+      code: 'custom',
+      message: 'Invalid node version',
+      path: ['nodeSettings', 'nodeVersion'],
+    },
+  ]);
 });
 
 test('ensures signed API names are unique', () => {
-  expect(() =>
-    signedApisSchema.parse([
+  expect(
+    signedApisSchema.safeParse([
       { name: 'foo', url: 'https://example.com', authToken: null },
       { name: 'foo', url: 'https://example.com', authToken: null },
-    ])
-  ).toThrow(
-    new ZodError([
-      {
-        code: 'custom',
-        message: 'Signed API names must be unique',
-        path: ['signedApis'],
-      },
-    ])
-  );
+    ]).error?.issues
+  ).toStrictEqual([
+    {
+      code: 'custom',
+      message: 'Signed API names must be unique',
+      path: ['signedApis'],
+    },
+  ]);
 
   expect(signedApisSchema.parse([{ name: 'foo', url: 'https://example.com', authToken: null }])).toStrictEqual([
     {
@@ -90,15 +85,14 @@ describe('validateTriggerReferences', () => {
       },
     };
 
-    await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
-      new ZodError([
-        {
-          code: 'custom',
-          message: `Template "${notFoundTemplateId}" is not defined in the config.templates object`,
-          path: ['triggers', 'signedApiUpdates', 0, 'templateIds', 0],
-        },
-      ])
-    );
+    const result = await configSchema.safeParseAsync(invalidConfig);
+    expect(result.error?.issues).toStrictEqual([
+      {
+        code: 'custom',
+        message: `Template "${notFoundTemplateId}" is not defined in the config.templates object`,
+        path: ['triggers', 'signedApiUpdates', 0, 'templateIds', 0],
+      },
+    ]);
   });
 
   it('validates all templates reference the same endpoint', async () => {
@@ -150,15 +144,14 @@ describe('validateTriggerReferences', () => {
       ],
     };
 
-    await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
-      new ZodError([
-        {
-          code: 'custom',
-          message: 'The endpoint utilized by each template must be same',
-          path: ['triggers', 'signedApiUpdates', 0, 'templateIds'],
-        },
-      ])
-    );
+    const result = await configSchema.safeParseAsync(invalidConfig);
+    expect(result.error?.issues).toStrictEqual([
+      {
+        code: 'custom',
+        message: 'The endpoint utilized by each template must be same',
+        path: ['triggers', 'signedApiUpdates', 0, 'templateIds'],
+      },
+    ]);
   });
 
   it('validates operation effects are identical', async () => {
@@ -170,15 +163,14 @@ describe('validateTriggerReferences', () => {
       ],
     };
 
-    await expect(configSchema.parseAsync(invalidConfig)).rejects.toStrictEqual(
-      new ZodError([
-        {
-          code: 'custom',
-          message: 'The endpoint utilized by each template must have the same operation effect',
-          path: ['triggers', 'signedApiUpdates', 0, 'templateIds'],
-        },
-      ])
-    );
+    const result = await configSchema.safeParseAsync(invalidConfig);
+    expect(result.error?.issues).toStrictEqual([
+      {
+        code: 'custom',
+        message: 'The endpoint utilized by each template must have the same operation effect',
+        path: ['triggers', 'signedApiUpdates', 0, 'templateIds'],
+      },
+    ]);
   });
 
   it('skips operation effect validation for skip API call endpoints', async () => {
@@ -202,5 +194,32 @@ describe('validateTriggerReferences', () => {
 
     // Should not throw even though the operation effects would be different
     await expect(configSchema.parseAsync(skipApiCallConfig)).resolves.toBeDefined();
+  });
+});
+
+describe('signedApiResponseSchema', () => {
+  it('validates that the expected keys are present', () => {
+    expect(signedApiResponseSchema.safeParse({ strange: 'some-invalid-response' }).error?.issues).toStrictEqual([
+      {
+        code: 'invalid_type',
+        expected: 'number',
+        path: ['count'],
+        message: 'Invalid input: expected number, received undefined',
+      },
+      {
+        code: 'invalid_type',
+        expected: 'number',
+        path: ['skipped'],
+        message: 'Invalid input: expected number, received undefined',
+      },
+      {
+        code: 'unrecognized_keys',
+        keys: ['strange'],
+        path: [],
+        message: 'Unrecognized key: "strange"',
+      },
+    ]);
+
+    expect(() => signedApiResponseSchema.parse({ count: 12, skipped: 3 })).not.toThrow();
   });
 });
