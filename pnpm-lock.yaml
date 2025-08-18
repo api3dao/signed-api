@@ -18,7 +18,7 @@ importers:
         specifier: ^30.0.0
         version: 30.0.0
       '@types/node':
-        specifier: ^22.17.0
+        specifier: ^22.17.1
         version: 22.17.1
       husky:
         specifier: ^9.1.7
