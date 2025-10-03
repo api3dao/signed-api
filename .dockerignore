@@ -19,3 +19,24 @@
 **/secrets.env
 **/signed-api.json
 **/.DS_Store
+
+# Extras (not part of .gitignore)
+.dockerignore
+.eslintrc.js
+.git
+.gitattributes
+.github
+.gitignore
+.husky
+.prettierignore
+.prettierrc
+**/.feature.ts
+**/.test.ts
+**/jest.config.js
+**/test
+Dockerfile
+jest.setup.js
+packages/e2e
+packages/performance-test
+renovate.json
+scripts
