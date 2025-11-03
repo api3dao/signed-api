@@ -88,8 +88,8 @@ importers:
         version: 4.1.12
     devDependencies:
       '@types/express':
-        specifier: ^5.0.3
-        version: 5.0.3
+        specifier: ^5.0.4
+        version: 5.0.5
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
@@ -128,8 +128,8 @@ importers:
         version: 4.1.12
     devDependencies:
       '@types/express':
-        specifier: ^5.0.3
-        version: 5.0.3
+        specifier: ^5.0.4
+        version: 5.0.5
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
@@ -177,8 +177,8 @@ importers:
         version: 4.1.12
     devDependencies:
       '@types/express':
-        specifier: ^5.0.3
-        version: 5.0.3
+        specifier: ^5.0.4
+        version: 5.0.5
       '@types/lodash':
         specifier: ^4.17.20
         version: 4.17.20
@@ -1516,8 +1516,8 @@ packages:
   '@types/express-serve-static-core@5.0.0':
     resolution: {integrity: sha512-AbXMTZGt40T+KON9/Fdxx0B2WK5hsgxcfXJLr5bFpZ7b4JCex2WyQPTEKdXqfHiY5nKKBScZ7yCoO6Pvgxfvnw==}
 
-  '@types/express@5.0.3':
-    resolution: {integrity: sha512-wGA0NX93b19/dZC1J18tKWVIYWyyF2ZjT9vin/NRu0qzzvfVzWjs04iq2rQ3H65vCTQYlRqs3YHfY7zjdV+9Kw==}
+  '@types/express@5.0.5':
+    resolution: {integrity: sha512-LuIQOcb6UmnF7C1PCFmEU1u2hmiHL43fgFQX67sN3H4Z+0Yk0Neo++mFsBjhOAuLzvlQeqAAkeDOZrJs9rzumQ==}
 
   '@types/http-errors@2.0.3':
     resolution: {integrity: sha512-pP0P/9BnCj1OVvQR2lF41EkDG/lWWnDyA203b/4Fmi2eTyORnBtcDoKDwjWQthELrBvWkMOrvSOnZ8OVlW6tXA==}
@@ -7480,7 +7480,7 @@ snapshots:
       '@types/range-parser': 1.2.6
       '@types/send': 0.17.3
 
-  '@types/express@5.0.3':
+  '@types/express@5.0.5':
     dependencies:
       '@types/body-parser': 1.19.4
       '@types/express-serve-static-core': 5.0.0
