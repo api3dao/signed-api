@@ -29,7 +29,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@types/express": "^5.0.3",
+    "@types/express": "^5.0.5",
     "@types/lodash": "^4.17.20",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2"
@@ -38,12 +38,12 @@
     "@api3/airnode-feed": "workspace:*",
     "@api3/commons": "^1.0.1",
     "@api3/promise-utils": "^0.4.0",
-    "@aws-sdk/client-s3": "^3.908.0",
+    "@aws-sdk/client-s3": "^3.922.0",
     "dotenv": "^17.2.3",
     "ethers": "^5.8.0",
     "express": "^5.1.0",
     "lodash": "^4.17.21",
-    "workerpool": "^9.3.4",
+    "workerpool": "^10.0.0",
     "zod": "^4.1.12"
   }
 }

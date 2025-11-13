@@ -36,7 +36,7 @@
     "@api3/commons": "^1.0.1",
     "@api3/ois": "^3.0.0",
     "@api3/promise-utils": "^0.4.0",
-    "axios": "^1.12.2",
+    "axios": "^1.13.1",
     "dotenv": "^17.2.3",
     "ethers": "^5.8.0",
     "express": "^5.1.0",
@@ -44,7 +44,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
-    "@types/express": "^5.0.3",
+    "@types/express": "^5.0.5",
     "@types/lodash": "^4.17.20",
     "nodemon": "^3.1.10"
   }
