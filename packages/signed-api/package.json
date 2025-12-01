@@ -30,7 +30,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/express": "^5.0.5",
-    "@types/lodash": "^4.17.20",
+    "@types/lodash": "^4.17.21",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2"
   },
