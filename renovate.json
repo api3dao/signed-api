@@ -3,6 +3,10 @@
   "extends": ["config:base"],
   "packageRules": [
     {
+      "matchPackageNames": ["actions/node-versions", "@types/node"],
+      "enabled": false
+    },
+    {
       "matchPackageNames": ["ethers", "node", "is-wsl"],
       "matchUpdateTypes": ["major"],
       "enabled": false
