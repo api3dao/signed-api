@@ -45,7 +45,7 @@ const configTemplate = {
   ],
   apiCredentials: [],
   nodeSettings: {
-    nodeVersion: '3.3.0',
+    nodeVersion: '4.0.0',
     airnodeWalletMnemonic: 'destroy manual orange pole pioneer enemy detail lady cake bus shed visa',
     stage: 'performance-test',
   },
