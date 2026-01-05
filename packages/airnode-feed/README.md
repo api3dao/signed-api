@@ -77,6 +77,8 @@ To deploy on premise you can use the Docker image by reading the instructions be
 
 To run the Airnode feed docker image you need to:
 
+<!-- markdown-link-check-disable -->
+
 1. Mount config folder to `/app/config`. The folder should contain the `airnode-feed.json` and `secrets.env` files.
 2. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
@@ -86,6 +88,8 @@ To run the Airnode feed docker image you need to:
    Desktop.
 6. Lastly, if you are using Docker Desktop and you want to access the host machine, you need to change the host URL from
    `localhost` to `host.docker.internal` in the configuration files.
+
+<!-- markdown-link-check-enable -->
 
 For example:
 

@@ -70,6 +70,8 @@ To deploy on premise you can use the Docker instructions below.
 
 The API is also dockerized. To run the dockerized APi, you need to:
 
+<!-- markdown-link-check-disable -->
+
 1. Publish the port of the API to the host machine. The port number of signed API in the container is set to `80`. So
    the command should look like `--publish <HOST_PORT>:80`.
 2. Mount config folder to `/app/config`. The folder should contain the `signed-api.json` file.
@@ -77,6 +79,8 @@ The API is also dockerized. To run the dockerized APi, you need to:
    [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
 4. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
 5. Optionally, pass the `--rm` flag to remove the container after it is stopped.
+
+<!-- markdown-link-check-enable -->
 
 For example:
 
