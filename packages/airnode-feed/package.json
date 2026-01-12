@@ -33,7 +33,7 @@
     "@api3/airnode-adapter": "^0.15.0",
     "@api3/airnode-node": "^0.15.0",
     "@api3/airnode-validator": "^0.15.0",
-    "@api3/commons": "^1.0.1",
+    "@api3/commons": "^1.1.2",
     "@api3/ois": "^3.0.0",
     "@api3/promise-utils": "^0.4.0",
     "axios": "^1.13.2",
@@ -41,7 +41,7 @@
     "ethers": "^5.8.0",
     "express": "^5.2.1",
     "lodash": "^4.17.21",
-    "zod": "^4.2.1"
+    "zod": "^4.3.5"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
