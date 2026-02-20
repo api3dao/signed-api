@@ -40,7 +40,7 @@
   "lockFileMaintenance": {
     "enabled": false
   },
-  "reviewers": ["Siegrift"],
+  "reviewers": ["bdrhn9"],
   "minimumReleaseAge": "7 days",
   "internalChecksFilter": "strict",
   "dependencyDashboard": false
