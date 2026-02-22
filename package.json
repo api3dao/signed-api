@@ -2,7 +2,8 @@
   "name": "signed-api",
   "version": "4.1.0",
   "engines": {
-    "node": ">=18.20.5"
+    "node": ">=18.20.5",
+    "pnpm": "^10.26.2"
   },
   "repository": {
     "type": "git",
@@ -39,5 +40,5 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },
-  "packageManager": "pnpm@9.15.9"
+  "packageManager": "pnpm@10.26.2"
 }
