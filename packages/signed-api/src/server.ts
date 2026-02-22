@@ -83,9 +83,9 @@ export const startServer = (config: Config, port: number) => {
     const stack = err.stack ?? new Error('Unexpected non-error value encountered').stack;
     logger.error('An unexpected handler error occurred.', { err, stack });
 
-    res.status(err.status || 500).json({
+    res.status(err.status ?? 500).json({
       error: {
-        message: err.message || 'An unexpected handler error occurred.',
+        message: err.message ?? 'An unexpected handler error occurred.',
       },
     });
   });
