@@ -46,7 +46,7 @@ LABEL application="airnode-feed" description="Airnode feed container"
 FROM build AS deployed-airnode-feed
 
 RUN pnpm --filter=@api3/airnode-feed --prod deploy deployed-airnode-feed
-FROM node:20-slim as airnode-feed
+FROM node:20-slim AS airnode-feed
 WORKDIR /app
 
 # Update package lists and install wget
@@ -67,7 +67,7 @@ LABEL application="signed-api" description="Signed API container"
 FROM build AS deployed-signed-api
 
 RUN pnpm --filter=@api3/signed-api --prod deploy deployed-signed-api
-FROM node:20-slim as signed-api
+FROM node:20-slim AS signed-api
 WORKDIR /app
 
 # Update package lists and install wget
