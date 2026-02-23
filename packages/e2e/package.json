@@ -18,7 +18,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@api3/commons": "^1.1.2",
+    "@api3/commons": "^1.2.0",
     "@api3/airnode-feed": "workspace:*",
     "@api3/promise-utils": "^0.4.0",
     "@api3/signed-api": "workspace:*",
