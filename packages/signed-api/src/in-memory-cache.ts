@@ -93,7 +93,7 @@ export const put = (signedData: InternalSignedData) => {
   // efficient to use a priority queue, but the proper solution is not to store the data in memory.
   const signedDatas = cache.signedDataCache[airnode]![templateId]!;
   const index = signedDatas.findIndex((data) => Number.parseInt(data.timestamp, 10) > Number.parseInt(timestamp, 10));
-  if (index < 0) signedDatas.push(signedData);
+  if (index === -1) signedDatas.push(signedData);
   else signedDatas.splice(index, 0, signedData);
 };
 
