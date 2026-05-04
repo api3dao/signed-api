@@ -86,7 +86,7 @@ importers:
         version: 5.2.1
       lodash:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -126,7 +126,7 @@ importers:
         version: 5.2.1
       lodash:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
       zod:
         specifier: ^4.3.6
         version: 4.3.6
@@ -172,7 +172,7 @@ importers:
         version: 5.2.1
       lodash:
         specifier: ^4.17.23
-        version: 4.17.23
+        version: 4.18.1
       workerpool:
         specifier: ^10.0.2
         version: 10.0.2
@@ -3583,6 +3583,9 @@ packages:
   lodash@4.17.23:
     resolution: {integrity: sha512-LgVTMpQtIopCi79SJeDiP0TfWi5CNEc/L/aRdTh3yIvmZXTnheWpKjSZhnvMl8iXbC1tFg9gdHHDMLoV7CnG+w==}
 
+  lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
+
   log-symbols@4.1.0:
     resolution: {integrity: sha512-8XPvpAA8uyhfteu8pIvQxpJZ7SYYdpUivZpGy6sFsBuKRY/7rQGavedeB8aK+Zkyq6upMFVL/9AW6vOYzfRyLg==}
     engines: {node: '>=10'}
@@ -4729,7 +4732,7 @@ snapshots:
   '@api3/airnode-abi@0.15.0':
     dependencies:
       ethers: 5.8.0
-      lodash: 4.17.23
+      lodash: 4.18.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -4741,7 +4744,7 @@ snapshots:
       axios: 1.15.0
       bignumber.js: 9.3.1
       ethers: 5.8.0
-      lodash: 4.17.23
+      lodash: 4.18.1
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -4764,7 +4767,7 @@ snapshots:
       ethers: 5.8.0
       express: 4.22.1
       google-auth-library: 9.15.1
-      lodash: 4.17.23
+      lodash: 4.18.1
       yargs: 17.7.2
       zod: 3.25.76
     transitivePeerDependencies:
@@ -4820,7 +4823,7 @@ snapshots:
       '@api3/promise-utils': 0.4.0
       dotenv: 16.6.1
       ethers: 5.8.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       ora: 5.4.1
       yargs: 17.7.2
       zod: 3.25.76
@@ -4869,7 +4872,7 @@ snapshots:
       eslint-plugin-react-hooks: 4.6.2(eslint@8.57.1)
       eslint-plugin-unicorn: 48.0.1(eslint@8.57.1)
       ethers: 5.8.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       winston: 3.19.0
       winston-console-format: 1.0.8
       zod: 3.25.76
@@ -4935,12 +4938,12 @@ snapshots:
 
   '@api3/ois@2.3.2':
     dependencies:
-      lodash: 4.17.23
+      lodash: 4.18.1
       zod: 3.25.76
 
   '@api3/ois@3.0.0':
     dependencies:
-      lodash: 4.17.23
+      lodash: 4.18.1
       zod: 4.3.6
 
   '@api3/promise-utils@0.4.0': {}
@@ -8654,7 +8657,7 @@ snapshots:
   eslint-plugin-lodash@8.0.0(eslint@8.57.1):
     dependencies:
       eslint: 8.57.1
-      lodash: 4.17.23
+      lodash: 4.18.1
 
   eslint-plugin-n@17.24.0(eslint@8.57.1)(typescript@5.9.3):
     dependencies:
@@ -8736,7 +8739,7 @@ snapshots:
       indent-string: 4.0.0
       is-builtin-module: 3.2.1
       jsesc: 3.1.0
-      lodash: 4.17.23
+      lodash: 4.18.1
       pluralize: 8.0.0
       read-pkg-up: 7.0.1
       regexp-tree: 0.1.27
@@ -9996,6 +9999,8 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lodash@4.17.23: {}
+
+  lodash@4.18.1: {}
 
   log-symbols@4.1.0:
     dependencies:
