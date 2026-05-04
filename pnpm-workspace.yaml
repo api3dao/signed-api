@@ -8,3 +8,5 @@ blockExoticSubdeps: true
 minimumReleaseAge: 20160 # 14 days (keep in sync with Renovate config)
 minimumReleaseAgeExclude:
   - '@api3/*'
+  # Renovate security update: axios@1.15.0
+  - axios@1.15.0
