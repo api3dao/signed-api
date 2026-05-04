@@ -8,3 +8,5 @@ blockExoticSubdeps: true
 minimumReleaseAge: 20160 # 14 days (keep in sync with Renovate config)
 minimumReleaseAgeExclude:
   - '@api3/*'
+  # Renovate security update: lodash@4.18.1
+  - lodash@4.18.1
