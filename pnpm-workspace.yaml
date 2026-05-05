@@ -1,14 +1,15 @@
 packages:
   - 'packages/*'
 
-injectWorkspacePackages: true
+# Use the pre-pnpm-10 deploy implementation so `pnpm deploy` works against
+# symlinked workspace deps (no `injectWorkspacePackages`). See:
+# https://github.com/orgs/pnpm/discussions/9015
+forceLegacyDeploy: true
 
 # See: https://pnpm.io/supply-chain-security
 blockExoticSubdeps: true
 minimumReleaseAge: 20160 # 14 days (keep in sync with Renovate config)
 minimumReleaseAgeExclude:
   - '@api3/*'
-  # Renovate security update: axios@1.15.0
-  - axios@1.15.0
-  # Renovate security update: lodash@4.18.1
-  - lodash@4.18.1
+  # Renovate security update: axios@1.15.2
+  - axios@1.15.2
