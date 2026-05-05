@@ -2,6 +2,8 @@ packages:
   - 'packages/*'
 
 injectWorkspacePackages: true
+syncInjectedDepsAfterScripts:
+  - build
 
 # See: https://pnpm.io/supply-chain-security
 blockExoticSubdeps: true
