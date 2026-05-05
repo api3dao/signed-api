@@ -1,9 +1,10 @@
 packages:
   - 'packages/*'
 
-injectWorkspacePackages: true
-syncInjectedDepsAfterScripts:
-  - build
+# Use the pre-pnpm-10 deploy implementation so `pnpm deploy` works against
+# symlinked workspace deps (no `injectWorkspacePackages`). See:
+# https://github.com/orgs/pnpm/discussions/9015
+forceLegacyDeploy: true
 
 # See: https://pnpm.io/supply-chain-security
 blockExoticSubdeps: true
