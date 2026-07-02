@@ -15,14 +15,14 @@
 # stages and verify that the image is correct.
 
 # Extract the pnpm version from the package.json file and store it in an environment variable.
-FROM node:20.20.1-slim AS version-extract
+FROM node:20.20.2-slim AS version-extract
 WORKDIR /app
 COPY package.json .
 RUN apt-get update && \
     apt-get install -y jq && \
     echo "PNPM_VERSION=$(jq -r .packageManager package.json | sed 's/pnpm@//')" >> /tmp/env-vars
 
-FROM node:20.20.1-slim AS build
+FROM node:20.20.2-slim AS build
 WORKDIR /app
 COPY --from=version-extract /tmp/env-vars /tmp/env-vars
 RUN . /tmp/env-vars && npm install -g pnpm@${PNPM_VERSION}
@@ -46,7 +46,7 @@ LABEL application="airnode-feed" description="Airnode feed container"
 FROM build AS deployed-airnode-feed
 
 RUN pnpm --filter=@api3/airnode-feed --prod deploy deployed-airnode-feed
-FROM node:20.20.1-slim AS airnode-feed
+FROM node:20.20.2-slim AS airnode-feed
 WORKDIR /app
 
 # Update package lists and install wget
@@ -67,7 +67,7 @@ LABEL application="signed-api" description="Signed API container"
 FROM build AS deployed-signed-api
 
 RUN pnpm --filter=@api3/signed-api --prod deploy deployed-signed-api
-FROM node:20.20.1-slim AS signed-api
+FROM node:20.20.2-slim AS signed-api
 WORKDIR /app
 
 # Update package lists and install wget
