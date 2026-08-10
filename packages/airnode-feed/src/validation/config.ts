@@ -2,11 +2,11 @@ import { join } from 'node:path';
 import { cwd } from 'node:process';
 
 import {
+  go,
   interpolateSecretsIntoConfig,
   loadConfig as loadRawConfigFromFilesystem,
   loadSecrets as loadRawSecretsFromFilesystem,
 } from '@api3/commons';
-import { go } from '@api3/promise-utils';
 
 import { logger } from '../logger';
 

@@ -1,5 +1,4 @@
-import { type LogFormat, logFormatOptions, logLevelOptions, type LogLevel } from '@api3/commons';
-import { goSync } from '@api3/promise-utils';
+import { goSync, type LogFormat, logFormatOptions, logLevelOptions, type LogLevel } from '@api3/commons';
 import { ethers } from 'ethers';
 import { uniqBy } from 'lodash';
 import { z } from 'zod';

@@ -1,5 +1,5 @@
 import type { ExtractedAndEncodedResponse } from '@api3/airnode-adapter';
-import { go } from '@api3/promise-utils';
+import { go } from '@api3/commons';
 import { isNil } from 'lodash';
 
 import { logger } from './logger';

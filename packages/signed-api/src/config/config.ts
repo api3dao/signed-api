@@ -2,11 +2,12 @@ import { join } from 'node:path';
 import { cwd } from 'node:process';
 
 import {
+  go,
+  goSync,
   interpolateSecretsIntoConfig,
   loadConfig as loadRawConfigFromFilesystem,
   loadSecrets as loadRawSecretsFromFilesystem,
 } from '@api3/commons';
-import { go, goSync } from '@api3/promise-utils';
 import { S3 } from '@aws-sdk/client-s3';
 
 import { loadEnv } from '../env';

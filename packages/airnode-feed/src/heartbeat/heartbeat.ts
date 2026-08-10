@@ -1,5 +1,4 @@
-import { createSha256Hash, serializePlainObject } from '@api3/commons';
-import { go } from '@api3/promise-utils';
+import { createSha256Hash, go, serializePlainObject } from '@api3/commons';
 
 import { logger } from '../logger';
 import { getState } from '../state';
