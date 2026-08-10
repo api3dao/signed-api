@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { createSha256Hash, serializePlainObject } from '@api3/commons';
-import * as promiseUtilsModule from '@api3/promise-utils';
+import * as commonsModule from '@api3/commons';
 import { ethers } from 'ethers';
 
 import { config, verifyHeartbeatLog } from '../../test/fixtures';
@@ -92,10 +92,10 @@ test('sends heartbeat payload every minute', async () => {
   // from the same module is annoying. See: https://jestjs.io/docs/mock-functions#mocking-partials.
   //
   // Instead we spyOn the "go" which is a third party module that wraps the logHeartbeat call.
-  jest.spyOn(promiseUtilsModule, 'go');
+  jest.spyOn(commonsModule, 'go');
 
   initiateHeartbeatLoop();
 
   await jest.advanceTimersByTimeAsync(1000 * 60 * 8);
-  expect(promiseUtilsModule.go).toHaveBeenCalledTimes(8);
+  expect(commonsModule.go).toHaveBeenCalledTimes(8);
 });

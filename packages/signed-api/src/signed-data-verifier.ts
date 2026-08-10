@@ -1,4 +1,4 @@
-import { goSync } from '@api3/promise-utils';
+import { goSync } from '@api3/commons';
 import workerpool from 'workerpool';
 
 import { type InternalSignedData } from './types';

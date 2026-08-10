@@ -1,5 +1,7 @@
 import * as abi from '@api3/airnode-abi';
 import {
+  go,
+  goSync,
   type LogFormat,
   type LogLevel,
   logFormatOptions,
@@ -7,7 +9,6 @@ import {
   preProcessEndpointParameters,
 } from '@api3/commons';
 import { oisSchema, type OIS, type Endpoint as oisEndpoint } from '@api3/ois';
-import { go, goSync } from '@api3/promise-utils';
 import { ethers } from 'ethers';
 import { isNil, uniqWith, isEqual, isEmpty, uniq } from 'lodash';
 import { z } from 'zod';

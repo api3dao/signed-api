@@ -1,5 +1,4 @@
-import { deriveBeaconId, type Hex } from '@api3/commons';
-import { goSync } from '@api3/promise-utils';
+import { deriveBeaconId, goSync, type Hex } from '@api3/commons';
 import { ethers } from 'ethers';
 
 export const formatData = (networkResponse: any) => {

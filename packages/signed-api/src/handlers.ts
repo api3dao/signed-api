@@ -1,6 +1,5 @@
 import { signedApiBatchPayloadV1Schema, signedApiBatchPayloadV2Schema } from '@api3/airnode-feed';
-import { createSha256Hash, serializePlainObject } from '@api3/commons';
-import { go, goSync } from '@api3/promise-utils';
+import { createSha256Hash, go, goSync, serializePlainObject } from '@api3/commons';
 import { isEmpty, omit, pick } from 'lodash';
 
 import { getConfig } from './config/config';
