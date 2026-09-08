@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@api3/commons':
-        specifier: 1.3.0
-        version: 1.3.0
+        specifier: 2.0.0
+        version: 2.0.0
       '@api3/eslint-plugin-commons':
         specifier: ^3.1.1
         version: 3.1.1(eslint@8.57.1)(jest@30.4.2(@types/node@24.13.3)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)))(prettier@3.9.6)(typescript@5.9.3)
@@ -63,8 +63,8 @@ importers:
         specifier: ^0.15.0
         version: 0.15.0(eslint@8.57.1)(jest@30.4.2(@types/node@24.13.3)(ts-node@10.9.2(@types/node@24.13.3)(typescript@5.9.3)))(typescript@5.9.3)
       '@api3/commons':
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@api3/ois':
         specifier: ^3.0.0
         version: 3.0.0
@@ -103,8 +103,8 @@ importers:
         specifier: workspace:*
         version: link:../airnode-feed
       '@api3/commons':
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@api3/signed-api':
         specifier: workspace:*
         version: link:../signed-api
@@ -146,8 +146,8 @@ importers:
         specifier: workspace:*
         version: link:../airnode-feed
       '@api3/commons':
-        specifier: ^1.3.0
-        version: 1.3.0
+        specifier: ^2.0.0
+        version: 2.0.0
       '@aws-sdk/client-s3':
         specifier: ^3.1117.0
         version: 3.1117.0
@@ -219,8 +219,8 @@ packages:
     peerDependencies:
       eslint: ^8.57.0
 
-  '@api3/commons@1.3.0':
-    resolution: {integrity: sha512-2LqiFSa4l+1LwyfJSTpHRrRWBfDCL9xYlcRGO+RlAoRQz9/2Ym55iwuLpsvO2jQt4npNvsEUaOfFIpAohXjJIg==}
+  '@api3/commons@2.0.0':
+    resolution: {integrity: sha512-GsotpgLO6ZKOHdC+8/BPjTqtd+iH8xIcnTJ71/3Y9O4VhSF1ThLuWfomXzCJk9arnEtTOHWZD7zZOk+4UNC0yw==}
     engines: {node: '>=18.20.8'}
 
   '@api3/eslint-plugin-commons@3.1.1':
@@ -1525,9 +1525,6 @@ packages:
   axe-core@4.12.1:
     resolution: {integrity: sha512-s7iGf5GaVMxEG0ENN9x+xTr7GFZCb1ZP/1uATUpCEK2X78nDB3RwbtFCo9pGAf9ru+VwoQ464DkaLEeRM08wJA==}
     engines: {node: '>=4'}
-
-  axios@1.18.1:
-    resolution: {integrity: sha512-3nTvFlvpn9Zu/RkHUqtc7/+al4UpRW5az71ap5zccp6e8RAYEzhMTecX8Dz1wWDYrPpUoB1HAQEGEAEvUr7S9g==}
 
   axios@1.19.0:
     resolution: {integrity: sha512-ht/iuYZXEjFxLH/Hkezgd7m6JKlHHXEUSneaDz8uZe1Gj5QZtCnpyDsckvAiEnT89OEbCLmnte4R4sn7P0EKFw==}
@@ -4461,11 +4458,11 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@api3/commons@1.3.0':
+  '@api3/commons@2.0.0':
     dependencies:
       '@api3/ois': 3.0.0
       '@octokit/rest': 20.1.2
-      axios: 1.18.1
+      axios: 1.19.0
       dotenv: 17.4.2
       ethers: 5.8.0
       lodash: 4.18.1
@@ -6408,16 +6405,6 @@ snapshots:
       possible-typed-array-names: 1.1.0
 
   axe-core@4.12.1: {}
-
-  axios@1.18.1:
-    dependencies:
-      follow-redirects: 1.16.0
-      form-data: 4.0.6
-      https-proxy-agent: 5.0.1
-      proxy-from-env: 2.1.0
-    transitivePeerDependencies:
-      - debug
-      - supports-color
 
   axios@1.19.0:
     dependencies:
