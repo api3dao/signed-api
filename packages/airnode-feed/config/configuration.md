@@ -1,12 +1,10 @@
 # Configuration
 
-Airnode feed can be configured via a combination of [environment variables](#environment-variables) and
-[configuration files](#configuration-files).
+Airnode feed can be configured via a combination of [environment variables](#environment-variables) and [configuration files](#configuration-files).
 
 ## Environment variables
 
-Logging needs to be initialized prior the configuration files are loaded. This is done via environment variables. All of
-the environment variables are optional and or set with default values for convenience.
+Logging needs to be initialized prior the configuration files are loaded. This is done via environment variables. All of the environment variables are optional and or set with default values for convenience.
 
 Example:
 
@@ -46,16 +44,13 @@ Default: `true`.
 The format of the log output. Options:
 
 - `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
-- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
-  development.
+- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in development.
 
 Default: `json`.
 
 ### `LOG_HEARTBEAT` _(optional)_
 
-Enables or disables the heartbeat log. The heartbeat log is a cryptographically secure log that is emitted every 60
-seconds to indicate that the service is running. The log includes useful information such as the deployment timestamp
-and configuration hash. Options:
+Enables or disables the heartbeat log. The heartbeat log is a cryptographically secure log that is emitted every 60 seconds to indicate that the service is running. The log includes useful information such as the deployment timestamp and configuration hash. Options:
 
 - `true` - Enables the heartbeat log.
 - `false` - Disables the heartbeat log.
@@ -66,8 +61,7 @@ Default: `true`.
 
 Enables or disables colors in the log output. Options:
 
-- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
-  Recommended when running locally and in development.
+- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI. Recommended when running locally and in development.
 - `false` - Disables colors in the log output. Recommended for production.
 
 Default: `false`.
@@ -85,16 +79,13 @@ Default: `info`.
 
 ## Configuration files
 
-Airnode feed needs two configuration files, `airnode-feed.json` and `secrets.env`. All expressions of a form
-`${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `airnode-feed.json` at runtime.
-You are advised to put sensitive information inside secrets file.
+Airnode feed needs two configuration files, `airnode-feed.json` and `secrets.env`. All expressions of a form `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `airnode-feed.json` at runtime. You are advised to put sensitive information inside secrets file.
 
 You can also refer to the example configuration files.
 
 ### `templates`
 
-Configuration for the template requests. Each template request is defined by a `templateId` and a `template` object. For
-example:
+Configuration for the template requests. Each template request is defined by a `templateId` and a `template` object. For example:
 
 ```jsonc
 // Defines a single template.
@@ -122,9 +113,7 @@ The ID of the endpoint to which the template request is made.
 
 ##### `parameters`
 
-The parameters of the template request. Refer to
-[Airnode ABI](https://airnode-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html) specification for
-details.
+The parameters of the template request. Refer to [Airnode ABI](https://airnode-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html) specification for details.
 
 ##### `parameters[n]`
 
@@ -132,8 +121,7 @@ Defines one of the parameters of the template request.
 
 `type`
 
-Refer to
-[Airnode ABI available types](https://airnode-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html#details).
+Refer to [Airnode ABI available types](https://airnode-docs.api3.org/reference/airnode/latest/specifications/airnode-abi.html#details).
 
 `name`
 
@@ -177,8 +165,7 @@ The title of the OIS to which the endpoint belongs.
 
 ### `triggers.signedApiUpdates`
 
-Configuration for the signed API update triggers. There can be multiple triggers, each specifying a different update
-configuration.
+Configuration for the signed API update triggers. There can be multiple triggers, each specifying a different update configuration.
 
 For example:
 
@@ -202,15 +189,9 @@ For example:
 
 #### `triggers.signedApiUpdates[n]`
 
-Configuration for one of the signed API update triggers. Airnode feed periodically fetches data from data provider and
-pushes it to all Signed APIs defined in the configuration file.
+Configuration for one of the signed API update triggers. Airnode feed periodically fetches data from data provider and pushes it to all Signed APIs defined in the configuration file.
 
-Airnode feed only makes a single template request independently of the number of template IDs specified. This is to
-reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same
-endpoint and parameters. You can use
-[OIS processing](https://airnode-docs.api3.org/reference/ois/latest/processing.html) to remove the parameters before
-making the request (using pre-processing) and later get the corresponding template value based on the endpoint
-parameters (using-processing).
+Airnode feed only makes a single template request independently of the number of template IDs specified. This is to reduce the number of data provider calls. This implies that all of the templates in the trigger must use the same endpoint and parameters. You can use [OIS processing](https://airnode-docs.api3.org/reference/ois/latest/processing.html) to remove the parameters before making the request (using pre-processing) and later get the corresponding template value based on the endpoint parameters (using-processing).
 
 ##### `templateIds`
 
@@ -249,8 +230,7 @@ The URL of the signed API.
 
 #### `authToken`
 
-The authentication token used to authenticate with the signed API. It is recommended to interpolate this value from
-secrets.
+The authentication token used to authenticate with the signed API. It is recommended to interpolate this value from secrets.
 
 If the signed API does not require authentication, set this value to `null`.
 
@@ -266,8 +246,7 @@ Refer to the [OIS documentation](https://airnode-docs.api3.org/reference/ois/lat
 
 ### `apiCredentials`
 
-Refer to Airnode's
-[API credentials](https://airnode-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
+Refer to Airnode's [API credentials](https://airnode-docs.api3.org/reference/airnode/latest/deployment-files/config-json.html#apicredentials).
 
 ### `nodeSettings`
 
@@ -275,13 +254,11 @@ Contains general deployment parameters of the Airnode feed.
 
 #### `nodeVersion`
 
-The version of the Airnode feed. The version specified in the config must match the version of the Airnode feed at
-deployment time.
+The version of the Airnode feed. The version specified in the config must match the version of the Airnode feed at deployment time.
 
 #### `airnodeWalletMnemonic`
 
-Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from
-secrets. For example:
+Mnemonic for the airnode wallet used to sign the template responses. It is recommended to interpolate this value from secrets. For example:
 
 ```jsonc
 // The mnemonic is interpolated from the "WALLET_MNEMONIC" secret.
@@ -290,6 +267,4 @@ secrets. For example:
 
 #### `stage`
 
-An identifier of the deployment stage. This is used to distinguish between different deployments of Airnode feed, for
-example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
-lowercase alphanumeric characters and hyphens.
+An identifier of the deployment stage. This is used to distinguish between different deployments of Airnode feed, for example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include lowercase alphanumeric characters and hyphens.
