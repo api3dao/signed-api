@@ -2,8 +2,7 @@
 
 > A service for storing and accessing signed data. It provides endpoints to handle signed data for a specific airnode.
 
-Signed API is a Node.js API server, dockerized and deployable on any cloud provider or hostable on premise. It stores
-the data in memory and provides endpoints to push and retrieve beacon data.
+Signed API is a Node.js API server, dockerized and deployable on any cloud provider or hostable on premise. It stores the data in memory and provides endpoints to push and retrieve beacon data.
 
 ## Configuration
 
@@ -11,15 +10,13 @@ See [configuration](./config/configuration.md) for details.
 
 ## Local development
 
-1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally
-   change the defaults.
+1. `cp config/signed-api.example.json config/signed-api.json` - To create a config file from the example one. Optionally change the defaults.
 2. `cp .env.example .env` - To copy the example environment variables. Optionally change the defaults.
 3. `pnpm run dev` - To start the API server. The port number can be configured by `SERVER_PORT` environment variable.
 
 ### Docker instructions
 
-You can use shorthands from package.json. To understand how the docker image is built, read the
-[Dockerfile](../../Dockerfile).
+You can use shorthands from package.json. To understand how the docker image is built, read the [Dockerfile](../../Dockerfile).
 
 ```sh
 pnpm run docker:build
@@ -43,26 +40,19 @@ LOGGER_ENABLED=true pnpm run test
 The API provides the following endpoints:
 
 - `POST /{airnode}`: Insert a batch of signed data.
-  - The batch is validated for consistency and data integrity errors. If there is any issue during this step, the whole
-    batch is rejected. Otherwise the batch is accepted. Also, all data that is no longer needed is removed during this
-    step.
+  - The batch is validated for consistency and data integrity errors. If there is any issue during this step, the whole batch is rejected. Otherwise the batch is accepted. Also, all data that is no longer needed is removed during this step.
 - `GET /{endpoint-name}/{airnode}`: Retrieve signed data for the Airnode respecting the endpoint configuration.
   - Returns the freshest signed data available for the given Airnode, respecting the configured endpoint delay.
 - `GET /airnodes`: Retrieve list of all available Airnode address.
-  - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the
-    delayed endpoints (in case the data is too fresh and there is not an older alternative).
+  - Returns all Airnode addresses for which there is signed data. It is possible that this data cannot be shown by the delayed endpoints (in case the data is too fresh and there is not an older alternative).
 - `GET /`: Retrieve system status information.
-  - Returns current system configuration details including deployment stage, version, current timestamp, deployment
-    timestamp, configuration hash, and certified Airnode addresses.
+  - Returns current system configuration details including deployment stage, version, current timestamp, deployment timestamp, configuration hash, and certified Airnode addresses.
 
 ## Deployment
 
-To deploy signed API on AWS you can use a CloudFormation template in the `deployment` folder. You need to specify the
-docker image of the signed API and the URL of the signed API configuration which will be download when the service is
-started.
+To deploy signed API on AWS you can use a CloudFormation template in the `deployment` folder. You need to specify the docker image of the signed API and the URL of the signed API configuration which will be download when the service is started.
 
-The template will create all necessary AWS resources and assign a domain name to access the the API. You can get the URL
-from the output parameters of the CloudFormation stack or by checking the DNS record of the load balancer.
+The template will create all necessary AWS resources and assign a domain name to access the the API. You can get the URL from the output parameters of the CloudFormation stack or by checking the DNS record of the load balancer.
 
 To deploy on premise you can use the Docker instructions below.
 
@@ -72,11 +62,9 @@ The API is also dockerized. To run the dockerized APi, you need to:
 
 <!-- markdown-link-check-disable -->
 
-1. Publish the port of the API to the host machine. The port number of signed API in the container is set to `80`. So
-   the command should look like `--publish <HOST_PORT>:80`.
+1. Publish the port of the API to the host machine. The port number of signed API in the container is set to `80`. So the command should look like `--publish <HOST_PORT>:80`.
 2. Mount config folder to `/app/config`. The folder should contain the `signed-api.json` file.
-3. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See
-   [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
+3. Pass the `-it --init` flags to the docker run command. This is needed to ensure the docker is stopped gracefully. See [this](https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md#handling-kernel-signals) for details.
 4. Specify the `--env-file` with the path to the `.env` file containing the [ENV configuration](#environment-variables).
 5. Optionally, pass the `--rm` flag to remove the container after it is stopped.
 

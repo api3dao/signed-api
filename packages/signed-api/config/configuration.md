@@ -1,12 +1,10 @@
 # Configuration
 
-The API is configured via combination of [environment variables](#environment-variables) and
-[configuration files](#configuration-files).
+The API is configured via combination of [environment variables](#environment-variables) and [configuration files](#configuration-files).
 
 ## Environment variables
 
-Parts of the API needs to be initialized prior the configuration files are loaded. This is done via environment
-variables. All of the environment variables are optional and or set with default values for convenience.
+Parts of the API needs to be initialized prior the configuration files are loaded. This is done via environment variables. All of the environment variables are optional and or set with default values for convenience.
 
 Example:
 
@@ -43,16 +41,13 @@ Default: `true`.
 The format of the log output. Options:
 
 - `json` - Specifies JSON log format. This is suitable when running in production and streaming logs to other services.
-- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in
-  development.
+- `pretty` - Logs are formatted in a human-friendly "pretty" way. Ideal, when running the service locally and in development.
 
 Default: `json`.
 
 ### `LOG_API_DATA` _(optional)_
 
-Enables or disables logging of the API data at the `info` level. When set to `true`, received valid signed data will be
-logged with the fields `airnode`, `encodedValue`, `templateId`, and `timestamp`. The `signature` field is intentionally
-excluded for security reasons. Options:
+Enables or disables logging of the API data at the `info` level. When set to `true`, received valid signed data will be logged with the fields `airnode`, `encodedValue`, `templateId`, and `timestamp`. The `signature` field is intentionally excluded for security reasons. Options:
 
 - `true` - Enables logging of the API data.
 - `false` - Disables logging of the API data.
@@ -63,8 +58,7 @@ Default: `false`.
 
 Enables or disables colors in the log output. Options:
 
-- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI.
-  Recommended when running locally and in development.
+- `true` - Enables colors in the log output. The output has special color setting characters that are parseable by CLI. Recommended when running locally and in development.
 - `false` - Disables colors in the log output. Recommended for production.
 
 Default: `false`.
@@ -111,9 +105,7 @@ The path to the configuration file in the AWS S3 bucket. Required when `CONFIG_S
 
 ## Configuration files
 
-The API is configured via combination of `signed-api.json` and `secrets.env` configuration files. All expressions of a
-form `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `signed-api.json` at runtime.
-You are advised to put sensitive information inside secrets file.
+The API is configured via combination of `signed-api.json` and `secrets.env` configuration files. All expressions of a form `${SECRET_NAME}` are referring to values from secrets and are interpolated inside the `signed-api.json` at runtime. You are advised to put sensitive information inside secrets file.
 
 ### `endpoints`
 
@@ -160,8 +152,7 @@ Configuration for one of the endpoints.
 
 ##### `urlPath`
 
-The URL path on which the endpoint is served. Must start with a slash and contain only alphanumeric characters and
-dashes.
+The URL path on which the endpoint is served. Must start with a slash and contain only alphanumeric characters and dashes.
 
 ##### `delaySeconds`
 
@@ -169,21 +160,17 @@ The delay in seconds for the endpoint. The endpoint will only serve data that is
 
 ##### `authTokens`
 
-The nonempty list of
-[Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer) allowed to query
-the data.
+The nonempty list of [Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer) allowed to query the data.
 
 In case the endpoint should be publicly available, set the value to `null`.
 
 ##### `hideSignatures` _(optional)_
 
-The boolean flag to hide the signatures in the response. The flag is optional for backwards compatibility with older
-Signed API versions.
+The boolean flag to hide the signatures in the response. The flag is optional for backwards compatibility with older Signed API versions.
 
 ##### `isOev`
 
-The boolean flag to indicate if the endpoint serves the data for OEV beacons. This data can be used to update the API3
-proxies with the latest OEV data, but cannot be used to update the main API3 base feeds.
+The boolean flag to indicate if the endpoint serves the data for OEV beacons. This data can be used to update the API3 proxies with the latest OEV data, but cannot be used to update the main API3 base feeds.
 
 ### `cache` _(optional)_
 
@@ -196,8 +183,7 @@ Defaults to no cache (no headers).
 The type of the cache. Options:
 
 - `browser` - Sets the standard `cache-control: max-age=XYZ` header.
-- `cdn` - Similar to `browser` cache, but also sets the `cdn-cache-control` to the same value as `cache-control`.
-  Setting both headers is necessary to support CDNs which do not support `cdn-cache-control` header.
+- `cdn` - Similar to `browser` cache, but also sets the `cdn-cache-control` to the same value as `cache-control`. Setting both headers is necessary to support CDNs which do not support `cdn-cache-control` header.
 
 #### `maxAgeSeconds`
 
@@ -205,8 +191,7 @@ The maximum age of the cache in seconds. The cache is cleared after this time.
 
 ### `allowedAirnodes`
 
-The list of allowed Airnodes with authorization details. If the list is empty, no Airnode is allowed. To whitelist all
-Airnodes, set the value to `"*"` instead of an array.
+The list of allowed Airnodes with authorization details. If the list is empty, no Airnode is allowed. To whitelist all Airnodes, set the value to `"*"` instead of an array.
 
 Example:
 
@@ -239,24 +224,17 @@ The address of the Airnode. The address must be a valid Ethereum address.
 
 ##### `authTokens`
 
-The nonempty list of
-[Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer).
+The nonempty list of [Bearer authentication tokens](https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication#bearer).
 
-To allow pushing data without any authorization, set the value to `null`. The API validates the data, but this is not
-recommended.
+To allow pushing data without any authorization, set the value to `null`. The API validates the data, but this is not recommended.
 
 ##### `isCertified`
 
-A boolean flag indicating whether the Airnode is first-party verified. When set to true, the Airnode address will be
-included in the `/` endpoint response under `certifiedAirnodes`. This flag is set by the deployer of the Signed API
-instance and serves as a declaration of ownership or control over the listed Airnodes. However, as the deployer has
-complete control over setting this flag, it does not constitute a cryptographic proof of ownership.
+A boolean flag indicating whether the Airnode is first-party verified. When set to true, the Airnode address will be included in the `/` endpoint response under `certifiedAirnodes`. This flag is set by the deployer of the Signed API instance and serves as a declaration of ownership or control over the listed Airnodes. However, as the deployer has complete control over setting this flag, it does not constitute a cryptographic proof of ownership.
 
 #### `stage`
 
-An identifier of the deployment stage. This is used to distinguish between different deployments of Signed API, for
-example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include
-lowercase alphanumeric characters and hyphens.
+An identifier of the deployment stage. This is used to distinguish between different deployments of Signed API, for example `dev`, `staging` or `production`. The stage value can have 256 characters at maximum and can only include lowercase alphanumeric characters and hyphens.
 
 #### `version`
 
