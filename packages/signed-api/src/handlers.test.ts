@@ -185,6 +185,38 @@ describe(batchInsertData.name, () => {
     });
   });
 
+  it('rejects a batch if there is a beacon with a negative timestamp', async () => {
+    const invalidData = await createSignedDataV1({ timestamp: '-1' });
+
+    const result = await batchInsertData(undefined, [invalidData], invalidData.airnode);
+    const { body, statusCode } = parseResponse(result);
+
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Invalid request, body must fit schema for batch of signed data',
+      context: {
+        v1ParsingIssues: [
+          {
+            code: 'invalid_format',
+            format: 'regex',
+            pattern: '/^(0|[1-9]\\d{0,9})$/',
+            message: 'Invalid string: must match pattern /^(0|[1-9]\\d{0,9})$/',
+            origin: 'string',
+            path: [0, 'timestamp'],
+          },
+        ],
+        v2ParsingIssues: [
+          {
+            code: 'invalid_type',
+            expected: 'object',
+            path: [],
+            message: 'Invalid input: expected object, received array',
+          },
+        ],
+      },
+    });
+  });
+
   it('rejects a batch if there it contains data for multiple Airnode addresses', async () => {
     const airnodeWallet1 = ethers.Wallet.fromMnemonic(
       'echo dose empower ensure purchase enjoy once hotel slender loop repair desk'
