@@ -79,6 +79,42 @@ describe(batchInsertData.name, () => {
     });
   }, 10_000);
 
+  it('rejects a batch with too many signed data', async () => {
+    const airnode = generateRandomWallet().address;
+    const signedData = Array.from({ length: 25_001 }).fill({});
+
+    const v1Result = await batchInsertData(undefined, signedData, airnode);
+    const v1Response = parseResponse(v1Result);
+    expect(v1Response.statusCode).toBe(400);
+    expect(v1Response.body).toStrictEqual({
+      message: 'Invalid request, batch of signed data is too large',
+      context: { maxBatchSize: 25_000 },
+    });
+
+    const v2Result = await batchInsertData(undefined, { airnode, signedData }, airnode);
+    const v2Response = parseResponse(v2Result);
+    expect(v2Response.statusCode).toBe(400);
+    expect(v2Response.body).toStrictEqual({
+      message: 'Invalid request, batch of signed data is too large',
+      context: { maxBatchSize: 25_000 },
+    });
+  }, 10_000);
+
+  it('parses a batch with the maximum number of signed data', async () => {
+    const airnode = generateRandomWallet().address;
+    const signedData = Array.from({ length: 25_000 }).fill(0);
+
+    const v1Result = await batchInsertData(undefined, signedData, airnode);
+    const v1Response = parseResponse<{ message: string }>(v1Result);
+    expect(v1Response.statusCode).toBe(400);
+    expect(v1Response.body.message).toBe('Invalid request, body must fit schema for batch of signed data');
+
+    const v2Result = await batchInsertData(undefined, { airnode, signedData }, airnode);
+    const v2Response = parseResponse<{ message: string }>(v2Result);
+    expect(v2Response.statusCode).toBe(400);
+    expect(v2Response.body.message).toBe('Invalid request, body must fit schema for batch of signed data');
+  }, 10_000);
+
   it('verifies signature', async () => {
     const invalidData = await createSignedDataV1({
       signature:
