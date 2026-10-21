@@ -16,19 +16,13 @@ export type Cache = {
   // The signed data stored internally.
   signedDataCache: SignedDataCache;
   // Mapping for template ID to their OEV counterparts. The OEV template ID is hashed from the original template ID and
-  // is cached for performance reasons.
+  // is cached for performance reasons. Only template IDs with verified signed data in the cache are memoized.
   templateIdToOevTemplateId: Record<string, string>;
-  // Beacon IDs are precomputed as a performance optimization.
-  airnodeToTemplateIdToBeaconId: Record<
-    string /* Airnode address */,
-    Record<string /* Template ID */, string /* Beacon ID */>
-  >;
 };
 
 export const getInitialCache = (): Cache => ({
   signedDataCache: {},
   templateIdToOevTemplateId: {},
-  airnodeToTemplateIdToBeaconId: {},
 });
 
 let cache: Cache = getInitialCache();

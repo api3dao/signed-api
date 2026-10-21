@@ -169,6 +169,63 @@ describe(batchInsertData.name, () => {
     expect(inMemoryCacheModule.getCache()).toStrictEqual(inMemoryCacheModule.getInitialCache());
   });
 
+  it('does not change the cache when the batch is rejected', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const invalidData = await createSignedDataV2({
+      airnodeWallet,
+      signature:
+        '0xaa5f77b3141527b67903699c77f2fd66e1cdcdb71c7d586addc4e5f6b0a5ca25537495389753795b6c23240a45bb5a1295a9c2aa526385702c54863a0f94f45d1c',
+    });
+    const batchData: SignedApiBatchPayloadV2 = { airnode: airnodeWallet.address, signedData: [invalidData] };
+
+    const result = await batchInsertData(undefined, batchData, airnodeWallet.address);
+    const { body, statusCode } = parseResponse<{ message: string }>(result);
+
+    expect(statusCode).toBe(400);
+    expect(body.message).toBe('Signature is invalid');
+    expect(inMemoryCacheModule.getCache()).toStrictEqual(inMemoryCacheModule.getInitialCache());
+  }, 10_000);
+
+  it('memoizes the OEV template ID only for templates with verified signed data', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const signedData = await createSignedDataV2({ airnodeWallet });
+    const batchData: SignedApiBatchPayloadV2 = { airnode: airnodeWallet.address, signedData: [signedData] };
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+    expect(inMemoryCacheModule.getCache().templateIdToOevTemplateId).toStrictEqual({});
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+    expect(inMemoryCacheModule.getCache().templateIdToOevTemplateId).toStrictEqual({
+      [signedData.templateId]: deriveOevTemplateId(signedData.templateId),
+    });
+  }, 10_000);
+
+  it('reuses the beacon IDs of verified signed data', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const airnode = airnodeWallet.address;
+    const signedData = await createSignedDataV2({ airnodeWallet });
+    const { templateId } = signedData;
+    const oevTemplateId = deriveOevTemplateId(templateId);
+    await batchInsertData(undefined, { airnode, signedData: [signedData] }, airnode);
+
+    const timestamp = (Number(signedData.timestamp) + 1).toString();
+    const nextSignedData = await createSignedDataV2({ airnodeWallet, templateId, timestamp });
+    const result = await batchInsertData(undefined, { airnode, signedData: [nextSignedData] }, airnode);
+
+    expect(parseResponse(result).body).toStrictEqual({ count: 2, skipped: 0 });
+    const { signedDataCache } = inMemoryCacheModule.getCache();
+    expect(signedDataCache[airnode]![templateId]!.at(-1)).toMatchObject({
+      timestamp,
+      beaconId: deriveBeaconId(airnode, templateId),
+      isOevBeacon: false,
+    });
+    expect(signedDataCache[airnode]![oevTemplateId]!.at(-1)).toMatchObject({
+      timestamp,
+      beaconId: deriveBeaconId(airnode, oevTemplateId),
+      isOevBeacon: true,
+    });
+  }, 10_000);
+
   it('skips signed data if there exists one with the same timestamp', async () => {
     const airnodeWallet = generateRandomWallet();
     const storedSignedData = await createInternalSignedData({ airnodeWallet });

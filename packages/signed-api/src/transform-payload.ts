@@ -1,39 +1,23 @@
 import { deriveOevTemplateId, type SignedApiBatchPayloadV1, type SignedApiBatchPayloadV2 } from '@api3/airnode-feed';
 import { deriveBeaconId, type Hex } from '@api3/commons';
 
-import { getCache, setCache } from './in-memory-cache';
+import { getCache } from './in-memory-cache';
 import { type InternalSignedData } from './types';
 
-export const getOevTemplateId = (templateId: string) => {
+// The payload is not verified yet, so the OEV template ID is memoized only when the template already has verified
+// signed data in the cache. Otherwise, any payload could grow the memo.
+export const getOevTemplateId = (airnode: string, templateId: string) => {
   const cache = getCache();
-  if (templateId in cache.templateIdToOevTemplateId) {
-    return cache.templateIdToOevTemplateId[templateId]!;
-  }
+  if (templateId in cache.templateIdToOevTemplateId) return cache.templateIdToOevTemplateId[templateId]!;
 
   const oevTemplateId = deriveOevTemplateId(templateId);
-  setCache({
-    ...cache,
-    templateIdToOevTemplateId: { ...cache.templateIdToOevTemplateId, [templateId]: oevTemplateId },
-  });
+  if (cache.signedDataCache[airnode]?.[templateId]) cache.templateIdToOevTemplateId[templateId] = oevTemplateId;
   return oevTemplateId;
 };
 
-export const getBeaconId = (airnode: string, templateId: string) => {
-  const cache = getCache();
-  if (cache.airnodeToTemplateIdToBeaconId[airnode]?.[templateId]) {
-    return cache.airnodeToTemplateIdToBeaconId[airnode][templateId];
-  }
-
-  const beaconId = deriveBeaconId(airnode as Hex, templateId as Hex);
-  setCache({
-    ...cache,
-    airnodeToTemplateIdToBeaconId: {
-      ...cache.airnodeToTemplateIdToBeaconId,
-      [airnode]: { ...cache.airnodeToTemplateIdToBeaconId[airnode], [templateId]: beaconId },
-    },
-  });
-  return beaconId;
-};
+// The cache contains only verified signed data, so the beacon ID stored there can be reused instead of deriving it.
+export const getBeaconId = (airnode: string, templateId: string) =>
+  getCache().signedDataCache[airnode]?.[templateId]?.[0]?.beaconId ?? deriveBeaconId(airnode as Hex, templateId as Hex);
 
 export const transformAirnodeFeedPayload = (
   payload: SignedApiBatchPayloadV1 | SignedApiBatchPayloadV2
@@ -45,7 +29,7 @@ export const transformAirnodeFeedPayload = (
     const { airnode } = payload;
     return payload.signedData.flatMap((data) => {
       const { templateId, encodedValue, oevSignature, signature, timestamp } = data;
-      const oevTemplateId = getOevTemplateId(templateId);
+      const oevTemplateId = getOevTemplateId(airnode, templateId);
       return [
         {
           airnode,
