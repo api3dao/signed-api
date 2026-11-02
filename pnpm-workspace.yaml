@@ -13,3 +13,5 @@ minimumReleaseAgeExclude:
   - '@api3/*'
   # Renovate security update: axios@1.15.2 || 1.16.0
   - axios@1.15.2 || 1.16.0
+  # Renovate security update: zod@4.6.6
+  - zod@4.6.6
