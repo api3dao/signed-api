@@ -14,7 +14,10 @@ export const startServer = (config: Config, port: number) => {
   const app = express();
 
   // The default limit is 100kb, which is not enough for the signed API because some payloads can be quite large.
-  app.use(express.json({ limit: '10mb' }));
+  // Reject compressed request bodies ("inflate: false") instead of decompressing them. Airnode feed only ever sends
+  // plain JSON, so there is no legitimate compressed traffic. Decompressing attacker-controlled bodies before the
+  // bearer token is checked exposed every Signed API to unauthenticated crashes via malformed gzip/brotli/zstd input.
+  app.use(express.json({ limit: '10mb', inflate: false }));
 
   app.post('/:airnodeAddress', async (req, res, next) => {
     const goRequest = await go(async () => {
