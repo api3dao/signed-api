@@ -24,6 +24,9 @@ import { extractBearerToken, generateErrorResponse, isBatchUnique } from './util
 // Initialize deployment timestamp when the application starts
 const DEPLOYMENT_TIMESTAMP = Math.floor(Date.now() / 1000).toString();
 
+// Each valid signed data takes at least ~465 bytes of JSON, so no valid batch under the 10 MB body limit has more.
+const MAX_BATCH_SIZE = 25_000;
+
 // Accepts a batch of signed data that is first validated for consistency and data integrity errors. If there is any
 // issue during this step, the whole batch is rejected.
 //
@@ -57,6 +60,14 @@ export const batchInsertData = async (
       }
       return generateErrorResponse(403, 'Unauthorized Airnode address', { airnodeAddress });
     }
+  }
+
+  // Ensure the batch is not too large before parsing it.
+  const rawBatch = Array.isArray(rawRequestBody) ? rawRequestBody : (rawRequestBody as any)?.signedData;
+  if (Array.isArray(rawBatch) && rawBatch.length > MAX_BATCH_SIZE) {
+    return generateErrorResponse(400, 'Invalid request, batch of signed data is too large', {
+      maxBatchSize: MAX_BATCH_SIZE,
+    });
   }
 
   // Parse the request body. Try parsing v2 schema first and fallback to v1 if validation fails.
