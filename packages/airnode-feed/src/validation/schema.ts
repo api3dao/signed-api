@@ -323,13 +323,16 @@ export const configSchema = z
   .check(validateOisReferences)
   .check(validateTriggerReferences);
 
+// The on-chain contract stores timestamps as uint32, whose largest value has 10 digits.
+export const timestampSchema = z.string().regex(/^(0|[1-9]\d{0,9})$/);
+
 export const encodedValueSchema = z.string().regex(/^0x[\dA-Fa-f]{64}$/);
 
 export const signatureSchema = z.string().regex(/^0x[\dA-Fa-f]{130}$/);
 
 export const signedDataSchema = z.strictObject({
   templateId: evmIdSchema,
-  timestamp: z.string(),
+  timestamp: timestampSchema,
   encodedValue: encodedValueSchema,
   signature: signatureSchema,
 });

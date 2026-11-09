@@ -14,12 +14,15 @@ export const startServer = (config: Config, port: number) => {
   const app = express();
 
   // The default limit is 100kb, which is not enough for the signed API because some payloads can be quite large.
-  app.use(express.json({ limit: '10mb' }));
+  // Reject compressed request bodies ("inflate: false") instead of decompressing them. Airnode feed only ever sends
+  // plain JSON, so there is no legitimate compressed traffic. Decompressing attacker-controlled bodies before the
+  // bearer token is checked exposed every Signed API to unauthenticated crashes via malformed gzip/brotli/zstd input.
+  app.use(express.json({ limit: '10mb', inflate: false }));
 
   app.post('/:airnodeAddress', async (req, res, next) => {
     const goRequest = await go(async () => {
       logger.info('Received request "POST /:airnodeAddress".');
-      logger.debug('Request details.', { body: req.body, params: req.params });
+      logger.debug('Request details.', { params: req.params });
 
       const result = await batchInsertData(req.headers.authorization, req.body, req.params.airnodeAddress);
       res.status(result.statusCode).header(result.headers).send(result.body);
@@ -63,7 +66,7 @@ export const startServer = (config: Config, port: number) => {
     app.get(`${urlPath}/:airnodeAddress`, async (req, res, next) => {
       const goRequest = await go(() => {
         logger.info(`Received request "GET ${urlPath}/:airnodeAddress".`);
-        logger.debug('Request details.', { body: req.body, params: req.params });
+        logger.debug('Request details.', { params: req.params });
 
         const result = getData(endpoint, req.headers.authorization, req.params.airnodeAddress);
         res.status(result.statusCode).header(result.headers).send(result.body);
@@ -81,6 +84,8 @@ export const startServer = (config: Config, port: number) => {
     // For unhandled errors it's very beneficial to have the stack trace. It is possible that the value is not an error.
     // It would be nice to know the stack trace in such cases as well.
     const stack = err.stack ?? new Error('Unexpected non-error value encountered').stack;
+    // The JSON parser attaches the whole request body to the error when it fails to parse it.
+    delete err.body;
     logger.error('An unexpected handler error occurred.', { err, stack });
 
     res.status(err.status ?? 500).json({

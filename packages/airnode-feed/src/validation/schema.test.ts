@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 
 import { config } from '../../test/fixtures';
 
-import { type Config, configSchema, signedApiResponseSchema, signedApisSchema } from './schema';
+import { type Config, configSchema, signedApiResponseSchema, signedApisSchema, signedDataSchema } from './schema';
 
 test('validates example config', async () => {
   const exampleConfig = JSON.parse(readFileSync(join(__dirname, '../../config/airnode-feed.example.json'), 'utf8'));
@@ -221,5 +221,45 @@ describe('signedApiResponseSchema', () => {
     ]);
 
     expect(() => signedApiResponseSchema.parse({ count: 12, skipped: 3 })).not.toThrow();
+  });
+});
+
+describe('signedDataSchema', () => {
+  const signedData = {
+    signature:
+      '0x1ea0a64100431adf033ec730547cd3ffd253dd5991336b3d9b9e8dcfe68d82a61bcd9b8b677557a90a025c19ebde1d98608e2fa3462457bb6fe62675518f7f9c1c',
+    timestamp: '1701419743',
+    templateId: '0x031487ca600cd3a26a39206b5b4373f9231f75e4bd23edeb3d5bdc513c147e2a',
+    encodedValue: '0x000000000000000000000000000000000000000000000003d026ef5a02753000',
+  };
+
+  it('accepts a timestamp of 10 digits', () => {
+    expect(() => signedDataSchema.parse({ ...signedData, timestamp: '9999999999' })).not.toThrow();
+  });
+
+  it('rejects a timestamp of more than 10 digits', () => {
+    expect(signedDataSchema.safeParse({ ...signedData, timestamp: '10000000000' }).error?.issues).toStrictEqual([
+      {
+        origin: 'string',
+        code: 'invalid_format',
+        format: 'regex',
+        pattern: '/^(0|[1-9]\\d{0,9})$/',
+        path: ['timestamp'],
+        message: 'Invalid string: must match pattern /^(0|[1-9]\\d{0,9})$/',
+      },
+    ]);
+  });
+
+  it('rejects a timestamp with a leading zero', () => {
+    expect(signedDataSchema.safeParse({ ...signedData, timestamp: '01' }).error?.issues).toStrictEqual([
+      {
+        origin: 'string',
+        code: 'invalid_format',
+        format: 'regex',
+        pattern: '/^(0|[1-9]\\d{0,9})$/',
+        path: ['timestamp'],
+        message: 'Invalid string: must match pattern /^(0|[1-9]\\d{0,9})$/',
+      },
+    ]);
   });
 });

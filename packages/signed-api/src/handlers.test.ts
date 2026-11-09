@@ -79,6 +79,42 @@ describe(batchInsertData.name, () => {
     });
   }, 10_000);
 
+  it('rejects a batch with too many signed data', async () => {
+    const airnode = generateRandomWallet().address;
+    const signedData = Array.from({ length: 25_001 }).fill({});
+
+    const v1Result = await batchInsertData(undefined, signedData, airnode);
+    const v1Response = parseResponse(v1Result);
+    expect(v1Response.statusCode).toBe(400);
+    expect(v1Response.body).toStrictEqual({
+      message: 'Invalid request, batch of signed data is too large',
+      context: { maxBatchSize: 25_000 },
+    });
+
+    const v2Result = await batchInsertData(undefined, { airnode, signedData }, airnode);
+    const v2Response = parseResponse(v2Result);
+    expect(v2Response.statusCode).toBe(400);
+    expect(v2Response.body).toStrictEqual({
+      message: 'Invalid request, batch of signed data is too large',
+      context: { maxBatchSize: 25_000 },
+    });
+  }, 10_000);
+
+  it('parses a batch with the maximum number of signed data', async () => {
+    const airnode = generateRandomWallet().address;
+    const signedData = Array.from({ length: 25_000 }).fill(0);
+
+    const v1Result = await batchInsertData(undefined, signedData, airnode);
+    const v1Response = parseResponse<{ message: string }>(v1Result);
+    expect(v1Response.statusCode).toBe(400);
+    expect(v1Response.body.message).toBe('Invalid request, body must fit schema for batch of signed data');
+
+    const v2Result = await batchInsertData(undefined, { airnode, signedData }, airnode);
+    const v2Response = parseResponse<{ message: string }>(v2Result);
+    expect(v2Response.statusCode).toBe(400);
+    expect(v2Response.body.message).toBe('Invalid request, body must fit schema for batch of signed data');
+  }, 10_000);
+
   it('verifies signature', async () => {
     const invalidData = await createSignedDataV1({
       signature:
@@ -133,6 +169,63 @@ describe(batchInsertData.name, () => {
     expect(inMemoryCacheModule.getCache()).toStrictEqual(inMemoryCacheModule.getInitialCache());
   });
 
+  it('does not change the cache when the batch is rejected', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const invalidData = await createSignedDataV2({
+      airnodeWallet,
+      signature:
+        '0xaa5f77b3141527b67903699c77f2fd66e1cdcdb71c7d586addc4e5f6b0a5ca25537495389753795b6c23240a45bb5a1295a9c2aa526385702c54863a0f94f45d1c',
+    });
+    const batchData: SignedApiBatchPayloadV2 = { airnode: airnodeWallet.address, signedData: [invalidData] };
+
+    const result = await batchInsertData(undefined, batchData, airnodeWallet.address);
+    const { body, statusCode } = parseResponse<{ message: string }>(result);
+
+    expect(statusCode).toBe(400);
+    expect(body.message).toBe('Signature is invalid');
+    expect(inMemoryCacheModule.getCache()).toStrictEqual(inMemoryCacheModule.getInitialCache());
+  }, 10_000);
+
+  it('memoizes the OEV template ID only for templates with verified signed data', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const signedData = await createSignedDataV2({ airnodeWallet });
+    const batchData: SignedApiBatchPayloadV2 = { airnode: airnodeWallet.address, signedData: [signedData] };
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+    expect(inMemoryCacheModule.getCache().templateIdToOevTemplateId).toStrictEqual({});
+
+    await batchInsertData(undefined, batchData, airnodeWallet.address);
+    expect(inMemoryCacheModule.getCache().templateIdToOevTemplateId).toStrictEqual({
+      [signedData.templateId]: deriveOevTemplateId(signedData.templateId),
+    });
+  }, 10_000);
+
+  it('reuses the beacon IDs of verified signed data', async () => {
+    const airnodeWallet = generateRandomWallet();
+    const airnode = airnodeWallet.address;
+    const signedData = await createSignedDataV2({ airnodeWallet });
+    const { templateId } = signedData;
+    const oevTemplateId = deriveOevTemplateId(templateId);
+    await batchInsertData(undefined, { airnode, signedData: [signedData] }, airnode);
+
+    const timestamp = (Number(signedData.timestamp) + 1).toString();
+    const nextSignedData = await createSignedDataV2({ airnodeWallet, templateId, timestamp });
+    const result = await batchInsertData(undefined, { airnode, signedData: [nextSignedData] }, airnode);
+
+    expect(parseResponse(result).body).toStrictEqual({ count: 2, skipped: 0 });
+    const { signedDataCache } = inMemoryCacheModule.getCache();
+    expect(signedDataCache[airnode]![templateId]!.at(-1)).toMatchObject({
+      timestamp,
+      beaconId: deriveBeaconId(airnode, templateId),
+      isOevBeacon: false,
+    });
+    expect(signedDataCache[airnode]![oevTemplateId]!.at(-1)).toMatchObject({
+      timestamp,
+      beaconId: deriveBeaconId(airnode, oevTemplateId),
+      isOevBeacon: true,
+    });
+  }, 10_000);
+
   it('skips signed data if there exists one with the same timestamp', async () => {
     const airnodeWallet = generateRandomWallet();
     const storedSignedData = await createInternalSignedData({ airnodeWallet });
@@ -182,6 +275,38 @@ describe(batchInsertData.name, () => {
     expect(body).toStrictEqual({
       message: 'Request timestamp is too far in the future',
       context: { signedData: { ...invalidData, isOevBeacon: false } },
+    });
+  });
+
+  it('rejects a batch if there is a beacon with a negative timestamp', async () => {
+    const invalidData = await createSignedDataV1({ timestamp: '-1' });
+
+    const result = await batchInsertData(undefined, [invalidData], invalidData.airnode);
+    const { body, statusCode } = parseResponse(result);
+
+    expect(statusCode).toBe(400);
+    expect(body).toStrictEqual({
+      message: 'Invalid request, body must fit schema for batch of signed data',
+      context: {
+        v1ParsingIssues: [
+          {
+            code: 'invalid_format',
+            format: 'regex',
+            pattern: '/^(0|[1-9]\\d{0,9})$/',
+            message: 'Invalid string: must match pattern /^(0|[1-9]\\d{0,9})$/',
+            origin: 'string',
+            path: [0, 'timestamp'],
+          },
+        ],
+        v2ParsingIssues: [
+          {
+            code: 'invalid_type',
+            expected: 'object',
+            path: [],
+            message: 'Invalid input: expected object, received array',
+          },
+        ],
+      },
     });
   });
 
