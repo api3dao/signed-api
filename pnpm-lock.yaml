@@ -69,7 +69,7 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       axios:
-        specifier: ^1.19.0
+        specifier: ^1.20.0
         version: 1.20.0
       dotenv:
         specifier: ^17.4.2
@@ -84,8 +84,8 @@ importers:
         specifier: ^4.18.1
         version: 4.18.1
       zod:
-        specifier: ^4.4.3
-        version: 4.6.6
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -109,7 +109,7 @@ importers:
         specifier: workspace:*
         version: link:../signed-api
       axios:
-        specifier: ^1.19.0
+        specifier: ^1.20.0
         version: 1.20.0
       ethers:
         specifier: ^5.8.0
@@ -121,8 +121,8 @@ importers:
         specifier: ^4.18.1
         version: 4.18.1
       zod:
-        specifier: ^4.4.3
-        version: 4.6.6
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -167,8 +167,8 @@ importers:
         specifier: ^10.0.3
         version: 10.0.3
       zod:
-        specifier: ^4.4.3
-        version: 4.6.6
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@types/express':
         specifier: ^5.0.6
@@ -4432,8 +4432,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.6.6:
-    resolution: {integrity: sha512-4UmzQUF5fxvfcYHlbjBmejU+w+hbDnWFx4aS8kBx7nPBHcO2SqPbpAG8snbdg+Xse4pRefR98hgjFgIMCI/UhA==}
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
 snapshots:
 
@@ -4607,7 +4607,7 @@ snapshots:
       lodash: 4.18.1
       winston: 3.19.0
       winston-console-format: 1.0.8
-      zod: 4.6.6
+      zod: 4.6.7
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -4654,7 +4654,7 @@ snapshots:
   '@api3/ois@3.0.0':
     dependencies:
       lodash: 4.18.1
-      zod: 4.6.6
+      zod: 4.6.7
 
   '@api3/promise-utils@0.4.0': {}
 
@@ -10184,4 +10184,4 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.6.6: {}
+  zod@4.6.7: {}
